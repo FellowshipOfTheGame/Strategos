@@ -1,0 +1,41 @@
+#Imagens das naves de cada exercitos
+
+#FORMATO:
+#key:
+#file:
+#clip: nLines nColumns width height margin padding 
+#center: x y
+#!
+
+#HUMANS
+key: human-ships
+file: assets/images/human-ships.png
+clip: 4 1 32 34 0 1
+center: 0 0
+!
+
+key: human-shootSimple
+file: assets/images/Shoot.png
+clip: 1 2 8 4 0 0
+center: 0 0
+!
+
+key: human-explode
+file: assets/images/HumanShipExplosionBig.png
+clip: 8 8 128 128 0 0
+center: 64 64
+!
+
+#ALIEN 1
+key: alien-ships
+file: assets/images/alien-ships.png
+clip: 4 1 42 42 0 0
+center: 0 0
+!
+
+#Elders
+key: elders-ships
+file: assets/images/elders-ships.png
+clip: 4 1 32 34 0 1
+center: 0 0
+!

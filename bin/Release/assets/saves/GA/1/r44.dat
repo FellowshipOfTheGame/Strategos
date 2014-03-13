@@ -1,0 +1,11 @@
+name: r44
+dictionary: Elders
+
+squadKind: 0
+position: 20 384
+rule: 0 0 0 0 0 0 0 0
+rule: 0 0 0 0 1 79 2 0
+rule: 0 0 0 0 1 44 1 0
+rule: 1 95 2 0 0 0 0 0
+END_SQUAD
+

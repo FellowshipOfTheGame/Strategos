@@ -1,0 +1,60 @@
+gfxShips: assets/Army.gfx human-ships
+DESCRP: @Coloque a descricao aqui. Deixe a descricao entre os simbolos "at".
+Pode ter quebra de linha.@
+
+SQUADS
+ship: MotherShip
+hp: 1000
+damage: 70
+atkCD: 25
+range: 20
+shield: 500
+dodge: 5
+speed: 0.2
+squad: 1
+gfxShoot: assets/Army.gfx human-shootSimple
+gfxExplode: assets/Army.gfx human-explode
+wavShoot: 
+END_SHIP
+
+ship: Fighter
+hp: 200
+damage: 10
+atkCD: 9
+range: 10
+shield: 100
+dodge: 10
+speed: 2.5
+squad: 5
+gfxShoot: assets/Army.gfx human-shootSimple
+gfxExplode: assets/Army.gfx human-explode
+wavShoot: 
+END_SHIP
+
+ship: Bomber
+hp: 400
+damage: 50
+atkCD: 20
+range: 18
+shield: 150
+dodge: 2
+speed: 1.0
+squad: 3
+gfxShoot: assets/Army.gfx human-shootSimple
+gfxExplode: assets/Army.gfx human-explode
+wavShoot: 
+END_SHIP
+
+ship: Support
+hp: 300
+damage: 20
+atkCD: 14
+range: 16
+shield: 600
+dodge: 15
+speed: 2.5
+squad: 4
+gfxShoot: assets/Army.gfx human-shootSimple
+gfxExplode: assets/Army.gfx human-explode
+wavShoot: 
+END_SHIP

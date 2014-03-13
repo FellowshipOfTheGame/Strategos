@@ -1,0 +1,26 @@
+#Fontes
+
+key: cooper14
+file: assets/font/cooper-black.ttf
+size: 28
+!
+
+key: ethnocentric-14
+file: assets/font/ethnocentric.ttf
+size: 14
+!
+
+key: unispace-14
+file: assets/font/unispace_bd.ttf
+size: 14
+!
+
+key: italic_unispace-14
+file: assets/font/unispace_it.ttf
+size: 14
+!
+
+key: jostix-14
+file: assets/font/joystix_monospace.ttf
+size: 14
+!

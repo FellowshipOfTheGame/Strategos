@@ -1,0 +1,22 @@
+name: helders
+dictionary: Elders
+
+squadKind: 0
+position: 425 300
+rule: 0 0 0 0 0 0 0 0
+END_SQUAD
+
+squadKind: 1
+position: 425 200
+rule: 0 0 0 0 0 0 0 0
+END_SQUAD
+
+squadKind: 2
+position: 625 500
+rule: 0 0 0 0 0 0 0 2 1
+END_SQUAD
+
+squadKind: 3
+position: 525 400
+rule: 0 0 0 0 0 0 0 2 0
+END_SQUAD

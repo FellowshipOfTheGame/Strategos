@@ -1,0 +1,11 @@
+name: r42
+dictionary: Scrolls
+
+squadKind: 0
+position: 20 384
+rule: 1 63 1 1 0 0 0 0
+rule: 0 0 0 0 0 0 0 1
+rule: 1 16 0 0 1 44 2 0
+rule: 1 73 0 1 0 0 0 1
+END_SQUAD
+

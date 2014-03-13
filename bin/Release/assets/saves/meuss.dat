@@ -1,0 +1,12 @@
+name: meuss
+dictionary: Elders
+
+squadKind: 0
+position: 100 300
+rule: 0 0 0 0 0 0 0 0
+END_SQUAD
+
+squadKind: 1
+position: 100 300
+rule: 0 0 0 0 0 0 0 3 0
+END_SQUAD

@@ -1,0 +1,60 @@
+gfxShips: assets/Army.gfx elders-ships
+DESCRP: @Coloque a descricao aqui. Deixe a descricao entre os simbolos "at".
+Pode ter quebra de linha.@
+
+SQUADS
+ship: MotherShip
+hp: 1000
+damage: 70
+atkCD: 25
+range: 20
+shield: 500
+dodge: 5
+speed: 0.2
+squad: 1
+gfxShoot: assets/Army.gfx human-shootSimple
+gfxExplode: assets/Army.gfx human-explode
+wavShoot: 
+END_SHIP
+
+ship: AncientFighter
+hp: 800
+damage: 10
+atkCD: 8
+range: 10
+shield: 50
+dodge: 40
+speed: 5
+squad: 7
+gfxShoot: assets/Army.gfx human-shootSimple
+gfxExplode: assets/Army.gfx human-explode
+wavShoot: 
+END_SHIP
+
+ship: AncientCruiser
+hp: 1500
+damage: 100
+atkCD: 30
+range: 25
+shield: 300
+dodge: 0
+speed: 0.8
+squad: 3
+gfxShoot: assets/Army.gfx human-shootSimple
+gfxExplode: assets/Army.gfx human-explode
+wavShoot: 
+END_SHIP
+
+ship: Ancient
+hp: 500
+damage: 20
+atkCD: 20
+range: 16
+shield: 1000
+dodge: 15
+speed: 2.5
+squad: 4
+gfxShoot: assets/Army.gfx human-shootSimple
+gfxExplode: assets/Army.gfx human-explode
+wavShoot: 
+END_SHIP
