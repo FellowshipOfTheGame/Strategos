@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Strategos" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Option virtualFolders="Simulacao\;Telas\;Genetico\;Gui\;" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Release/StrategosDebug" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin/Release" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add directory="include" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/Strategos" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin/Release/" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add directory="include" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-std=c++11" />
+			<Add option="-Wall" />
+			<Add option="-D_WINDOWS_" />
+			<Add option="-DWIN32" />
+			<Add directory="source/SDL2_gfx" />
+			<Add directory="source/include" />
+			<Add directory="source" />
+			<Add directory="$(SDL_HOME)/include/SDL2" />
+			<Add directory="$(SDL_IMAGE_HOME)/include/SDL2" />
+			<Add directory="$(SDL_TTF_HOME)/include/SDL2" />
+		</Compiler>
+		<Linker>
+			<Add library="mingw32" />
+			<Add library="SDL2main" />
+			<Add library="SDL2" />
+			<Add library="SDL2_TTF" />
+			<Add library="SDL2_IMAGE" />
+		</Linker>
+		<Unit filename="source/SDL2_gfx/SDL2_framerate.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="source/SDL2_gfx/SDL2_framerate.h" />
+		<Unit filename="source/SDL2_gfx/SDL2_gfxPrimitives.cpp">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="source/SDL2_gfx/SDL2_gfxPrimitives.h" />
+		<Unit filename="source/SDL2_gfx/SDL2_gfxPrimitives_font.h" />
+		<Unit filename="source/SDL2_gfx/SDL2_imageFilter.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="source/SDL2_gfx/SDL2_imageFilter.h" />
+		<Unit filename="source/SDL2_gfx/SDL2_rotozoom.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="source/SDL2_gfx/SDL2_rotozoom.h" />
+		<Unit filename="source/include/Action.h">
+			<Option virtualFolder="Simulacao/" />
+		</Unit>
+		<Unit filename="source/include/Algorithm.h">
+			<Option virtualFolder="Genetico/" />
+		</Unit>
+		<Unit filename="source/include/Army.h">
+			<Option virtualFolder="Simulacao/" />
+		</Unit>
+		<Unit filename="source/include/Camera.h" />
+		<Unit filename="source/include/CombatLog.h" />
+		<Unit filename="source/include/Coordinates.h" />
+		<Unit filename="source/include/Create_Army.h">
+			<Option virtualFolder="Telas/" />
+		</Unit>
+		<Unit filename="source/include/Dictionary.h" />
+		<Unit filename="source/include/Font.h" />
+		<Unit filename="source/include/Game.h" />
+		<Unit filename="source/include/GeneticAlgorithm.h">
+			<Option virtualFolder="Genetico/" />
+		</Unit>
+		<Unit filename="source/include/Global.h" />
+		<Unit filename="source/include/GuiElements.h">
+			<Option virtualFolder="Gui/" />
+		</Unit>
+		<Unit filename="source/include/GuiTactics.h">
+			<Option virtualFolder="Gui/" />
+		</Unit>
+		<Unit filename="source/include/Image.h" />
+		<Unit filename="source/include/Menu.h">
+			<Option virtualFolder="Telas/" />
+		</Unit>
+		<Unit filename="source/include/Options.h">
+			<Option virtualFolder="Telas/" />
+		</Unit>
+		<Unit filename="source/include/Play.h">
+			<Option virtualFolder="Telas/" />
+		</Unit>
+		<Unit filename="source/include/Random.h" />
+		<Unit filename="source/include/Resource.h" />
+		<Unit filename="source/include/Result.h" />
+		<Unit filename="source/include/Ship.h" />
+		<Unit filename="source/include/Simulation.h">
+			<Option virtualFolder="Telas/" />
+		</Unit>
+		<Unit filename="source/include/StateMachine.h">
+			<Option virtualFolder="Telas/" />
+		</Unit>
+		<Unit filename="source/include/Tactic.h">
+			<Option virtualFolder="Simulacao/" />
+		</Unit>
+		<Unit filename="source/include/Trigger.h">
+			<Option virtualFolder="Simulacao/" />
+		</Unit>
+		<Unit filename="source/include/Unit.h" />
+		<Unit filename="source/include/Unit_Setup.h">
+			<Option virtualFolder="Telas/" />
+		</Unit>
+		<Unit filename="source/include/View.h" />
+		<Unit filename="source/include/World.h">
+			<Option virtualFolder="Simulacao/" />
+		</Unit>
+		<Unit filename="source/include/XMLParser.h" />
+		<Unit filename="source/src/Action.cpp">
+			<Option virtualFolder="Simulacao/" />
+		</Unit>
+		<Unit filename="source/src/Algorithm.cpp">
+			<Option virtualFolder="Genetico/" />
+		</Unit>
+		<Unit filename="source/src/Army.cpp">
+			<Option virtualFolder="Simulacao/" />
+		</Unit>
+		<Unit filename="source/src/CombatLog.cpp" />
+		<Unit filename="source/src/Create_Army.cpp">
+			<Option virtualFolder="Telas/" />
+		</Unit>
+		<Unit filename="source/src/Dictionary.cpp" />
+		<Unit filename="source/src/Font.cpp" />
+		<Unit filename="source/src/Game.cpp" />
+		<Unit filename="source/src/GeneticAlgorithm.cpp">
+			<Option virtualFolder="Genetico/" />
+		</Unit>
+		<Unit filename="source/src/GuiElements.cpp">
+			<Option virtualFolder="Gui/" />
+		</Unit>
+		<Unit filename="source/src/GuiTactics.cpp">
+			<Option virtualFolder="Gui/" />
+		</Unit>
+		<Unit filename="source/src/Image.cpp" />
+		<Unit filename="source/src/Menu.cpp">
+			<Option virtualFolder="Telas/" />
+		</Unit>
+		<Unit filename="source/src/Options.cpp" />
+		<Unit filename="source/src/Play.cpp">
+			<Option virtualFolder="Telas/" />
+		</Unit>
+		<Unit filename="source/src/Random.cpp" />
+		<Unit filename="source/src/Resource.cpp" />
+		<Unit filename="source/src/Result.cpp" />
+		<Unit filename="source/src/Ship.cpp" />
+		<Unit filename="source/src/Simulation.cpp">
+			<Option virtualFolder="Telas/" />
+		</Unit>
+		<Unit filename="source/src/Tactic.cpp">
+			<Option virtualFolder="Simulacao/" />
+		</Unit>
+		<Unit filename="source/src/Trigger.cpp">
+			<Option virtualFolder="Simulacao/" />
+		</Unit>
+		<Unit filename="source/src/Unit.cpp" />
+		<Unit filename="source/src/Unit_Setup.cpp">
+			<Option virtualFolder="Telas/" />
+		</Unit>
+		<Unit filename="source/src/View.cpp" />
+		<Unit filename="source/src/World.cpp">
+			<Option virtualFolder="Simulacao/" />
+		</Unit>
+		<Unit filename="source/src/XMLParser.cpp" />
+		<Unit filename="source/src/main.cpp" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
