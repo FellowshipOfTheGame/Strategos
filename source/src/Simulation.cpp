@@ -65,8 +65,6 @@ Simulation::Simulation(STATE previous) : StateMachine(previous, GAMEPLAY, GAMEPL
     }
 
     selectedUnit = NULL;
-    Game::getGlobalGame()->setCombatLog(0);
-    Game::getGlobalGame()->setCombatLog(1);
     printf("Simulation Ready!\n");
 }
 

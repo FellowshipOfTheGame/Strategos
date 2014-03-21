@@ -63,6 +63,8 @@ void GeneticAlgorithm::initialize()
 
 void GeneticAlgorithm::randomArmies(int size)
 {
+    if (size <= 0) return;
+
     std::ostringstream stream;
     std::string armyName;
 
@@ -207,19 +209,16 @@ Army* GeneticAlgorithm::generateRandomArmy()
 
 void GeneticAlgorithm::run()
 {
-    if(individuos.size() == 0)
-        randomArmies(INDIVIDUOS_GERACAO);
-
     if (armyType != 0) return;
 
     printf("Iterate 2 times\n");
-    for (unsigned int i = 0; i < 50; i++)
+    vector<Army*> selected, rejected;
+    for (unsigned int i = 0; i < 2; i++)
     {
-        vector<Army*> selected, rejected;
-
-        // Completar exercito
+        // Completar exercito para INDIVIDUOS_GERACAO
+        randomArmies( INDIVIDUOS_GERACAO - individuos.size() );
         // Adicionar 2 aleatorios sempre
-        randomArmies( INDIVIDUOS_GERACAO - individuos.size() + 2 );
+        randomArmies( 2 );
 
         // Apply the selection - currently Tournament
         selectFromPop(20, selected, rejected);
@@ -230,7 +229,7 @@ void GeneticAlgorithm::run()
         rejected.clear();
 
         // Apply CrossOver
-        crossOver(selected);
+        crossOver(selected); // Memory Leak
 
         // Apply Mutation
         mutate(selected);
@@ -238,9 +237,9 @@ void GeneticAlgorithm::run()
         individuos.clear();
         printf("Iteration: %d\n", selected.size());
         for (unsigned int j = 0; j < selected.size(); ++j){
-            selected[j]->restore();
             individuos.push_back(selected[j]);
         }
+        selected.clear();
     }
 
     char buffer[8];
@@ -352,9 +351,12 @@ void GeneticAlgorithm::crossOver(vector<Army*>& selected)
 
     printf("CrossOvers: %d\n", indCross.size());
 
+    // Deletar alguns individuos extras
     while (indCross.size() + selected.size() > INDIVIDUOS_GERACAO)
     {
-        indCross.erase( indCross.begin()+ (rand()%indCross.size()) );
+        auto it = indCross.begin()+ (rand()%indCross.size());
+        delete *it;
+        indCross.erase( it );
     }
 
     printf("CrossOvers: %d\n", indCross.size());
@@ -491,7 +493,8 @@ void GeneticAlgorithm::GoldCap(Army *army)
 	{
 		n = 1+(rand()%(army->nUnits()-2));
 		gold -= army->getUnitAtIndex(n)->getType()*10;
-		army->removeUnit(n);
+		Unit* removed = army->removeUnit(n);
+		delete removed; // TODO: Talvez usar isso em outra army?
 	}
     printf("%d\n", army->nUnits());
 }
@@ -509,7 +512,9 @@ void GeneticAlgorithm::rectifyUnitID(Army *ind)
         {
             Tactic *tactic = units->at(i)->getTacticAt(j);
 
-            if(tactic->getType() == 2 || tactic->getType() == 3)
+            if(tactic->getType() == TACTIC_ATTACK_COLLAB
+            || tactic->getType() == TACTIC_DEFENSE_COLAB
+            || tactic->getType() == TACTIC_RETREAT) // TODO: Retreat tem ally???
             {
                 //If allyUnit is out of range, AttackCollab or DefenseCollab with the Mothership
                 if(tactic->getInfo().allyUnitID >= units->size())

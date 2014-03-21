@@ -94,6 +94,7 @@ void Unit::removeTactic(int n)
 	{
 		if (i == n)
 		{
+//		    delete *(tactics.begin() + i) // Checar isso
 			iter = tactics.erase(tactics.begin() + i);
 
 			break;

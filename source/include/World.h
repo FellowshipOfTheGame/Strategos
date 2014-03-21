@@ -46,9 +46,7 @@ class World
 
         Army* getArmy(int id);
 
-        //Unit *getUnit(int armyID, int unitID);
-        //Ship *getShip(int armyID, int shipID);
-
+        // Desenha o combate no renderer principal
         void render();
 
 };

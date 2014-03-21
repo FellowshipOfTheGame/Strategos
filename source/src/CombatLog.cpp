@@ -9,6 +9,8 @@ CombatLogItem::~CombatLogItem()
 {
 }
 
+/// Combat Log
+
 CombatLog::CombatLog()
 {
 	this->damageDealt=0;
@@ -17,6 +19,8 @@ CombatLog::CombatLog()
 
 CombatLog::~CombatLog()
 {
+    for (int i = 0; i < combatline.size(); ++i)
+        delete combatline[i];
 	this->combatline.clear();
 }
 

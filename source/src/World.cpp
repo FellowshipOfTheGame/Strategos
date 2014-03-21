@@ -111,9 +111,9 @@ void World::makeLog(Army *army, CombatLog *log)
         Unit *unit = army->getUnitAtIndex(n);
         for (unsigned int j = 0; j < unit->getUnitInfo()->squadSize; j++){
             Ship *ship = unit->getShip(j);
-            if (ship->logUpdate()==1)
+            if (ship->logUpdate() == 1)
             {
-                log->addLog(n,j);
+                log->addLog(n, j);
             }
         }
 	}

@@ -32,8 +32,6 @@ Game::Game()
 	algorithm[0] = new GeneticAlgorithm(0);
 	algorithm[1] = new GeneticAlgorithm(1);
 	algorithm[2] = new GeneticAlgorithm(2);
-	combatLog.push_back(NULL);
-	combatLog.push_back(NULL);
 
 	initRand((unsigned int) time(NULL));
 	loadDictionaries();
@@ -193,7 +191,7 @@ void Game::setArmy2(Army *a)
 	}
 	if (armySim2 != NULL)
 		delete armySim2;
-	armySim2  = a;
+	armySim2 = a;
 }
 
 GeneticAlgorithm** Game::getGA()
@@ -208,8 +206,8 @@ CombatLog* Game::getCombatLog(int i)
 
 void Game::setCombatLog(int i)
 {
-	CombatLog *x =combatLog[i];
-	if (x!=NULL)
-		delete x;
+	if (combatLog[i] != NULL)
+		delete combatLog[i];
+
 	combatLog[i] = new CombatLog();
 }

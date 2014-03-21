@@ -171,12 +171,12 @@ int Ship::logUpdate()
 	{
 		deathTime++;
 	}
-	else
-		if (status == 0)
-		{
-			status = 1;
-		}
-		else
-			status = 2;
+	else if (status == 0)
+    {
+        status = 1;
+    }
+    else
+        status = 2;
+
 	return status;
 }

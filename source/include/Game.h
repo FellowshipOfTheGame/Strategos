@@ -36,7 +36,7 @@ class Game
 		int globalSeed;
         GeneticAlgorithm *algorithm[3];
 
-        vector<CombatLog *>   combatLog;
+        CombatLog* combatLog[2];
 
 		void loadDictionaries();
 

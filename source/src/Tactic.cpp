@@ -505,7 +505,7 @@ string Retreat::printTactic()
 	str = Tactic::printTactic();
 
 	str.append(" ");
-	str.append(std::to_string(info.allyUnitID));
+	str.append(std::to_string(info.allyUnitID)); // TODO: info.allyUnitID Not used for Retreat?
 
 	return str;
 }
