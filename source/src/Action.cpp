@@ -17,7 +17,7 @@
 #include "SDL2_gfxPrimitives.h"
 
 ExplosionAction::ExplosionAction(Coordinates pos, Image *explosionImg)
-    : timer(0), position(pos), img(explosionImg)
+    : img(explosionImg), timer(0), position(pos)
 {
 }
 
@@ -36,10 +36,10 @@ bool ExplosionAction::completed()
     return complete;
 }
 
-void ExplosionAction::render(float camOX, float camOY)
+void ExplosionAction::render()
 {
     // Explosion
-    img->DrawImage(position.x - camOX, position.y - camOY, timer, Game::getGlobalGame()->getRenderer());
+    img->DrawImage(position.x, position.y, timer, Game::getGlobalGame()->getRenderer());
 //    filledCircleRGBA( Game::getGlobalGame()->getRenderer(), position.x - camOX, position.y - camOY, 28/(timer/2+1), 128+rand()%128, rand()%128, rand()%128, 150+rand()%55 );
 //    filledCircleRGBA( Game::getGlobalGame()->getRenderer(), position.x - camOX, position.y - camOY, (14+rand()%16)/(timer/2+1), 128+rand()%128, rand()%128, rand()%128, 150+rand()%55 );
 }
@@ -68,15 +68,15 @@ bool DamageAction::completed()
     return complete;
 }
 
-void DamageAction::render(float camOX, float camOY)
+void DamageAction::render()
 {
     // Damage
     int rad = 26;
-    filledCircleRGBA( Game::getGlobalGame()->getRenderer(), position.x - camOX + (rand()%rad-rand()%rad), position.y - camOY + (rand()%rad-rand()%rad), (rand()%3+1)/(timer/5+1), 168+rand()%88, 50+rand()%128, 50+rand()%128, 190+rand()%55 );
-    filledCircleRGBA( Game::getGlobalGame()->getRenderer(), position.x - camOX + (rand()%rad-rand()%rad), position.y - camOY + (rand()%rad-rand()%rad), (rand()%3+1)/(timer/5+1), 168+rand()%88, 50+rand()%128, 50+rand()%128, 190+rand()%55 );
-    filledCircleRGBA( Game::getGlobalGame()->getRenderer(), position.x - camOX + (rand()%rad-rand()%rad), position.y - camOY + (rand()%rad-rand()%rad), (rand()%3+1)/(timer/5+1), 168+rand()%88, 50+rand()%128, 50+rand()%128, 190+rand()%55 );
-    filledCircleRGBA( Game::getGlobalGame()->getRenderer(), position.x - camOX + (rand()%rad-rand()%rad), position.y - camOY + (rand()%rad-rand()%rad), (rand()%3+1)/(timer/5+1), 168+rand()%88, 50+rand()%128, 50+rand()%128, 190+rand()%55 );
-    filledCircleRGBA( Game::getGlobalGame()->getRenderer(), position.x - camOX + (rand()%rad-rand()%rad), position.y - camOY + (rand()%rad-rand()%rad), (rand()%3+1)/(timer/5+1), 168+rand()%88, 50+rand()%128, 50+rand()%128, 190+rand()%55 );
+    filledCircleRGBA( Game::getGlobalGame()->getRenderer(), position.x + (rand()%rad-rand()%rad), position.y + (rand()%rad-rand()%rad), (rand()%3+1)/(timer/5+1), 168+rand()%88, 50+rand()%128, 50+rand()%128, 190+rand()%55 );
+    filledCircleRGBA( Game::getGlobalGame()->getRenderer(), position.x + (rand()%rad-rand()%rad), position.y + (rand()%rad-rand()%rad), (rand()%3+1)/(timer/5+1), 168+rand()%88, 50+rand()%128, 50+rand()%128, 190+rand()%55 );
+    filledCircleRGBA( Game::getGlobalGame()->getRenderer(), position.x + (rand()%rad-rand()%rad), position.y + (rand()%rad-rand()%rad), (rand()%3+1)/(timer/5+1), 168+rand()%88, 50+rand()%128, 50+rand()%128, 190+rand()%55 );
+    filledCircleRGBA( Game::getGlobalGame()->getRenderer(), position.x + (rand()%rad-rand()%rad), position.y + (rand()%rad-rand()%rad), (rand()%3+1)/(timer/5+1), 168+rand()%88, 50+rand()%128, 50+rand()%128, 190+rand()%55 );
+    filledCircleRGBA( Game::getGlobalGame()->getRenderer(), position.x + (rand()%rad-rand()%rad), position.y + (rand()%rad-rand()%rad), (rand()%3+1)/(timer/5+1), 168+rand()%88, 50+rand()%128, 50+rand()%128, 190+rand()%55 );
 }
 
 ///
@@ -136,18 +136,18 @@ bool MoveAction::completed()
     return 0;
 }
 
-void MoveAction::render(float cOX, float cOY)
+void MoveAction::render()
 {
 //    lineRGBA(Game::getGlobalGame()->getScreenSurface(), source->getX() - cOX, source->getY() - cOY,
 //                coord.x - cOX, coord.y - cOY, 255, 0, 0, 32);
 
     if (target)
-    lineRGBA(Game::getGlobalGame()->getRenderer(), source->getX() - cOX, source->getY() - cOY,
-                target->getX() - cOX, target->getY() - cOY, 255, 0, 0, 32);
+    lineRGBA(Game::getGlobalGame()->getRenderer(), source->getX(), source->getY() ,
+                target->getX(), target->getY(), 255, 0, 0, 32);
 }
 
 AttackAction::AttackAction(Ship *Source, Ship *Target, const DictKey *srcInfo, const DictKey *trgetInfo)
-    : source(Source), target(Target), sourceInfo(srcInfo), targetInfo(trgetInfo), coord(Source->getPosition()), shootEffect(sourceInfo->shootGFX)
+    : sourceInfo(srcInfo), targetInfo(trgetInfo), source(Source), target(Target), coord(Source->getPosition()), shootEffect(sourceInfo->shootGFX)
 {
     frame = -1;
 }
@@ -193,7 +193,7 @@ bool AttackAction::completed()
     return complete;
 }
 
-void AttackAction::render( float cOX, float cOY )
+void AttackAction::render( )
 {
     // LAZER
 //    float direction = atan2(coord.y - target->getPosition().y, coord.x - target->getPosition().x);
@@ -212,7 +212,7 @@ void AttackAction::render( float cOX, float cOY )
 //    circleRGBA( Game::getGlobalGame()->getScreenSurface(), coord.x - cOX, coord.y - cOY, 1, 128+rand()%128, rand()%128, rand()%128, 200+rand()%55 );
 
     // Normal
-    shootEffect->DrawImage((int) (coord.x - cOX), (int) (coord.y - cOY), frame, ( (direction+PI) * 180.0) /PI, Game::getGlobalGame()->getRenderer());
+    shootEffect->DrawImage((int) (coord.x ), (int) (coord.y ), frame, ( (direction+PI) * 180.0) /PI, Game::getGlobalGame()->getRenderer());
 }
 
 KamikazeAction::KamikazeAction(Ship *Source, Ship *Target, Image *imgShoot)
@@ -259,7 +259,7 @@ bool KamikazeAction::completed()
     return complete;
 }
 
-void KamikazeAction::render( float camOX, float camOY )
+void KamikazeAction::render( )
 {
    // explosionEffect->setFrame(0);
    // explosionEffect->DrawImage(coord.x - camOX, coord.y - camOY, Game::getGlobalGame()->getScreenSurface());

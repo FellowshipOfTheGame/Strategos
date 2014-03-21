@@ -1,11 +1,8 @@
 /*
  *  Strategos - World.h
  *
- *  Esta classe eh um dos 'Controller' (@see MVC) do nosso software.
- *	Ela vai comunicar os exercitos (@see Army.h) com a simulacao
- *	propriamente dita.
+ *  Classe usada para fazer a simulacao de combate entre duas 'Army'
  *
- *	Last update: 06/07/2012
  */
 
 
@@ -52,7 +49,7 @@ class World
         //Unit *getUnit(int armyID, int unitID);
         //Ship *getShip(int armyID, int shipID);
 
-        void render(Camera *camera);
+        void render();
 
 };
 

@@ -40,10 +40,8 @@ class GeneticAlgorithm : public Algorithm
         void run();
         double evaluateFitness(const Army *ind);
         void selection();
-        void mutation(Army *ind, int degree);
-        void mutateTactic(Tactic *tactic, int degree);
-        void normalizeFitness(vector<PairAF> *pairs);
         void randomArmies(int size);
+        void normalizeFitness(vector<PairAF> *pairs);
         void rectifyUnitID(Army *ind);
         void GoldCap(Army *army);
 
@@ -57,6 +55,11 @@ class GeneticAlgorithm : public Algorithm
         //talvez nao use isso
         Army* higherFitnessArmy();
         vector<Army*>& getSelectedArmies();
+
+        // Mutation
+        void mutation(Army *ind, int degree);
+        void mutateUnitType(Army* ind, int unitID, int newType);
+        void mutateTactic(Tactic *tactic, int degree);
 
     private:
         int armyType;

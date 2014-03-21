@@ -11,6 +11,11 @@
 #include "World.h"
 #include "Global.h"
 
+#define MUTATION_UNIT_TYPE      0
+#define MUTATION_UNIT_TACTIC    1
+#define MUTATION_UNIT_POSITION  2
+#define MUTATION_TOTAL          3
+
 
 GeneticAlgorithm::~GeneticAlgorithm()
 {
@@ -140,7 +145,7 @@ Army* GeneticAlgorithm::generateRandomArmy()
             for(int l = 0; l < 2; l++)
             {
                 Trigger *trig;
-                randValue = rand()%N_TRIGGERS;
+                randValue = rand()%TRIGGER_TOTAL;
 
                 switch (randValue)
                 {
@@ -160,7 +165,7 @@ Army* GeneticAlgorithm::generateRandomArmy()
 
             //Gera a tatica
             Tactic *tactic=0;
-            randValue = rand()%N_RULES;
+            randValue = rand()%TACTIC_NUMBER;
             switch (randValue)
             {
                 case 0:
@@ -208,17 +213,18 @@ void GeneticAlgorithm::run()
     if (armyType != 0) return;
 
     printf("Iterate 2 times\n");
-    for (unsigned int i = 0; i < 20; i++)
+    for (unsigned int i = 0; i < 50; i++)
     {
         vector<Army*> selected, rejected;
 
         // Completar exercito
-        randomArmies( INDIVIDUOS_GERACAO - individuos.size() );
+        // Adicionar 2 aleatorios sempre
+        randomArmies( INDIVIDUOS_GERACAO - individuos.size() + 2 );
 
         // Apply the selection - currently Tournament
         selectFromPop(20, selected, rejected);
 
-        for (int r = 0; r < rejected.size(); ++r){
+        for (unsigned int r = 0; r < rejected.size(); ++r){
             delete rejected[r];
         }
         rejected.clear();
@@ -227,7 +233,7 @@ void GeneticAlgorithm::run()
         crossOver(selected);
 
         // Apply Mutation
-//        mutate(selected);
+        mutate(selected);
 
         individuos.clear();
         printf("Iteration: %d\n", selected.size());
@@ -312,13 +318,13 @@ void GeneticAlgorithm::selectFromPop(int n, vector<Army*>& selected, vector<Army
         }
     }
 
-    printf("TOP 5:\n");
-    for (int i = 0; i < 5; ++i){
+    printf("TOP 10:\n");
+    for (int i = 0; i < 10; ++i){
         printf("Fit[%d] = %lf [%d]\n", i, order[i].fitness, order[i].ind->nUnits());
     }
 
     // Selecionar os N primeiros
-    for (int i = 0; i < order.size(); ++i){
+    for (unsigned int i = 0; i < order.size(); ++i){
         if (i < n)
             selected.push_back(order[i].ind);
         else
@@ -335,9 +341,9 @@ void GeneticAlgorithm::crossOver(vector<Army*>& selected)
 {
     vector<Army*> indCross;
 
-    for (int i = 0; i < selected.size(); ++i)
+    for (unsigned int i = 0; i < selected.size(); ++i)
     {
-        int other = rand()%selected.size();
+        unsigned int other = rand()%selected.size();
         while ( other == i )
             other = rand()%selected.size();
 
@@ -352,7 +358,7 @@ void GeneticAlgorithm::crossOver(vector<Army*>& selected)
     }
 
     printf("CrossOvers: %d\n", indCross.size());
-    for (int i = 0; i < indCross.size(); ++i)
+    for (unsigned int i = 0; i < indCross.size(); ++i)
     {
         selected.push_back(indCross[i]);
     }
@@ -360,10 +366,10 @@ void GeneticAlgorithm::crossOver(vector<Army*>& selected)
 
 void GeneticAlgorithm::mutate(vector<Army*>& selected)
 {
-    for (int i = 0; i < selected.size(); ++i)
+    for (unsigned int i = 0; i < selected.size(); ++i)
     {
         if ( (double)rand()/(double)RAND_MAX < 0.2)
-            mutation(selected[i], rand()%3 + 1);
+            mutation(selected[i], rand()%MUTATION_TOTAL);
     }
 }
 
@@ -381,7 +387,7 @@ void GeneticAlgorithm::crossOver(const Army *parent1, const Army *parent2, vecto
     str.append(parent1->getName().c_str());
     Army* child2 = new Army(str, parent2->getDictionary());
 
-    int i;
+    unsigned int i;
     for (i = 0; i < parent1->nUnits() && i < parent2->nUnits(); ++i )
     {
         if (rand()%2 == 0)
@@ -415,11 +421,11 @@ void GeneticAlgorithm::crossOver(const Army *parent1, const Army *parent2, vecto
         child2->addUnit( new Unit(unit) );
     }
 
-    printf("preParents: %d %d [%d] -> %d %d [%d]\n", parent1->nUnits(), parent2->nUnits(), parent1->nUnits()+parent2->nUnits(),
-                                                  child1->nUnits(), child2->nUnits(), child1->nUnits()+child2->nUnits());
+//    printf("preParents: %d %d [%d] -> %d %d [%d]\n", parent1->nUnits(), parent2->nUnits(), parent1->nUnits()+parent2->nUnits(),
+//                                                  child1->nUnits(), child2->nUnits(), child1->nUnits()+child2->nUnits());
     GoldCap(child1);
     GoldCap(child2);
-    printf("postParents: %d %d [%d]\n", child1->nUnits(), child2->nUnits(), child1->nUnits()+child2->nUnits());
+//    printf("postParents: %d %d [%d]\n", child1->nUnits(), child2->nUnits(), child1->nUnits()+child2->nUnits());
 //    SDL_Delay(3000);
 
     rectifyUnitID(child1);
@@ -428,73 +434,6 @@ void GeneticAlgorithm::crossOver(const Army *parent1, const Army *parent2, vecto
     //Save the new armies
     ind.push_back(child1);
     ind.push_back(child2);
-
-//    Army *child1, *child2 = nullptr;
-//    int point1 = rand()%parent1->nUnits()+1;
-//    int point2 = rand()%parent2->nUnits()+1;
-//    string str;
-//
-//    //Child #1
-//    str.assign(parent1->getName().c_str());
-//    str.append(parent2->getName().c_str());
-//    child1 = new Army(str, parent1->getDictionary());
-//
-//    printf("Creating childs\np1 %d, p2 %d\n", point1, point2);
-//    printf("Pa1 %d\n", parent1->nUnits());
-//    printf("Pa2 %d\n", parent2->nUnits());
-//
-//    for (int i = 0; i < point1; i++)
-//    {
-//        Unit *unit = new Unit( parent1->getUnitAtIndex(i) );
-//
-//        //child1->createUnit(unit1->getID(), unit1->getType(), unit1->getCoord());
-//        child1->addUnit( unit );
-//    }
-//
-//    for (unsigned int i = point2; i < parent2->nUnits(); i++)
-//    {
-//        Unit *unit = new Unit( parent2->getUnitAtIndex(i) );
-//
-//        //child1->createUnit(unit2->getID(), unit2->getType(), unit2->getCoord());
-//        child1->addUnit( unit );
-//    }
-//
-//    //Child #2
-//    str.assign(parent2->getName().c_str());
-//    str.append(parent1->getName().c_str());
-//    child2 = new Army(str, parent2->getDictionary());
-//
-//    for(int i = 0; i < point2; i++)
-//    {
-//        Unit *unit = parent2->getUnitAtIndex(i);
-//
-//        //child2->createUnit(unit2->getID(), unit2->getType(), unit2->getCoord());
-//        child2->addUnit( new Unit(unit) );
-//    }
-//
-//    for (unsigned int i = point1; i < parent1->nUnits(); i++)
-//    {
-//        Unit *unit = parent1->getUnitAtIndex(i);
-//
-//        //child2->createUnit(unit1->getID(), unit1->getType(), unit1->getCoord());
-//        child2->addUnit( new Unit(unit) );
-//    }
-//
-//    printf("preParents: %d %d [%d] -> %d %d [%d]\n", parent1->nUnits(), parent2->nUnits(), parent1->nUnits()+parent2->nUnits(),
-//                                                  child1->nUnits(), child2->nUnits(), child1->nUnits()+child2->nUnits());
-//
-//    GoldCap(child1);
-//    GoldCap(child2);
-//    printf("postParents: %d %d [%d] -> %d %d [%d]\n", parent1->nUnits(), parent2->nUnits(), parent1->nUnits()+parent2->nUnits(),
-//                                                  child1->nUnits(), child2->nUnits(), child1->nUnits()+child2->nUnits());
-//    SDL_Delay(3000);
-//
-//    rectifyUnitID(child1);
-//    rectifyUnitID(child2);
-//
-//    //Save the new armies
-//    ind.push_back(child1);
-//    ind.push_back(child2);
 }
 
 double GeneticAlgorithm::evaluateFitness(const Army *ind)
@@ -597,14 +536,6 @@ Army* GeneticAlgorithm::higherFitnessArmy()
 }
 
 
-//Possible mutations
-// Unit -> type
-// Tactic:
-//  -> Type
-//  -> Trigger type
-//  -> Trigger value
-//  -> Trigger relational operator
-//  -> Triggers logic operator
 void GeneticAlgorithm::mutation(Army *ind, int degree)
 {
     int unitID = rand()%ind->nUnits();
@@ -614,43 +545,21 @@ void GeneticAlgorithm::mutation(Army *ind, int degree)
     Tactic *tactic = unit->getTacticAt(tacticID);
 
     int newType = unit->getType();
-    int tacticDegree;
 
     switch(degree)
     {
-        case 1: //Mutate a unit type
-            if(unit->getType() == 0)    //Do not let mothership's type mutate
-                break;
+        case MUTATION_UNIT_TYPE:{ //Mutate a unit type
+            mutateUnitType(ind, unitID, newType);
+        }
+        break;
 
-            while(newType == unit->getType())
-                newType = rand()%(N_UNIT_TYPE-1) + 1;   //Mothership is always 0
+        case MUTATION_UNIT_TACTIC: //Mutate a unit tactic
+            mutateTactic(tactic, rand()%4);
+        break;
 
-            unit->setType(newType);
-            break;
-
-        case 2: //Mutate a unit tactic
-        	do
-        	{
-            tacticDegree = rand()%5;//+1;
-        	}while ((unit->getType()==0) && (tacticDegree>1));
-            mutateTactic(tactic, tacticDegree);
-            break;
-
-        case 3: //Mutate a unit type & tactic
-            if(unit->getType() == 0)    //Do not let mothership's type mutate
-                break;
-
-            while (newType == unit->getType())
-                newType = rand()%(N_UNIT_TYPE-1) + 1;   //Mothership is always 0
-
-            unit->setType(newType);
-
-            do
-			{
-			tacticDegree = rand()%5;//+1;
-			}while ((unit->getType()==0) && (tacticDegree>1));
-            mutateTactic(tactic, tacticDegree);
-            break;
+        case MUTATION_UNIT_POSITION: //Mutate a unit position
+            unit->setBluePrintCoord( Coordinates(rand()%COMBAT_AREA_WIDTH + 150, rand()%COMBAT_AREA_HEIGHT + 50) );
+        break;
 
         default:
             break;
@@ -658,6 +567,30 @@ void GeneticAlgorithm::mutation(Army *ind, int degree)
     GoldCap(ind);
 }
 
+void GeneticAlgorithm::mutateUnitType(Army* ind, int unitID, int newType)
+{
+    Unit *removed = ind->getUnitAtIndex(unitID);
+
+    if(removed->getType() == 0)    //Do not let mothership's type mutate
+        return;
+
+    while(newType == removed->getType())
+        newType = rand()%(N_UNIT_TYPE-1) + 1;   //Mothership is always 0
+
+    ind->removeUnit(unitID);
+    Unit *newUnit = ind->createUnit(removed->getID(), newType, removed->getBluePrintCoord());
+    for (unsigned int i = 0; i < removed->getTacticSize(); ++i)
+        newUnit->addTactic( Tactic::copy(removed->getTacticAt(i)) );
+    delete removed;
+}
+
+//Possible mutations
+// Unit -> type
+// Tactic:
+//  -> Trigger type
+//  -> Trigger value
+//  -> Trigger relational operator
+//  -> Triggers logic operator
 void GeneticAlgorithm::mutateTactic(Tactic *tactic, int degree)
 {
     int newValue;
@@ -665,44 +598,39 @@ void GeneticAlgorithm::mutateTactic(Tactic *tactic, int degree)
 
     switch (degree)
     {
-        case 1: //  -> Type
-            newValue = rand()%N_RULES;
-            tactic->setType(newValue);
-            break;
-
-        case 2: //  -> Trigger type
-            newValue = rand()%N_TRIGGERS;
+        case 0: //  -> Trigger type
+            newValue = rand()%TRIGGER_TOTAL;
 
             if(whichTrigger == 0)
                 tactic->getTacticTrigger().getTriggerA()->setType(newValue);
             else
                 tactic->getTacticTrigger().getTriggerB()->setType(newValue);
-            break;
+        break;
 
-        case 3: //  -> Trigger value
+        case 1: //  -> Trigger value
             newValue = rand()%100+1;
 
             if(whichTrigger == 0)
                 tactic->getTacticTrigger().getTriggerA()->setValue(newValue);
             else
                 tactic->getTacticTrigger().getTriggerB()->setValue(newValue);
-            break;
+        break;
 
-        case 4: //  -> Trigger relational operator
+        case 2: //  -> Trigger relational operator
             newValue = rand()%6;
             if(whichTrigger == 0)
                 tactic->getTacticTrigger().getTriggerA()->setRelOperator(newValue);
             else
                 tactic->getTacticTrigger().getTriggerB()->setRelOperator(newValue);
-            break;
+        break;
 
-        case 5: //  -> Triggers logic operator
+        case 3: //  -> Triggers logic operator
             newValue = rand()%2;
             tactic->getTacticTrigger().setLogicOperator(newValue);
-            break;
+        break;
 
         default:
-            break;
+        break;
     }
 }
 

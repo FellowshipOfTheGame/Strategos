@@ -167,7 +167,7 @@ bool View::update()
 
     SDL_RenderPresent(renderer);
 
-    SDL_Delay(17);
+    SDL_Delay(16);
 
 	/*Segura alguns quadros ate que um certo intervalo de tempo tenha se completado*/
 	//if(fps->GetTicks() < 1000/FRAMES_PER_SECOND)

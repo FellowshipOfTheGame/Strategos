@@ -19,10 +19,10 @@
 #include "Tactic.h"
 #include "Dictionary.h"
 
-#define N_RULES                 6
-#define N_TRIGGERS              2
-#define N_UNIT_TYPE             4
+#define COMBAT_AREA_WIDTH 800
+#define COMBAT_AREA_HEIGHT 700
 
+#define N_UNIT_TYPE             4
 
 using namespace std;
 
@@ -55,11 +55,13 @@ public:
     // Adiciona um Unit para o Army
     void addUnit(Unit *unit);
 	Unit* createUnit(int id, int unitType, Coordinates position);
-	void removeUnit(int i);
+	Unit* removeUnit(int i);
 
 	const Dictionary *getDictionary() const;
 	void setDictionary(Dictionary* armyDictionary);
 	void setArmyName(std::string armyName);
+
+	void setReflectBasePositions(int startWidth);
 
 	// Gets
 	Unit* getMotherUnit();
@@ -77,7 +79,7 @@ public:
 
 	void printUnits() const;
 
-    void render(float camOX, float camOY);
+    void render();
 
     static Army* loadArmy(std::string armyname);
     static void saveArmy(const Army *army, const string pth="");

@@ -29,9 +29,7 @@ class Unit
 {
     private:
         const DictKey *mySquadInfo;
-        unsigned long id;
-        int type;
-        float radius;
+        unsigned long id; // TODO: O que exatamente eh id? Posicao na Army? Apenas um numero id usado para taticas?
         int target;
 
         int maxCapacity;
@@ -51,7 +49,7 @@ class Unit
 
     public:
         Unit(const Unit* copy);
-        Unit(unsigned long id, int unitType, const DictKey *info, Coordinates position);
+        Unit(unsigned long id, const DictKey *info, Coordinates position);
         ~Unit();
 
         /// Atualiza ships
@@ -76,7 +74,6 @@ class Unit
         unsigned int getTacticSize();
         unsigned long getID();
         void setID(int id);
-        void setType(int newType);
         int getType();
         Ship* getShip(unsigned long gid);
         unsigned long nShips();
@@ -112,13 +109,11 @@ class Unit
         ///
         const Coordinates& getAveragePos();
 
-        float getRadius();
-
-        /// Retorna a coordernada X base INICIAL
+        /// Retorna a coordernada X base INICIAL da batalha
         /// \return Retorna a posicao X base inicial
         float getBaseX();
 
-        /// Retorna a coordernada Y base INICIAL
+        /// Retorna a coordernada Y base INICIAL da batalha
         /// \return Retorna a posicao Y base inicial
         float getBaseY();
 
@@ -130,6 +125,8 @@ class Unit
 
         float getBluePrintX();
         float getBluePrintY();
+        const Coordinates& getBluePrintCoord();
+        void setBluePrintCoord(const Coordinates& coord);
 
         /// Retorna as coordenadas base INICIAIS
         /// \return Retorna as coordenadas base iniciais da unidade
@@ -154,11 +151,7 @@ class Unit
         void generateActions(const vector<Unit*>& enemyUnits, const vector<Unit*>& alliedUnits);
 
         /// Desenha a unidade considerando a posicao da camera
-        ///
-        /// \param camOX Posicao X da camera
-        /// \param camOY Posicao Y da camera
-        ///
-        void render(float camOX, float camOY);
+        void render();
 //        int amountAlive();
 };
 

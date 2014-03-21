@@ -9,12 +9,10 @@
 #include "Simulation.h"
 #include "Global.h"
 
-#ifdef WIN32
-#include "SDL2_gfx\SDL2_gfxPrimitives.h"
-#endif
-
-#ifdef __APPLE__
-#include "SDL2_gfx/SDL2_gfxPrimitives.h"
+#if defined(WIN32)
+    #include "SDL2_gfx\SDL2_gfxPrimitives.h"
+#elif defined(__APPLE__)
+    #include "SDL2_gfx/SDL2_gfxPrimitives.h"
 #endif // _MAC_OS_
 
 Simulation::Simulation(STATE previous) : StateMachine(previous, GAMEPLAY, GAMEPLAY)
@@ -56,6 +54,15 @@ Simulation::Simulation(STATE previous) : StateMachine(previous, GAMEPLAY, GAMEPL
 
     camera = new Camera(0, 0, screenWidth, screenHeight, screenWidth*2, screenHeight*1.5f);
     bgOffsetX = bgOffsetY = 0;
+
+    renderCombat = SDL_CreateTexture(Game::getGlobalGame()->getRenderer(), SDL_PIXELFORMAT_RGBA8888,
+                        SDL_TEXTUREACCESS_TARGET, 2048, 2048);
+
+    if(renderCombat == NULL)
+    {
+        printf("SDL_CreateTexture failed: %s\n", SDL_GetError());
+        exit(-9);
+    }
 
     selectedUnit = NULL;
     Game::getGlobalGame()->setCombatLog(0);
@@ -100,13 +107,13 @@ void Simulation::onKeyHeldEvent(const Uint8 *keystate)
 {
     if(keystate[SDL_SCANCODE_LEFT])
     {
-        camera->moveH(-10);
+        camera->moveH(-15);
         bgOffsetX += 1.25f;
     }
 
     if(keystate[SDL_SCANCODE_RIGHT])
     {
-        camera->moveH(10);
+        camera->moveH(15);
         bgOffsetX -= 1.0f;
     }
 
@@ -227,7 +234,26 @@ void Simulation::Render()
 //    background->DrawImage(bgOffsetX, bgOffsetY + Game::getGlobalGame()->getHeight(), renderer);
 
     //Just TESTING
-    simulationWorld->render(camera);
+    SDL_SetRenderTarget(renderer, renderCombat);
+        // Limpar textura
+        SDL_SetTextureBlendMode(renderCombat, SDL_BLENDMODE_BLEND);
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+        SDL_RenderClear(renderer);
+
+        SDL_SetRenderDrawBlendMode(renderer, SDL_BlendMode::SDL_BLENDMODE_NONE);
+        SDL_SetTextureBlendMode(renderCombat, SDL_BLENDMODE_BLEND);
+
+        simulationWorld->render();
+    SDL_SetRenderTarget(renderer, 0);
+
+    // Renderizar imagem de combate na tela
+    SDL_Rect rect;
+    rect.x = -camera->getX();  rect.w = 2048;
+    rect.y = -camera->getY();  rect.h = 2048;
+
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BlendMode::SDL_BLENDMODE_NONE);
+    SDL_RenderCopy( renderer, renderCombat, 0, &rect);
 
     if(selectedUnit)
     {

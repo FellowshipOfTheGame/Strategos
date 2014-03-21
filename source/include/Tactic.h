@@ -27,6 +27,8 @@
 #define TACTIC_DEFENSE_COLAB        3
 #define TACTIC_KAMIKASE             4
 #define TACTIC_RETREAT              5
+#define TACTIC_NUMBER               6
+// Tatica especial
 #define TACTIC_MOVE_RANDOM          100
 
 class Unit;
@@ -51,12 +53,9 @@ class Tactic
     public:
         static Tactic* copy(const Tactic *source);
 
-        Tactic(TacticInfo info, const TacticTrigger& trigger, int type)
-            : tacticTrigger(trigger), info(info), type(type)
+        Tactic(const TacticInfo Info, const TacticTrigger& Trigger, int Type)
+            : tacticTrigger(Trigger), info(Info), type(Type)
         {}
-
-//        Tactic() : info(0), type(-1)
-//        {}
 
         virtual ~Tactic() {
         }
@@ -64,11 +63,6 @@ class Tactic
         bool testTrigger(Unit *unit)
         {
             return tacticTrigger.testTrigger(unit);
-        }
-
-        void setType(int newType)
-        {
-            type = newType;
         }
 
         int getType()
@@ -131,7 +125,7 @@ class Tactic
 
 // Ataca o inimigo mais proximo dentro da RANGE da nave
 // Nenhum parametro adicional
-// TODOS os esquadroes possuem esta tatica como ultima alternativa
+// Todos os esquadroes possuem esta tatica como ultima alternativa
 class AttackNearestEnemy : public Tactic
 {
     private:
@@ -185,6 +179,7 @@ class DefenseCollab : public Tactic
 
     public:
         DefenseCollab(TacticInfo info, const TacticTrigger& trigger);
+        ~DefenseCollab(){};
         string printTactic();
 
         void debugPrint(){printf("DefenseCollab");}
@@ -223,7 +218,7 @@ class Retreat : public Tactic
 };
 
 // Mover aleatoriamente
-// TODOS os esquadroes possuem esta tatica como ultima alternativa
+// Todos os esquadroes possuem esta tatica como ultima alternativa
 class MoveRandomly : public Tactic
 {
     private:

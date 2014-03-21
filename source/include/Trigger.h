@@ -3,6 +3,7 @@
 
 #define TRIGGER_ALWAYS  0
 #define TRIGGER_LIFE    1
+#define TRIGGER_TOTAL   2
 
 #define TRIGGER_OPERATION_EQUAL         0
 #define TRIGGER_OPERATION_LOWER_EQUAL   1
@@ -10,6 +11,7 @@
 
 #define TRIGGER_LOGIC_AND 0
 #define TRIGGER_LOGIC_OR 1
+
 
 class Unit;
 

@@ -112,6 +112,7 @@ Army* Army::loadArmy(string armyname)
 				file >> trigger;
 				file >> value;
                 file >> operation;
+                printf("%d%d.%d", trigger, value, operation);
 				switch (trigger)
 				{
 					case TRIGGER_ALWAYS:
@@ -132,11 +133,13 @@ Army* Army::loadArmy(string armyname)
 
 				// Ler Operador Logico
 				file >> logic;
+				printf("%d", logic);
 
 				// LER SEGUNDO TRIGGER
 				file >> trigger;
 				file >> value;
                 file >> operation;
+                printf("%d%d.%d", trigger, value, operation);
 				switch (trigger)
 				{
 					case TRIGGER_ALWAYS:
@@ -200,6 +203,7 @@ Army* Army::loadArmy(string armyname)
 				}
 
 				unit->addTactic(tatica);
+				printf(" - ");
 			}
 		}
 	}
@@ -252,6 +256,14 @@ void Army::setArmyName(std::string armyName)
 	this->name = armyName;
 }
 
+void Army::setReflectBasePositions(int startWidth)
+{
+    Coordinates reflect(startWidth*2, 0);
+    for (unsigned int i = 0; i < units.size(); i++){
+	    units[i]->setBasePos( reflect - Coordinates(units[i]->getBaseX(), 0) );
+	}
+}
+
 void Army::addUnit(Unit *unit)
 {
     totalShips += unit->nShips();
@@ -272,7 +284,7 @@ void Army::addUnit(Unit *unit)
 Unit *Army::createUnit(int id, int unitType, Coordinates position)
 {
 	const DictKey *unitInfo = dictionary->getInfoFor(unitType);
-	Unit *unit = new Unit(id, unitType, unitInfo, position);
+	Unit *unit = new Unit(id, unitInfo, position);
 
 	totalShips += unitInfo->squadSize;
 	units.push_back(unit);
@@ -290,14 +302,17 @@ Unit *Army::createUnit(int id, int unitType, Coordinates position)
 	return unit;
 }
 
-void Army::removeUnit(int i)
+Unit* Army::removeUnit(int i)
 {
-	if (i>units.size())
-		return;
+	if (i > units.size())
+		return nullptr;
 
-	totalShips -= (*(units.begin() + i))->nShips();
+    auto it = (units.begin() + i);
+    Unit *removed = *it;
 
-	units.erase(units.begin() + i);
+	totalShips -= (*it)->nShips();
+
+	units.erase(it);
 	vector<Unit*>::iterator iter = units.begin();
 	i = 0;
 	while (iter != units.end())
@@ -306,6 +321,8 @@ void Army::removeUnit(int i)
 		iter++;
 		i++;
 	}
+
+	return removed;
 }
 
 // Sets
@@ -423,11 +440,11 @@ void Army::printUnits() const
 	printf("-------------------------|-------------------------\n");
 }
 
-void Army::render(float camOX, float camOY)
+void Army::render()
 {
 	for (unsigned int i = 0; i < nUnits(); i++)
 	{
-		units[i]->render(camOX, camOY);
+		units[i]->render();
 	}
 
 //    for (int j = 0; j < 4; ++j)

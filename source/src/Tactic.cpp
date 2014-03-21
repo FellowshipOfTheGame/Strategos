@@ -52,7 +52,7 @@ Tactic* Tactic::copy(const Tactic *source)
 }
 
 AttackNearestEnemy::AttackNearestEnemy(TacticInfo Info, const TacticTrigger& trigger) :
-		Tactic(Info, trigger, 0)
+		Tactic(Info, trigger, TACTIC_ATTACK_NEAREST_ENEMY)
 {
 
 }
@@ -118,7 +118,7 @@ int AttackNearestEnemy::validateTactic(list<Action*> &newActions, Unit* squad, c
 // ---
 
 AttackWeakestEnemy::AttackWeakestEnemy(TacticInfo Info, const TacticTrigger& trigger) :
-		Tactic(Info, trigger, 1)
+		Tactic(Info, trigger, TACTIC_ATTACK_WEAKEST_ENEMY)
 {
 
 }
@@ -217,17 +217,21 @@ int AttackWeakestEnemy::validateTactic(list<Action*> &newActions, Unit* squad, c
 
 // ---
 AttackCollab::AttackCollab(TacticInfo Info, const TacticTrigger& trigger) :
-		Tactic(Info, trigger, 2)
+		Tactic(Info, trigger, TACTIC_ATTACK_COLLAB)
 {
-
 }
 
 int AttackCollab::validateTactic(list<Action*> &newActions, Unit* squad, const vector<Unit*>& enemyUnits, const vector<Unit*>& alliedUnits)
 {
 	squad->setTarget(-1);
+
+    // TODO: Algumas unidades chegam aqui com aliados invalidos! arrumar!
+	if (info.allyUnitID >= alliedUnits.size())
+        return 0;
+
 	Unit *allyUnit = alliedUnits[info.allyUnitID];
 	if (allyUnit->getTarget() == -1)
-	{return 0;}
+        return 0;
 
     int target = allyUnit->getTarget();
 
@@ -302,7 +306,7 @@ string AttackCollab::printTactic()
 
 // ---
 DefenseCollab::DefenseCollab(TacticInfo Info, const TacticTrigger& trigger) :
-		Tactic(Info, trigger, 3)
+		Tactic(Info, trigger, TACTIC_DEFENSE_COLAB)
 {
 
 }
@@ -386,7 +390,7 @@ string DefenseCollab::printTactic()
 // ---
 
 Kamikase::Kamikase(TacticInfo Info, const TacticTrigger& trigger) :
-		Tactic(Info, trigger, 4)
+		Tactic(Info, trigger, TACTIC_KAMIKASE)
 {
 
 }
@@ -449,7 +453,7 @@ int Kamikase::validateTactic(list<Action*> &newActions, Unit* squad, const vecto
 // ---
 
 Retreat::Retreat(TacticInfo Info, const TacticTrigger& trigger) :
-		Tactic(Info, trigger, 5)
+		Tactic(Info, trigger, TACTIC_RETREAT)
 {
 }
 
@@ -509,7 +513,7 @@ string Retreat::printTactic()
 // ---
 
 MoveRandomly::MoveRandomly(TacticInfo Info, const TacticTrigger& trigger) :
-		Tactic(Info, trigger, 6)
+		Tactic(Info, trigger, TACTIC_MOVE_RANDOM)
 {
 	cooldown = 0;
 }
@@ -522,7 +526,7 @@ int MoveRandomly::validateTactic(list<Action*> &newActions, Unit* squad, const v
 		return 0;
 	}
 
-// TODO: Tamanho da tela de combate??????
+    // TODO: Tamanho da tela de combate? Considerar lado da tela
 	Coordinates coordBase = squad->getAveragePos();
 	coordBase.x += rand() % 300 - rand() % 300;
 	coordBase.y += rand() % 300 - rand() % 300;

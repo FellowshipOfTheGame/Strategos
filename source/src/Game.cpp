@@ -38,7 +38,9 @@ Game::Game()
 	initRand((unsigned int) time(NULL));
 	loadDictionaries();
 
-    for (int i = 0; i < 3; ++i){
+    // TODO: Alterar para 3 na versao final
+    // 1 apenas para agilizar debugs
+    for (int i = 0; i < 1; ++i){
         algorithm[i]->initialize();
         algorithm[i]->run();
     }

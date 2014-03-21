@@ -1,3 +1,11 @@
 
 *.exe
 *.dll
+*.dat
+*.depend
+*.layout
+*.html
+*.o
+*.dat
+*.db
+Strategos.cscope_file_list

@@ -334,7 +334,9 @@ void Unit_Setup::Render()
 		        squad_focus->getAvgY() + blueprint->getY()
 		                - Game::getGlobalGame()->getResourceMNGR()->GetImage("squadfocus-bg")->getFrameHeight() / 2, renderer);
 	}
-	Game::getGlobalGame()->getEditingArmy()->render(-blueprint->getX(), -blueprint->getY());
+	// TODO: Fix coordinates to draw on screen
+	Game::getGlobalGame()->getEditingArmy()->render();
+//	Game::getGlobalGame()->getEditingArmy()->render(-blueprint->getX(), -blueprint->getY());
 	if (put_squad)
 	{
 		SDL_GetMouseState(&mouseX, &mouseY);

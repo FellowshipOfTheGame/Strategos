@@ -26,7 +26,7 @@ class Action
 
         virtual Action* act() = 0;
         virtual bool completed(){return 1;}
-        virtual void render( float camOX, float camOY){}
+        virtual void render(){}
 };
 
 class ExplosionAction : public Action
@@ -36,7 +36,7 @@ class ExplosionAction : public Action
 
         Action* act();
         bool completed();
-        void render(float camOX, float camOY);
+        void render();
 
     private:
         Image* img;
@@ -51,7 +51,7 @@ class DamageAction : public Action
 
         Action* act();
         bool completed();
-        void render(float camOX, float camOY);
+        void render();
 
     private:
         int timer;
@@ -65,7 +65,7 @@ public:
 	MoveAction(Ship *Source, Ship* target);
 	Action* act();
 	bool completed();
-	void render(float camOX, float camOY);
+	void render();
 
     Ship *source, *target;
 	Coordinates coord;
@@ -85,7 +85,7 @@ class AttackAction : public Action
 
         Action* act();
         bool completed();
-        void render( float camOX, float camOY );
+        void render( );
 
         Ship *source, *target;
         Coordinates coord;
@@ -101,7 +101,7 @@ public:
 
 	Action* act();
 	bool completed();
-	void render( float camOX, float camOY );
+	void render( );
 
 	Ship *source, *target;
 	Coordinates coord;
