@@ -13,6 +13,7 @@ Game* Game::globalGame = 0;
 Game::Game()
     : armySim1(0), armySim2(0)
 {
+    combatLog[0] = combatLog[1] = nullptr;
 	int screenWidth = 1024, screenHeight = 768, screenBPP = 0;
     globalGame = this;
 

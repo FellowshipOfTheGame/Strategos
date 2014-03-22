@@ -28,18 +28,17 @@ using namespace std;
 class Unit
 {
     private:
-        const DictKey *mySquadInfo;
+        // Imutable Data
         unsigned long id; // TODO: O que exatamente eh id? Posicao na Army? Apenas um numero id usado para taticas?
-        int target;
-
-        int maxCapacity;
-        int shipsAlive;
-
-        Coordinates baseCoord, averageCoord, bluePrintCoord;
-
+        const DictKey *mySquadInfo;
+        Coordinates bluePrintCoord;
         vector<Tactic*> tactics;
-        vector<Ship*> ships;
 
+        // Dynamic Combat Data
+        int shipsAlive;
+        int target;
+        Coordinates baseCoord, averageCoord;
+        vector<Ship*> ships;
         list<Action*> shipsActions;
 
         // Taticas basicas
@@ -49,7 +48,7 @@ class Unit
 
     public:
         Unit(const Unit* copy);
-        Unit(unsigned long id, const DictKey *info, Coordinates position);
+        Unit(unsigned long ID, const DictKey *info, Coordinates position);
         ~Unit();
 
         /// Atualiza ships
@@ -76,7 +75,7 @@ class Unit
         void setID(int id);
         int getType();
         Ship* getShip(unsigned long gid);
-        unsigned long nShips();
+        unsigned long nShips() const;
         void setTarget(int i);
         int getTarget();
         void restoreShips();
@@ -135,7 +134,7 @@ class Unit
         void setBasePos(const Coordinates& pos);
 
         const shipBaseStats& getSquadBaseStats();
-        const DictKey* getUnitInfo();
+        const DictKey* getUnitInfo() const;
 
         // Mover Unidade
         void moveTo(Coordinates c);

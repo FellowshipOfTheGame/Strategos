@@ -22,7 +22,7 @@ class DictKey
     public:
         char name[16];
         shipBaseStats stats;
-        int squadSize;
+        unsigned int squadSize;
         int type;
 
         Image *shootGFX;

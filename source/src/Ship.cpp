@@ -4,8 +4,6 @@
 
 using namespace std;
 
-#define M_PI 3.141592653
-
 float slowlyRotateTo(float fromRad, float toRad)
 {
 	return toRad-fromRad;
@@ -82,7 +80,7 @@ int Ship::update()
     return 0;
 }
 
-bool Ship::isAlive()
+bool Ship::isAlive() const
 {
     if(stats.currentHP > 0)
         return true;
@@ -149,7 +147,7 @@ void Ship::moveTo(Coordinates c)
     moving = 1;
 }
 
-double Ship::getHP(){
+double Ship::getHP() const{
     return stats.currentHP;
 }
 

@@ -16,42 +16,42 @@
 
 Tactic* Tactic::copy(const Tactic *source)
 {
-    Tactic *copy = nullptr;
+    Tactic *t_copy = nullptr;
 
     switch(source->type)
     {
         case 0:
-            copy = new AttackNearestEnemy(source->info, source->tacticTrigger);
+            t_copy = new AttackNearestEnemy(source->info, source->tacticTrigger);
             break;
 
         case 1:
-            copy = new AttackWeakestEnemy(source->info, source->tacticTrigger);
+            t_copy = new AttackWeakestEnemy(source->info, source->tacticTrigger);
             break;
 
         case 2:
-            copy = new AttackCollab(source->info, source->tacticTrigger);
+            t_copy = new AttackCollab(source->info, source->tacticTrigger);
             break;
 
         case 3:
-            copy = new DefenseCollab(source->info, source->tacticTrigger);
+            t_copy = new DefenseCollab(source->info, source->tacticTrigger);
             break;
 
         case 4:
-            copy = new Kamikase(source->info, source->tacticTrigger);
+            t_copy = new Kamikase(source->info, source->tacticTrigger);
             break;
 
         case 5:
-            copy = new Retreat(source->info, source->tacticTrigger);
+            t_copy = new Retreat(source->info, source->tacticTrigger);
             break;
 
         default:
             break;
     }
 
-    return copy;
+    return t_copy;
 }
 
-AttackNearestEnemy::AttackNearestEnemy(TacticInfo Info, const TacticTrigger& trigger) :
+AttackNearestEnemy::AttackNearestEnemy(const TacticInfo& Info, const TacticTrigger& trigger) :
 		Tactic(Info, trigger, TACTIC_ATTACK_NEAREST_ENEMY)
 {
 
@@ -117,7 +117,7 @@ int AttackNearestEnemy::validateTactic(list<Action*> &newActions, Unit* squad, c
 
 // ---
 
-AttackWeakestEnemy::AttackWeakestEnemy(TacticInfo Info, const TacticTrigger& trigger) :
+AttackWeakestEnemy::AttackWeakestEnemy(const TacticInfo& Info, const TacticTrigger& trigger) :
 		Tactic(Info, trigger, TACTIC_ATTACK_WEAKEST_ENEMY)
 {
 
@@ -216,7 +216,7 @@ int AttackWeakestEnemy::validateTactic(list<Action*> &newActions, Unit* squad, c
 }
 
 // ---
-AttackCollab::AttackCollab(TacticInfo Info, const TacticTrigger& trigger) :
+AttackCollab::AttackCollab(const TacticInfo& Info, const TacticTrigger& trigger) :
 		Tactic(Info, trigger, TACTIC_ATTACK_COLLAB)
 {
 }
@@ -305,7 +305,7 @@ string AttackCollab::printTactic()
 }
 
 // ---
-DefenseCollab::DefenseCollab(TacticInfo Info, const TacticTrigger& trigger) :
+DefenseCollab::DefenseCollab(const TacticInfo& Info, const TacticTrigger& trigger) :
 		Tactic(Info, trigger, TACTIC_DEFENSE_COLAB)
 {
 
@@ -389,7 +389,7 @@ string DefenseCollab::printTactic()
 
 // ---
 
-Kamikase::Kamikase(TacticInfo Info, const TacticTrigger& trigger) :
+Kamikase::Kamikase(const TacticInfo& Info, const TacticTrigger& trigger) :
 		Tactic(Info, trigger, TACTIC_KAMIKASE)
 {
 
@@ -452,7 +452,7 @@ int Kamikase::validateTactic(list<Action*> &newActions, Unit* squad, const vecto
 
 // ---
 
-Retreat::Retreat(TacticInfo Info, const TacticTrigger& trigger) :
+Retreat::Retreat(const TacticInfo& Info, const TacticTrigger& trigger) :
 		Tactic(Info, trigger, TACTIC_RETREAT)
 {
 }
@@ -512,7 +512,7 @@ string Retreat::printTactic()
 
 // ---
 
-MoveRandomly::MoveRandomly(TacticInfo Info, const TacticTrigger& trigger) :
+MoveRandomly::MoveRandomly(const TacticInfo& Info, const TacticTrigger& trigger) :
 		Tactic(Info, trigger, TACTIC_MOVE_RANDOM)
 {
 	cooldown = 0;

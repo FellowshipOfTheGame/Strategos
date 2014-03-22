@@ -35,12 +35,12 @@ class Unit;
 
 struct TacticInfo
 {
-    TacticInfo(int unitID)
+    TacticInfo(unsigned int unitID)
+        : allyUnitID(unitID)
     {
-        allyUnitID = unitID;
     }
 
-    int allyUnitID; // Unidade aliada para interagir
+    unsigned int allyUnitID; // Unidade aliada para interagir
 };
 
 class Tactic
@@ -53,7 +53,7 @@ class Tactic
     public:
         static Tactic* copy(const Tactic *source);
 
-        Tactic(const TacticInfo Info, const TacticTrigger& Trigger, int Type)
+        Tactic(const TacticInfo& Info, const TacticTrigger& Trigger, int Type)
             : tacticTrigger(Trigger), info(Info), type(Type)
         {}
 
@@ -131,7 +131,7 @@ class AttackNearestEnemy : public Tactic
     private:
 
     public:
-        AttackNearestEnemy(TacticInfo info, const TacticTrigger& trigger);
+        AttackNearestEnemy(const TacticInfo& info, const TacticTrigger& trigger);
         ~AttackNearestEnemy() {}
 
         void debugPrint(){printf("AttackNearestEnemy");}
@@ -146,7 +146,7 @@ class AttackWeakestEnemy : public Tactic
     private:
 
     public:
-        AttackWeakestEnemy(TacticInfo info, const TacticTrigger& trigger);
+        AttackWeakestEnemy(const TacticInfo& info, const TacticTrigger& trigger);
 
         void debugPrint(){printf("AttackWeakestEnemy");}
 
@@ -161,7 +161,7 @@ class AttackCollab : public Tactic
     private:
 
     public:
-        AttackCollab(TacticInfo info, const TacticTrigger& trigger);
+        AttackCollab(const TacticInfo& info, const TacticTrigger& trigger);
         ~AttackCollab(){}
 
         string printTactic();
@@ -178,7 +178,7 @@ class DefenseCollab : public Tactic
     private:
 
     public:
-        DefenseCollab(TacticInfo info, const TacticTrigger& trigger);
+        DefenseCollab(const TacticInfo& info, const TacticTrigger& trigger);
         ~DefenseCollab(){};
         string printTactic();
 
@@ -196,7 +196,7 @@ class Kamikase : public Tactic
     private:
 
     public:
-        Kamikase(TacticInfo info, const TacticTrigger& trigger);
+        Kamikase(const TacticInfo& info, const TacticTrigger& trigger);
 
         void debugPrint(){printf("Kamikase");}
 
@@ -208,7 +208,7 @@ class Retreat : public Tactic
 {
     private:
     public:
-        Retreat(TacticInfo info, const TacticTrigger& trigger);
+        Retreat(const TacticInfo& info, const TacticTrigger& trigger);
 
         string printTactic();
 
@@ -225,7 +225,7 @@ class MoveRandomly : public Tactic
         int cooldown; // Tempo para mudar de direcao
 
     public:
-        MoveRandomly(TacticInfo info, const TacticTrigger& trigger);
+        MoveRandomly(const TacticInfo& info, const TacticTrigger& trigger);
 
         void debugPrint(){printf("MoveRandomly");}
 

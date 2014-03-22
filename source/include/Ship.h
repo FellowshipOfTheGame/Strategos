@@ -61,7 +61,7 @@ class Ship
         ~Ship();
 
         int update();
-        bool isAlive();
+        bool isAlive() const;
 
         /// \return: Retorna se o dano foi letal
         bool takeDamage(double damage);
@@ -72,7 +72,7 @@ class Ship
 
         float getDirection();
 
-        double getHP();
+        double getHP() const;
         void kill();
 
         const shipBaseStats &getBaseStats();

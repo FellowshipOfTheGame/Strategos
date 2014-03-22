@@ -18,9 +18,9 @@ class Unit;
 class Trigger
 {
     public:
-        virtual ~Trigger(){}
+        static Trigger* copy(const Trigger *source);
 
-    static Trigger* copy(const Trigger &source);
+        virtual ~Trigger(){}
 
         virtual bool testTrigger(Unit *unit) = 0;
         virtual int getType()
@@ -62,14 +62,12 @@ class Trigger
 class TacticTrigger
 {
     public:
-        static TacticTrigger* copy(const TacticTrigger &source);
-
         TacticTrigger(Trigger* A, Trigger* B, int oper);
         TacticTrigger(const TacticTrigger &source);
         ~TacticTrigger();
 
-
         bool testTrigger(Unit *unit);
+
         Trigger* getTriggerA();
         Trigger* getTriggerB();
         void setTriggerA(Trigger* t);

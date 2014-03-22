@@ -2,35 +2,27 @@
 
 #include "Unit.h"
 
-Trigger* Trigger::copy(const Trigger &source)
+Trigger* Trigger::copy(const Trigger *source)
 {
-    Trigger *copy = nullptr;
+    Trigger *t_copy = nullptr;
 
-    switch (source.type)
+    switch (source->type)
     {
         case 0:
-            copy = new Trigger_Always();
+            t_copy = new Trigger_Always();
             break;
 
         case 1:
-            copy = new Trigger_Life(source.value, source.relOperator);
+            t_copy = new Trigger_Life(source->value, source->relOperator);
             break;
 
         default:
             break;
     }
 
-    return copy;
+    return t_copy;
 }
 
-TacticTrigger* TacticTrigger::copy(const TacticTrigger &source)
-{
-    TacticTrigger *copy = nullptr;
-
-    copy = new TacticTrigger(Trigger::copy(*source.tA), Trigger::copy(*source.tB), source.operation);
-
-    return copy;
-}
 
 TacticTrigger::TacticTrigger(Trigger* A, Trigger* B, int oper)
     : tA(A), tB(B), operation(oper)
@@ -41,10 +33,10 @@ TacticTrigger::TacticTrigger(const TacticTrigger &source)
     : tA(0), tB(0)
 {
     if (source.tA)
-        tA = Trigger::copy(*source.tA);
+        tA = Trigger::copy(source.tA);
 
     if (source.tB)
-        tB = Trigger::copy(*source.tB);
+        tB = Trigger::copy(source.tB);
 
     operation = source.operation;
 }

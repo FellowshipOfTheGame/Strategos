@@ -13,7 +13,7 @@ using namespace std;
 
 World::World(Army *army1, Army *army2)
 {
-    printf("Starting World...\n");
+    printf("Starting World... ");
 
     if (army1 == army2)
     {
@@ -24,7 +24,7 @@ World::World(Army *army1, Army *army2)
     armies.push_back(army1);
 	armies.push_back(army2);
 
-	printf("%d VS %d\n", army1->nUnits(), army2->nUnits());
+	printf("%d VS %d ", army1->nUnits(), army2->nUnits());
 
 	army1->restore();
 	army2->restore();
@@ -33,7 +33,7 @@ World::World(Army *army1, Army *army2)
     armies[1]->setReflectBasePositions(COMBAT_AREA_WIDTH);
     Game::getGlobalGame()->setCombatLog(0);
     Game::getGlobalGame()->setCombatLog(1);
-    printf("World Ready!\n", army1->nUnits(), army2->nUnits());
+    printf("World Ready!\n");
 }
 
 World::~World()
@@ -83,7 +83,7 @@ int World::simulateStep()
 
     if (N0 == 0 && N1 == 0)
     {
-    	makeLog(armies[0],Game::getGlobalGame()->getCombatLog(0));
+    	makeLog(armies[0],Game::getGlobalGame()->getCombatLog(0)); // TODO: Mover logs para World
     	makeLog(armies[1],Game::getGlobalGame()->getCombatLog(1));
         return _SIM_DRAW_;
     }

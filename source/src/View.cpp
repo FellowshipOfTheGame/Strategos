@@ -90,7 +90,7 @@ bool View::update()
 	/** Carrega as configuracoes do novo estado */
 	if (gameState->getCurrent() != gameState->getNext())
 	{
-		fprintf(stdout, "Changing State...\n");
+		printf("Changing State...\n");
 		gameState->setPrevious(gameState->getCurrent());
 		gameState->setCurrent(gameState->getNext());
 

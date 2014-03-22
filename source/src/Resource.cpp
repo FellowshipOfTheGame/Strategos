@@ -153,7 +153,6 @@ Image* Resource::LoadImage(std::fstream &file, std::string key)
 
 	images.insert(std::pair<std::string, Image*>(key, newImage));
 
-	printf("RETurn\n");
 	return newImage;
 }
 

@@ -44,6 +44,7 @@ class CombatLog
 	private:
 		std::vector<CombatLogItem*> combatline;
 		int damageDealt, damageTaken;
+
 	public:
 		CombatLog();
 		~CombatLog();

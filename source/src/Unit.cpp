@@ -14,51 +14,29 @@
     #include "SDL2_gfx/SDL2_gfxPrimitives.h"
 #endif // _MAC_OS_
 
-Unit::Unit(unsigned long id, const DictKey *info, Coordinates position)
-    : baseCoord(position), averageCoord(position), bluePrintCoord(position),
+Unit::Unit(unsigned long ID, const DictKey *info, Coordinates position)
+    : id(ID), mySquadInfo(info), bluePrintCoord(position),
+    target(-1), baseCoord(position), averageCoord(position),
         basicTacticMoveRandom( TacticInfo(0), TacticTrigger(0, 0, TRIGGER_LOGIC_OR) ),
         basicTacticAttackNearest( TacticInfo(0), TacticTrigger(0, 0, TRIGGER_LOGIC_OR) ),
         basicTacticRetreat( TacticInfo(0), TacticTrigger(0, 0, TRIGGER_LOGIC_OR) )
 {
-    double circleRadius = 42.0;
-
-	mySquadInfo = info;
-	this->id = id;
-	this->target = -1;
-
-	float dAngle = 6.283185306 / info->squadSize;
-	for (int i = 0; i < info->squadSize; i++)
-	{
-		Coordinates coordships(position);
-		coordships.x += circleRadius * cos(i * dAngle);
-		coordships.y += -circleRadius * sin(i * dAngle);
-		Ship *nship = new Ship(mySquadInfo->stats, coordships, i);
-
-		ships.push_back(nship);
-	}
-
-	shipsAlive = info->squadSize;
+	restoreShips();
 }
 
 Unit::Unit(const Unit* copy)
-    :   basicTacticMoveRandom( copy->basicTacticMoveRandom ),
+    :   id(copy->id), mySquadInfo(copy->mySquadInfo), bluePrintCoord(copy->bluePrintCoord),
+        target(-1), baseCoord(bluePrintCoord), averageCoord(bluePrintCoord),
+        basicTacticMoveRandom( copy->basicTacticMoveRandom ),
         basicTacticAttackNearest( copy->basicTacticAttackNearest ),
         basicTacticRetreat( copy->basicTacticRetreat )
 {
     // Copiar todos os dados
-    *this = *copy;
-
-    tactics.clear();
-    ships.clear();
-
     // Efetuar copia dos objetos dos ponteiros
     for (unsigned int i = 0; i < copy->tactics.size(); ++i)
         tactics.push_back(Tactic::copy(copy->tactics[i]));
 
-    for (unsigned int i = 0; i < copy->ships.size(); ++i)
-        ships.push_back(new Ship( *(copy->ships[i]) ));
-
-    shipsActions.clear();
+    restoreShips();
 }
 
 Unit::~Unit()
@@ -80,9 +58,38 @@ Unit::~Unit()
 	}
 }
 
+void Unit::restoreShips()
+{
+    for (unsigned int i = 0; i < ships.size(); ++i)
+        delete ships[i];
+
+    for (std::list<Action*>::iterator it = shipsActions.begin(); it != shipsActions.end(); ++it)
+        delete *it;
+
+    shipsActions.clear();
+    ships.clear();
+
+    baseCoord = bluePrintCoord;
+    averageCoord = bluePrintCoord;
+
+    double circleRadius = 42.0;
+    float dAngle = 6.283185306 / mySquadInfo->squadSize;
+	for (unsigned int i = 0; i < mySquadInfo->squadSize; i++)
+	{
+		Coordinates coordships(bluePrintCoord);
+		coordships.x += circleRadius * cos(i * dAngle);
+		coordships.y += -circleRadius * sin(i * dAngle);
+		Ship *nship = new Ship(mySquadInfo->stats, coordships, i);
+
+		ships.push_back(nship);
+	}
+
+	shipsAlive = mySquadInfo->squadSize;
+	target = -1;
+}
+
 void Unit::addTactic(Tactic *tactic)
 {
-
 	tactics.push_back(tactic);
 }
 
@@ -219,7 +226,7 @@ bool Unit::hover(float camOX, float camOY)
 	return false;
 }
 
-unsigned long Unit::nShips()
+unsigned long Unit::nShips() const
 {
     //should use getNShipsAlive
 	//return ships.size();
@@ -285,7 +292,7 @@ void Unit::printInfo()
 		tactics[i]->printTactic();
 }
 
-const DictKey* Unit::getUnitInfo()
+const DictKey* Unit::getUnitInfo() const
 {
 	return mySquadInfo;
 }
@@ -355,7 +362,7 @@ void Unit::render()
 
 	for (unsigned int j = 0; j < nShips(); j++)
 	{
-		Ship *ship = getShip(j);
+		Ship *ship = ships[j];
 
 		if (!mySquadInfo->shipsGFX)
 			printf("No img");
@@ -409,31 +416,3 @@ void Unit::render()
 	circleRGBA(Game::getGlobalGame()->getRenderer(), averageCoord.x, averageCoord.y, 64, 0, 128, 0, 128);
 }
 
-void Unit::restoreShips()
-{
-    for (unsigned int i = 0; i < ships.size(); ++i)
-        delete ships[i];
-
-    for (std::list<Action*>::iterator it = shipsActions.begin(); it != shipsActions.end(); ++it)
-        delete *it;
-
-    shipsActions.clear();
-    ships.clear();
-
-    baseCoord = bluePrintCoord;
-
-    double circleRadius = 42.0;
-    float dAngle = 6.283185306 / mySquadInfo->squadSize;
-	for (int i = 0; i < mySquadInfo->squadSize; i++)
-	{
-		Coordinates coordships(bluePrintCoord);
-		coordships.x += circleRadius * cos(i * dAngle);
-		coordships.y += -circleRadius * sin(i * dAngle);
-		Ship *nship = new Ship(mySquadInfo->stats, coordships, i);
-
-		ships.push_back(nship);
-	}
-
-	shipsAlive = mySquadInfo->squadSize;
-	target = -1;
-}
