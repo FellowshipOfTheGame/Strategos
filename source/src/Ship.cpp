@@ -15,12 +15,9 @@ float slowlyRotateTo(float fromRad, float toRad)
     return toRad-fromRad+M_PI*2.0f;
 }
 
-Ship::Ship(const shipBaseStats &initialStats, Coordinates Coord, int shipID)
+Ship::Ship(const shipBaseStats &initialStats, Coordinates Coord)
     : baseStats(initialStats), stats(initialStats), coord(Coord), basePos(Coord)
 {
-    //printf ("shiled: %3d hp:%3d \n",stats.currentShield, stats.currentHP);
-    this->id = shipID;
-
     direction = M_PI/2;
 
     moving = 0;
@@ -149,10 +146,6 @@ void Ship::moveTo(Coordinates c)
 
 double Ship::getHP() const{
     return stats.currentHP;
-}
-
-unsigned long Ship::getID(){
-    return id;
 }
 
 int Ship::getX(){

@@ -96,7 +96,7 @@ class AttackAction : public Action
 class KamikazeAction : public Action
 {
 public:
-		KamikazeAction(Ship *Source, Ship *Target, Image *imgShoot);
+    KamikazeAction(Ship *Source, Ship *Target, Image *imgShoot);
 	~KamikazeAction(){}
 
 	Action* act();

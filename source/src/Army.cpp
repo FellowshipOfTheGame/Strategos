@@ -8,20 +8,16 @@
 
 using namespace std;
 
-Army::Army(string armyName, const Dictionary *armyDictionary) :
-		name(armyName), dictionary(armyDictionary), motherUnit(0), shipsGFX(NULL)
+Army::Army(const string& armyName, const Dictionary *armyDictionary) :
+		name(armyName), dictionary(armyDictionary), motherUnit(0)
 {
 	totalShips = 0;
 }
 
 Army::~Army()
 {
-	vector<Unit*>::iterator iter = units.begin();
-
-	while (iter != units.end())
-	{
-		delete *iter;
-		iter = units.erase(iter);
+	for (int i = 0; i < units.size(); ++i){
+		delete units[i];
 	}
 }
 
@@ -266,7 +262,7 @@ void Army::setReflectBasePositions(int startWidth)
 
 void Army::addUnit(Unit *unit)
 {
-    totalShips += unit->nShips();
+    totalShips += unit->getUnitInfo()->squadSize;
 
     if (unit->getType() == 0)
     {
@@ -286,18 +282,7 @@ Unit *Army::createUnit(int id, int unitType, Coordinates position)
 	const DictKey *unitInfo = dictionary->getInfoFor(unitType);
 	Unit *unit = new Unit(id, unitInfo, position);
 
-	totalShips += unitInfo->squadSize;
-	units.push_back(unit);
-
-	if (unitType == 0)
-    {
-        if (motherUnit != 0)
-        {
-            printf("ANOTHER MOTHER ADDED!\n");
-            exit(-1);
-        }
-		motherUnit = unit;
-	}
+	addUnit(unit);
 
 	return unit;
 }

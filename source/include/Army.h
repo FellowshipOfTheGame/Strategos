@@ -36,10 +36,8 @@ private:
 	std::vector<Unit*> units; // Todas as unidades da army, incluindo unidade Mae
 	int totalShips;
 
-	Image *shipsGFX;
-
 public:
-	Army(std::string armyName, const Dictionary* armyDictionary);
+	Army(const std::string& armyName, const Dictionary* armyDictionary);
 	~Army();
 
     // Altera a posicao base de todo o Army

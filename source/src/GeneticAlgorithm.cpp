@@ -19,7 +19,10 @@
 
 GeneticAlgorithm::~GeneticAlgorithm()
 {
-
+    for (int i = 0; i < individuos.size(); ++i)
+    {
+        delete individuos[i];
+    }
 }
 
 void GeneticAlgorithm::initialize()
@@ -97,7 +100,7 @@ void GeneticAlgorithm::randomArmies(int size)
 
 Army* GeneticAlgorithm::generateRandomArmy()
 {
-    vector<Trigger*> triggers;
+    Trigger* triggers[2];
     Army *randomArmy = 0;
     int u = 0;
     int gold = GOLD_AMOUNT;
@@ -140,27 +143,24 @@ Army* GeneticAlgorithm::generateRandomArmy()
     {
         Unit *unit = randomArmy->getUnitAtIndex(j);
 
-        // Gera 20 taticas
+        // Gera K taticas
         for(int k = 0; k < 4; k++)
         {
             // Gera 2 triggers, seus operadores e valores associados
             for(int l = 0; l < 2; l++)
             {
-                Trigger *trig;
                 randValue = rand()%TRIGGER_TOTAL;
 
                 switch (randValue)
                 {
                     case TRIGGER_ALWAYS:
-                        trig = new Trigger_Always();
-                        break;
+                        triggers[l] = new Trigger_Always();
+                    break;
 
                     case TRIGGER_LIFE:
-                        trig = new Trigger_Life(rand()%100+1, rand()%3);
-                        break;
+                        triggers[l] = new Trigger_Life(rand()%100+1, rand()%3);
+                    break;
                 }
-
-                triggers.push_back(trig);
             }
 
            TacticTrigger tacticTrig(triggers[0], triggers[1], rand()%2);
@@ -198,9 +198,7 @@ Army* GeneticAlgorithm::generateRandomArmy()
             {
                 unit->addTactic(new AttackNearestEnemy(TacticInfo(0), tacticTrig));
                 delete tactic;
-             }
-
-            triggers.clear();
+            }
         }
     }
 
@@ -209,12 +207,14 @@ Army* GeneticAlgorithm::generateRandomArmy()
 
 void GeneticAlgorithm::run()
 {
-    if (armyType != 0) return;
+    if (armyType != 0) return; // debug
 
     printf("Iterate 2 times\n");
-    vector<Army*> selected, rejected;
-    for (unsigned int i = 0; i < 2; i++)
+    for (unsigned int i = 0; i < 3; i++)
     {
+        vector<Army*> selected, rejected;
+
+        printf("GENERATION %d\n", i);
         // Completar exercito para INDIVIDUOS_GERACAO
         randomArmies( INDIVIDUOS_GERACAO - individuos.size() );
         // Adicionar 2 aleatorios sempre
@@ -226,16 +226,16 @@ void GeneticAlgorithm::run()
         for (unsigned int r = 0; r < rejected.size(); ++r){
             delete rejected[r];
         }
+        individuos.clear();
         rejected.clear();
 
         // Apply CrossOver
-        crossOver(selected); // Memory Leak
+        crossOver(selected);
 
         // Apply Mutation
         mutate(selected);
 
-        individuos.clear();
-        printf("Iteration: %d\n", selected.size());
+        printf("Iteration Individuals: %d\n", selected.size());
         for (unsigned int j = 0; j < selected.size(); ++j){
             individuos.push_back(selected[j]);
         }
@@ -266,7 +266,7 @@ void GeneticAlgorithm::selectFromPop(int n, vector<Army*>& selected, vector<Army
     printf("Battle for %d individuos\n", individuos.size());
     for (unsigned int i = 0; i < individuos.size(); ++i)
     {
-        int nBattlesToFit = 2;
+        int nBattlesToFit = 1;
         double fit = 0;
         for (int b = 0; b < nBattlesToFit; ++b)
         {
@@ -277,7 +277,7 @@ void GeneticAlgorithm::selectFromPop(int n, vector<Army*>& selected, vector<Army
             int ret = _SIM_CONTINUE_;
 
             //Sequencial
-            printf("\nBattle: %d with %d -- Units: %d vs %d\n", i, opponent, individuos[i]->nUnits(), individuos[opponent]->nUnits());
+            printf("->Battle: %d with %d -- Units: %d vs %d\n", i, opponent, individuos[i]->nUnits(), individuos[opponent]->nUnits());
             World *world = new World(individuos[i], individuos[opponent]);
 
             while(ret == _SIM_CONTINUE_){
@@ -322,6 +322,8 @@ void GeneticAlgorithm::selectFromPop(int n, vector<Army*>& selected, vector<Army
         printf("Fit[%d] = %lf [%d]\n", i, order[i].fitness, order[i].ind->nUnits());
     }
 
+    printf("Selecting and Rejecting...");
+
     // Selecionar os N primeiros
     for (unsigned int i = 0; i < order.size(); ++i){
         if (i < n)
@@ -340,18 +342,19 @@ void GeneticAlgorithm::crossOver(vector<Army*>& selected)
 {
     vector<Army*> indCross;
 
+    printf("crossover for: %d\n", selected.size());
     for (unsigned int i = 0; i < selected.size(); ++i)
     {
         unsigned int other = rand()%selected.size();
         while ( other == i )
             other = rand()%selected.size();
 
-        crossOver(selected[i], selected[other], indCross);
+        crossOver(selected[i], selected[other], indCross); // Memory Leak
     }
 
-    printf("CrossOvers: %d\n", indCross.size());
+    printf("CrossOvers: %d [%d]\n", indCross.size(), indCross.capacity());
 
-    // Deletar alguns individuos extras
+    // Deletar alguns individuos extras aleatoriamente
     while (indCross.size() + selected.size() > INDIVIDUOS_GERACAO)
     {
         auto it = indCross.begin()+ (rand()%indCross.size());
@@ -360,8 +363,7 @@ void GeneticAlgorithm::crossOver(vector<Army*>& selected)
     }
 
     printf("CrossOvers: %d\n", indCross.size());
-    for (unsigned int i = 0; i < indCross.size(); ++i)
-    {
+    for (unsigned int i = 0; i < indCross.size(); ++i){
         selected.push_back(indCross[i]);
     }
 }
@@ -394,41 +396,27 @@ void GeneticAlgorithm::crossOver(const Army *parent1, const Army *parent2, vecto
     {
         if (rand()%2 == 0)
         {
-            Unit *unit = parent1->getUnitAtIndex(i);
-            child1->addUnit( new Unit(unit) );
-
-            unit = parent2->getUnitAtIndex(i);
-            child2->addUnit( new Unit(unit) );
+            child1->addUnit( new Unit( parent1->getUnitAtIndex(i) ) );
+            child2->addUnit( new Unit( parent2->getUnitAtIndex(i) ) );
         }
         else
         {
-            Unit *unit = parent1->getUnitAtIndex(i);
-            child2->addUnit( new Unit(unit) );
-
-            unit = parent2->getUnitAtIndex(i);
-            child1->addUnit( new Unit(unit) );
+            child1->addUnit( new Unit( parent2->getUnitAtIndex(i) ) );
+            child2->addUnit( new Unit( parent1->getUnitAtIndex(i) ) );
         }
     }
 
     // Colocar as restantes nos respectivos filhos 1 e 2
     // Apenas um desses 2 loops deve ocorrer, por isso a mesma variavel i eh usada
-    for (; i < parent1->nUnits(); ++i)
-    {
-        Unit *unit = parent1->getUnitAtIndex(i);
-        child1->addUnit( new Unit(unit) );
+    for (; i < parent1->nUnits(); ++i){
+        child1->addUnit( new Unit( parent1->getUnitAtIndex(i) ) );
     }
-    for (; i < parent2->nUnits(); ++i)
-    {
-        Unit *unit = parent2->getUnitAtIndex(i);
-        child2->addUnit( new Unit(unit) );
+    for (; i < parent2->nUnits(); ++i){
+        child2->addUnit( new Unit( parent2->getUnitAtIndex(i) ) );
     }
 
-//    printf("preParents: %d %d [%d] -> %d %d [%d]\n", parent1->nUnits(), parent2->nUnits(), parent1->nUnits()+parent2->nUnits(),
-//                                                  child1->nUnits(), child2->nUnits(), child1->nUnits()+child2->nUnits());
     GoldCap(child1);
     GoldCap(child2);
-//    printf("postParents: %d %d [%d]\n", child1->nUnits(), child2->nUnits(), child1->nUnits()+child2->nUnits());
-//    SDL_Delay(3000);
 
     rectifyUnitID(child1);
     rectifyUnitID(child2);
@@ -488,7 +476,7 @@ void GeneticAlgorithm::GoldCap(Army *army)
 		gold += unit->getType()*10;
 	}
 
-    printf("GoldCap: %d -> ", army->nUnits());
+//    printf("GoldCap: %d -> ", army->nUnits());
 	while (gold > GOLD_AMOUNT)
 	{
 		n = 1+(rand()%(army->nUnits()-2));
@@ -496,7 +484,7 @@ void GeneticAlgorithm::GoldCap(Army *army)
 		Unit* removed = army->removeUnit(n);
 		delete removed; // TODO: Talvez usar isso em outra army?
 	}
-    printf("%d\n", army->nUnits());
+//    printf("%d\n", army->nUnits());
 }
 
 void GeneticAlgorithm::rectifyUnitID(Army *ind)
@@ -606,10 +594,11 @@ void GeneticAlgorithm::mutateTactic(Tactic *tactic, int degree)
         case 0: //  -> Trigger type
             newValue = rand()%TRIGGER_TOTAL;
 
-            if(whichTrigger == 0)
-                tactic->getTacticTrigger().getTriggerA()->setType(newValue);
-            else
-                tactic->getTacticTrigger().getTriggerB()->setType(newValue);
+            // TODO: Fix this
+//            if(whichTrigger == 0)
+//                tactic->getTacticTrigger().getTriggerA()->setType(newValue);
+//            else
+//                tactic->getTacticTrigger().getTriggerB()->setType(newValue);
         break;
 
         case 1: //  -> Trigger value

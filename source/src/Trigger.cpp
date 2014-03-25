@@ -10,11 +10,11 @@ Trigger* Trigger::copy(const Trigger *source)
     {
         case 0:
             t_copy = new Trigger_Always();
-            break;
+        break;
 
         case 1:
             t_copy = new Trigger_Life(source->value, source->relOperator);
-            break;
+        break;
 
         default:
             break;
@@ -69,9 +69,8 @@ TacticTrigger::~TacticTrigger()
     delete tB;
 }
 
-Trigger_Always::Trigger_Always()
+Trigger_Always::Trigger_Always() : Trigger(TRIGGER_ALWAYS)
 {
-    type = TRIGGER_ALWAYS;
     value = 0;
     relOperator = 0;
 }
@@ -87,9 +86,8 @@ bool Trigger_Always::testTrigger(Unit *unit)
 }
 
 //WHAT IS HAPPENING HERE? O.o
-Trigger_Life::Trigger_Life(int lifeTrigger, int trigOP)
+Trigger_Life::Trigger_Life(int lifeTrigger, int trigOP) : Trigger(TRIGGER_LIFE)
 {
-    type = TRIGGER_LIFE;
     value = lifeTrigger;
     relOperator = trigOP;
 }

@@ -41,33 +41,27 @@ Unit::Unit(const Unit* copy)
 
 Unit::~Unit()
 {
-	vector<Tactic*>::iterator iter = tactics.begin();
-	while (iter != tactics.end())
-	{
-		delete *iter;
-		iter = tactics.erase(iter);
-	}
+	for (int i = 0; i < tactics.size(); ++i){
+        delete tactics[i];
+    }
 
-	vector<Ship*>::iterator iter2;
-	while (ships.size() > 0)
-	{
-		iter2 = ships.begin();
+    for (int i = 0; i < ships.size(); ++i){
+        delete ships[i];
+    }
 
-		delete ships[0];
-		ships.erase(iter2);
-	}
+	for (std::list<Action*>::iterator it = shipsActions.begin(); it != shipsActions.end(); ++it)
+        delete *it;
 }
 
 void Unit::restoreShips()
 {
     for (unsigned int i = 0; i < ships.size(); ++i)
         delete ships[i];
+    ships.clear();
 
     for (std::list<Action*>::iterator it = shipsActions.begin(); it != shipsActions.end(); ++it)
         delete *it;
-
     shipsActions.clear();
-    ships.clear();
 
     baseCoord = bluePrintCoord;
     averageCoord = bluePrintCoord;
@@ -79,7 +73,7 @@ void Unit::restoreShips()
 		Coordinates coordships(bluePrintCoord);
 		coordships.x += circleRadius * cos(i * dAngle);
 		coordships.y += -circleRadius * sin(i * dAngle);
-		Ship *nship = new Ship(mySquadInfo->stats, coordships, i);
+		Ship *nship = new Ship(mySquadInfo->stats, coordships);
 
 		ships.push_back(nship);
 	}
@@ -140,17 +134,10 @@ unsigned int Unit::getTacticSize(){
 
 Ship* Unit::getShip(unsigned long gid)
 {
-	vector<Ship*>::iterator iter = ships.begin();
+    if (gid < ships.size())
+        return ships[gid];
 
-	while (iter != ships.end())
-	{
-		if ((*iter)->getID() == gid)
-			return (*iter);
-
-		iter++;
-	}
-
-	return NULL;
+    return nullptr;
 }
 
 unsigned long Unit::getID(){

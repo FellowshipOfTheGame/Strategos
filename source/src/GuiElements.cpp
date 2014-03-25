@@ -308,14 +308,18 @@ void TextField::draw()
     rectangleRGBA( renderer, x, y, x+width, y+height, 0, 0, 255, 255 );
     //	SDL_FillRect(renderer, &back, SDL_MapRGB(scrSurface->format, 0, 0, 255));
 
-    imgText->DrawImage(x+5, y, renderer);
+    if (imgText)
+        imgText->DrawImage(x+5, y, renderer);
 }
 void TextField::setText(string str)
 {
 	this->text = str;
 
     delete imgText;
-	imgText = new Image(font->renderText(Game::getGlobalGame()->getRenderer(), text.c_str(), ColorRGB8::White), 1, 0, 0, 0);
+	if (text.size() > 0)
+        imgText = new Image(font->renderText(Game::getGlobalGame()->getRenderer(), text.c_str(), ColorRGB8::White), 1, 0, 0, 0);
+    else
+        imgText = 0;
 
 }
 string TextField::getText()
@@ -352,7 +356,10 @@ void TextField::enterLetter(char letter)
 	}
 
 	delete imgText;
-	imgText = new Image(font->renderText(Game::getGlobalGame()->getRenderer(), text.c_str(), ColorRGB8::White), 1, 0, 0, 0);
+	if (text.size() > 0)
+        imgText = new Image(font->renderText(Game::getGlobalGame()->getRenderer(), text.c_str(), ColorRGB8::White), 1, 0, 0, 0);
+    else
+        imgText = 0;
 }
 
 INPUT_EVENT TextField::input(SDL_Event &event)
@@ -399,7 +406,10 @@ void TextField::setFont(Font *font)
 	this->font = font;
 
 	delete imgText;
-	imgText = new Image(font->renderText(Game::getGlobalGame()->getRenderer(), text.c_str(), ColorRGB8::White), 1, 0, 0, 0);
+	if (text.size() > 0)
+        imgText = new Image(font->renderText(Game::getGlobalGame()->getRenderer(), text.c_str(), ColorRGB8::White), 1, 0, 0, 0);
+    else
+        imgText = 0;
 }
 
 /****************************** COMBO_BOX ******************************/

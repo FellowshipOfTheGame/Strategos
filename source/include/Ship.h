@@ -41,12 +41,8 @@ struct shipCurrentStats
 class Ship
 {
     private:
-        static unsigned long gid;
-        unsigned long id;
         int owner;
-
         int deathTime, status;
-
         float direction;
 
         // Atributos iniciados no construtor
@@ -57,7 +53,7 @@ class Ship
         bool moving;
 
     public:
-        Ship(const shipBaseStats &initialStats, Coordinates Coord, int shipID);
+        Ship(const shipBaseStats &initialStats, Coordinates Coord);
         ~Ship();
 
         int update();
@@ -78,7 +74,6 @@ class Ship
         const shipBaseStats &getBaseStats();
         shipCurrentStats &getStats();
 
-        unsigned long getID();
         int getX();
         int getY();
         const Coordinates& getPosition();

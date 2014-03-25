@@ -20,39 +20,34 @@ class Trigger
     public:
         static Trigger* copy(const Trigger *source);
 
+        Trigger(int Type) : type(Type)
+        {}
         virtual ~Trigger(){}
 
         virtual bool testTrigger(Unit *unit) = 0;
-        virtual int getType()
-        {
+
+        virtual int getType(){
             return type;
         }
-        virtual int getValue()
-        {
+
+        virtual int getValue(){
             return value;
         }
-        virtual int getRelationalOperator()
-        {
+
+        virtual int getRelationalOperator(){
             return relOperator;
         }
 
-        void setType(int newType)
-        {
-            type = newType;
-        }
-
-        void setValue(int newValue)
-        {
+        void setValue(int newValue){
             value = newValue;
         }
 
-        void setRelOperator(int newRel)
-        {
+        void setRelOperator(int newRel){
             relOperator = newRel;
         }
 
     protected:
-        int type;
+        const int type;
         int value;
         int relOperator;
 
