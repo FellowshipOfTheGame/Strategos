@@ -216,9 +216,8 @@ void GeneticAlgorithm::run()
 
         printf("GENERATION %d\n", i);
         // Completar exercito para INDIVIDUOS_GERACAO
-        randomArmies( INDIVIDUOS_GERACAO - individuos.size() );
         // Adicionar 2 aleatorios sempre
-        randomArmies( 2 );
+        randomArmies( INDIVIDUOS_GERACAO - individuos.size() + 2 );
 
         // Apply the selection - currently Tournament
         selectFromPop(20, selected, rejected);
@@ -355,7 +354,7 @@ void GeneticAlgorithm::crossOver(vector<Army*>& selected)
     printf("CrossOvers: %d [%d]\n", indCross.size(), indCross.capacity());
 
     // Deletar alguns individuos extras aleatoriamente
-    while (indCross.size() + selected.size() > INDIVIDUOS_GERACAO)
+    while (indCross.size() > 0 && (indCross.size() + selected.size()) > INDIVIDUOS_GERACAO)
     {
         auto it = indCross.begin()+ (rand()%indCross.size());
         delete *it;
@@ -588,17 +587,39 @@ void GeneticAlgorithm::mutateTactic(Tactic *tactic, int degree)
 {
     int newValue;
     int whichTrigger = rand()%2;
+    int triggerValue, triggerOperator;
 
     switch (degree)
     {
         case 0: //  -> Trigger type
+        {
             newValue = rand()%TRIGGER_TOTAL;
 
-            // TODO: Fix this
-//            if(whichTrigger == 0)
-//                tactic->getTacticTrigger().getTriggerA()->setType(newValue);
-//            else
-//                tactic->getTacticTrigger().getTriggerB()->setType(newValue);
+            if (whichTrigger == 0){
+                triggerValue = tactic->getTacticTrigger().getTriggerA()->getValue();
+                triggerOperator = tactic->getTacticTrigger().getTriggerA()->getRelationalOperator();
+            }else{
+                triggerValue = tactic->getTacticTrigger().getTriggerB()->getValue();
+                triggerOperator = tactic->getTacticTrigger().getTriggerB()->getRelationalOperator();
+            }
+
+            switch (newValue)
+            {
+                case TRIGGER_ALWAYS:
+                    if (whichTrigger == 0)
+                        tactic->getTacticTrigger().setTriggerA( new Trigger_Always() );
+                    else
+                        tactic->getTacticTrigger().setTriggerB( new Trigger_Always() );
+                break;
+
+                case TRIGGER_LIFE:
+                    if (whichTrigger == 0)
+                        tactic->getTacticTrigger().setTriggerA( new Trigger_Life( triggerValue, triggerOperator ) );
+                    else
+                        tactic->getTacticTrigger().setTriggerB( new Trigger_Life( triggerValue, triggerOperator ) );
+                break;
+            }
+        }
         break;
 
         case 1: //  -> Trigger value
@@ -611,7 +632,7 @@ void GeneticAlgorithm::mutateTactic(Tactic *tactic, int degree)
         break;
 
         case 2: //  -> Trigger relational operator
-            newValue = rand()%6;
+            newValue = rand()%TRIGGER_OPERATION_TOTAL;
             if(whichTrigger == 0)
                 tactic->getTacticTrigger().getTriggerA()->setRelOperator(newValue);
             else
@@ -619,7 +640,7 @@ void GeneticAlgorithm::mutateTactic(Tactic *tactic, int degree)
         break;
 
         case 3: //  -> Triggers logic operator
-            newValue = rand()%2;
+            newValue = rand()%TRIGGER_LOGIC_TOTAL;
             tactic->getTacticTrigger().setLogicOperator(newValue);
         break;
 

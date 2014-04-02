@@ -10,7 +10,7 @@ atkCD: 25
 range: 20
 shield: 500
 dodge: 5
-speed: 0.3
+speed: 0.4
 squad: 1
 gfxShoot: assets/Army.gfx human-shootSimple
 gfxExplode: assets/Army.gfx human-explode

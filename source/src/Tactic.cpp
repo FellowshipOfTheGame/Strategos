@@ -433,7 +433,7 @@ int Kamikase::validateTactic(list<Action*> &newActions, Unit* squad, const vecto
 			{
 				while (1)
 				{
-					int s = rand() % nearestUnit->nShips();
+					int s = rand()%nearestUnit->nShips();
 					if (nearestUnit->getShip(s)->isAlive())
 					{
 						iShip->getStats().curKamikazeCD = FRAMES_PER_SECOND * 3;
