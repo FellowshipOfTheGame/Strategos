@@ -16,7 +16,7 @@ Army::Army(const string& armyName, const Dictionary *armyDictionary) :
 
 Army::~Army()
 {
-	for (int i = 0; i < units.size(); ++i){
+	for (unsigned int i = 0; i < units.size(); ++i){
 		delete units[i];
 	}
 }
@@ -112,7 +112,7 @@ Army* Army::loadArmy(string armyname)
 				switch (trigger)
 				{
 					case TRIGGER_ALWAYS:
-						trig1 = new Trigger_Always;
+						trig1 = new Trigger_Always();
                     break;
 
 					case TRIGGER_LIFE:
@@ -287,7 +287,7 @@ Unit *Army::createUnit(int id, int unitType, Coordinates position)
 	return unit;
 }
 
-Unit* Army::removeUnit(int i)
+Unit* Army::removeUnit(unsigned int i)
 {
 	if (i > units.size())
 		return nullptr;

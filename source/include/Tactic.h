@@ -48,7 +48,7 @@ class Tactic
     protected:
         TacticTrigger tacticTrigger;
         TacticInfo info;
-        int type;
+        const int type;
 
     public:
         static Tactic* copy(const Tactic *source);

@@ -101,6 +101,7 @@ bool Trigger_Life::testTrigger(Unit *unit)
 {
     // Endereco de trigger nao foi passado corretamente
     int sumHP = 0;
+    // TODO: Colocar isso na Unit, para evitar recalcular muitas vezes
     for (unsigned int i = 0; i < unit->nShips(); ++i)
     {
         sumHP += unit->getShip(i)->getHP();

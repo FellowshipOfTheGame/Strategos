@@ -143,7 +143,6 @@ int AttackWeakestEnemy::validateTactic(list<Action*> &newActions, Unit* squad, c
 
 	Unit *wekeastUnit = NULL;
 
-	vector<Unit*> enemyNear;
 	//cria uma lista com a unidades dentro do alcançe
 	for (unsigned int i = 0; i < enemyUnits.size(); i++)
 	{
@@ -153,35 +152,25 @@ int AttackWeakestEnemy::validateTactic(list<Action*> &newActions, Unit* squad, c
 			float dist = myPos.distance(enemyAvrg);
 			if (dist < squad->getSquadBaseStats().range)
 			{
-				enemyNear.push_back(enemyUnits[i]);
+			    // Verificar HP desta unidade
+                sumHP = 0;
+                // TODO: Colocar isso na Unit
+                for (unsigned int j = 0; j < enemyUnits[i]->nShips(); ++j){
+                    sumHP += enemyUnits[i]->getShip(j)->getHP();
+                }
+
+                int maxHP = enemyUnits[i]->getUnitInfo()->squadSize * enemyUnits[i]->getUnitInfo()->stats.maxHP;
+
+                // Considerar apenas o inteiro
+                int percent = (sumHP / maxHP) * 100;
+                if (percent < minHP)
+                {
+                    minHP = percent;
+                    wekeastUnit = enemyUnits[i];
+                    squad->setTarget( i );
+                }
 			}
 		}
-	}
-
-	//percorre a lista de unidades inimigas no alçance um busca da mais fraca
-	for (unsigned int i = 0; i < enemyNear.size(); i++)
-	{
-        enemyAvrg = enemyNear[i]->getAveragePos();
-		if (enemyNear[i]->getNShipsAlive() > 0)
-		{
-			sumHP = 0;
-			for (unsigned int j = 0; j < enemyNear[i]->nShips(); ++j)
-			{
-				sumHP += enemyNear[i]->getShip(j)->getHP();
-			}
-
-			int maxHP = enemyNear[i]->getUnitInfo()->squadSize * enemyNear[i]->getUnitInfo()->stats.maxHP;
-
-			// Considerar apenas o inteiro
-			int percent = (sumHP / maxHP) * 100;
-			if (percent < minHP)
-			{
-				minHP = percent;
-				wekeastUnit = enemyNear[i];
-				squad->setTarget( i );
-			}
-		}
-
 	}
 
 	//ataca as naves do esquadrao de maneira aleatoria
@@ -318,7 +307,7 @@ int DefenseCollab::validateTactic(list<Action*> &newActions, Unit* squad, const 
 
 	for (unsigned int j = 0; j < enemyUnits.size(); j++)
 	{
-		//interrompe caso tenha encontrado unimigo a quem atacar
+		// Interrompe caso tenha encontrado um inimigo para atacar
 		if (enemyUnits[j]->getTarget() == info.allyUnitID)
 		{
 			enemyUnit = enemyUnits[j];
@@ -345,7 +334,7 @@ int DefenseCollab::validateTactic(list<Action*> &newActions, Unit* squad, const 
 
 				if (eShip->isAlive())
 				{
-					float d = shipPos.distance(enemyUnit->getShip(u)->getPosition());
+					float d = shipPos.distance(eShip->getPosition());
 					if (d < dist_)
 					{
 						nearestShip = eShip;
