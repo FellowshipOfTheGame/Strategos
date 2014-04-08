@@ -60,7 +60,7 @@ class Dictionary
         string description;
 
     private:
-        DictKey* readAttribute(fstream &input, std::string &title, Resource &resource);
+        DictKey* readAttribute(fstream &input, Resource &resource);
 
         vector<DictKey*> keys;
         Image *baseGFX;

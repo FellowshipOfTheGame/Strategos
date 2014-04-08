@@ -64,6 +64,8 @@ class Ship
 
         void move(Coordinates delta);
         void move(double dx, double dy);
+
+        // Seleciona a posicao "alvo" para a nave ir em direcao
         void moveTo(Coordinates c);
 
         float getDirection();

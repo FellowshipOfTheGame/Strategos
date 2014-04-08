@@ -78,6 +78,12 @@ class Unit
         unsigned long nShips() const;
         void setTarget(int i);
         int getTarget();
+
+        /// Recria todas as naves da unidade
+        /// Altera a posicao base
+        void restoreShips(const Coordinates atBaseP);
+
+        /// Reseta as naves na posicao da BluePrint
         void restoreShips();
 
         /// Retorna o numero de naves vivas
@@ -131,7 +137,7 @@ class Unit
         /// \return Retorna as coordenadas base iniciais da unidade
         const Coordinates& getBaseCoord();
 
-        void setBasePos(const Coordinates& pos);
+//        void setBasePos(const Coordinates& pos);
 
         const shipBaseStats& getSquadBaseStats();
         const DictKey* getUnitInfo() const;

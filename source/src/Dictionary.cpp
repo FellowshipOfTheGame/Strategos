@@ -124,7 +124,7 @@ int Dictionary::loadDictionary(const char *inputFile, Resource &resource)
     int nTypes=0;
     while (!dictInput.eof())
     {
-        DictKey *key = readAttribute( dictInput, title, resource);
+        DictKey *key = readAttribute( dictInput, resource);
         key->type = nTypes;
         if (key){
             keys.push_back(key);
@@ -146,7 +146,7 @@ const DictKey* Dictionary::getInfoFor(unsigned int pos) const
     return NULL;
 }
 
-DictKey* Dictionary::readAttribute(fstream &input, std::string &title, Resource &resource)
+DictKey* Dictionary::readAttribute(fstream &input, Resource &resource)
 {
     DictKey *key = new DictKey();
     string tag;

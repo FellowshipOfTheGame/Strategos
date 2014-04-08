@@ -108,7 +108,7 @@ Army* Army::loadArmy(string armyname)
 				file >> trigger;
 				file >> value;
                 file >> operation;
-                printf("%d%d.%d", trigger, value, operation);
+//                printf("%d%d.%d", trigger, value, operation);
 				switch (trigger)
 				{
 					case TRIGGER_ALWAYS:
@@ -129,13 +129,13 @@ Army* Army::loadArmy(string armyname)
 
 				// Ler Operador Logico
 				file >> logic;
-				printf("%d", logic);
+//				printf("%d", logic);
 
 				// LER SEGUNDO TRIGGER
 				file >> trigger;
 				file >> value;
                 file >> operation;
-                printf("%d%d.%d", trigger, value, operation);
+//                printf("%d%d.%d", trigger, value, operation);
 				switch (trigger)
 				{
 					case TRIGGER_ALWAYS:
@@ -160,7 +160,7 @@ Army* Army::loadArmy(string armyname)
 				Tactic *tatica = NULL;
 				int ruleID;
 				file >> ruleID;
-				printf("%d", ruleID);
+//				printf("%d", ruleID);
 
 				TacticInfo info(0);
 
@@ -199,7 +199,7 @@ Army* Army::loadArmy(string armyname)
 				}
 
 				unit->addTactic(tatica);
-				printf(" - ");
+//				printf(" - ");
 			}
 		}
 	}
@@ -243,20 +243,24 @@ void Army::saveArmy(const Army *army, const string pth)
 	printf ("Army's ready\n");
 }
 
+// Sets
+
 void Army::setDictionary(Dictionary* armyDictionary)
 {
 	this->dictionary = armyDictionary;
 }
+
 void Army::setArmyName(std::string armyName)
 {
 	this->name = armyName;
 }
 
-void Army::setReflectBasePositions(int startWidth)
+void Army::setReflectBasePositions(int offX, int offY)
 {
-    Coordinates reflect(startWidth*2, 0);
     for (unsigned int i = 0; i < units.size(); i++){
-	    units[i]->setBasePos( reflect - Coordinates(units[i]->getBaseX(), 0) );
+        const int x = TEAM_AREA_WIDTH - units[i]->getBluePrintX() + offX;
+        const int y = TEAM_AREA_HEIGHT - units[i]->getBluePrintY() + offY;
+	    units[i]->restoreShips( Coordinates(x, y) );
 	}
 }
 
@@ -310,9 +314,8 @@ Unit* Army::removeUnit(unsigned int i)
 	return removed;
 }
 
-// Sets
-
 // Gets
+
 Unit* Army::getMotherUnit()
 {
 	//return motherUnit;
@@ -377,13 +380,6 @@ void Army::restore()
     for(unsigned int i = 0; i < units.size(); i++){
         units[i]->restoreShips();
     }
-}
-
-void Army::setBasePos(Coordinates pos)
-{
-	for (unsigned int i = 0; i < units.size(); i++){
-	    units[i]->setBasePos(pos);
-	}
 }
 
 void Army::updateActions()

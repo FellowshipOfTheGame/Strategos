@@ -53,7 +53,7 @@ Unit::~Unit()
         delete *it;
 }
 
-void Unit::restoreShips()
+void Unit::restoreShips(const Coordinates atBaseP)
 {
     for (unsigned int i = 0; i < ships.size(); ++i)
         delete ships[i];
@@ -63,14 +63,14 @@ void Unit::restoreShips()
         delete *it;
     shipsActions.clear();
 
-    baseCoord = bluePrintCoord;
-    averageCoord = bluePrintCoord;
+    baseCoord = atBaseP;
+    averageCoord = atBaseP;
 
-    double circleRadius = 42.0;
+    double circleRadius = 12.0 * (mySquadInfo->squadSize-1);
     float dAngle = 6.283185306 / mySquadInfo->squadSize;
 	for (unsigned int i = 0; i < mySquadInfo->squadSize; i++)
 	{
-		Coordinates coordships(bluePrintCoord);
+		Coordinates coordships(atBaseP);
 		coordships.x += circleRadius * cos(i * dAngle);
 		coordships.y += -circleRadius * sin(i * dAngle);
 		Ship *nship = new Ship(mySquadInfo->stats, coordships);
@@ -80,6 +80,11 @@ void Unit::restoreShips()
 
 	shipsAlive = mySquadInfo->squadSize;
 	target = -1;
+}
+
+void Unit::restoreShips()
+{
+    restoreShips(bluePrintCoord);
 }
 
 void Unit::addTactic(Tactic *tactic)
@@ -215,9 +220,6 @@ bool Unit::hover(float camOX, float camOY)
 
 unsigned long Unit::nShips() const
 {
-    //should use getNShipsAlive
-	//return ships.size();
-
     return mySquadInfo->squadSize;
 }
 
@@ -308,16 +310,17 @@ void Unit::generateActions(const vector<Unit*>& enemyUnits, const vector<Unit*>&
 		basicTacticRetreat.validateTactic(shipsActions, this, enemyUnits, alliedUnits);
 }
 
-void Unit::setBasePos(const Coordinates& pos)
-{
-    for (unsigned int j = 0; j < ships.size(); j++)
-    {
-        ships[j]->move(pos);
-    }
-
-	averageCoord += pos;
-	baseCoord += pos;
-}
+//void Unit::setBasePos(const Coordinates& pos)
+//{
+//    for (unsigned int j = 0; j < ships.size(); j++)
+//    {
+//        Coordinates current = ships[j]->getPosition() - pos;
+//        ships[j]->move(pos+current);
+//    }
+//
+//	averageCoord = pos;
+//	baseCoord = pos;
+//}
 
 void Unit::moveTo(Coordinates c)
 {

@@ -19,8 +19,14 @@
 #include "Tactic.h"
 #include "Dictionary.h"
 
-#define COMBAT_AREA_WIDTH 800
-#define COMBAT_AREA_HEIGHT 700
+#define TEAM_AREA_WIDTH 800
+#define TEAM_AREA_HEIGHT 700
+
+#define COMBAT_ARENA_WIDTH  ((TEAM_AREA_WIDTH*2)+448)
+#define COMBAT_ARENA_HEIGHT    TEAM_AREA_HEIGHT
+
+#define TEAM_2_POSX     (COMBAT_ARENA_WIDTH-TEAM_AREA_WIDTH)
+#define TEAM_2_POSY     (COMBAT_ARENA_HEIGHT-TEAM_AREA_HEIGHT)
 
 #define N_UNIT_TYPE             4
 
@@ -40,10 +46,6 @@ public:
 	Army(const std::string& armyName, const Dictionary* armyDictionary);
 	~Army();
 
-    // Altera a posicao base de todo o Army
-    // Todas as naves movem relativamente a pos
-    void setBasePos(Coordinates pos);
-
     // Percorre Tactics e gera acoes para as naves
     int update();
     void updateActions();
@@ -59,7 +61,9 @@ public:
 	void setDictionary(Dictionary* armyDictionary);
 	void setArmyName(std::string armyName);
 
-	void setReflectBasePositions(int startWidth);
+    // Reflete a posicao X e Y do exercito
+    // Soma beta na posicao X final e gama na posicao Y
+	void setReflectBasePositions(int beta, int gama);
 
 	// Gets
 	Unit* getMotherUnit();

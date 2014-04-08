@@ -550,7 +550,7 @@ void GeneticAlgorithm::mutation(Army *ind, int degree)
         break;
 
         case MUTATION_UNIT_POSITION: //Mutate a unit position
-            unit->setBluePrintCoord( Coordinates(rand()%COMBAT_AREA_WIDTH + 150, rand()%COMBAT_AREA_HEIGHT + 50) );
+            unit->setBluePrintCoord( Coordinates(rand()%TEAM_AREA_WIDTH + 25, rand()%TEAM_AREA_HEIGHT ) );
         break;
 
         default:

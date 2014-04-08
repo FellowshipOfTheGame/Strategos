@@ -30,7 +30,8 @@ World::World(Army *army1, Army *army2)
 	army2->restore();
 
 	// Setar posicao de cada exercito
-    armies[1]->setReflectBasePositions(COMBAT_AREA_WIDTH);
+    armies[1]->setReflectBasePositions(TEAM_2_POSX, TEAM_2_POSY);
+
     Game::getGlobalGame()->setCombatLog(0);
     Game::getGlobalGame()->setCombatLog(1);
     printf("World Ready!\n");
@@ -143,4 +144,7 @@ void World::render()
 {
     armies[0]->render();
     armies[1]->render();
+
+    SDL_RenderDrawLine(Game::getGlobalGame()->getRenderer(), TEAM_AREA_WIDTH, 0, TEAM_AREA_WIDTH, TEAM_AREA_HEIGHT);
+    SDL_RenderDrawLine(Game::getGlobalGame()->getRenderer(), TEAM_2_POSX, 0, TEAM_2_POSX, TEAM_AREA_HEIGHT);
 }
