@@ -26,9 +26,10 @@ class World
     private:
         vector<Army*> armies;
         void makeLog(Army *army, CombatLog *log);
+        vector<CombatLog *>   combatLog;
 
     public:
-        World(Army *army1, Army *army2);
+        World(Army *army1, Army *army2); //TODO: Criar um construtor com parametro que diga se é jogo, ou ag
         ~World();
 
         // Calcula valores necessarios para as acoes: Distancia,...
@@ -45,6 +46,12 @@ class World
         void printLoadedArmy();
 
         Army* getArmy(int id);
+
+        CombatLog* getCombatLog(int i);
+
+		CombatRound* getCombatRound(int i);
+
+		void setCombatLog(int i);
 
         // Desenha o combate no renderer principal
         void render();

@@ -7,6 +7,8 @@
 
 using namespace std;
 
+
+class CombatRound;
 struct shipBaseStats
 {
     shipBaseStats()
@@ -52,6 +54,7 @@ class Ship
         Coordinates coord, basePos, targetPos;
         bool moving;
 
+        CombatRound *dmgperround;
     public:
         Ship(const shipBaseStats &initialStats, Coordinates Coord);
         ~Ship();
@@ -79,6 +82,10 @@ class Ship
         const Coordinates& getPosition();
         const Coordinates& getTargetPos();
         int logUpdate();
+        CombatRound* getDmgperround()
+		{
+			return this->dmgperround;
+		}
 };
 
 #endif

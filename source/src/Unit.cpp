@@ -403,3 +403,15 @@ void Unit::render()
 	circleRGBA(Game::getGlobalGame()->getRenderer(), averageCoord.x, averageCoord.y, 64, 0, 128, 0, 128);
 }
 
+CombatRound* Unit::unifyCombatRound()
+{
+	printf ("unificando unit\n");
+	CombatRound* _new;
+	_new = new CombatRound();
+	 for (unsigned int i = 0; i < ships.size(); ++i)
+	 {
+		 _new->ConcatCombatRound(ships[i]->getDmgperround());
+	 }
+	return _new;
+}
+

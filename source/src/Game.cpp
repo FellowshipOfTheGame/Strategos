@@ -3,17 +3,17 @@
  *
  */
 
-//#include "time.h"
-#include "Game.h"
+#include "time.h"
 #include "Random.h"
+#include "Game.h"
 #include "CombatLog.h"
+
 
 Game* Game::globalGame = 0;
 
 Game::Game()
     : armySim1(0), armySim2(0)
 {
-    combatLog[0] = combatLog[1] = nullptr;
 	int screenWidth = 1024, screenHeight = 768, screenBPP = 0;
     globalGame = this;
 
@@ -33,6 +33,8 @@ Game::Game()
 	algorithm[0] = new GeneticAlgorithm(0);
 	algorithm[1] = new GeneticAlgorithm(1);
 	algorithm[2] = new GeneticAlgorithm(2);
+	combatLog.push_back(nullptr);
+	combatLog.push_back(nullptr);
 
 	initRand((unsigned int) time(NULL));
 	loadDictionaries();
@@ -207,8 +209,16 @@ CombatLog* Game::getCombatLog(int i)
 
 void Game::setCombatLog(int i)
 {
-	if (combatLog[i] != NULL)
-		delete combatLog[i];
-
+	CombatLog *x =combatLog[i];
+	if (x!=nullptr)
+		delete x;
 	combatLog[i] = new CombatLog();
+}
+
+CombatRound* Game::getCombatRound(int i)
+{
+	if (i==0){
+        return armySim1->unifyCombatRound();
+       } else{
+	return armySim2->unifyCombatRound();}
 }

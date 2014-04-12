@@ -24,6 +24,11 @@ World::World(Army *army1, Army *army2)
     armies.push_back(army1);
 	armies.push_back(army2);
 
+	combatLog.push_back(nullptr);
+	combatLog.push_back(nullptr);
+
+
+
 	printf("%d VS %d ", army1->nUnits(), army2->nUnits());
 
 	army1->restore();
@@ -31,8 +36,8 @@ World::World(Army *army1, Army *army2)
 
 	// Setar posicao de cada exercito
     armies[1]->setReflectBasePositions(COMBAT_AREA_WIDTH);
-    Game::getGlobalGame()->setCombatLog(0);
-    Game::getGlobalGame()->setCombatLog(1);
+    this->setCombatLog(0); //Game::getGlobalGame()->setCombatLog(0);
+	this->setCombatLog(1); //Game::getGlobalGame()->setCombatLog(1);
     printf("World Ready!\n");
 }
 
@@ -81,23 +86,21 @@ int World::simulateStep()
    // printf ("\t\t Update 2 \n");
     int N1 = armies[1]->update();
 
+    makeLog(armies[0],this->getCombatLog(0));
+    makeLog(armies[1],this->getCombatLog(1));
+
     if (N0 == 0 && N1 == 0)
     {
-    	makeLog(armies[0],Game::getGlobalGame()->getCombatLog(0)); // TODO: Mover logs para World
-    	makeLog(armies[1],Game::getGlobalGame()->getCombatLog(1));
         return _SIM_DRAW_;
     }
-    else if (N0 == 0){
-        makeLog(armies[0],Game::getGlobalGame()->getCombatLog(0));
-        makeLog(armies[1],Game::getGlobalGame()->getCombatLog(1));
+    else
+    	if (N0 == 0){
         return _SIM_ARMY1_WIN_;
-    }
-    else if (N1 == 0)
-    {
-        makeLog(armies[0],Game::getGlobalGame()->getCombatLog(0));
-        makeLog(armies[1],Game::getGlobalGame()->getCombatLog(1));
+    	}
+    	else if (N1 == 0)
+    	{
         return _SIM_ARMY0_WIN_;
-    }
+    	}
 //    else
 //        printf("Sobrando: %d, %d\n", N0, N1);
 
@@ -110,12 +113,33 @@ void World::makeLog(Army *army, CombatLog *log)
         Unit *unit = army->getUnitAtIndex(n);
         for (unsigned int j = 0; j < unit->getUnitInfo()->squadSize; j++){
             Ship *ship = unit->getShip(j);
-            if (ship->logUpdate() == 1)
+            if (ship->logUpdate()==1)
             {
-                log->addLog(n, j);
+                log->addLog(n,j);
             }
         }
 	}
+}
+
+CombatLog* World::getCombatLog(int i)
+{
+	return combatLog[i];
+}
+
+CombatRound* World::getCombatRound(int i)
+{
+	if (i==0){
+        return armies[0]->unifyCombatRound();
+       } else{
+	return armies[1]->unifyCombatRound();}
+}
+
+void World::setCombatLog(int i)
+{
+	CombatLog *x =combatLog[i];
+	if (x!=nullptr)
+		delete x;
+	combatLog[i] = new CombatLog();
 }
 
 void World::printLoadedArmy()
