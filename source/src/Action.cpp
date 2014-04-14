@@ -149,8 +149,8 @@ MoveAction::MoveAction(Ship *Source, Ship* Target, bool GetNear)
         if (dist >= source->getBaseStats().range)
         {
             float direction = atan2(source->getY() - target->getY(), source->getX() - target->getX());
-            coord.x = source->getX() - (dist-source->getBaseStats().range*0.9) * cos(direction);
-            coord.y = source->getY() - (dist-source->getBaseStats().range*0.9) * sin(direction);
+            coord.x = source->getX() - (dist - source->getBaseStats().range*0.9) * cos(direction);
+            coord.y = source->getY() - (dist - source->getBaseStats().range*0.9) * sin(direction);
         }
     }else{
         coord = target->getPosition();
@@ -163,7 +163,7 @@ Action* MoveAction::act()
 
     complete = 1;
 
-    return 0;
+    return nullptr;
 }
 
 bool MoveAction::completed()
@@ -249,7 +249,7 @@ void AttackAction::render( )
 //    circleRGBA( Game::getGlobalGame()->getScreenSurface(), coord.x - cOX, coord.y - cOY, 1, 128+rand()%128, rand()%128, rand()%128, 200+rand()%55 );
 
     // Normal
-    shootEffect->DrawImage((int) (coord.x ), (int) (coord.y ), frame, ( (direction+PI) * 180.0) /PI, Game::getGlobalGame()->getRenderer());
+    shootEffect->DrawImage((int) (coord.x ), (int) (coord.y ), frame, ( (direction+M_PI) * 180.0) /M_PI, Game::getGlobalGame()->getRenderer());
 }
 
 KamikazeAction::KamikazeAction(Ship *Source, Ship *Target, Image *imgShoot)

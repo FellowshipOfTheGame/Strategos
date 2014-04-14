@@ -11,10 +11,10 @@ class CombatData
         ~CombatData();
 
         double getUnitDistance(const Unit* a, const Unit* b);
-        double getShipDistance(const Ship* a, const Ship* b);
+//        double getShipDistance(const Ship* a, const Ship* b);
 
         Unit* getNearestUnit(const Unit* from, const std::vector<Unit*>& to);
-        Ship* getNearestShip(const Ship* from, const std::vector<Ship*>& to);
+//        Ship* getNearestShip(const Ship* from, const std::vector<Ship*>& to);
 
         void ClearDistances();
 

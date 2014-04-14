@@ -67,26 +67,15 @@ int AttackNearestEnemy::validateTactic(list<Action*> &newActions, TacticValidati
 	tvd.validatingUnit->setTarget(-1);
 
 	int Ret = 0;
-//	Coordinates myPos = tvd.validatingUnit->getAveragePos();
-	float minDist = 99999;
 
-	Unit *nearestUnit = NULL;
-	for (unsigned int i = 0; i < tvd.enemyUnits.size(); ++i)
-	{
-//		Coordinates enemyAvrg = tvd.enemyUnits[i]->getAveragePos();
-		if (tvd.enemyUnits[i]->getNShipsAlive() > 0)
-		{
-			float dist = tvd.combatData.getUnitDistance(tvd.validatingUnit, tvd.enemyUnits[i]); //myPos.distance(enemyAvrg);
-			if (dist < minDist)
-			{
-				minDist = dist;
-				nearestUnit = tvd.enemyUnits[i];
-				tvd.validatingUnit->setTarget(i);
-			}
-		}
-	}
+    // Encontrar unidade mais proxima
+	Unit *nearestUnit = tvd.combatData.getNearestUnit(tvd.validatingUnit, tvd.enemyUnits);
+	if (nearestUnit == nullptr) return 0;
 
-	if (nearestUnit && minDist < tvd.validatingUnit->getSquadBaseStats().range)
+	float minDist = tvd.combatData.getUnitDistance(tvd.validatingUnit, nearestUnit);
+    tvd.validatingUnit->setTarget( nearestUnit->getID() );
+
+	if (minDist < tvd.validatingUnit->getSquadBaseStats().range)
 	{
 		for (unsigned int i = 0; i < tvd.validatingUnit->nShips(); ++i)
 		{
@@ -134,72 +123,62 @@ int AttackWeakestEnemy::validateTactic(list<Action*> &newActions, TacticValidati
 
 	int Ret = 0;
 	float minHP = 100;
-	Coordinates enemyAvrg;
 	int sumHP;
 
-//	Coordinates myPos = tvd.validatingUnit->getAveragePos();
 	if (tvd.validatingUnit->getNShipsAlive() == 0)
 		return 0;
 
-	Unit *wekeastUnit = NULL;
+	Unit *wekeastUnit = nullptr;
 
-	//cria uma lista com a unidades dentro do alcançe
+	// Encontrar unidade mais fraca
 	for (unsigned int i = 0; i < tvd.enemyUnits.size(); i++)
 	{
-//		Coordinates enemyAvrg = tvd.enemyUnits[i]->getAveragePos();
-		if (tvd.enemyUnits[i]->getNShipsAlive() > 0)
-		{
-			float dist = tvd.combatData.getUnitDistance(tvd.validatingUnit, tvd.enemyUnits[i]); // myPos.distance(enemyAvrg);
-			if (dist < tvd.validatingUnit->getSquadBaseStats().range)
-			{
-			    // Verificar HP desta unidade
-                sumHP = 0;
-                // TODO: Colocar isso na Unit
-                for (unsigned int j = 0; j < tvd.enemyUnits[i]->nShips(); ++j){
-                    sumHP += tvd.enemyUnits[i]->getShip(j)->getHP();
-                }
+	    // Evitar selecionar uma unidade sem naves vivas
+		if (tvd.enemyUnits[i]->getNShipsAlive() == 0) continue;
 
-                int maxHP = tvd.enemyUnits[i]->getUnitInfo()->squadSize * tvd.enemyUnits[i]->getUnitInfo()->stats.maxHP;
+        double dist = tvd.combatData.getUnitDistance(tvd.validatingUnit, tvd.enemyUnits[i]);
+        if (dist < tvd.validatingUnit->getSquadBaseStats().range)
+        {
+            // Verificar HP desta unidade
+            sumHP = 0;
 
-                // Considerar apenas o inteiro
-                int percent = (sumHP / maxHP) * 100;
-                if (percent < minHP)
-                {
-                    minHP = percent;
-                    wekeastUnit = tvd.enemyUnits[i];
-                    tvd.validatingUnit->setTarget( i );
-                }
-			}
-		}
+            // TODO: Colocar isso na Unit
+            for (unsigned int j = 0; j < tvd.enemyUnits[i]->nShips(); ++j){
+                sumHP += tvd.enemyUnits[i]->getShip(j)->getHP();
+            }
+
+            int maxHP = tvd.enemyUnits[i]->getUnitInfo()->squadSize * tvd.enemyUnits[i]->getUnitInfo()->stats.maxHP;
+
+            // Considerar apenas o inteiro
+            int percent = (sumHP / maxHP) * 100;
+            if (percent < minHP)
+            {
+                minHP = percent;
+                wekeastUnit = tvd.enemyUnits[i];
+            }
+        }
 	}
 
-	//ataca as naves do esquadrao de maneira aleatoria
-	if (wekeastUnit)
-	{
-		for (unsigned int i = 0; i < tvd.validatingUnit->nShips(); ++i)
-		{
-			Ship *iShip = tvd.validatingUnit->getShip(i);
+    if (wekeastUnit == nullptr) return 0;
+    tvd.validatingUnit->setTarget( wekeastUnit->getID() );
 
-			if (iShip->isAlive() && iShip->getStats().currentAtkCD == 0)
-			{
-				while (1)
-				{
-					int s = rand() % wekeastUnit->nShips();
-					if (wekeastUnit->getShip(s)->isAlive())
-					{
-						iShip->getStats().currentAtkCD = iShip->getBaseStats().maxAtkCD;
-						newActions.push_back(new AttackAction(iShip, wekeastUnit->getShip(s), tvd.validatingUnit->getUnitInfo(), wekeastUnit->getUnitInfo()));
-						++Ret;
-						break;
-					}
-				}
-			}
-		}
-	}
+	// Atacar naves da unidade aleatoriamente
+    for (unsigned int i = 0; i < tvd.validatingUnit->nShips(); ++i)
+    {
+        Ship *iShip = tvd.validatingUnit->getShip(i);
 
-    // TODO: Se eu nao conseguir atacar, devo desconsiderar o target?
-//	if (Ret == 0)
-//        squad->setTarget(-1);
+        if (iShip->isAlive() && iShip->getStats().currentAtkCD == 0)
+        {
+            int s = rand() % wekeastUnit->nShips();
+            while ( !wekeastUnit->getShip(s)->isAlive() ){
+                s = rand() % wekeastUnit->nShips();
+            }
+
+            iShip->getStats().currentAtkCD = iShip->getBaseStats().maxAtkCD;
+            newActions.push_back(new AttackAction(iShip, wekeastUnit->getShip(s), tvd.validatingUnit->getUnitInfo(), wekeastUnit->getUnitInfo()));
+            ++Ret;
+        }
+    }
 
 	return Ret;
 }
@@ -227,16 +206,16 @@ int AttackCollab::validateTactic(list<Action*> &newActions, TacticValidationData
     if (target >= tvd.enemyUnits.size() || target < 0)
         return 0;
 
-	tvd.validatingUnit->setTarget(target);
-
 	Unit *enemyUnit = tvd.enemyUnits[target];
 	if (enemyUnit->getNShipsAlive() == 0){
 		return 0;
 	}
 
-	/// TODO: Adicionar restricao de distancia?
+	tvd.validatingUnit->setTarget(target);
 
-    float dist = tvd.combatData.getUnitDistance(tvd.validatingUnit, enemyUnit); //tvd.validatingUnit->getAveragePos().distance(enemyUnit->getAveragePos());
+    double dist = tvd.combatData.getUnitDistance(tvd.validatingUnit, enemyUnit); //tvd.validatingUnit->getAveragePos().distance(enemyUnit->getAveragePos());
+
+    // Atacar se estiver ao alcance
     if (dist < tvd.validatingUnit->getUnitInfo()->stats.range)
     {
         for (unsigned int i = 0; i < tvd.validatingUnit->nShips(); ++i)
@@ -245,35 +224,25 @@ int AttackCollab::validateTactic(list<Action*> &newActions, TacticValidationData
 
 			if (iShip->isAlive() && iShip->getStats().currentAtkCD == 0)
 			{
-				while (1)
-				{
-					int s = rand() % enemyUnit->nShips();
-					if (enemyUnit->getShip(s)->isAlive())
-					{
-						iShip->getStats().currentAtkCD = iShip->getBaseStats().maxAtkCD;
-						newActions.push_back(new AttackAction(iShip, enemyUnit->getShip(s), tvd.validatingUnit->getUnitInfo(), enemyUnit->getUnitInfo()));
-						break;
-					}
+                int s = rand() % enemyUnit->nShips();
+				while ( !enemyUnit->getShip(s)->isAlive() ){
+                    s = rand() % enemyUnit->nShips();
 				}
+
+				iShip->getStats().currentAtkCD = iShip->getBaseStats().maxAtkCD;
+                newActions.push_back(new AttackAction(iShip, enemyUnit->getShip(s), tvd.validatingUnit->getUnitInfo(), enemyUnit->getUnitInfo()));
 			}
 		}
     }
-    else
+    else // Andar se estiver longe
     {
-        Coordinates coord = tvd.validatingUnit->getAveragePos();
-        float direction = atan2(enemyUnit->getAveragePos().y - coord.y, enemyUnit->getAveragePos().x - coord.x);
-
         for (unsigned int i = 0; i < tvd.validatingUnit->nShips(); ++i)
 		{
 		    Ship *iShip = tvd.validatingUnit->getShip(i);
 
             if (iShip->isAlive() && iShip->getStats().isMoving != move_action)
             {
-                coord = iShip->getPosition();
-                coord.x += cos(direction)*SPACIAL_UNIT;
-                coord.y += sin(direction)*SPACIAL_UNIT;
-
-                newActions.push_back(new MoveAction( iShip, coord, true ) );
+                newActions.push_back(new MoveAction( iShip, enemyUnit->getAveragePos(), true ) );
             }
 		}
     }
@@ -384,7 +353,6 @@ string DefenseCollab::printTactic()
 Kamikase::Kamikase(const TacticInfo& Info, const TacticTrigger& trigger) :
 		Tactic(Info, trigger, TACTIC_KAMIKASE)
 {
-
 }
 
 int Kamikase::validateTactic(list<Action*> &newActions, TacticValidationData& tvd)
@@ -393,29 +361,18 @@ int Kamikase::validateTactic(list<Action*> &newActions, TacticValidationData& tv
 		return 0;
 
 	int Ret = 0;
-	float minDist = 99999;
 
-//	Coordinates myPos = tvd.validatingUnit->getAveragePos();
 	if (tvd.validatingUnit->getNShipsAlive() == 0)
 		return 0;
 
-	Unit *nearestUnit = NULL;
-	for (unsigned int i = 0; i < tvd.enemyUnits.size(); ++i)
-	{
-//		Coordinates enemyAvrg = tvd.enemyUnits[i]->getAveragePos();
-		if (tvd.enemyUnits[i]->getNShipsAlive() > 0)
-		{
-			float dist = tvd.combatData.getUnitDistance(tvd.validatingUnit, tvd.enemyUnits[i]); // myPos.distance(enemyAvrg);
-			if (dist < minDist)
-			{
-				minDist = dist;
-				nearestUnit = tvd.enemyUnits[i];
-				tvd.validatingUnit->setTarget(i);
-			}
-		}
-	}
+    // Encontrar unidade mais proxima
+	Unit *nearestUnit = tvd.combatData.getNearestUnit(tvd.validatingUnit, tvd.enemyUnits);
+	if (nearestUnit == nullptr) return 0;
 
-	if (nearestUnit && minDist < tvd.validatingUnit->getSquadBaseStats().range)
+	double minDist = tvd.combatData.getUnitDistance(tvd.validatingUnit, nearestUnit);
+    tvd.validatingUnit->setTarget( nearestUnit->getID() );
+
+	if (minDist < tvd.validatingUnit->getSquadBaseStats().range)
 	{
 		for (unsigned int i = 0; i < tvd.validatingUnit->nShips(); ++i)
 		{
@@ -423,18 +380,15 @@ int Kamikase::validateTactic(list<Action*> &newActions, TacticValidationData& tv
 
 			if (iShip->isAlive() && iShip->getStats().isKamikasing == false)
 			{
-				while (1)
-				{
-					int s = rand()%nearestUnit->nShips();
-					if (nearestUnit->getShip(s)->isAlive())
-					{
-						iShip->getStats().isKamikasing = true;
-						iShip->getStats().currentAtkCD = iShip->getBaseStats().maxAtkCD * 99;
-						newActions.push_back(new KamikazeAction(iShip, nearestUnit->getShip(s), NULL));
-						++Ret;
-						break;
-					}
+                int s = rand()%nearestUnit->nShips();
+				while (!nearestUnit->getShip(s)->isAlive()){
+                    s = rand()%nearestUnit->nShips();
 				}
+
+                iShip->getStats().isKamikasing = true;
+                iShip->getStats().currentAtkCD = iShip->getBaseStats().maxAtkCD * 99;
+                newActions.push_back(new KamikazeAction(iShip, nearestUnit->getShip(s), NULL));
+                ++Ret;
 			}
 		}
 	}
@@ -451,9 +405,9 @@ Retreat::Retreat(const TacticInfo& Info, const TacticTrigger& trigger) :
 
 int Retreat::validateTactic(list<Action*> &newActions, TacticValidationData& tvd)
 {
-	Coordinates myPos, motherAvrg, enemyAvrg;
+	Coordinates motherAvrg;
 
-	Unit *motherShipUnit = NULL;
+	Unit *motherShipUnit = nullptr;
 	for (unsigned int i = 0; i < tvd.alliedUnits.size(); ++i)
 	{
 		if (tvd.alliedUnits[i]->getType() == 0)
@@ -463,10 +417,10 @@ int Retreat::validateTactic(list<Action*> &newActions, TacticValidationData& tvd
 		}
 	}
 
-	motherAvrg = motherShipUnit->getAveragePos();
-	myPos = tvd.validatingUnit->getAveragePos();
+	if (motherShipUnit->getNShipsAlive() == 0)
+        return 0;
 
-	if (myPos.distance(motherAvrg) > tvd.validatingUnit->getSquadBaseStats().range)
+	if (tvd.combatData.getUnitDistance(tvd.validatingUnit, motherShipUnit) > tvd.validatingUnit->getSquadBaseStats().range)
 	{
 	    motherAvrg = motherShipUnit->getAveragePos();
         motherAvrg.x += rand() % 300 - rand() % 300;

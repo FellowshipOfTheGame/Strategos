@@ -51,8 +51,8 @@ double CombatData::getUnitDistance(const Unit* a, const Unit* b)
     return distancesUnit[x][y];
 }
 
-double CombatData::getShipDistance(const Ship* a, const Ship* b)
-{
+//double CombatData::getShipDistance(const Ship* a, const Ship* b)
+//{
 //    p_ships s(a, b);
 //
 //    if ( a > b ){
@@ -70,27 +70,27 @@ double CombatData::getShipDistance(const Ship* a, const Ship* b)
 //    }
 //
 //    return it->second;
-}
-
-//Unit* CombatData::getNearestUnit(const Unit* from, const std::vector<Unit*>& to)
-//{
-//    Unit *nearestUnit = NULL;
-//    double minDist = 99999;
-//
-//	for (unsigned int i = 0; i < to.size(); ++i)
-//	{
-//	    if (to[i]->getNShipsAlive() == 0) continue;
-//
-//        double dist = getUnitDistance(from, to[i]);
-//        if (dist < minDist)
-//        {
-//            minDist = dist;
-//            nearestUnit = to[i];
-//        }
-//	}
-//
-//	return nearestUnit;
 //}
+
+Unit* CombatData::getNearestUnit(const Unit* from, const std::vector<Unit*>& to)
+{
+    Unit *nearestUnit = nullptr;
+    double minDist = 999999;
+
+	for (unsigned int i = 0; i < to.size(); ++i)
+	{
+	    if (to[i]->getNShipsAlive() == 0) continue;
+
+        double dist = getUnitDistance(from, to[i]);
+        if (dist < minDist)
+        {
+            minDist = dist;
+            nearestUnit = to[i];
+        }
+	}
+
+	return nearestUnit;
+}
 
 //Ship* CombatData::getNearestShip(const Ship* from, const std::vector<Ship*>& to)
 //{

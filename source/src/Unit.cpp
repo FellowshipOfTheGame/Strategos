@@ -14,6 +14,9 @@
     #include "SDL2_gfx/SDL2_gfxPrimitives.h"
 #endif // _MAC_OS_
 
+
+#define LIFE_BAR_SIZE   70
+
 static int max_tatics_per_unit = 0;
 
 void print_MaxActions()
@@ -23,7 +26,7 @@ void print_MaxActions()
 }
 
 Unit::Unit(unsigned long ID, const DictKey *info, Coordinates position)
-    : id(ID), mySquadInfo(info), bluePrintCoord(position),
+    : bluePrintCoord(position), mySquadInfo(info), id(ID),
     target(-1), baseCoord(position), averageCoord(position),
         basicTacticMoveRandom( TacticInfo(0), TacticTrigger(0, 0, TRIGGER_LOGIC_OR) ),
         basicTacticAttackNearest( TacticInfo(0), TacticTrigger(0, 0, TRIGGER_LOGIC_OR) ),
@@ -33,7 +36,7 @@ Unit::Unit(unsigned long ID, const DictKey *info, Coordinates position)
 }
 
 Unit::Unit(const Unit* copy)
-    :   id(copy->id), mySquadInfo(copy->mySquadInfo), bluePrintCoord(copy->bluePrintCoord),
+    :   bluePrintCoord(copy->bluePrintCoord), mySquadInfo(copy->mySquadInfo), id(copy->id),
         target(-1), baseCoord(bluePrintCoord), averageCoord(bluePrintCoord),
         basicTacticMoveRandom( copy->basicTacticMoveRandom ),
         basicTacticAttackNearest( copy->basicTacticAttackNearest ),
@@ -49,11 +52,11 @@ Unit::Unit(const Unit* copy)
 
 Unit::~Unit()
 {
-	for (int i = 0; i < tactics.size(); ++i){
+	for (unsigned int i = 0; i < tactics.size(); ++i){
         delete tactics[i];
     }
 
-    for (int i = 0; i < ships.size(); ++i){
+    for (unsigned int i = 0; i < ships.size(); ++i){
         delete ships[i];
     }
 
@@ -371,13 +374,6 @@ void Unit::render()
 		(*it)->render();
 	}
 
-	// Printar todas as direcoes da nave DEBUG
-	/*for(unsigned int j = 0; j < _ROTATION_FRAMES_; j++)
-	 {
-	 Image *img = mySquadInfo->shipsGFX[j];
-	 img->DrawImage(j * 32, mySquadInfo->type * 34, Game::getGlobalGame()->getScreenSurface());
-	 }*/
-
     SDL_Renderer* renderer = Game::getGlobalGame()->getRenderer();
 
     if (!mySquadInfo->shipsGFX){
@@ -389,50 +385,49 @@ void Unit::render()
 
             if (!ship->isAlive()) continue;
 
-            float x = ship->getDirection() * 180 / PI;
-            if (x < 0)
-                x += 360;
-
-            while (x < 0.0) x += 360.0;
-            while (x > 360.0) x -= 360.0;
+            float x = ship->getDirection() * 180.0 / M_PI;
+            while (x < 0.0)     x += 360.0;
 
             int frame = ((int(x) % 360) / (360 / _ROTATION_FRAMES_)) % _ROTATION_FRAMES_;
             Image *img = mySquadInfo->shipsGFX[frame];
 
-//			circleRGBA(Game::getGlobalGame()->getScreenSurface(), ship->getX() - cOffX, ship->getY() - cOffY, mySquadInfo->stats.range, 0, 0, 255, 40);
             if (img){
-                img->DrawImage(ship->getX() - (img->getFrameWidth() / 2), ship->getY() - (img->getFrameHeight() / 2),
-                        renderer);
-            }else{
-//                filledCircleRGBA(Game::getGlobalGame()->getRenderer(),
-//                           ship->getX() - cOffX, ship->getY() - cOffY,
-//                           mySquadInfo->stats.range, 255, 0, 0, 128);
+                img->DrawImage(ship->getX() - (img->getFrameWidth() / 2), ship->getY() - (img->getFrameHeight() / 2), renderer);
             }
 
             SDL_Rect rLife;
-            rLife.x = ship->getX();
-            rLife.y = ship->getY();
-            rLife.w = ship->getHP()/20;
-            rLife.h = 2;
+            rLife.x = ship->getX() - LIFE_BAR_SIZE/2;
+            rLife.y = ship->getY() - 32;
+            rLife.h = 4;
 
-            // Barra de vida
-            SDL_SetRenderDrawColor(renderer, 0,255,0, 200);
+            // Barra de vida fundo
+            SDL_SetRenderDrawColor(renderer, 0,0,0, 200);
+            rLife.w = LIFE_BAR_SIZE;
             SDL_RenderFillRect(renderer, &rLife);
-//            for (int i = 0; i < 5; ++i){
-//                arcRGBA(Game::getGlobalGame()->getRenderer(), ship->getX() - (img->getFrameWidth() / 2) - cOffX, ship->getY() - (img->getFrameHeight() / 2) - cOffY,
-//                         30-i, 180, 360, 255, 255, 255, 255);
-//            }
+
+            // Interior
+            rLife.x += 1;
+            rLife.y += 1;
+            rLife.h -= 2;
+            rLife.w = (ship->getHP()/ship->getBaseStats().maxHP)*LIFE_BAR_SIZE-2;
+            SDL_SetRenderDrawColor(renderer,
+                                   255*(1.0-ship->getHP()/ship->getBaseStats().maxHP),
+                                   255*(ship->getHP()/ship->getBaseStats().maxHP), 0, 200);
+            SDL_RenderFillRect(renderer, &rLife);
 
             // Barra de Shield
-            if (ship->getStats().currentShield > 0){
-                SDL_SetRenderDrawColor(renderer, 228,228,228, 250);
-                rLife.w = ship->getStats().currentShield/20;
-                rLife.y += 2;
+            if (ship->getStats().currentShield > 0)
+            {
+                SDL_SetRenderDrawColor(renderer, 228,228,228, 200);
+                rLife.w = ship->getStats().currentShield/ship->getBaseStats().shield*LIFE_BAR_SIZE-2;
                 SDL_RenderFillRect(renderer, &rLife);
             }
 
-            SDL_RenderDrawLine(renderer, ship->getPosition().x, ship->getPosition().y, ship->getTargetPos().x, ship->getTargetPos().y );
+            // Target line
+            SDL_RenderDrawLine(renderer, ship->getPosition().x, ship->getPosition().y,
+                               ship->getTargetPos().x, ship->getTargetPos().y );
 
+            // Debug
             SDL_Rect a;
             a.x = ship->getPosition().x;
             a.y = ship->getPosition().y;
@@ -440,14 +435,12 @@ void Unit::render()
             a.h = 5;
             if (ship->getMoving() == move_not_moving){
                 SDL_SetRenderDrawColor(renderer, 255, 0,0 ,255);
-            }
-            else if (ship->getMoving() == move_action){
+            }else if (ship->getMoving() == move_action){
                 SDL_SetRenderDrawColor(renderer, 0, 255, 0 ,255);
-            }
-            else{
+            }else{
                 SDL_SetRenderDrawColor(renderer, 0, 0,255 ,255);
             }
-            SDL_RenderDrawRect(renderer, &a );
+            SDL_RenderFillRect(renderer, &a );
 
             if (ship->getStats().isKamikasing)
             {
@@ -456,11 +449,11 @@ void Unit::render()
                 a.w += 10;
                 a.h += 10;
                 SDL_SetRenderDrawColor(renderer, 0, 255,255 ,255);
-                SDL_RenderDrawRect(renderer, &a );
+                SDL_RenderFillRect(renderer, &a );
             }
         }
     }
 
-	circleRGBA(renderer, averageCoord.x, averageCoord.y, 64, 0, 128, 0, 128);
+	circleRGBA(renderer, averageCoord.x, averageCoord.y, 64, 0, 128, 0, 160);
 }
 

@@ -131,9 +131,10 @@ void Simulation::onMouseDownEvent(Uint8 button)
     if(button == SDL_BUTTON_LEFT)
     {
         selectedUnit = checkClickOn(simulationWorld->getArmy(0));
-        if (!selectedUnit)
+        if (selectedUnit == nullptr)
             selectedUnit = checkClickOn(simulationWorld->getArmy(1));
-        // TODO: Assim temos preferencia para exercito 0... ????
+
+        // TODO: Assim temos preferencia para exercito 0...
     }
 }
 
@@ -147,7 +148,7 @@ Unit* Simulation::checkClickOn(Army *army)
         }
     }
 
-    return 0;
+    return nullptr;
 }
 
 void Simulation::onMouseUpEvent(Uint8 button)
