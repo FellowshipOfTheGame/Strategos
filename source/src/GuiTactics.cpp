@@ -345,7 +345,7 @@ TacticCA::TacticCA(int x, int y, int id, string GID) :
 	{
 		if (id != unt[i]->getID())
 		{
-            sprintf(str, "%lu", unt[i]->getID());
+            sprintf(str, "%d", unt[i]->getID());
             cmb_partner->addText(str);
 		}
 	}
@@ -393,7 +393,7 @@ TacticCD::TacticCD(int x, int y, int id, string GID) :
 	{
 		if (id != unt[i]->getID())
         {
-            sprintf(str, "%lu", unt[i]->getID());
+            sprintf(str, "%d", unt[i]->getID());
             cmb_partner->addText(str);
         }
 	}
@@ -461,7 +461,7 @@ TacticRT::TacticRT(int x, int y, int id, string GID) :
 	{
 		if (id != unt[i]->getID())
         {
-            sprintf(str, "%lu", unt[i]->getID());
+            sprintf(str, "%d", unt[i]->getID());
             cmb_partner->addText(str);
         }
 	}

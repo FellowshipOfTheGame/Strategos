@@ -20,7 +20,6 @@ Ship::Ship(const shipBaseStats &initialStats, Coordinates Coord)
 {
     currentDirection = M_PI/2;
 
-//    moving = 0;
     status = 0;
     deathTime=0;
 }
@@ -40,7 +39,7 @@ const Coordinates& Ship::getTargetPos() const
     return targetPos;
 }
 
-float Ship::getDirection()
+float Ship::getDirection() const
 {
     return currentDirection;
 }
@@ -79,10 +78,7 @@ int Ship::update()
 
 bool Ship::isAlive() const
 {
-    if(stats.currentHP > 0)
-        return true;
-
-    return false;
+    return (stats.currentHP > 0);
 }
 
 void Ship::kill()

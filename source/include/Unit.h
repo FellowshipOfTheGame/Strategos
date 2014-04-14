@@ -35,7 +35,7 @@ class Unit
         vector<Tactic*> tactics;
 
         // Team Data
-        unsigned long id;   // TODO: O que exatamente eh id? Posicao na Army? Apenas um numero id usado para taticas?
+        unsigned int id;   // TODO: O que exatamente eh id? Posicao na Army? Apenas um numero id usado para taticas?
         int team;  // Time 0 ou 1, durante a batalha.
 
         // Dynamic Combat Data
@@ -52,7 +52,7 @@ class Unit
 
     public:
         Unit(const Unit* copy);
-        Unit(unsigned long ID, const DictKey *info, Coordinates position);
+        Unit(unsigned int ID, const DictKey *info, Coordinates position);
         ~Unit();
 
         /// Atualiza ships
@@ -76,12 +76,12 @@ class Unit
         unsigned int getTacticSize();
 
         // Team
-        unsigned long getID() const;
+        unsigned int getID() const;
         void setID(int id);
         int getTeam() const;
 
         /// Retorna o tipo da unidade
-        int getType();
+        int getType() const;
 
         void setTarget(int i);
         int getTarget();
@@ -103,18 +103,17 @@ class Unit
         ///
         /// Este valor eh atualizado na funcao update()
         ///
-        int getNShipsAlive();
+        int getNShipsAlive() const;
 
-        /// Verifica se o mouse esta sobre a unidade
+        /// Verifica a posicao esta sobre a unidade
         ///
-        /// \param  camOX   Posicao X da camera
-        /// \param  camOY   Posicao Y da camera
-        /// \return Retorna se o mouse esta sobre a nave
+        /// \param  mX   Posicao X
+        /// \param  mY   Posicao Y
+        /// \return Retorna se a posicao X,Y esta sobre a unidade
         ///
-        /// A posicao da camera eh considerada para verificar se o mouse
-        /// esta sobre a camera. Eh usada a posicao MEDIA da unidade.
+        /// A posicao MEDIA da unidade eh usada.
         ///
-        bool hover(float camOX, float camOY);
+        bool hover(float mX, float mY) const;
 
         /// Retorna a posicao media do esquadrao
         ///
@@ -127,28 +126,28 @@ class Unit
 
         /// Retorna a coordernada X base INICIAL da batalha
         /// \return Retorna a posicao X base inicial
-        float getBaseX();
+        float getBaseX() const;
 
         /// Retorna a coordernada Y base INICIAL da batalha
         /// \return Retorna a posicao Y base inicial
-        float getBaseY();
+        float getBaseY() const;
 
         /// Retorna a coordernada X media
-        float getAvgX();
+        float getAvgX() const;
 
         /// Retorna a coordernada Y media
-        float getAvgY();
+        float getAvgY() const;
 
-        float getBluePrintX();
-        float getBluePrintY();
-        const Coordinates& getBluePrintCoord();
+        float getBluePrintX() const;
+        float getBluePrintY() const;
+        const Coordinates& getBluePrintCoord() const;
         void setBluePrintCoord(const Coordinates& coord);
 
         /// Retorna as coordenadas base INICIAIS
         /// \return Retorna as coordenadas base iniciais da unidade
-        const Coordinates& getBaseCoord();
+        const Coordinates& getBaseCoord() const;
 
-        const shipBaseStats& getSquadBaseStats();
+        const shipBaseStats& getSquadBaseStats() const;
         const DictKey* getUnitInfo() const;
 
         // Mover Unidade
@@ -166,7 +165,6 @@ class Unit
 
         /// Desenha a unidade considerando a posicao da camera
         void render();
-//        int amountAlive();
 };
 
 #endif

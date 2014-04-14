@@ -79,13 +79,10 @@ class Ship
         /// \return: Retorna se o dano foi letal
         bool takeDamage(double damage);
 
-//        void move(Coordinates delta);
-//        void move(double dx, double dy);
-
         // Seleciona a posicao "alvo" para a nave ir em direcao
         void moveTo(const Coordinates& c);
 
-        float getDirection();
+        float getDirection() const;
 
         double getHP() const;
         void kill();

@@ -134,16 +134,25 @@ void Simulation::onMouseDownEvent(Uint8 button)
         if (selectedUnit == nullptr)
             selectedUnit = checkClickOn(simulationWorld->getArmy(1));
 
-        // TODO: Assim temos preferencia para exercito 0...
+        if (selectedUnit != nullptr)
+        {
+            selectedUnit->printInfo();
+        }
     }
 }
 
-Unit* Simulation::checkClickOn(Army *army)
+Unit* Simulation::checkClickOn(const Army *army)
 {
+    int mouseX, mouseY;
+	SDL_GetMouseState(&mouseX, &mouseY);
+
+	mouseX += camera->getX();
+	mouseY += camera->getY();
+
     const vector<Unit*>& units = army->getUnits();
     for(unsigned int i = 0; i < units.size(); i++)
     {
-        if( units[i]->hover(camera->getX(), camera->getY()) ){
+        if( units[i]->getNShipsAlive() > 0 && units[i]->hover(mouseX, mouseY) ){
             return units[i];
         }
     }

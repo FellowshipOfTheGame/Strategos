@@ -120,22 +120,25 @@ void DamageAction::render()
 ///
 
 MoveAction::MoveAction(Ship *Source, const Coordinates& Coord, bool GetNear)
-    : source(Source), target(0), getNearTo(GetNear)
+    : source(Source), target(0), getNearTo(GetNear), coord(Coord)
 {
     ++_N_ACTIONS_MOVE_;
 
     if (getNearTo)
     {
-        float dist = Coord.distance(source->getPosition());
+        double dist = Coord.distance(source->getPosition());
 
         if (dist >= source->getBaseStats().range)
         {
-            float direction = atan2(source->getY() - Coord.y, source->getX() - Coord.x);
+            double direction = atan2(source->getY() - Coord.y, source->getX() - Coord.x);
             coord.x = source->getX() - (dist-source->getBaseStats().range*0.9) * cos(direction);
             coord.y = source->getY() - (dist-source->getBaseStats().range*0.9) * sin(direction);
         }
     }else{
-        coord = Coord;
+
+            // !!!! Ja foi iniciado com Coord !!!!
+            // coord = Coord;
+
     }
 }
 
@@ -144,11 +147,11 @@ MoveAction::MoveAction(Ship *Source, Ship* Target, bool GetNear)
 {
     if (getNearTo)
     {
-        float dist = target->getPosition().distance(source->getPosition());
+        double dist = target->getPosition().distance(source->getPosition());
 
         if (dist >= source->getBaseStats().range)
         {
-            float direction = atan2(source->getY() - target->getY(), source->getX() - target->getX());
+            double direction = atan2(source->getY() - target->getY(), source->getX() - target->getX());
             coord.x = source->getX() - (dist - source->getBaseStats().range*0.9) * cos(direction);
             coord.y = source->getY() - (dist - source->getBaseStats().range*0.9) * sin(direction);
         }
@@ -212,7 +215,7 @@ Action* AttackAction::act()
     {
         direction = atan2(coord.y - target->getPosition().y, coord.x - target->getPosition().x);
 
-        float speed = std::min( dist, 14.0f );
+        float speed = std::min( dist, 16.0f );
 
         coord.x -= speed*cos(direction);
         coord.y -= speed*sin(direction);
@@ -253,41 +256,33 @@ void AttackAction::render( )
 }
 
 KamikazeAction::KamikazeAction(Ship *Source, Ship *Target, Image *imgShoot)
-    : source(Source), target(Target), coord(Source->getPosition()), distance(0),explosionEffect(imgShoot)
+    :   source(Source), target(Target), coord(Source->getPosition()),
+        distance(0), explosionEffect(imgShoot)
 {
 }
 
 Action* KamikazeAction::act()
 {
-    if (!target->isAlive())
+    if ( !target->isAlive() )
     {
         complete = 1;
         source->kill();
+
+        return 0;
     }
 
-    float dist = source->getPosition().distance(target->getPosition());
-    if ( dist < 20.0f )
+    double dist = source->getPosition().distance(target->getPosition());
+    if ( dist < 15.0 )
     {
     	source->kill();
+        target->takeDamage(source->getBaseStats().damage * distance/2);
 
-        target->takeDamage(source->getBaseStats().damage * distance/4);
-
-//        printf("%p kamikaze to %p for %f damage\n", source, target, source->getBaseStats().damage * distance/400);
         complete = 1;
     }
     else
     {
-//        float direction = atan2(source->getY() - target->getPosition().y, source->getX() - target->getPosition().x);
-//
-//        // Causar dano a nave kamikaze [NERF]
-//        source->takeDamage( std::max( source->getHP()/100, 0.3) );
-//
-//        float speed = std::min( dist, 14.0f );
         distance += 1;
-
-//        source->moveTo(-speed*cos(direction), -speed*sin(direction));
-
-        source->getStats().currentSpeed = std::max(source->getBaseStats().speed*5, 8.0);
+        source->getStats().currentSpeed = std::min(dist, std::max(source->getBaseStats().speed*5, 10.0));
         source->moveTo(target->getPosition());
     }
 

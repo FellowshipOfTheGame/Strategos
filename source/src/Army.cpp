@@ -419,7 +419,7 @@ void Army::printUnits() const
 {
 	for (unsigned int i = 0; i < units.size(); i++)
 	{
-		printf("ID: %ld\n", units[i]->getID());
+		printf("ID: %d\n", units[i]->getID());
 		printf("Type: %d\n", units[i]->getType());
 
 		units[i]->printInfo();

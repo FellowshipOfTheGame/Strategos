@@ -25,7 +25,7 @@ void print_MaxActions()
     max_tatics_per_unit = 0;
 }
 
-Unit::Unit(unsigned long ID, const DictKey *info, Coordinates position)
+Unit::Unit(unsigned int ID, const DictKey *info, Coordinates position)
     : bluePrintCoord(position), mySquadInfo(info), id(ID),
     target(-1), baseCoord(position), averageCoord(position),
         basicTacticMoveRandom( TacticInfo(0), TacticTrigger(0, 0, TRIGGER_LOGIC_OR) ),
@@ -162,7 +162,7 @@ Ship* Unit::getShip(unsigned long gid)
     return nullptr;
 }
 
-unsigned long Unit::getID() const{
+unsigned int Unit::getID() const{
 	return id;
 }
 
@@ -170,15 +170,15 @@ void Unit::setID(int id){
 	this->id = id;
 }
 
-int Unit::getType(){
+int Unit::getType() const{
 	return mySquadInfo->type;
 }
 
-float Unit::getBaseX(){
+float Unit::getBaseX() const{
 	return baseCoord.x;
 }
 
-float Unit::getBaseY(){
+float Unit::getBaseY() const{
 	return baseCoord.y;
 }
 
@@ -186,35 +186,35 @@ void Unit::setBluePrintCoord(const Coordinates& coord){
     bluePrintCoord = coord;
 }
 
-const Coordinates& Unit::getBluePrintCoord(){
+const Coordinates& Unit::getBluePrintCoord() const{
 	return bluePrintCoord;
 }
 
-float Unit::getBluePrintX(){
+float Unit::getBluePrintX() const{
 	return bluePrintCoord.x;
 }
 
-float Unit::getBluePrintY(){
+float Unit::getBluePrintY() const{
 	return bluePrintCoord.y;
 }
 
-float Unit::getAvgX(){
+float Unit::getAvgX() const{
 	return averageCoord.x;
 }
 
-float Unit::getAvgY(){
+float Unit::getAvgY() const{
 	return averageCoord.y;
 }
 
-const Coordinates& Unit::getBaseCoord(){
+const Coordinates& Unit::getBaseCoord() const{
 	return baseCoord;
 }
 
-const shipBaseStats& Unit::getSquadBaseStats(){
+const shipBaseStats& Unit::getSquadBaseStats() const{
 	return mySquadInfo->stats;
 }
 
-int Unit::getNShipsAlive(){
+int Unit::getNShipsAlive() const{
     return shipsAlive;
 }
 
@@ -222,17 +222,9 @@ const Coordinates& Unit::getAveragePos() const{
     return averageCoord;
 }
 
-bool Unit::hover(float camOX, float camOY)
+bool Unit::hover(float mX, float mY) const
 {
-	int mouseX, mouseY;
-	SDL_GetMouseState(&mouseX, &mouseY);
-
-	if (averageCoord.distance(mouseX + camOX, mouseY + camOY) < 64)
-	{
-		return true;
-	}
-
-	return false;
+	return (averageCoord.distance(mX, mY) < 64);
 }
 
 unsigned long Unit::nShips() const
@@ -314,6 +306,7 @@ int Unit::update()
 
 void Unit::printInfo()
 {
+    printf("\nUNIT: %d\n", id);
 	printf("maxHP: %lf\n", mySquadInfo->stats.maxHP);
 	printf("damage: %lf\n", mySquadInfo->stats.damage);
 	printf("speed: %lf\n", mySquadInfo->stats.speed);
@@ -321,10 +314,26 @@ void Unit::printInfo()
 	printf("shield: %lf\n", mySquadInfo->stats.shield);
 	printf("dodge: %lf%%\n", mySquadInfo->stats.dodge);
 	printf("atkCooldown: %d\n", mySquadInfo->stats.maxAtkCD);
-	printf("squadSize: %d\n", mySquadInfo->squadSize);
+	printf("squadSize: %d \t Alive: %d\n", mySquadInfo->squadSize, shipsAlive);
 
+    printf("Tactics: %d\n", tactics.size());
 	for (unsigned int i = 0; i < tactics.size(); i++)
-		tactics[i]->printTactic();
+		printf("-> %s\n",tactics[i]->printTactic().c_str());
+
+    printf("Actions: %d\n", shipsActions.size());
+    for (Action* ac : shipsActions)
+    {
+        if (dynamic_cast<ExplosionAction*>(ac))
+            printf("-> Explosion Action\n");
+        else if (dynamic_cast<DamageAction*>(ac))
+            printf("-> Damage Action\n");
+        else if (dynamic_cast<MoveAction*>(ac))
+            printf("-> Move Action\n");
+        else if (dynamic_cast<AttackAction*>(ac))
+            printf("-> Attack Action\n");
+        else if (dynamic_cast<KamikazeAction*>(ac))
+            printf("-> Kamikaze Action\n");
+    }
 }
 
 const DictKey* Unit::getUnitInfo() const
@@ -454,6 +463,9 @@ void Unit::render()
         }
     }
 
-	circleRGBA(renderer, averageCoord.x, averageCoord.y, 64, 0, 128, 0, 160);
+    if (team == 0)
+        circleRGBA(renderer, averageCoord.x, averageCoord.y, 64, 255,0,0, 240);
+    else
+        circleRGBA(renderer, averageCoord.x, averageCoord.y, 64, 0,0,255, 240);
 }
 

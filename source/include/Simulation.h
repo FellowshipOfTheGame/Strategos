@@ -31,7 +31,7 @@ class Simulation : public StateMachine
         // Render
         SDL_Texture* renderCombat;
 
-        Unit* checkClickOn(Army *army);
+        Unit* checkClickOn(const Army *army);
         void drawBG(Image* img, double x, double y, double factor, SDL_Renderer *renderer);
 
 
