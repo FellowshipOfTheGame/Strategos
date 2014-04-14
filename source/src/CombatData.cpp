@@ -1,74 +1,96 @@
 #include "CombatData.h"
 
-CombatData::CombatData()
+CombatData::CombatData(int nU1, int nU2)
+    : nUnits1(nU1), nUnits2(nU2)
 {
+    distancesUnit = new double*[nU1];
+
+    for (int i = 0; i < nU1; ++i){
+        distancesUnit[i] = new double[nU2];
+
+        for (int j = 0; j < nU2; ++j)
+            distancesUnit[i][j] = -1;
+    }
+
+    total = miss = 0;
 }
 
 CombatData::~CombatData()
 {
+    for (int i = 0; i < nUnits1; ++i)
+        delete[] distancesUnit[i];
+    delete[] distancesUnit;
 }
 
 double CombatData::getUnitDistance(const Unit* a, const Unit* b)
 {
-    p_units u(a, b);
+    int x = a->getTeam();
+    int y = b->getTeam();
 
-    if ( a > b ){
-        u.first = b;
-        u.second = a;
-    }
-
-    auto it = unitDistance.find(u);
-
-    if (it == unitDistance.end())
+    if (x == y)
     {
-        double d = a->getAveragePos().distance(b->getAveragePos());
-        unitDistance[u] = d;
-        return d;
+        printf("Same Team not expected!\n");
+        exit(0);
     }
 
-    return it->second;
+    if (x == 0)
+    {
+        x = a->getID();
+        y = b->getID();
+    }else{
+        x = b->getID();
+        y = a->getID();
+    }
+
+    ++total;
+    if ( distancesUnit[x][y] < 0 ){
+        ++miss;
+        return (distancesUnit[x][y] = a->getAveragePos().distance(b->getAveragePos()));
+    }
+
+    return distancesUnit[x][y];
 }
 
 double CombatData::getShipDistance(const Ship* a, const Ship* b)
 {
-    p_ships s(a, b);
-
-    if ( a > b ){
-        s.first = b;
-        s.second = a;
-    }
-
-    auto it = shipDistance.find(s);
-
-    if (it == shipDistance.end())
-    {
-        double d = a->getPosition().distance(b->getPosition());
-        shipDistance[s] = d;
-        return d;
-    }
-
-    return it->second;
+//    p_ships s(a, b);
+//
+//    if ( a > b ){
+//        s.first = b;
+//        s.second = a;
+//    }
+//
+//    auto it = shipDistance.find(s);
+//
+//    if (it == shipDistance.end())
+//    {
+//        double d = a->getPosition().distance(b->getPosition());
+//        shipDistance[s] = d;
+//        return d;
+//    }
+//
+//    return it->second;
 }
 
-Unit* CombatData::getNearestUnit(const Unit* from, const std::vector<Unit*>& to)
-{
-    Unit *nearestUnit = NULL;
-    double minDist = 99999;
-
-	for (unsigned int i = 0; i < to.size(); ++i)
-	{
-	    if (to[i]->getNShipsAlive() == 0) continue;
-
-        double dist = getUnitDistance(from, to[i]);
-        if (dist < minDist)
-        {
-            minDist = dist;
-            nearestUnit = to[i];
-        }
-	}
-
-	return nearestUnit;
-}
+//Unit* CombatData::getNearestUnit(const Unit* from, const std::vector<Unit*>& to)
+//{
+//    Unit *nearestUnit = NULL;
+//    double minDist = 99999;
+//
+//	for (unsigned int i = 0; i < to.size(); ++i)
+//	{
+//	    if (to[i]->getNShipsAlive() == 0) continue;
+//
+//        double dist = getUnitDistance(from, to[i]);
+//        if (dist < minDist)
+//        {
+//            minDist = dist;
+//            nearestUnit = to[i];
+//        }
+//	}
+//
+//	return nearestUnit;
+//}
 
 //Ship* CombatData::getNearestShip(const Ship* from, const std::vector<Ship*>& to)
 //{
@@ -77,6 +99,12 @@ Unit* CombatData::getNearestUnit(const Unit* from, const std::vector<Unit*>& to)
 
 void CombatData::ClearDistances()
 {
-    unitDistance.clear();
-    shipDistance.clear();
+//    printf("Total: %d, Miss: %d, TaxSuc: %.3lf\n", total, miss, 1.0-miss/(double)total);
+//    total = miss = 0;
+    for (int i = 0; i < nUnits1; ++i)
+    {
+//        for (int j = 0; j < nUnits2; ++j)
+//            distancesUnit[i][j] = -1;
+        memset( distancesUnit[i], -5, nUnits2*sizeof(double) );
+    }
 }

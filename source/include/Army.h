@@ -50,7 +50,9 @@ public:
     int update();
     void updateActions();
 
-    void restore();
+    // Resetar Army como o time X
+    // Altera o lado das naves
+    void restore(int asTeam);
 
     // Adiciona um Unit para o Army
     void addUnit(Unit *unit);
@@ -60,10 +62,6 @@ public:
 	const Dictionary *getDictionary() const;
 	void setDictionary(Dictionary* armyDictionary);
 	void setArmyName(std::string armyName);
-
-    // Reflete a posicao X e Y do exercito
-    // Soma beta na posicao X final e gama na posicao Y
-	void setReflectBasePositions(int beta, int gama);
 
 	// Gets
 	Unit* getMotherUnit();

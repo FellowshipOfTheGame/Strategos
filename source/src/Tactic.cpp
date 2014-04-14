@@ -14,6 +14,8 @@
 #include "Tactic.h"
 #include "Unit.h"
 
+#include "CombatData.h"
+
 Tactic* Tactic::copy(const Tactic *source)
 {
     Tactic *t_copy = nullptr;
@@ -65,16 +67,16 @@ int AttackNearestEnemy::validateTactic(list<Action*> &newActions, TacticValidati
 	tvd.validatingUnit->setTarget(-1);
 
 	int Ret = 0;
-	Coordinates myPos = tvd.validatingUnit->getAveragePos();
+//	Coordinates myPos = tvd.validatingUnit->getAveragePos();
 	float minDist = 99999;
 
 	Unit *nearestUnit = NULL;
 	for (unsigned int i = 0; i < tvd.enemyUnits.size(); ++i)
 	{
-		Coordinates enemyAvrg = tvd.enemyUnits[i]->getAveragePos();
+//		Coordinates enemyAvrg = tvd.enemyUnits[i]->getAveragePos();
 		if (tvd.enemyUnits[i]->getNShipsAlive() > 0)
 		{
-			float dist = myPos.distance(enemyAvrg);
+			float dist = tvd.combatData.getUnitDistance(tvd.validatingUnit, tvd.enemyUnits[i]); //myPos.distance(enemyAvrg);
 			if (dist < minDist)
 			{
 				minDist = dist;
@@ -135,7 +137,7 @@ int AttackWeakestEnemy::validateTactic(list<Action*> &newActions, TacticValidati
 	Coordinates enemyAvrg;
 	int sumHP;
 
-	Coordinates myPos = tvd.validatingUnit->getAveragePos();
+//	Coordinates myPos = tvd.validatingUnit->getAveragePos();
 	if (tvd.validatingUnit->getNShipsAlive() == 0)
 		return 0;
 
@@ -144,10 +146,10 @@ int AttackWeakestEnemy::validateTactic(list<Action*> &newActions, TacticValidati
 	//cria uma lista com a unidades dentro do alcançe
 	for (unsigned int i = 0; i < tvd.enemyUnits.size(); i++)
 	{
-		Coordinates enemyAvrg = tvd.enemyUnits[i]->getAveragePos();
+//		Coordinates enemyAvrg = tvd.enemyUnits[i]->getAveragePos();
 		if (tvd.enemyUnits[i]->getNShipsAlive() > 0)
 		{
-			float dist = myPos.distance(enemyAvrg);
+			float dist = tvd.combatData.getUnitDistance(tvd.validatingUnit, tvd.enemyUnits[i]); // myPos.distance(enemyAvrg);
 			if (dist < tvd.validatingUnit->getSquadBaseStats().range)
 			{
 			    // Verificar HP desta unidade
@@ -234,7 +236,7 @@ int AttackCollab::validateTactic(list<Action*> &newActions, TacticValidationData
 
 	/// TODO: Adicionar restricao de distancia?
 
-    float dist = tvd.validatingUnit->getAveragePos().distance(enemyUnit->getAveragePos());
+    float dist = tvd.combatData.getUnitDistance(tvd.validatingUnit, enemyUnit); //tvd.validatingUnit->getAveragePos().distance(enemyUnit->getAveragePos());
     if (dist < tvd.validatingUnit->getUnitInfo()->stats.range)
     {
         for (unsigned int i = 0; i < tvd.validatingUnit->nShips(); ++i)
@@ -393,17 +395,17 @@ int Kamikase::validateTactic(list<Action*> &newActions, TacticValidationData& tv
 	int Ret = 0;
 	float minDist = 99999;
 
-	Coordinates myPos = tvd.validatingUnit->getAveragePos();
+//	Coordinates myPos = tvd.validatingUnit->getAveragePos();
 	if (tvd.validatingUnit->getNShipsAlive() == 0)
 		return 0;
 
 	Unit *nearestUnit = NULL;
 	for (unsigned int i = 0; i < tvd.enemyUnits.size(); ++i)
 	{
-		Coordinates enemyAvrg = tvd.enemyUnits[i]->getAveragePos();
+//		Coordinates enemyAvrg = tvd.enemyUnits[i]->getAveragePos();
 		if (tvd.enemyUnits[i]->getNShipsAlive() > 0)
 		{
-			float dist = myPos.distance(enemyAvrg);
+			float dist = tvd.combatData.getUnitDistance(tvd.validatingUnit, tvd.enemyUnits[i]); // myPos.distance(enemyAvrg);
 			if (dist < minDist)
 			{
 				minDist = dist;

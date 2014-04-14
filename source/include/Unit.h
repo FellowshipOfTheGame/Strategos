@@ -30,10 +30,13 @@ class Unit
 {
     private:
         // Imutable Data
-        unsigned long id; // TODO: O que exatamente eh id? Posicao na Army? Apenas um numero id usado para taticas?
-        const DictKey *mySquadInfo;
         Coordinates bluePrintCoord;
+        const DictKey *mySquadInfo;
         vector<Tactic*> tactics;
+
+        // Team Data
+        unsigned long id;   // TODO: O que exatamente eh id? Posicao na Army? Apenas um numero id usado para taticas?
+        int team;  // Time 0 ou 1, durante a batalha.
 
         // Dynamic Combat Data
         int shipsAlive;
@@ -65,27 +68,34 @@ class Unit
         ///
         void updateActions();
 
+        // Taticas
         void addTactic(Tactic *tactic);
         void removeTactic(int n);
         void setTacticAt(Tactic *tactic, int pos);
-
-        // Gets
         Tactic* getTacticAt(unsigned int pos);
         unsigned int getTacticSize();
-        unsigned long getID();
+
+        // Team
+        unsigned long getID() const;
         void setID(int id);
+        int getTeam() const;
+
+        /// Retorna o tipo da unidade
         int getType();
-        Ship* getShip(unsigned long gid);
-        unsigned long nShips() const;
+
         void setTarget(int i);
         int getTarget();
 
+        /// Ships
+        Ship* getShip(unsigned long gid);
+        unsigned long nShips() const;
+
         /// Recria todas as naves da unidade
         /// Altera a posicao base
-        void restoreShips(const Coordinates atBaseP);
+        void restoreUnit(int teamID, const Coordinates atBaseP);
 
         /// Reseta as naves na posicao da BluePrint
-        void restoreShips();
+        void restoreUnit(int teamID);
 
         /// Retorna o numero de naves vivas
         ///

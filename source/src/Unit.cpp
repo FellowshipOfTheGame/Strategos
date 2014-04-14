@@ -29,7 +29,7 @@ Unit::Unit(unsigned long ID, const DictKey *info, Coordinates position)
         basicTacticAttackNearest( TacticInfo(0), TacticTrigger(0, 0, TRIGGER_LOGIC_OR) ),
         basicTacticRetreat( TacticInfo(0), TacticTrigger(0, 0, TRIGGER_LOGIC_OR) )
 {
-	restoreShips();
+	restoreUnit(0);
 }
 
 Unit::Unit(const Unit* copy)
@@ -44,7 +44,7 @@ Unit::Unit(const Unit* copy)
     for (unsigned int i = 0; i < copy->tactics.size(); ++i)
         tactics.push_back(Tactic::copy(copy->tactics[i]));
 
-    restoreShips();
+    restoreUnit(copy->team);
 }
 
 Unit::~Unit()
@@ -61,7 +61,7 @@ Unit::~Unit()
         delete *it;
 }
 
-void Unit::restoreShips(const Coordinates atBaseP)
+void Unit::restoreUnit(int teamID, const Coordinates atBaseP)
 {
     for (unsigned int i = 0; i < ships.size(); ++i)
         delete ships[i];
@@ -88,11 +88,17 @@ void Unit::restoreShips(const Coordinates atBaseP)
 
 	shipsAlive = mySquadInfo->squadSize;
 	target = -1;
+	team = teamID;
 }
 
-void Unit::restoreShips()
+int Unit::getTeam() const
 {
-    restoreShips(bluePrintCoord);
+    return team;
+}
+
+void Unit::restoreUnit(int teamID)
+{
+    restoreUnit(teamID, bluePrintCoord);
 }
 
 void Unit::addTactic(Tactic *tactic)
@@ -153,7 +159,7 @@ Ship* Unit::getShip(unsigned long gid)
     return nullptr;
 }
 
-unsigned long Unit::getID(){
+unsigned long Unit::getID() const{
 	return id;
 }
 

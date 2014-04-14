@@ -33,6 +33,8 @@ class World
         TacticValidationData tvdForArmy1;
         TacticValidationData tvdForArmy2;
 
+        int totalSteps;
+
     public:
         World(Army *army1, Army *army2);
         ~World();

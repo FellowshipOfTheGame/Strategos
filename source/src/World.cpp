@@ -12,9 +12,12 @@ using namespace std;
 /// quando uma morre, ambas morrem. ERRO ERRO
 
 World::World(Army *army1, Army *army2)
-    : tvdForArmy1(combatData, army2->getUnits(), army1->getUnits()),
-      tvdForArmy2(combatData, army1->getUnits(), army2->getUnits())
+    :   combatData(army1->nUnits(), army2->nUnits()),
+        tvdForArmy1(combatData, army2->getUnits(), army1->getUnits()),
+        tvdForArmy2(combatData, army1->getUnits(), army2->getUnits())
 {
+    totalSteps = 0;
+
     printf("Starting World... ");
 
     if (army1 == army2)
@@ -28,11 +31,8 @@ World::World(Army *army1, Army *army2)
 
 	printf("%d VS %d ", army1->nUnits(), army2->nUnits());
 
-	army1->restore();
-	army2->restore();
-
-	// Setar posicao de cada exercito
-    armies[1]->setReflectBasePositions(TEAM_2_POSX, TEAM_2_POSY);
+	army1->restore(0);
+	army2->restore(1);
 
     Game::getGlobalGame()->setCombatLog(0);
     Game::getGlobalGame()->setCombatLog(1);
@@ -43,6 +43,7 @@ World::~World()
 {
 //    printNActions();
 //    print_MaxActions();
+    printf("Steps: %d\n", totalSteps);
 }
 
 void World::calcActions()
@@ -75,6 +76,8 @@ void World::calcActions()
 
 int World::simulateStep()
 {
+    ++totalSteps;
+
     combatData.ClearDistances();
 
 	//printf ("\t calcActions\n");

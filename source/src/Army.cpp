@@ -256,15 +256,6 @@ void Army::setArmyName(std::string armyName)
 	this->name = armyName;
 }
 
-void Army::setReflectBasePositions(int offX, int offY)
-{
-    for (unsigned int i = 0; i < units.size(); i++){
-        const int x = TEAM_AREA_WIDTH - units[i]->getBluePrintX() + offX;
-        const int y = TEAM_AREA_HEIGHT - units[i]->getBluePrintY() + offY;
-	    units[i]->restoreShips( Coordinates(x, y) );
-	}
-}
-
 void Army::addUnit(Unit *unit)
 {
     totalShips += unit->getUnitInfo()->squadSize;
@@ -376,10 +367,27 @@ const std::string& Army::getName() const
 	return name;
 }
 
-void Army::restore()
+void Army::restore(int asTeam)
 {
-    for(unsigned int i = 0; i < units.size(); i++){
-        units[i]->restoreShips();
+    int offX = 0;
+    int offY = 0;
+
+    if (asTeam == 1)
+    {
+        offX = TEAM_2_POSX;
+        offY = TEAM_2_POSY;
+
+        for (unsigned int i = 0; i < units.size(); i++){
+            const int x = TEAM_AREA_WIDTH - units[i]->getBluePrintX() + offX;
+            const int y = TEAM_AREA_HEIGHT - units[i]->getBluePrintY() + offY;
+            units[i]->restoreUnit( 1, Coordinates(x, y) );
+        }
+    }
+    else
+    {
+        for (unsigned int i = 0; i < units.size(); i++){
+            units[i]->restoreUnit( 0 );
+        }
     }
 }
 

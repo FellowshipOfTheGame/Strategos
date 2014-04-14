@@ -4,13 +4,10 @@
 #include <Unit.h>
 #include <Ship.h>
 
-typedef std::pair<const Unit*, const Unit*> p_units;
-typedef std::pair<const Ship*, const Ship*> p_ships;
-
 class CombatData
 {
     public:
-        CombatData();
+        CombatData(int nU1, int nU2);
         ~CombatData();
 
         double getUnitDistance(const Unit* a, const Unit* b);
@@ -22,9 +19,10 @@ class CombatData
         void ClearDistances();
 
     private:
-        std::map<p_units, double> unitDistance;
-        std::map<p_ships, double> shipDistance;
+        int miss, total;
 
+        double** distancesUnit;
+        int nUnits1, nUnits2;
 };
 
 
