@@ -94,6 +94,7 @@ Army* Army::loadArmy(string armyname)
 			}
 			//unit->setShipImages(workingDict->getShipImage());
 
+            // RULE: [trigger(tipo, valor, operador)][logic][trigger(tipo, valor, operador)][ruleType][extra]
 			while (tag != "END_SQUAD")
 			{
 				file >> tag;
@@ -393,14 +394,13 @@ void Army::updateActions()
 int Army::update()
 {
     int t = 0;
+
+    // Se a nave mae estiver morta, o exercito perdeu.
+    if (units[0]->getNShipsAlive() == 0)
+        return 0;
+
 	for (unsigned int i = 0; i < units.size(); i++)
 	{
-		if (units[i]->getUnitInfo()->type == 0)
-		{ // Se a nave mae estiver morta
-			if (units[i]->getNShipsAlive() == 0)
-				return 0;
-		}
-
 		t += units[i]->update();
 	}
 

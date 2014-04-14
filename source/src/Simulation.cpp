@@ -139,17 +139,10 @@ void Simulation::onMouseDownEvent(Uint8 button)
 
 Unit* Simulation::checkClickOn(Army *army)
 {
-    int mouseX, mouseY;
-
-    SDL_GetMouseState(&mouseX, &mouseY);
-
-    // TODO: Considerar camera!
     const vector<Unit*>& units = army->getUnits();
     for(unsigned int i = 0; i < units.size(); i++)
     {
-        const Coordinates& coord = units[i]->getAveragePos();
-
-        if(coord.distance(mouseX, mouseY) <= 64){
+        if( units[i]->hover(camera->getX(), camera->getY()) ){
             return units[i];
         }
     }
@@ -167,11 +160,6 @@ void Simulation::Logic()
     camera->update();
     bgOffsetX = camera->getX();
     bgOffsetY = camera->getY();
-//    if (bgOffsetX < -Game::getGlobalGame()->getWidth()) // Fazer loop do background
-//        bgOffsetX += Game::getGlobalGame()->getWidth();
-//
-//    if (bgOffsetY < -Game::getGlobalGame()->getHeight()) // Fazer loop do background
-//        bgOffsetY += Game::getGlobalGame()->getHeight();
 
     if (gameRunning)
     {
@@ -219,17 +207,6 @@ void Simulation::Render()
     drawBG(background[1], bgOffsetX, bgOffsetY, -0.13, renderer);
     drawBG(background[2], bgOffsetX, bgOffsetY, -0.2, renderer);
     drawBG(background[3], bgOffsetX, bgOffsetY, -0.28, renderer);
-//    background[0]->DrawImage(bgOffsetX*0.10, bgOffsetY*0.10, renderer);
-//    background[1]->DrawImage(bgOffsetX*0.13, bgOffsetY*0.13, renderer);
-//    background[2]->DrawImage(bgOffsetX*0.20, bgOffsetY*0.20, renderer);
-//    background[3]->DrawImage(bgOffsetX*0.28, bgOffsetY*0.28, renderer);
-
-//    background->DrawImage(bgOffsetX, bgOffsetY, renderer);
-//    background->DrawImage(bgOffsetX + Game::getGlobalGame()->getWidth(),
-//                          bgOffsetY + Game::getGlobalGame()->getHeight(), renderer);
-//
-//    background->DrawImage(bgOffsetX + Game::getGlobalGame()->getWidth(), bgOffsetY, renderer);
-//    background->DrawImage(bgOffsetX, bgOffsetY + Game::getGlobalGame()->getHeight(), renderer);
 
     //Just TESTING
     SDL_SetRenderTarget(renderer, renderCombat);
@@ -255,7 +232,7 @@ void Simulation::Render()
 
     if(selectedUnit)
     {
-        filledCircleRGBA( renderer, selectedUnit->getAvgX(), selectedUnit->getAvgY(), 64, 0, 0, 255, 128 );
+        filledCircleRGBA( renderer, selectedUnit->getAvgX()-camera->getX(), selectedUnit->getAvgY()-camera->getY(), 64, 0, 0, 255, 128 );
     }
 }
 

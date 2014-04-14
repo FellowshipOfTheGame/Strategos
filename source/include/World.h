@@ -9,9 +9,11 @@
 #ifndef _WORLD_H_
 #define _WORLD_H_
 
+#include <vector>
+
 #include "Camera.h"
 #include "Army.h"
-#include <vector>
+#include "CombatData.h"
 #include "CombatLog.h"
 
 #define _SIM_CONTINUE_  0
@@ -26,6 +28,10 @@ class World
     private:
         vector<Army*> armies;
         void makeLog(Army *army, CombatLog *log);
+
+        CombatData combatData;
+        TacticValidationData tvdForArmy1;
+        TacticValidationData tvdForArmy2;
 
     public:
         World(Army *army1, Army *army2);

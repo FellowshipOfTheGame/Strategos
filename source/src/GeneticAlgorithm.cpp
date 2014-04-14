@@ -210,7 +210,7 @@ void GeneticAlgorithm::run()
     if (armyType != 0) return; // debug
 
     printf("Iterate 2 times\n");
-    for (unsigned int i = 0; i < 3; i++)
+    for (unsigned int i = 0; i < 1; i++)
     {
         vector<Army*> selected, rejected;
 
@@ -252,6 +252,8 @@ void GeneticAlgorithm::run()
         Army::saveArmy(individuos[i], directory.c_str());
         printf("army[%d]\n", i+1);
     }
+
+//    exit(0);
 }
 
 void GeneticAlgorithm::selectFromPop(int n, vector<Army*>& selected, vector<Army*>& rejected)

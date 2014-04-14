@@ -21,6 +21,8 @@
 #include "Ship.h"
 #include "Trigger.h"
 
+#include "TacticValidationData.h"
+
 #define TACTIC_ATTACK_NEAREST_ENEMY 0
 #define TACTIC_ATTACK_WEAKEST_ENEMY 1
 #define TACTIC_ATTACK_COLLAB        2
@@ -120,7 +122,7 @@ class Tactic
 
         // Verifica se a tatica pode ser efetuada e nesse caso já adiciona uma acao para a nave
         // @return: 1 se a tatica foi validada, 0 caso contrario.
-        virtual int validateTactic(list<Action*> &newActions, Unit* squad, const vector<Unit*>& enemyUnits, const vector<Unit*>& alliedUnits ) = 0;
+        virtual int validateTactic(list<Action*> &newActions, TacticValidationData& tvd ) = 0;
 };
 
 // Ataca o inimigo mais proximo dentro da RANGE da nave
@@ -136,7 +138,7 @@ class AttackNearestEnemy : public Tactic
 
         void debugPrint(){printf("AttackNearestEnemy");}
 
-        int validateTactic(list<Action*> &newActions, Unit* squad, const vector<Unit*>& enemyUnits, const vector<Unit*>& alliedUnits);
+        int validateTactic(list<Action*> &newActions, TacticValidationData& tvd ) override;
 };
 
 // Ataca o inimigo mais fraco dentro da RANGE da nave
@@ -150,7 +152,7 @@ class AttackWeakestEnemy : public Tactic
 
         void debugPrint(){printf("AttackWeakestEnemy");}
 
-        int validateTactic(list<Action*> &newActions, Unit* squad, const vector<Unit*>& enemyUnits, const vector<Unit*>& alliedUnits);
+        int validateTactic(list<Action*> &newActions, TacticValidationData& tvd ) override;
 };
 
 // Ataque colaborativo
@@ -168,7 +170,7 @@ class AttackCollab : public Tactic
 
         void debugPrint(){printf("AttackCollab");}
 
-        int validateTactic(list<Action*> &newActions, Unit* squad, const vector<Unit*>& enemyUnits, const vector<Unit*>& alliedUnits);
+        int validateTactic(list<Action*> &newActions, TacticValidationData& tvd ) override;
 };
 
 // Defende a unidade aliada
@@ -184,7 +186,7 @@ class DefenseCollab : public Tactic
 
         void debugPrint(){printf("DefenseCollab");}
 
-        int validateTactic(list<Action*> &newActions, Unit* squad, const vector<Unit*>& enemyUnits, const vector<Unit*>& alliedUnits);
+        int validateTactic(list<Action*> &newActions, TacticValidationData& tvd ) override;
 };
 
 // Suicidar-se na nave inimiga mais proxima
@@ -200,7 +202,7 @@ class Kamikase : public Tactic
 
         void debugPrint(){printf("Kamikase");}
 
-        int validateTactic(list<Action*> &newActions, Unit* squad, const vector<Unit*>& enemyUnits, const vector<Unit*>& alliedUnits);
+        int validateTactic(list<Action*> &newActions, TacticValidationData& tvd ) override;
 };
 
 // Retornar para perto da unidade aliada
@@ -214,7 +216,7 @@ class Retreat : public Tactic
 
         void debugPrint(){printf("Retreat");}
 
-        int validateTactic(list<Action*> &newActions, Unit* squad, const vector<Unit*>& enemyUnits, const vector<Unit*>& alliedUnits);
+        int validateTactic(list<Action*> &newActions, TacticValidationData& tvd ) override;
 };
 
 // Mover aleatoriamente
@@ -229,7 +231,7 @@ class MoveRandomly : public Tactic
 
         void debugPrint(){printf("MoveRandomly");}
 
-        int validateTactic(list<Action*> &newActions, Unit* squad, const vector<Unit*>& enemyUnits, const vector<Unit*>& alliedUnits);
+        int validateTactic(list<Action*> &newActions, TacticValidationData& tvd ) override;
 };
 
 #endif

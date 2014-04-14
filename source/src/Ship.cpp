@@ -16,11 +16,11 @@ float slowlyRotateTo(float fromRad, float toRad)
 }
 
 Ship::Ship(const shipBaseStats &initialStats, Coordinates Coord)
-    : baseStats(initialStats), stats(initialStats), coord(Coord), basePos(Coord)
+    : baseStats(initialStats), stats(initialStats), coord(Coord), unitPos(Coord)
 {
-    direction = M_PI/2;
+    currentDirection = M_PI/2;
 
-    moving = 0;
+//    moving = 0;
     status = 0;
     deathTime=0;
 }
@@ -30,19 +30,19 @@ Ship::~Ship()
 
 }
 
-const Coordinates& Ship::getPosition()
+const Coordinates& Ship::getPosition() const
 {
     return coord;
 }
 
-const Coordinates& Ship::getTargetPos()
+const Coordinates& Ship::getTargetPos() const
 {
     return targetPos;
 }
 
 float Ship::getDirection()
 {
-    return direction;
+    return currentDirection;
 }
 
 int Ship::update()
@@ -53,25 +53,25 @@ int Ship::update()
     if (stats.curKamikazeCD > 0)
         --(stats.curKamikazeCD);
 
-    if (!moving) //So dar uma nova coordenada quando 'terminar' o movimento atual
+    if (stats.isMoving == move_not_moving) //So dar uma nova coordenada quando 'terminar' o movimento atual
     {
-        moving = 1;
-        targetPos.x = basePos.x+rand()%30-rand()%30;
-        targetPos.y = basePos.y+rand()%30-rand()%30;
+        targetPos.x = unitPos.x+rand()%30-rand()%30;
+        targetPos.y = unitPos.y+rand()%30-rand()%30;
+        stats.isMoving = move_flying;
     }
 
-    direction += slowlyRotateTo( direction, coord.angleTo(targetPos) )/15;
+    currentDirection += slowlyRotateTo( currentDirection, coord.angleTo(targetPos) )/15;
 
     double distance = coord.distance(targetPos);
 
-    if(distance > baseStats.speed)
+    if (distance > stats.currentSpeed)
     {
-        coord.x -= ((coord.x-targetPos.x)/distance)*baseStats.speed/1.5;
-        coord.y -= ((coord.y-targetPos.y)/distance)*baseStats.speed/1.5;
+        coord.x -= ((coord.x-targetPos.x)/distance)*stats.currentSpeed;
+        coord.y -= ((coord.y-targetPos.y)/distance)*stats.currentSpeed;
     }
     else
     {
-        moving = 0;
+        stats.isMoving = move_not_moving;
     }
 
     return 0;
@@ -90,7 +90,7 @@ void Ship::kill()
 	stats.currentHP = -1;
 }
 
-const shipBaseStats &Ship::getBaseStats()
+const shipBaseStats &Ship::getBaseStats() const
 {
     return baseStats;
 }
@@ -117,42 +117,23 @@ bool Ship::takeDamage(double damage)
     return (stats.currentHP <= 0);
 }
 
-void Ship::move(Coordinates delta)
-{
-    coord += delta;
-    basePos += delta;
-
-    moving = 0;
-}
-
-void Ship::move(double dx, double dy)
-{
-    basePos.x += dx;
-    basePos.y += dy;
-
-    coord.x += dx;
-    coord.y += dy;
-
-    moving = 0;
-}
-
-void Ship::moveTo(Coordinates c)
+void Ship::moveTo(const Coordinates& c)
 {
     targetPos = c;
-    basePos = c;
+    unitPos = c;
 
-    moving = 1;
+    stats.isMoving = move_action;
 }
 
 double Ship::getHP() const{
     return stats.currentHP;
 }
 
-int Ship::getX(){
+int Ship::getX() const{
     return coord.x;
 }
 
-int Ship::getY(){
+int Ship::getY() const{
     return coord.y;
 }
 

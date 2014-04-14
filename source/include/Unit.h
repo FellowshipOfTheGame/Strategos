@@ -24,6 +24,7 @@
 
 using namespace std;
 
+void print_MaxActions();
 
 class Unit
 {
@@ -112,7 +113,7 @@ class Unit
         /// A posicao media eh calculada considerando apenas as naves vivas.
         /// Este valor eh atualizado na funcao update()
         ///
-        const Coordinates& getAveragePos();
+        const Coordinates& getAveragePos() const;
 
         /// Retorna a coordernada X base INICIAL da batalha
         /// \return Retorna a posicao X base inicial
@@ -137,8 +138,6 @@ class Unit
         /// \return Retorna as coordenadas base iniciais da unidade
         const Coordinates& getBaseCoord();
 
-//        void setBasePos(const Coordinates& pos);
-
         const shipBaseStats& getSquadBaseStats();
         const DictKey* getUnitInfo() const;
 
@@ -153,7 +152,7 @@ class Unit
         /// \param enemyUnits Vetor com unidades INIMIGAS.
         /// \param alliedUnits Vetor com unidades ALIADAS [esta unidade inclusive]
         ///
-        void generateActions(const vector<Unit*>& enemyUnits, const vector<Unit*>& alliedUnits);
+        void generateActions(TacticValidationData& tvd);
 
         /// Desenha a unidade considerando a posicao da camera
         void render();

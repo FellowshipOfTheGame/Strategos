@@ -26,7 +26,7 @@ Game::Game()
 
 	view = new View();
 	view->createWindow(screenWidth, screenHeight, screenBPP, 0); // SDL_DOUBLEBUF | SDL_HWSURFACE
-//
+
 	run = true;
 	editingArmy = NULL;
 
@@ -77,7 +77,6 @@ void Game::setRunning(bool state)
 
 void Game::update()
 {
-	//	run = world->simulateStep();
 	run = view->update();
 }
 
@@ -117,7 +116,6 @@ void Game::readCFGKey(const char *key, void *info)
 
 unsigned long Game::createNewGID()
 {
-
 	return 0;
 }
 
@@ -163,13 +161,9 @@ void Game::setArmy1(string str)
 
 void Game::setArmy1(Army *a)
 {
-	if (!a)
-	{
-		printf ("nulo\n");
-	}
 	if (armySim1 != NULL)
 		delete armySim1;
-	armySim1  = a;
+	armySim1 = a;
 }
 
 Army* Game::getArmy2()
@@ -186,10 +180,6 @@ void Game::setArmy2(string str)
 
 void Game::setArmy2(Army *a)
 {
-	if (!a)
-	{
-		printf ("nulo\n");
-	}
 	if (armySim2 != NULL)
 		delete armySim2;
 	armySim2 = a;

@@ -14,6 +14,14 @@
     #include "SDL2_gfx/SDL2_gfxPrimitives.h"
 #endif // _MAC_OS_
 
+static int max_tatics_per_unit = 0;
+
+void print_MaxActions()
+{
+    printf("Limit Actions: %d\n", max_tatics_per_unit);
+    max_tatics_per_unit = 0;
+}
+
 Unit::Unit(unsigned long ID, const DictKey *info, Coordinates position)
     : id(ID), mySquadInfo(info), bluePrintCoord(position),
     target(-1), baseCoord(position), averageCoord(position),
@@ -201,7 +209,7 @@ int Unit::getNShipsAlive(){
     return shipsAlive;
 }
 
-const Coordinates& Unit::getAveragePos(){
+const Coordinates& Unit::getAveragePos() const{
     return averageCoord;
 }
 
@@ -210,7 +218,7 @@ bool Unit::hover(float camOX, float camOY)
 	int mouseX, mouseY;
 	SDL_GetMouseState(&mouseX, &mouseY);
 
-	if (averageCoord.distance(mouseX - camOX, mouseY - camOY) < 64)
+	if (averageCoord.distance(mouseX + camOX, mouseY + camOY) < 64)
 	{
 		return true;
 	}
@@ -235,13 +243,11 @@ void Unit::updateActions()
 		else
 		{
 			Action* reaction = (*it)->act();
-			if (reaction)
-            {
+			if (reaction){
                 shipsActions.push_back(reaction);
             }
 		}
 	}
-
 }
 
 int Unit::update()
@@ -262,6 +268,37 @@ int Unit::update()
 	totalPos.x /= shipsAlive;
 	totalPos.y /= shipsAlive;
 	averageCoord = totalPos;
+
+//	if (max_tatics_per_unit < shipsActions.size()){
+//        max_tatics_per_unit = shipsActions.size();
+//
+//        int EA = 0;
+//        int DA = 0;
+//        int MA = 0;
+//        int AA = 0;
+//        int KA = 0;
+//
+//        for (Action* ac : shipsActions)
+//        {
+//            if (dynamic_cast<ExplosionAction*>(ac))
+//                EA++;
+//            else if (dynamic_cast<DamageAction*>(ac))
+//                DA++;
+//            else if (dynamic_cast<MoveAction*>(ac))
+//                MA++;
+//            else if (dynamic_cast<AttackAction*>(ac))
+//                AA++;
+//            else if (dynamic_cast<KamikazeAction*>(ac))
+//                KA++;
+//        }
+//
+//        printf("ExpAc: %d\n", EA);
+//        printf("DmgAc: %d\n", DA);
+//        printf("MovAc: %d\n", MA);
+//        printf("AtkAc: %d\n", AA);
+//        printf("KamAc: %d\n\n", KA);
+//
+//	}
 
 	return shipsAlive;
 }
@@ -286,41 +323,26 @@ const DictKey* Unit::getUnitInfo() const
 	return mySquadInfo;
 }
 
-void Unit::generateActions(const vector<Unit*>& enemyUnits, const vector<Unit*>& alliedUnits)
+void Unit::generateActions(TacticValidationData& tvd)
 {
+    tvd.validatingUnit = this;
+
 	for (unsigned int i = 0; i < tactics.size(); i++)
 	{
 		if (tactics[i]->testTrigger(this))
 		{
-//            tactics[i]->debugPrint();
-			if (tactics[i]->validateTactic(shipsActions, this, enemyUnits, alliedUnits) != 0)
-			{
-//				printf("VALIDADA: ");
-//				printf("okok\n");
+			if (tactics[i]->validateTactic(shipsActions, tvd) != 0){
 				return;
 			}
-//				printf("okok\n");
 		}
 	}
 
 	// Validar taticas basicas
-	basicTacticMoveRandom.validateTactic(shipsActions, this, enemyUnits, alliedUnits);
-	basicTacticAttackNearest.validateTactic(shipsActions, this, enemyUnits, alliedUnits);
+	basicTacticMoveRandom.validateTactic(shipsActions, tvd);
+	basicTacticAttackNearest.validateTactic(shipsActions, tvd);
 	if (this->mySquadInfo->type != 0)
-		basicTacticRetreat.validateTactic(shipsActions, this, enemyUnits, alliedUnits);
+		basicTacticRetreat.validateTactic(shipsActions, tvd);
 }
-
-//void Unit::setBasePos(const Coordinates& pos)
-//{
-//    for (unsigned int j = 0; j < ships.size(); j++)
-//    {
-//        Coordinates current = ships[j]->getPosition() - pos;
-//        ships[j]->move(pos+current);
-//    }
-//
-//	averageCoord = pos;
-//	baseCoord = pos;
-//}
 
 void Unit::moveTo(Coordinates c)
 {
@@ -350,29 +372,31 @@ void Unit::render()
 	 img->DrawImage(j * 32, mySquadInfo->type * 34, Game::getGlobalGame()->getScreenSurface());
 	 }*/
 
-	for (unsigned int j = 0; j < nShips(); j++)
-	{
-		Ship *ship = ships[j];
+    SDL_Renderer* renderer = Game::getGlobalGame()->getRenderer();
 
-		if (!mySquadInfo->shipsGFX)
+    if (!mySquadInfo->shipsGFX){
 			printf("No img");
+    }else{
+        for (unsigned int j = 0; j < nShips(); j++)
+        {
+            Ship *ship = ships[j];
 
-		if (mySquadInfo->shipsGFX && ship->isAlive())
-		{
-			float x = ship->getDirection() * 180 / PI;
-			if (x < 0)
-				x += 360;
+            if (!ship->isAlive()) continue;
 
-			while (x < 0.0) x += 360.0;
-			while (x > 360.0) x -= 360.0;
+            float x = ship->getDirection() * 180 / PI;
+            if (x < 0)
+                x += 360;
 
-			int frame = ((int(x) % 360) / (360 / _ROTATION_FRAMES_)) % _ROTATION_FRAMES_;
-			Image *img = mySquadInfo->shipsGFX[frame];
+            while (x < 0.0) x += 360.0;
+            while (x > 360.0) x -= 360.0;
+
+            int frame = ((int(x) % 360) / (360 / _ROTATION_FRAMES_)) % _ROTATION_FRAMES_;
+            Image *img = mySquadInfo->shipsGFX[frame];
 
 //			circleRGBA(Game::getGlobalGame()->getScreenSurface(), ship->getX() - cOffX, ship->getY() - cOffY, mySquadInfo->stats.range, 0, 0, 255, 40);
             if (img){
                 img->DrawImage(ship->getX() - (img->getFrameWidth() / 2), ship->getY() - (img->getFrameHeight() / 2),
-                        Game::getGlobalGame()->getRenderer());
+                        renderer);
             }else{
 //                filledCircleRGBA(Game::getGlobalGame()->getRenderer(),
 //                           ship->getX() - cOffX, ship->getY() - cOffY,
@@ -386,8 +410,8 @@ void Unit::render()
             rLife.h = 2;
 
             // Barra de vida
-            SDL_SetRenderDrawColor(Game::getGlobalGame()->getRenderer(), 0,255,0, 200);
-            SDL_RenderFillRect(Game::getGlobalGame()->getRenderer(), &rLife);
+            SDL_SetRenderDrawColor(renderer, 0,255,0, 200);
+            SDL_RenderFillRect(renderer, &rLife);
 //            for (int i = 0; i < 5; ++i){
 //                arcRGBA(Game::getGlobalGame()->getRenderer(), ship->getX() - (img->getFrameWidth() / 2) - cOffX, ship->getY() - (img->getFrameHeight() / 2) - cOffY,
 //                         30-i, 180, 360, 255, 255, 255, 255);
@@ -395,14 +419,42 @@ void Unit::render()
 
             // Barra de Shield
             if (ship->getStats().currentShield > 0){
-                SDL_SetRenderDrawColor(Game::getGlobalGame()->getRenderer(), 228,228,228, 250);
+                SDL_SetRenderDrawColor(renderer, 228,228,228, 250);
                 rLife.w = ship->getStats().currentShield/20;
                 rLife.y += 2;
-                SDL_RenderFillRect(Game::getGlobalGame()->getRenderer(), &rLife);
+                SDL_RenderFillRect(renderer, &rLife);
             }
-		}
-	}
 
-	circleRGBA(Game::getGlobalGame()->getRenderer(), averageCoord.x, averageCoord.y, 64, 0, 128, 0, 128);
+            SDL_RenderDrawLine(renderer, ship->getPosition().x, ship->getPosition().y, ship->getTargetPos().x, ship->getTargetPos().y );
+
+            SDL_Rect a;
+            a.x = ship->getPosition().x;
+            a.y = ship->getPosition().y;
+            a.w = 5;
+            a.h = 5;
+            if (ship->getMoving() == move_not_moving){
+                SDL_SetRenderDrawColor(renderer, 255, 0,0 ,255);
+            }
+            else if (ship->getMoving() == move_action){
+                SDL_SetRenderDrawColor(renderer, 0, 255, 0 ,255);
+            }
+            else{
+                SDL_SetRenderDrawColor(renderer, 0, 0,255 ,255);
+            }
+            SDL_RenderDrawRect(renderer, &a );
+
+            if (ship->getStats().isKamikasing)
+            {
+                a.x -=5;
+                a.y -=5;
+                a.w += 10;
+                a.h += 10;
+                SDL_SetRenderDrawColor(renderer, 0, 255,255 ,255);
+                SDL_RenderDrawRect(renderer, &a );
+            }
+        }
+    }
+
+	circleRGBA(renderer, averageCoord.x, averageCoord.y, 64, 0, 128, 0, 128);
 }
 

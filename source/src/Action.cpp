@@ -16,9 +16,46 @@
 
 #include "SDL2_gfxPrimitives.h"
 
+static int _N_ACTIONS_ = 0;
+static int _N_ACTIONS_EXPLOSION_ = 0;
+static int _N_ACTIONS_DMG_ = 0;
+static int _N_ACTIONS_MOVE_ = 0;
+
+void printNActions(){
+    printf("TOTAL Actions: %d\n", _N_ACTIONS_);
+    printf("TOTAL Explosions: %d\n", _N_ACTIONS_EXPLOSION_);
+    printf("TOTAL Damage: %d\n", _N_ACTIONS_DMG_);
+    printf("TOTAL Move: %d\n", _N_ACTIONS_MOVE_);
+    _N_ACTIONS_ = 0;
+    _N_ACTIONS_EXPLOSION_ = 0;
+    _N_ACTIONS_DMG_ = 0;
+    _N_ACTIONS_MOVE_ = 0;
+}
+
+Action::Action()
+    : complete(0)
+{
+    ++_N_ACTIONS_;
+}
+
+Action::~Action(){
+
+}
+
+bool Action::completed(){
+    return 1;
+}
+
+void Action::render(){
+
+}
+
+///
+
 ExplosionAction::ExplosionAction(Coordinates pos, Image *explosionImg)
     : img(explosionImg), timer(0), position(pos)
 {
+    ++_N_ACTIONS_EXPLOSION_;
 }
 
 Action* ExplosionAction::act()
@@ -51,6 +88,7 @@ void ExplosionAction::render()
 DamageAction::DamageAction(Coordinates pos)
     : timer(0), position(pos)
 {
+    ++_N_ACTIONS_DMG_;
 }
 
 Action* DamageAction::act()
@@ -81,45 +119,49 @@ void DamageAction::render()
 
 ///
 
-MoveAction::MoveAction(Ship *Source, Coordinates Coord)
-    : source(Source), target(0), coord(Coord)
+MoveAction::MoveAction(Ship *Source, const Coordinates& Coord, bool GetNear)
+    : source(Source), target(0), getNearTo(GetNear)
 {
+    ++_N_ACTIONS_MOVE_;
 
+    if (getNearTo)
+    {
+        float dist = Coord.distance(source->getPosition());
+
+        if (dist >= source->getBaseStats().range)
+        {
+            float direction = atan2(source->getY() - Coord.y, source->getX() - Coord.x);
+            coord.x = source->getX() - (dist-source->getBaseStats().range*0.9) * cos(direction);
+            coord.y = source->getY() - (dist-source->getBaseStats().range*0.9) * sin(direction);
+        }
+    }else{
+        coord = Coord;
+    }
 }
 
-MoveAction::MoveAction(Ship *Source, Ship* Target)
-    : source(Source), target(Target)
+MoveAction::MoveAction(Ship *Source, Ship* Target, bool GetNear)
+    : source(Source), target(Target), getNearTo(GetNear)
 {
-    Coordinates tc = target->getPosition();
-    float dist = tc.distance(source->getPosition());
-
-    if (dist > source->getBaseStats().range)
+    if (getNearTo)
     {
-        float direction = atan2(source->getY() - target->getY(), source->getX() - target->getX());
-        dist -= (source->getBaseStats().range-30);
-        coord.x = source->getX() - dist * cos(direction);
-        coord.y = source->getY() - dist * sin(direction);
-    }
-    else
-    {
-        coord = source->getPosition();
-    }
+        float dist = target->getPosition().distance(source->getPosition());
 
-//    printf("Move To: %lf, %lf\n", coord.x, coord.y);
+        if (dist >= source->getBaseStats().range)
+        {
+            float direction = atan2(source->getY() - target->getY(), source->getX() - target->getX());
+            coord.x = source->getX() - (dist-source->getBaseStats().range*0.9) * cos(direction);
+            coord.y = source->getY() - (dist-source->getBaseStats().range*0.9) * sin(direction);
+        }
+    }else{
+        coord = target->getPosition();
+    }
 }
 
 Action* MoveAction::act()
 {
-    // Terminar a acao quando chegar proximo do destino
-    if (coord.distance(source->getX(), source->getY()) < 5.0)
-    {
-        complete = 1;
-    }
-    else
-    {
-        source->moveTo(coord);
-        complete = 1;
-    }
+    source->moveTo( coord );
+
+    complete = 1;
 
     return 0;
 }
@@ -127,13 +169,6 @@ Action* MoveAction::act()
 bool MoveAction::completed()
 {
     return complete;
-
-    float dist = sqrt( pow( source->getX()-coord.x, 2)
-                     + pow( source->getY()-coord.y, 2) );
-    if ( dist < 20 )
-        return 1;
-
-    return 0;
 }
 
 void MoveAction::render()
@@ -142,8 +177,10 @@ void MoveAction::render()
 //                coord.x - cOX, coord.y - cOY, 255, 0, 0, 32);
 
     if (target)
-    lineRGBA(Game::getGlobalGame()->getRenderer(), source->getX(), source->getY() ,
-                target->getX(), target->getY(), 255, 0, 0, 32);
+    {
+        lineRGBA(Game::getGlobalGame()->getRenderer(), source->getX(), source->getY() ,
+                    target->getX(), target->getY(), 255, 0, 0, 32);
+    }
 }
 
 AttackAction::AttackAction(Ship *Source, Ship *Target, const DictKey *srcInfo, const DictKey *trgetInfo)
@@ -233,22 +270,25 @@ Action* KamikazeAction::act()
     {
     	source->kill();
 
-        target->takeDamage(source->getBaseStats().damage * distance/500);
+        target->takeDamage(source->getBaseStats().damage * distance/4);
 
 //        printf("%p kamikaze to %p for %f damage\n", source, target, source->getBaseStats().damage * distance/400);
         complete = 1;
     }
     else
     {
-        float direction = atan2(source->getY() - target->getPosition().y, source->getX() - target->getPosition().x);
+//        float direction = atan2(source->getY() - target->getPosition().y, source->getX() - target->getPosition().x);
+//
+//        // Causar dano a nave kamikaze [NERF]
+//        source->takeDamage( std::max( source->getHP()/100, 0.3) );
+//
+//        float speed = std::min( dist, 14.0f );
+        distance += 1;
 
-        // Causar dano a nave kamikaze [NERF]
-        source->takeDamage( std::max( source->getHP()/100, 0.3) );
+//        source->moveTo(-speed*cos(direction), -speed*sin(direction));
 
-        float speed = std::min( dist, 14.0f );
-        distance += speed;
-
-        source->move(-speed*cos(direction), -speed*sin(direction));
+        source->getStats().currentSpeed = std::max(source->getBaseStats().speed*5, 8.0);
+        source->moveTo(target->getPosition());
     }
 
     return 0;

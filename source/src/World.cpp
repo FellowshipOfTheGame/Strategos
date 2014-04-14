@@ -12,6 +12,8 @@ using namespace std;
 /// quando uma morre, ambas morrem. ERRO ERRO
 
 World::World(Army *army1, Army *army2)
+    : tvdForArmy1(combatData, army2->getUnits(), army1->getUnits()),
+      tvdForArmy2(combatData, army1->getUnits(), army2->getUnits())
 {
     printf("Starting World... ");
 
@@ -39,7 +41,8 @@ World::World(Army *army1, Army *army2)
 
 World::~World()
 {
-
+//    printNActions();
+//    print_MaxActions();
 }
 
 void World::calcActions()
@@ -47,13 +50,13 @@ void World::calcActions()
     // ARMY 0
     for (unsigned int n = 0; n < armies[0]->nUnits(); n++){
         Unit *unit = armies[0]->getUnitAtIndex(n);
-        unit->generateActions(armies[1]->getUnits(), armies[0]->getUnits());
+        unit->generateActions(tvdForArmy1);
     }
 
     // ARMY 1
     for (unsigned int n = 0; n < armies[1]->nUnits(); n++){
         Unit *unit = armies[1]->getUnitAtIndex(n);
-        unit->generateActions(armies[0]->getUnits(), armies[1]->getUnits());
+        unit->generateActions(tvdForArmy2);
     }
 
     // Aproximar naves mae
@@ -61,6 +64,7 @@ void World::calcActions()
     Unit *mother1 = armies[1]->getMotherUnit();
     Coordinates md1 = mother0->getAveragePos();
     Coordinates md2 = mother1->getAveragePos();
+
     if ( md1.distance( md2 ) > std::min(mother0->getUnitInfo()->stats.range,
                                         mother1->getUnitInfo()->stats.range) )
     {
@@ -71,6 +75,8 @@ void World::calcActions()
 
 int World::simulateStep()
 {
+    combatData.ClearDistances();
+
 	//printf ("\t calcActions\n");
     calcActions();
   //  printf ("\t\t updateActions 1\n");

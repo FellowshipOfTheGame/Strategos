@@ -17,6 +17,7 @@
 					<Add option="-pg" />
 					<Add option="-g" />
 					<Add directory="include" />
+					<Add directory="source/include" />
 				</Compiler>
 				<Linker>
 					<Add option="-pg -lgmon" />
@@ -31,6 +32,7 @@
 				<Compiler>
 					<Add option="-O2" />
 					<Add directory="include" />
+					<Add directory="source/include" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -83,6 +85,7 @@
 			<Option virtualFolder="Simulacao/" />
 		</Unit>
 		<Unit filename="source/include/Camera.h" />
+		<Unit filename="source/include/CombatData.h" />
 		<Unit filename="source/include/CombatLog.h" />
 		<Unit filename="source/include/Coordinates.h" />
 		<Unit filename="source/include/Create_Army.h">
@@ -124,6 +127,7 @@
 		<Unit filename="source/include/Tactic.h">
 			<Option virtualFolder="Simulacao/" />
 		</Unit>
+		<Unit filename="source/include/TacticValidationData.h" />
 		<Unit filename="source/include/Trigger.h">
 			<Option virtualFolder="Simulacao/" />
 		</Unit>
@@ -145,6 +149,7 @@
 		<Unit filename="source/src/Army.cpp">
 			<Option virtualFolder="Simulacao/" />
 		</Unit>
+		<Unit filename="source/src/CombatData.cpp" />
 		<Unit filename="source/src/CombatLog.cpp" />
 		<Unit filename="source/src/Create_Army.cpp">
 			<Option virtualFolder="Telas/" />
