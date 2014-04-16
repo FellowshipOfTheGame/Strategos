@@ -83,6 +83,8 @@ public:
 
     static Army* loadArmy(std::string armyname);
     static void saveArmy(const Army *army, const string pth="");
+
+    CombatRound* unifyCombatRound();
 };
 
 #endif

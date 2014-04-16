@@ -11,8 +11,46 @@
 #include "Unit.h"
 #include "Ship.h"
 #include <time.h>
-
+#include <algorithm>
+#include <iostream>
+#include <vector>
 using namespace std;
+
+class CombatRoundItem
+{
+	private:
+		int step;
+		double roundDamage;
+	public:
+		CombatRoundItem(int s, double d);
+		CombatRoundItem(int s);
+		CombatRoundItem(CombatRoundItem* origin);
+
+		void addRoundDamage(int roundDamage);
+
+		int getRoundDamage() const;
+		int getStep();
+
+		CombatRoundItem* clone();
+		bool operator <(CombatRoundItem* origin) const;
+		bool operator ==(CombatRoundItem* origin) const;
+};
+
+class CombatRound
+{
+	private:
+		std::vector<CombatRoundItem*> log;
+	public:
+		CombatRound();
+		CombatRound(std::vector<CombatRoundItem*>& origin);
+		~CombatRound();
+		const std::vector<CombatRoundItem*>& getLog() const;
+
+		void addLog(CombatRoundItem *round);
+
+		CombatRound* ConcatCombatRound(CombatRound* cb);
+
+};
 
 class CombatLogItem
 {
@@ -43,38 +81,31 @@ class CombatLog
 {
 	private:
 		std::vector<CombatLogItem*> combatline;
+		CombatRound *combatRegister;
 		int damageDealt, damageTaken;
-
 	public:
 		CombatLog();
 		~CombatLog();
 		void addLog(int squad, int ship);
 		std::vector<CombatLogItem*> getLog();
 
-		int getDamageDealt() const
+		int getTotalDamageDealt() const
 		{
 			return damageDealt;
 		}
 
-		void setDamageDealt(int damageDealt)
-		{
-			this->damageDealt += damageDealt;
-		}
-
-		int getDamageTaken() const
+		int getTotalDamageTaken() const
 		{
 			return damageTaken;
 		}
 
-		void setDamageTaken(int damageTaken)
-		{
-			this->damageTaken += damageTaken;
-		}
-		int getSize()
+		int getLogSize()
 		{
 			return combatline.size();
 		}
-};
 
+		void setRegister(CombatRound *cb);
+		CombatRound* getRegister();
+};
 
 #endif /* COMBATLOG_H_ */

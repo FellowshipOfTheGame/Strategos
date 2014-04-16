@@ -22,6 +22,7 @@ Ship::Ship(const shipBaseStats &initialStats, Coordinates Coord)
 
     status = 0;
     deathTime=0;
+    dmgperround = new CombatRound();
 }
 
 Ship::~Ship()
@@ -98,6 +99,10 @@ shipCurrentStats &Ship::getStats()
 
 bool Ship::takeDamage(double damage)
 {
+    //registra quanto de dano bruto foi recebido
+	CombatRoundItem *temp = new CombatRoundItem(this->deathTime, damage);
+	dmgperround->addLog(temp);
+	delete temp;
     //printf ("shiled: %3d hp:%3d \n",stats.currentShield, stats.currentHP);
     if (stats.currentShield > 0)
     {
@@ -139,12 +144,12 @@ int Ship::logUpdate()
 	{
 		deathTime++;
 	}
-	else if (status == 0)
-    {
-        status = 1;
-    }
-    else
-        status = 2;
-
+	else
+		if (status == 0)
+		{
+			status = 1;
+		}
+		else
+			status = 2;
 	return status;
 }

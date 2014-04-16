@@ -93,7 +93,7 @@ void GeneticAlgorithm::randomArmies(int size)
         //Save created army
         individuos.push_back(randomArmy);
 
-//        Army::saveArmy(randomArmy, directory.c_str());
+        Army::saveArmy(randomArmy, directory.c_str());
     }
 
 }

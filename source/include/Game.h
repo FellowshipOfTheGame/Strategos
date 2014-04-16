@@ -36,7 +36,7 @@ class Game
 		int globalSeed;
         GeneticAlgorithm *algorithm[3];
 
-        CombatLog* combatLog[2];
+        vector<CombatLog *>   combatLog;
 
 		void loadDictionaries();
 
@@ -108,6 +108,8 @@ class Game
 		CombatLog* getCombatLog(int i);
 
 		void setCombatLog(int i);
+
+		CombatRound* getCombatRound(int i);
 
 		SDL_Renderer *getRenderer();
 };

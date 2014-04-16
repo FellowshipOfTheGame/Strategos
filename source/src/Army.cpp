@@ -444,3 +444,15 @@ void Army::render()
 //        }
 //    }
 }
+
+CombatRound* Army::unifyCombatRound()
+{
+	printf ("unificando army\n");
+	CombatRound* _new;
+	_new = new CombatRound();
+	 for (unsigned int i = 0; i < units.size(); ++i)
+	 {
+		 _new->ConcatCombatRound(units[i]->unifyCombatRound());
+	 }
+	return _new;
+}

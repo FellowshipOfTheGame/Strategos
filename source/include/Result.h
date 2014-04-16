@@ -9,6 +9,7 @@
 #define RESULT_H_
 #include "StateMachine.h"
 #include "GuiElements.h"
+#include "CombatLog.h"
 using namespace std;
 class Result : public StateMachine
 {
@@ -17,6 +18,7 @@ private:
     Button *btn_Next;
 
     Label *alive,*dead;
+    CombatRound *log1, *log2;
 
 public:
     Result(STATE previous);

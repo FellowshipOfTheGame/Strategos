@@ -16,6 +16,8 @@
 #include <vector>
 #include <list>
 
+
+#include "CombatLog.h"
 #include "Ship.h"
 #include "Tactic.h"
 #include "Action.h"
@@ -165,6 +167,11 @@ class Unit
 
         /// Desenha a unidade considerando a posicao da camera
         void render();
+<<<<<<< HEAD
+=======
+//        int amountAlive();
+        CombatRound* unifyCombatRound();
+>>>>>>> origin/master
 };
 
 #endif
