@@ -39,15 +39,10 @@ World::World(Army *army1, Army *army2)
 	army1->restore(0);
 	army2->restore(1);
 
-<<<<<<< HEAD
-    Game::getGlobalGame()->setCombatLog(0);
-    Game::getGlobalGame()->setCombatLog(1);
-=======
 	// Setar posicao de cada exercito
-    armies[1]->setReflectBasePositions(COMBAT_AREA_WIDTH);
     this->setCombatLog(0); //Game::getGlobalGame()->setCombatLog(0);
 	this->setCombatLog(1); //Game::getGlobalGame()->setCombatLog(1);
->>>>>>> origin/master
+
     printf("World Ready!\n");
 }
 

@@ -167,11 +167,8 @@ class Unit
 
         /// Desenha a unidade considerando a posicao da camera
         void render();
-<<<<<<< HEAD
-=======
-//        int amountAlive();
+
         CombatRound* unifyCombatRound();
->>>>>>> origin/master
 };
 
 #endif
