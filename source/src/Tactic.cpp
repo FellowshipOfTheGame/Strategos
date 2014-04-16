@@ -466,7 +466,6 @@ int MoveRandomly::validateTactic(list<Action*> &newActions, TacticValidationData
 		return 0;
 	}
 
-    // TODO: Tamanho da tela de combate? Considerar lado da tela
 	Coordinates coordBase = tvd.validatingUnit->getAveragePos();
 	coordBase.x += rand() % 200 - rand() % 200;
 	coordBase.y += rand() % 200 - rand() % 200;

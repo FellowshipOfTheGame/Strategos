@@ -120,7 +120,7 @@ void DamageAction::render()
 ///
 
 MoveAction::MoveAction(Ship *Source, const Coordinates& Coord, bool GetNear)
-    : source(Source), target(0), getNearTo(GetNear), coord(Coord)
+    : source(Source), target(0), coord(Coord), getNearTo(GetNear)
 {
     ++_N_ACTIONS_MOVE_;
 

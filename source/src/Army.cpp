@@ -65,7 +65,7 @@ Army* Army::loadArmy(string armyname)
 				// TODO: verificar memory leaks
 				delete loadedArmy;
 
-				return NULL;
+				return nullptr;
 			}
 
 			loadedArmy = new Army(name, workingDict);
@@ -90,7 +90,7 @@ Army* Army::loadArmy(string armyname)
 				// TODO: verificar memory leaks
 				delete loadedArmy;
 
-				return NULL;
+				return nullptr;
 			}
 			//unit->setShipImages(workingDict->getShipImage());
 
