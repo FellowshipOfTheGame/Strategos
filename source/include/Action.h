@@ -64,7 +64,6 @@ class MoveAction : public Action
 {
     public:
         MoveAction(Ship *Source, const Coordinates& Coord, bool GetNear=false);
-        MoveAction(Ship *Source, Ship* target, bool GetNear=false);
         Action* act();
         bool completed();
         void render();

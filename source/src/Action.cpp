@@ -142,28 +142,9 @@ MoveAction::MoveAction(Ship *Source, const Coordinates& Coord, bool GetNear)
     }
 }
 
-MoveAction::MoveAction(Ship *Source, Ship* Target, bool GetNear)
-    : source(Source), target(Target), getNearTo(GetNear)
-{
-    if (getNearTo)
-    {
-        double dist = target->getPosition().distance(source->getPosition());
-
-        if (dist >= source->getBaseStats().range)
-        {
-            double direction = atan2(source->getY() - target->getY(), source->getX() - target->getX());
-            coord.x = source->getX() - (dist - source->getBaseStats().range*0.9) * cos(direction);
-            coord.y = source->getY() - (dist - source->getBaseStats().range*0.9) * sin(direction);
-        }
-    }else{
-        coord = target->getPosition();
-    }
-}
-
 Action* MoveAction::act()
 {
     source->moveTo( coord );
-
     complete = 1;
 
     return nullptr;

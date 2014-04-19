@@ -235,7 +235,7 @@ int AttackCollab::validateTactic(list<Action*> &newActions, TacticValidationData
 			}
 		}
     }
-    else // Andar se estiver longe
+    else // Se estiver longe, Mover uma unidade espacial em direcao ao alvo
     {
         for (unsigned int i = 0; i < tvd.validatingUnit->nShips(); ++i)
 		{
@@ -243,7 +243,13 @@ int AttackCollab::validateTactic(list<Action*> &newActions, TacticValidationData
 
             if (iShip->isAlive() && iShip->getStats().isMoving != move_action)
             {
-                newActions.push_back(new MoveAction( iShip, enemyUnit->getAveragePos(), true ) );
+                double direction = atan2( enemyUnit->getAveragePos().y-iShip->getY(), enemyUnit->getAveragePos().x-iShip->getX() );
+
+                Coordinates dest = iShip->getPosition();
+                dest.x += SPACIAL_UNIT*cos(direction);
+                dest.y += SPACIAL_UNIT*sin(direction);
+
+                newActions.push_back( new MoveAction(iShip, dest, false) );
             }
 		}
     }
@@ -323,9 +329,15 @@ int DefenseCollab::validateTactic(list<Action*> &newActions, TacticValidationDat
                 newActions.push_back(new AttackAction(iShip, nearestShip, tvd.validatingUnit->getUnitInfo(), enemyUnit->getUnitInfo()));
                 ++Ret;
             }
-            else if (iShip->getStats().isMoving != move_action)
+            else if (iShip->getStats().isMoving != move_action) // Mover uma unidade espacial em direcao ao alvo
             {
-                newActions.push_back( new MoveAction(iShip, nearestShip, true) );
+                double direction = atan2( nearestShip->getY()-iShip->getY(), nearestShip->getX()-iShip->getX() );
+
+                Coordinates dest = iShip->getPosition();
+                dest.x += SPACIAL_UNIT*cos(direction);
+                dest.y += SPACIAL_UNIT*sin(direction);
+
+                newActions.push_back( new MoveAction(iShip, dest, false) );
                 ++Ret;
             }
 		}
