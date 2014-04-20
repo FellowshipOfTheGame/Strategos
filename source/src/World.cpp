@@ -32,8 +32,6 @@ World::World(Army *army1, Army *army2)
 	combatLog.push_back(nullptr);
 	combatLog.push_back(nullptr);
 
-
-
 	printf("%d VS %d ", army1->nUnits(), army2->nUnits());
 
 	army1->restore(0);

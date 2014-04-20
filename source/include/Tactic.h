@@ -67,17 +67,17 @@ class Tactic
             return tacticTrigger.testTrigger(unit);
         }
 
-        int getType()
+        int getType() const
         {
             return type;
         }
 
-        void setInfo(TacticInfo info_)
+        void setInfo(const TacticInfo& info_)
         {
             info.allyUnitID = info_.allyUnitID;
         }
 
-        TacticInfo getInfo()
+        const TacticInfo& getInfo() const
         {
             return info;
         }
@@ -89,9 +89,9 @@ class Tactic
 
         virtual void debugPrint() = 0;
 
-        virtual string printTactic()
+        virtual std::string printTactic()
         {
-            string str = "";
+            std::string str = "";
 
             //tipo da primeira trigger
             str.append(std::to_string(tacticTrigger.getTriggerA()->getType()));
@@ -122,7 +122,7 @@ class Tactic
 
         // Verifica se a tatica pode ser efetuada e nesse caso já adiciona uma acao para a nave
         // @return: 1 se a tatica foi validada, 0 caso contrario.
-        virtual int validateTactic(list<Action*> &newActions, TacticValidationData& tvd ) = 0;
+        virtual int validateTactic(std::list<Action*> &newActions, TacticValidationData& tvd ) = 0;
 };
 
 // Ataca o inimigo mais proximo dentro da RANGE da nave
@@ -138,7 +138,7 @@ class AttackNearestEnemy : public Tactic
 
         void debugPrint(){printf("AttackNearestEnemy");}
 
-        int validateTactic(list<Action*> &newActions, TacticValidationData& tvd ) override;
+        int validateTactic(std::list<Action*> &newActions, TacticValidationData& tvd ) override;
 };
 
 // Ataca o inimigo mais fraco dentro da RANGE da nave
@@ -152,7 +152,7 @@ class AttackWeakestEnemy : public Tactic
 
         void debugPrint(){printf("AttackWeakestEnemy");}
 
-        int validateTactic(list<Action*> &newActions, TacticValidationData& tvd ) override;
+        int validateTactic(std::list<Action*> &newActions, TacticValidationData& tvd ) override;
 };
 
 // Ataque colaborativo
@@ -166,11 +166,11 @@ class AttackCollab : public Tactic
         AttackCollab(const TacticInfo& info, const TacticTrigger& trigger);
         ~AttackCollab(){}
 
-        string printTactic();
+        std::string printTactic();
 
         void debugPrint(){printf("AttackCollab");}
 
-        int validateTactic(list<Action*> &newActions, TacticValidationData& tvd ) override;
+        int validateTactic(std::list<Action*> &newActions, TacticValidationData& tvd ) override;
 };
 
 // Defende a unidade aliada
@@ -182,11 +182,11 @@ class DefenseCollab : public Tactic
     public:
         DefenseCollab(const TacticInfo& info, const TacticTrigger& trigger);
         ~DefenseCollab(){};
-        string printTactic();
+        std::string printTactic();
 
         void debugPrint(){printf("DefenseCollab");}
 
-        int validateTactic(list<Action*> &newActions, TacticValidationData& tvd ) override;
+        int validateTactic(std::list<Action*> &newActions, TacticValidationData& tvd ) override;
 };
 
 // Suicidar-se na nave inimiga mais proxima
@@ -202,7 +202,7 @@ class Kamikase : public Tactic
 
         void debugPrint(){printf("Kamikase");}
 
-        int validateTactic(list<Action*> &newActions, TacticValidationData& tvd ) override;
+        int validateTactic(std::list<Action*> &newActions, TacticValidationData& tvd ) override;
 };
 
 // Retornar para perto da unidade aliada
@@ -212,11 +212,11 @@ class Retreat : public Tactic
     public:
         Retreat(const TacticInfo& info, const TacticTrigger& trigger);
 
-        string printTactic();
+        std::string printTactic();
 
         void debugPrint(){printf("Retreat");}
 
-        int validateTactic(list<Action*> &newActions, TacticValidationData& tvd ) override;
+        int validateTactic(std::list<Action*> &newActions, TacticValidationData& tvd ) override;
 };
 
 // Mover aleatoriamente
@@ -231,7 +231,7 @@ class MoveRandomly : public Tactic
 
         void debugPrint(){printf("MoveRandomly");}
 
-        int validateTactic(list<Action*> &newActions, TacticValidationData& tvd ) override;
+        int validateTactic(std::list<Action*> &newActions, TacticValidationData& tvd ) override;
 };
 
 #endif

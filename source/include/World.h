@@ -21,14 +21,12 @@
 #define _SIM_ARMY1_WIN_ 2
 #define _SIM_DRAW_      3
 
-using namespace std;
-
 class World
 {
     private:
-        vector<Army*> armies;
+        std::vector<Army*> armies;
         void makeLog(Army *army, CombatLog *log);
-        vector<CombatLog *>   combatLog;
+        std::vector<CombatLog *>   combatLog;
 
         CombatData combatData;
         TacticValidationData tvdForArmy1;
@@ -36,29 +34,27 @@ class World
 
         int totalSteps;
 
-    public:
-        World(Army *army1, Army *army2); //TODO: Criar um construtor com parametro que diga se é jogo, ou ag
-        ~World();
-
         // Calcula valores necessarios para as acoes: Distancia,...
         void calcSimulationData();
 
         // Gera vetor de Actions para cada Army
         void calcActions();
 
-        //Simula um "Frame" depois Atualizamos renderizacao/input e etc.
+    public:
+        World(Army *army1, Army *army2); //TODO: Criar um construtor com parametro que diga se é jogo, ou ag
+        ~World();
+
+        // Simula um "Frame"
         int simulateStep();
 
-
-        Army *loadArmy(string path);
+        // Army
+        Army *loadArmy(std::string path);
         void printLoadedArmy();
-
         Army* getArmy(int id);
 
+        // Combat Log
         CombatLog* getCombatLog(int i);
-
 		CombatRound* getCombatRound(int i);
-
 		void setCombatLog(int i);
 
         // Desenha o combate no renderer principal

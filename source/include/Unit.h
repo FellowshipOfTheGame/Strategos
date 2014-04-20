@@ -24,8 +24,6 @@
 #include "Dictionary.h"
 #include "Image.h"
 
-using namespace std;
-
 void print_MaxActions();
 
 class Unit
@@ -34,7 +32,7 @@ class Unit
         // Imutable Data
         Coordinates bluePrintCoord;
         const DictKey *mySquadInfo;
-        vector<Tactic*> tactics;
+        std::vector<Tactic*> tactics;
 
         // Team Data
         unsigned int id;   // TODO: O que exatamente eh id? Posicao na Army? Apenas um numero id usado para taticas?
@@ -44,8 +42,8 @@ class Unit
         int shipsAlive;
         int target;
         Coordinates baseCoord, averageCoord;
-        vector<Ship*> ships;
-        list<Action*> shipsActions;
+        std::vector<Ship*> ships;
+        std::list<Action*> shipsActions;
 
         // Taticas basicas
         MoveRandomly basicTacticMoveRandom;
@@ -86,7 +84,7 @@ class Unit
         int getType() const;
 
         void setTarget(int i);
-        int getTarget();
+        int getTarget() const;
 
         /// Ships
         Ship* getShip(unsigned long gid);

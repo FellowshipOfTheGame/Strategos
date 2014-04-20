@@ -59,7 +59,7 @@ AttackNearestEnemy::AttackNearestEnemy(const TacticInfo& Info, const TacticTrigg
 
 }
 
-int AttackNearestEnemy::validateTactic(list<Action*> &newActions, TacticValidationData& tvd)
+int AttackNearestEnemy::validateTactic(std::list<Action*> &newActions, TacticValidationData& tvd)
 {
 	if (tvd.enemyUnits.size() == 0 || tvd.validatingUnit->getNShipsAlive() == 0)
 		return 0;
@@ -113,7 +113,7 @@ AttackWeakestEnemy::AttackWeakestEnemy(const TacticInfo& Info, const TacticTrigg
 
 }
 
-int AttackWeakestEnemy::validateTactic(list<Action*> &newActions, TacticValidationData& tvd)
+int AttackWeakestEnemy::validateTactic(std::list<Action*> &newActions, TacticValidationData& tvd)
 {
 	tvd.validatingUnit->setTarget(-1);
 	if (tvd.enemyUnits.size() == 0)
@@ -189,7 +189,7 @@ AttackCollab::AttackCollab(const TacticInfo& Info, const TacticTrigger& trigger)
 {
 }
 
-int AttackCollab::validateTactic(list<Action*> &newActions, TacticValidationData& tvd)
+int AttackCollab::validateTactic(std::list<Action*> &newActions, TacticValidationData& tvd)
 {
 	tvd.validatingUnit->setTarget(-1);
 
@@ -257,11 +257,9 @@ int AttackCollab::validateTactic(list<Action*> &newActions, TacticValidationData
 	return 1;
 }
 
-string AttackCollab::printTactic()
+std::string AttackCollab::printTactic()
 {
-	string str;
-
-	str = Tactic::printTactic();
+	std::string str = Tactic::printTactic();
 
 	str.append(" ");
 	str.append(std::to_string(info.allyUnitID));
@@ -276,7 +274,7 @@ DefenseCollab::DefenseCollab(const TacticInfo& Info, const TacticTrigger& trigge
 
 }
 
-int DefenseCollab::validateTactic(list<Action*> &newActions, TacticValidationData& tvd)
+int DefenseCollab::validateTactic(std::list<Action*> &newActions, TacticValidationData& tvd)
 {
 	int Ret = 0;
 	Unit *enemyUnit = nullptr;
@@ -346,9 +344,9 @@ int DefenseCollab::validateTactic(list<Action*> &newActions, TacticValidationDat
 	return Ret;
 }
 
-string DefenseCollab::printTactic()
+std::string DefenseCollab::printTactic()
 {
-	string str;
+	std::string str;
 
 	str = Tactic::printTactic();
 
@@ -365,7 +363,7 @@ Kamikase::Kamikase(const TacticInfo& Info, const TacticTrigger& trigger) :
 {
 }
 
-int Kamikase::validateTactic(list<Action*> &newActions, TacticValidationData& tvd)
+int Kamikase::validateTactic(std::list<Action*> &newActions, TacticValidationData& tvd)
 {
 	if (tvd.enemyUnits.size() == 0)
 		return 0;
@@ -397,7 +395,7 @@ int Kamikase::validateTactic(list<Action*> &newActions, TacticValidationData& tv
 
                 iShip->getStats().isKamikasing = true;
                 iShip->getStats().currentAtkCD = iShip->getBaseStats().maxAtkCD * 99;
-                newActions.push_back(new KamikazeAction(iShip, nearestUnit->getShip(s), NULL));
+                newActions.push_back(new KamikazeAction(iShip, nearestUnit->getShip(s), nullptr));
                 ++Ret;
 			}
 		}
@@ -413,7 +411,7 @@ Retreat::Retreat(const TacticInfo& Info, const TacticTrigger& trigger) :
 {
 }
 
-int Retreat::validateTactic(list<Action*> &newActions, TacticValidationData& tvd)
+int Retreat::validateTactic(std::list<Action*> &newActions, TacticValidationData& tvd)
 {
 	Coordinates motherAvrg;
 
@@ -450,9 +448,9 @@ int Retreat::validateTactic(list<Action*> &newActions, TacticValidationData& tvd
 	return 1;
 }
 
-string Retreat::printTactic()
+std::string Retreat::printTactic()
 {
-	string str;
+	std::string str;
 
 	str = Tactic::printTactic();
 
@@ -470,7 +468,7 @@ MoveRandomly::MoveRandomly(const TacticInfo& Info, const TacticTrigger& trigger)
 	cooldown = 0;
 }
 
-int MoveRandomly::validateTactic(list<Action*> &newActions, TacticValidationData& tvd)
+int MoveRandomly::validateTactic(std::list<Action*> &newActions, TacticValidationData& tvd)
 {
 	if (cooldown > 0)
 	{

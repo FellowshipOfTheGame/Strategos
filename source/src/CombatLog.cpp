@@ -4,16 +4,19 @@ CombatRoundItem::CombatRoundItem(int s, double d)
 	step=s;
 	roundDamage = d;
 }
+
 CombatRoundItem::CombatRoundItem(int s)
 {
 	step=s;
 	roundDamage = 0;
 }
+
 CombatRoundItem::CombatRoundItem(CombatRoundItem* origin)
 {
 	step=origin->getStep();
 	roundDamage = origin->getRoundDamage();
 }
+
 int CombatRoundItem::getRoundDamage() const
 {
 	return roundDamage;
@@ -43,13 +46,16 @@ bool CombatRoundItem::operator == ( CombatRoundItem* origin) const
 {
    return (step == origin->getStep());
 }
+
 /*****************************************************************************/
+
 CombatRound::CombatRound()
 {
 }
+
 CombatRound::CombatRound(std::vector<CombatRoundItem*>& origin)
 {
-	vector<CombatRoundItem*>::iterator iter = origin.begin();
+	std::vector<CombatRoundItem*>::iterator iter = origin.begin();
 
 	while (iter != origin.end())
 	{
@@ -57,10 +63,12 @@ CombatRound::CombatRound(std::vector<CombatRoundItem*>& origin)
 	}
 
 }
+
 CombatRound::~CombatRound()
 {
 	log.clear();
 }
+
 const std::vector<CombatRoundItem*>& CombatRound::getLog() const
 {
 	return log;
@@ -82,7 +90,7 @@ void CombatRound::addLog(CombatRoundItem *round)
 		elem->addRoundDamage(round->getRoundDamage());
 		return;
 	}
-	printf ("adicionando dano\n");
+//	printf ("adicionando dano\n");
 	log.push_back(round->clone());
 	std::sort(log.begin(), log.end());
 
@@ -100,7 +108,7 @@ CombatRound* CombatRound::ConcatCombatRound(CombatRound* cb)
 {
 	CombatRound* _new = new CombatRound(log);
 
-	vector<CombatRoundItem*>::const_iterator iter = cb->getLog().begin();
+	std::vector<CombatRoundItem*>::const_iterator iter = cb->getLog().begin();
 
 	while (iter != cb->getLog().end())
 	{
@@ -153,9 +161,8 @@ void CombatLog::setRegister(CombatRound *cb)
 	delete this->combatRegister;
 	this->combatRegister = _new;
 
-	const vector<CombatRoundItem*> log = this->combatRegister->getLog();
-
-	vector<CombatRoundItem*>::const_iterator iter = log.begin();
+	const std::vector<CombatRoundItem*>& log = this->combatRegister->getLog();
+	std::vector<CombatRoundItem*>::const_iterator iter = log.begin();
 
 	while (iter != log.end())
 	{

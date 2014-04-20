@@ -5,10 +5,9 @@
 
 #include "Coordinates.h"
 
-using namespace std;
-
-
 class CombatRound;
+
+
 struct shipBaseStats
 {
     shipBaseStats()

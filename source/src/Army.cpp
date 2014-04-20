@@ -23,7 +23,7 @@ Army::~Army()
 
 Army* Army::loadArmy(string armyname)
 {
-	Army *loadedArmy = NULL;
+	Army *loadedArmy = nullptr;
 	string path;
 	path.append(SAVE_PATH);
 	path.append(armyname);
@@ -41,7 +41,7 @@ Army* Army::loadArmy(string armyname)
 	if (!file.is_open())
 	{
 		printf("error on loading Army!\n");
-		return NULL;
+		return nullptr;
 	}
 
 	while (!file.eof())
@@ -124,7 +124,7 @@ Army* Army::loadArmy(string armyname)
                         printf("ERROR: Unkown Trigger: %d\n", trigger);
                         delete loadedArmy;
 
-                        return NULL;
+                        return nullptr;
                     break;
 				}
 
@@ -151,14 +151,14 @@ Army* Army::loadArmy(string armyname)
                         printf("ERROR: Unkown Trigger: %d\n", trigger);
                         delete loadedArmy;
 
-                        return NULL;
+                        return nullptr;
                     break;
 				}
 
 				TacticTrigger tacticTrigger(trig1, trig2, logic);
 
 				// Ler valores de tatica
-				Tactic *tatica = NULL;
+				Tactic *tatica = nullptr;
 				int ruleID;
 				file >> ruleID;
 //				printf("%d", ruleID);
@@ -251,7 +251,7 @@ void Army::setDictionary(Dictionary* armyDictionary)
 	this->dictionary = armyDictionary;
 }
 
-void Army::setArmyName(std::string armyName)
+void Army::setArmyName(const std::string& armyName)
 {
 	this->name = armyName;
 }
@@ -336,7 +336,7 @@ Unit* Army::getUnitByID(unsigned int id) const
 		iter++;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 Unit* Army::getUnitAtIndex(unsigned int id) const
@@ -344,7 +344,7 @@ Unit* Army::getUnitAtIndex(unsigned int id) const
 	if (id < units.size())
 		return units[id];
 	else
-		return NULL;
+		return nullptr;
 }
 
 const vector<Unit*>& Army::getUnits() const

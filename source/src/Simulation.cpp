@@ -15,7 +15,9 @@
     #include "SDL2_gfx/SDL2_gfxPrimitives.h"
 #endif // _MAC_OS_
 
-Simulation::Simulation(STATE previous) : StateMachine(previous, GAMEPLAY, GAMEPLAY)
+Simulation::Simulation(STATE previous)
+    : StateMachine(previous, GAMEPLAY, GAMEPLAY),
+        simulationSpeed(0)
 {
     printf("Starting Simulation...\n");
     gameRunning = true;
@@ -58,13 +60,13 @@ Simulation::Simulation(STATE previous) : StateMachine(previous, GAMEPLAY, GAMEPL
     renderCombat = SDL_CreateTexture(Game::getGlobalGame()->getRenderer(), SDL_PIXELFORMAT_RGBA8888,
                         SDL_TEXTUREACCESS_TARGET, 2048, 2048);
 
-    if(renderCombat == NULL)
+    if(renderCombat == nullptr)
     {
         printf("SDL_CreateTexture failed: %s\n", SDL_GetError());
         exit(-9);
     }
 
-    selectedUnit = NULL;
+    selectedUnit = nullptr;
     printf("Simulation Ready!\n");
 }
 
@@ -90,6 +92,29 @@ void Simulation::onKeyDownEvent(SDL_Keysym key)
         case SDLK_RETURN:
             if (!gameRunning)
                 setNext(RESULTS);
+        break;
+
+        case SDLK_SPACE:
+            simulationSpeed = 0;
+        break;
+
+        case SDLK_0:
+            simulationSpeed = 0;
+        break;
+
+        case SDLK_1:
+            simulationSpeed = 1;
+        break;
+
+        case SDLK_KP_PLUS:
+        case SDLK_PLUS:
+            ++simulationSpeed;
+        break;
+
+        case SDLK_KP_MINUS:
+        case SDLK_MINUS:
+            if (simulationSpeed > 0)
+                --simulationSpeed;
         break;
 
         default: break;
@@ -149,7 +174,7 @@ Unit* Simulation::checkClickOn(const Army *army)
 	mouseX += camera->getX();
 	mouseY += camera->getY();
 
-    const vector<Unit*>& units = army->getUnits();
+    const std::vector<Unit*>& units = army->getUnits();
     for(unsigned int i = 0; i < units.size(); i++)
     {
         if( units[i]->getNShipsAlive() > 0 && units[i]->hover(mouseX, mouseY) ){
@@ -176,9 +201,8 @@ void Simulation::Logic()
          if (simulationSTATE == _SIM_CONTINUE_)
          {
              // Aumentar velocidade da simulacao
-            for (int i = 0; i < 1 && simulationSTATE == _SIM_CONTINUE_; ++i){
+            for (int i = 0; i < simulationSpeed && simulationSTATE == _SIM_CONTINUE_; ++i){
                  simulationSTATE = simulationWorld->simulateStep();
-                 //printf("END STEP - SIMULATION: %d\n", simulationSTATE);
             }
         }
         else

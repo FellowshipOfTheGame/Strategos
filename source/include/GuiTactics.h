@@ -24,7 +24,7 @@ public:
 class GuiTactic : public cGuiElement
 {
 public:
-	GuiTactic(int x, int y, string GID);
+	GuiTactic(int x, int y, std::string GID);
 	~GuiTactic();
 
 	virtual void update(){}
@@ -49,7 +49,7 @@ protected:
 	Tactic *tactic;
 
 public:
-	TacticSet(int x, int y, string GID);
+	TacticSet(int x, int y, std::string GID);
 	virtual ~TacticSet();
 
 	void update(int x, int y, DictKey *key);
@@ -74,7 +74,7 @@ class TacticAN : public GuiTactic
 {
 private:
 public:
-	TacticAN(int x, int y, string GID);
+	TacticAN(int x, int y, std::string GID);
 	virtual ~TacticAN();
 
 	void update(){}
@@ -88,7 +88,7 @@ class TacticAW : public GuiTactic
 {
 private:
 public:
-	TacticAW(int x, int y, string GID);
+	TacticAW(int x, int y, std::string GID);
 	virtual ~TacticAW();
 
 	void update(){}
@@ -103,7 +103,7 @@ class TacticCA : public GuiTactic
 private:
 ComboBox *cmb_partner;
 public:
-	TacticCA(int x, int y, int id, string GID);
+	TacticCA(int x, int y, int id, std::string GID);
 	virtual ~TacticCA();
 
 	void update(){}
@@ -120,7 +120,7 @@ class TacticCD : public GuiTactic
 private:
 	ComboBox *cmb_partner;
 public:
-	TacticCD(int x, int y, int id, string GID);
+	TacticCD(int x, int y, int id, std::string GID);
 	virtual ~TacticCD();
 
 	void update(){}
@@ -136,7 +136,7 @@ class TacticKM : public GuiTactic
 {
 private:
 public:
-	TacticKM(int x, int y, string GID);
+	TacticKM(int x, int y, std::string GID);
 	virtual ~TacticKM();
 
 	void update(){}
@@ -151,7 +151,7 @@ class TacticRT : public GuiTactic
 private:
 		ComboBox *cmb_partner;
 public:
-	TacticRT(int x, int y, int id,string GID);
+	TacticRT(int x, int y, int id, std::string GID);
 	virtual ~TacticRT();
 
 	void update(){}
@@ -167,7 +167,7 @@ class TacticRM : public GuiTactic
 {
 private:
 public:
-	TacticRM(int x, int y, string GID);
+	TacticRM(int x, int y, std::string GID);
 	virtual ~TacticRM();
 
 	void update(){}
@@ -184,8 +184,8 @@ private:
 	void initialize();
 public:
 
-	ItemList(string text, Font *font, SDL_Color color, SDL_Color shadow, string GID);
-	ItemList(int tp,string text, Font *font, SDL_Color color, SDL_Color shadow, string GID);
+	ItemList(std::string text, Font *font, SDL_Color color, SDL_Color shadow, std::string GID);
+	ItemList(int tp, std::string text, Font *font, SDL_Color color, SDL_Color shadow, std::string GID);
 	ItemList(int tp);
 	ItemList();
 	void setType(int i);
@@ -198,7 +198,7 @@ class TacticList: public cGuiElement
 {
 private:
 	Button *btn_up, *btn_down, *btn_plus, *btn_minus, *btn_show;
-	vector<ItemList*> lista;
+	std::vector<ItemList*> lista;
 	TacticSet *tct_set;
 	ItemList *selected;
 	Unit *squad;

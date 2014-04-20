@@ -19,6 +19,8 @@ class Simulation : public StateMachine
     private:
         bool gameRunning;
         int simulationSTATE;
+        int simulationSpeed; // 0 = paused
+
         Image *background[4];
         Image *humanShips;
 

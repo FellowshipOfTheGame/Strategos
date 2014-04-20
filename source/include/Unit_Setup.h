@@ -36,7 +36,7 @@ private:
     ImageBox *bx1,*bx2,*bx3,*bx4;
 
     Dictionary *dct;
-    vector<Label*> squad_number;
+    std::vector<Label*> squad_number;
 
     bool put_squad, move_squad;
     int squad_type;

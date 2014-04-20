@@ -35,64 +35,46 @@ Play::Play(STATE previous) :
 	btSimulate->setText(fntEthnocentric, "SIMULATE", ColorRGB8::White, ColorRGB8::Black);
 	addGuiElement(btSimulate);
 
-	cbSelect1 = new ComboBox(120, 200, 150, 17, NULL, ColorRGB8::Green, ColorRGB8::White, "CB01");
+	cbSelect1 = new ComboBox(120, 200, 150, 17, nullptr, ColorRGB8::Green, ColorRGB8::White, "CB01");
 	cbSelect1->setFont(fntEthnocentric);
 	cbSelect1->addText("Player");
 	cbSelect1->addText("CPU");
 	addGuiElement(cbSelect1);
 
-	cbSelect2 = new ComboBox(120, 400, 150, 17, NULL, ColorRGB8::Green, ColorRGB8::White, "CB02");
+	cbSelect2 = new ComboBox(120, 400, 150, 17, nullptr, ColorRGB8::Green, ColorRGB8::White, "CB02");
 	cbSelect2->setFont(fntEthnocentric);
 	cbSelect2->addText("Player");
 	cbSelect2->addText("CPU");
 	addGuiElement(cbSelect2);
 
-	cbPlayer1 = new ComboBox(240, 200, 200, 17, NULL, ColorRGB8::White, ColorRGB8::Black, "CB-AP01");
+	cbPlayer1 = new ComboBox(240, 200, 200, 17, nullptr, ColorRGB8::White, ColorRGB8::Black, "CB-AP01");
 	cbPlayer1->setFont(fntEthnocentric);
 	addGuiElement(cbPlayer1);
-	/*cbCPU1 = new ComboBox(240, 200, 200, 17, NULL, ColorRGB8::White, ColorRGB8::Black, "CB-AC01");
+	/*cbCPU1 = new ComboBox(240, 200, 200, 17, nullptr, ColorRGB8::White, ColorRGB8::Black, "CB-AC01");
 	cbCPU1->setFont(fntEthnocentric);
 	cbCPU1->setVisible(false);
 	addGuiElement(cbCPU1);*/
 
-	cbPlayer2 = new ComboBox(240, 400, 200, 17, NULL, ColorRGB8::White, ColorRGB8::Black, "CB-AP02");
+	cbPlayer2 = new ComboBox(240, 400, 200, 17, nullptr, ColorRGB8::White, ColorRGB8::Black, "CB-AP02");
 	cbPlayer2->setFont(fntEthnocentric);
 	addGuiElement(cbPlayer2);
-	/*cbCPU2 = new ComboBox(240, 400, 200, 17, NULL, ColorRGB8::White, ColorRGB8::Black, "CB-AC02");
+	/*cbCPU2 = new ComboBox(240, 400, 200, 17, nullptr, ColorRGB8::White, ColorRGB8::Black, "CB-AC02");
 	cbCPU2->setFont(fntEthnocentric);
 	cbCPU2->setVisible(false);
 	addGuiElement(cbCPU2);*/
 
 	//Populate the combo-boxes with the name of the armies already created
-	vector<string*> datFiles;
+	std::vector<std::string> datFiles;
 	Resource::getListOfFiles(datFiles, "assets/saves/", ".dat");
 	for (unsigned int i = 0; i < datFiles.size(); ++i)
 	{
-		string aux = datFiles[i]->c_str();
+		std::string& aux = datFiles[i];
 		aux = aux.substr(0, aux.find_last_of('.'));
 		aux = aux.substr(aux.find_last_of("\\/") + 1);
-//		Army *armytemp = Army::loadArmy(aux.c_str());
-//		if (armytemp)
-//		{
-			cbPlayer1->addText(aux.c_str());
-			cbPlayer2->addText(aux.c_str());
-//		}
-//		delete armytemp;
+
+        cbPlayer1->addText(aux.c_str());
+        cbPlayer2->addText(aux.c_str());
 	}
-	/*Resource::getListOfFiles(datFiles, "assets/saves/GA/", ".dat");
-	for (unsigned int i = 0; i < datFiles.size(); ++i)
-	{
-		string aux = datFiles[i]->c_str();
-		aux = aux.substr(0, aux.find_last_of('.'));
-		aux = aux.substr(aux.find_last_of("\\/") + 1);
-		Army *armytemp = Army::loadArmy(aux.c_str());
-		if (armytemp)
-		{
-			cbCPU1->addText(aux.c_str());
-			cbCPU2->addText(aux.c_str());
-		}
-		delete armytemp;
-	}*/
 }
 
 Play::~Play()
@@ -112,7 +94,7 @@ void Play::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keysym key
         {
             GeneticAlgorithm **algorithm = Game::getGlobalGame()->getGA();
 
-            const vector<Army*>& ar = algorithm[0]->getSelectedArmies();
+            const std::vector<Army*>& ar = algorithm[0]->getSelectedArmies();
             printf("NArmies: %u\n", ar.size());
             for (unsigned int i = 0; i < ar.size(); ++i)
             {
@@ -207,10 +189,10 @@ void Play::Clean()
 
 bool previewArmy(const char *armyName)
 {
-	FILE *fp = NULL;
+	FILE *fp = nullptr;
 	char *armyFile;
 
-	if (armyName != NULL)
+	if (armyName != nullptr)
 	{
 		armyFile = new char[64];
 		strcpy(armyFile, "assets/saves/");
@@ -218,7 +200,7 @@ bool previewArmy(const char *armyName)
 		strcat(armyFile, ".dat");
 
 		fp = fopen(armyFile, "r+");
-		if (fp != NULL)
+		if (fp != nullptr)
 		{
 			//Carrega info dos exercitos!!
 

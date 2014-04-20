@@ -28,15 +28,15 @@ class Trigger
 
         virtual bool testTrigger(Unit *unit) = 0;
 
-        virtual int getType(){
+        int getType() const{
             return type;
         }
 
-        virtual int getValue(){
+        int getValue() const{
             return value;
         }
 
-        virtual int getRelationalOperator(){
+        int getRelationalOperator() const{
             return relOperator;
         }
 
@@ -93,6 +93,7 @@ class Trigger_Always : public Trigger
     public:
         Trigger_Always();
         ~Trigger_Always();
+
         bool testTrigger(Unit *unit);
 };
 

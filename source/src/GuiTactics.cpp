@@ -8,11 +8,11 @@
 using namespace ColorRGB8;
 //TODO arrumar posicionamento dos elementos
 /****************************** TacticSet ******************************/
-TacticSet::TacticSet(int x, int y, string GID)
+TacticSet::TacticSet(int x, int y, std::string GID)
 {
 	this->x = x;
 	this->y = y;
-	box_container = new Box(x, y, 200, 100, Game::getGlobalGame()->getResourceMNGR()->GetImage("combo-cmb"), NULL, "BOX" + GID);
+	box_container = new Box(x, y, 200, 100, Game::getGlobalGame()->getResourceMNGR()->GetImage("combo-cmb"), nullptr, "BOX" + GID);
 	cmb_choiser = new ComboBox(x + 2, y + 2, 200, 20, Game::getGlobalGame()->getResourceMNGR()->GetImage("combo-cmb"), ColorRGB8::Black,
 	        ColorRGB8::White, "COMBO" + GID);
 	cmb_choiser->setFont(Game::getGlobalGame()->getResourceMNGR()->GetFont("jostix-14"));
@@ -99,7 +99,7 @@ Tactic* TacticSet::getTactic()
 //			temp = new MoveRandomly(info, TacticTrigger::copy(*tactic->getTacticTrigger()));
 //			break;
 //		default:
-//			temp = NULL;
+//			temp = nullptr;
 //			break;
 //	}
 //	return temp;
@@ -192,7 +192,7 @@ INPUT_EVENT TacticSet::input(SDL_Event &event)
 
 void TacticSet::convert_AN()
 {
-	if (dynamic_cast<TacticAN*>(this->guiTactic) == NULL)
+	if (dynamic_cast<TacticAN*>(this->guiTactic) == nullptr)
 	{
 		delete guiTactic;
 		guiTactic= new TacticAN(x, y, GID);
@@ -200,7 +200,7 @@ void TacticSet::convert_AN()
 }
 void TacticSet::convert_AW()
 {
-	if (dynamic_cast<TacticAW*>(this->guiTactic) == NULL)
+	if (dynamic_cast<TacticAW*>(this->guiTactic) == nullptr)
 	{
 		delete guiTactic;
 		guiTactic= new TacticAW(x, y, GID);
@@ -208,7 +208,7 @@ void TacticSet::convert_AW()
 }
 void TacticSet::convert_CA(int id)
 {
-	if (dynamic_cast<TacticCA*>(this->guiTactic) == NULL)
+	if (dynamic_cast<TacticCA*>(this->guiTactic) == nullptr)
 	{
 		delete guiTactic;
 		guiTactic = new TacticCA(x, y, id, GID);
@@ -216,7 +216,7 @@ void TacticSet::convert_CA(int id)
 }
 void TacticSet::convert_CD(int id)
 {
-	if (dynamic_cast<TacticCD*>(this->guiTactic) == NULL)
+	if (dynamic_cast<TacticCD*>(this->guiTactic) == nullptr)
 	{
 		delete guiTactic;
 		guiTactic = new TacticCD(x, y, id, GID);
@@ -225,7 +225,7 @@ void TacticSet::convert_CD(int id)
 }
 void TacticSet::convert_KM()
 {
-	if (dynamic_cast<TacticKM*>(this->guiTactic) == NULL)
+	if (dynamic_cast<TacticKM*>(this->guiTactic) == nullptr)
 	{
 		delete guiTactic;
 		guiTactic = new TacticKM(x, y, GID);
@@ -233,7 +233,7 @@ void TacticSet::convert_KM()
 }
 void TacticSet::convert_RT(int id)
 {
-	if (dynamic_cast<TacticRT*>(this->guiTactic) == NULL)
+	if (dynamic_cast<TacticRT*>(this->guiTactic) == nullptr)
 	{
 		delete guiTactic;
 		guiTactic = new TacticRT(x, y, id, GID);
@@ -241,14 +241,14 @@ void TacticSet::convert_RT(int id)
 }
 void TacticSet::convert_RM()
 {
-	if (dynamic_cast<TacticRM*>(this->guiTactic) == NULL)
+	if (dynamic_cast<TacticRM*>(this->guiTactic) == nullptr)
 	{
 		delete guiTactic;
 		guiTactic = new TacticRM(x, y, GID);
 	}
 }
 /*GuiTactic*/
-GuiTactic::GuiTactic(int x, int y, string GID)
+GuiTactic::GuiTactic(int x, int y, std::string GID)
 {
 	this->x = x;
 	this->y = y;
@@ -281,7 +281,7 @@ int GuiTactic::getDistance()
 }
 
 /****************************** TacticAN ******************************/
-TacticAN::TacticAN(int x, int y, string GID) :
+TacticAN::TacticAN(int x, int y, std::string GID) :
 		GuiTactic(x, y, GID)
 {
 	this->height=0;
@@ -305,7 +305,7 @@ INPUT_EVENT TacticAN::input(SDL_Event &event)
 }
 
 /****************************** TacticAW ******************************/
-TacticAW::TacticAW(int x, int y, string GID) :
+TacticAW::TacticAW(int x, int y, std::string GID) :
 		GuiTactic(x, y, GID)
 {
 	this->height=0;
@@ -331,7 +331,7 @@ INPUT_EVENT TacticAW::input(SDL_Event &event)
 }
 
 /****************************** TacticCA ******************************/
-TacticCA::TacticCA(int x, int y, int id, string GID) :
+TacticCA::TacticCA(int x, int y, int id, std::string GID) :
 		GuiTactic(x, y, GID)
 {
 	this->x=x;
@@ -340,7 +340,7 @@ TacticCA::TacticCA(int x, int y, int id, string GID) :
 	cmb_partner->setFont(Game::getGlobalGame()->getResourceMNGR()->GetFont("jostix-14"));
 
 	char str[5];
-	const vector<Unit*>& unt = Game::getGlobalGame()->getEditingArmy()->getUnits();
+	const std::vector<Unit*>& unt = Game::getGlobalGame()->getEditingArmy()->getUnits();
 	for (unsigned int i = 0; i < unt.size(); i++)
 	{
 		if (id != unt[i]->getID())
@@ -379,7 +379,7 @@ INPUT_EVENT TacticCA::input(SDL_Event &event)
 	return NO_EVENT;
 }
 /****************************** TacticCD ******************************/
-TacticCD::TacticCD(int x, int y, int id, string GID) :
+TacticCD::TacticCD(int x, int y, int id, std::string GID) :
 		GuiTactic(x, y, GID)
 {
 	this->x=x;
@@ -388,7 +388,7 @@ TacticCD::TacticCD(int x, int y, int id, string GID) :
 	cmb_partner->setFont(Game::getGlobalGame()->getResourceMNGR()->GetFont("jostix-14"));
 
 	char str[5];
-	const vector<Unit*>& unt = Game::getGlobalGame()->getEditingArmy()->getUnits();
+	const std::vector<Unit*>& unt = Game::getGlobalGame()->getEditingArmy()->getUnits();
 	for (unsigned int i = 0; i < unt.size(); i++)
 	{
 		if (id != unt[i]->getID())
@@ -425,7 +425,7 @@ INPUT_EVENT TacticCD::input(SDL_Event &event)
 	return NO_EVENT;
 }
 /****************************** TacticKM ******************************/
-TacticKM::TacticKM(int x, int y, string GID) :
+TacticKM::TacticKM(int x, int y, std::string GID) :
 		GuiTactic(x, y, GID)
 {
 	this->height=0;
@@ -447,7 +447,7 @@ INPUT_EVENT TacticKM::input(SDL_Event &event)
 	return NO_EVENT;
 }
 /****************************** TacticRT ******************************/
-TacticRT::TacticRT(int x, int y, int id, string GID) :
+TacticRT::TacticRT(int x, int y, int id, std::string GID) :
 		GuiTactic(x, y, GID)
 {
 	this->x=x;
@@ -456,7 +456,7 @@ TacticRT::TacticRT(int x, int y, int id, string GID) :
 	cmb_partner->setFont(Game::getGlobalGame()->getResourceMNGR()->GetFont("jostix-14"));
 
 	char str[5];
-	const vector<Unit*>& unt = Game::getGlobalGame()->getEditingArmy()->getUnits();
+	const std::vector<Unit*>& unt = Game::getGlobalGame()->getEditingArmy()->getUnits();
 	for (unsigned int i = 0; i < unt.size(); i++)
 	{
 		if (id != unt[i]->getID())
@@ -492,7 +492,7 @@ INPUT_EVENT TacticRT::input(SDL_Event &event)
 	return NO_EVENT;
 }
 /****************************** TacticRM ******************************/
-TacticRM::TacticRM(int x, int y, string GID) :
+TacticRM::TacticRM(int x, int y, std::string GID) :
 		GuiTactic(x, y, GID)
 {
 	this->height=0;
@@ -532,10 +532,10 @@ void TacticList::initialize()
 	btn_show = new Button(this->x - 40, this->y, 40, 100, resource->GetImage("menu-bt"), "BT02");
 	btn_show->setText(resource->GetFont("jostix-14"), "Hidden", ColorRGB8::White, ColorRGB8::White);
 	top = 0;
-	selected = NULL;
+	selected = nullptr;
 	tct_set = new TacticSet(this->x, 5 + btn_minus->getY() + btn_minus->getHeight(), "TCT");
 	this->height = btn_minus->getY() + btn_minus->getHeight();
-	squad = NULL;
+	squad = nullptr;
 }
 TacticList::TacticList(Unit *squad, int x, int y)
 {
@@ -569,7 +569,7 @@ TacticList::~TacticList()
 	delete btn_show;
 	delete tct_set;
 
-	vector<ItemList*>::iterator iter = lista.begin();
+	std::vector<ItemList*>::iterator iter = lista.begin();
 	while (iter != lista.end())
 	{
 		delete *iter;
@@ -604,12 +604,12 @@ void TacticList::draw()
 
 void TacticList::setSquad(Unit *squad)
 {
-	selected = NULL;
+	selected = nullptr;
 	if (squad != this->squad)
 	{
 		printf("removendo taticas antigas\n");
 		//remove elementos da antiga squad
-		vector<ItemList*>::iterator iter = lista.begin();
+		std::vector<ItemList*>::iterator iter = lista.begin();
 		while (iter != lista.end())
 		{
 			delete *iter;
@@ -625,31 +625,31 @@ void TacticList::setSquad(Unit *squad)
 			int tp = -1;
 			while (i < squad->getTacticSize())
 			{
-				if (dynamic_cast<AttackNearestEnemy*>(squad->getTacticAt(i)) != NULL)
+				if (dynamic_cast<AttackNearestEnemy*>(squad->getTacticAt(i)) != nullptr)
 				{
 					tp = 0;
 				}
-				else if (dynamic_cast<AttackWeakestEnemy*>(squad->getTacticAt(i)) != NULL)
+				else if (dynamic_cast<AttackWeakestEnemy*>(squad->getTacticAt(i)) != nullptr)
 				{
 					tp = 1;
 				}
-				else if (dynamic_cast<AttackCollab*>(squad->getTacticAt(i)) != NULL)
+				else if (dynamic_cast<AttackCollab*>(squad->getTacticAt(i)) != nullptr)
 				{
 					tp = 2;
 				}
-				else if (dynamic_cast<DefenseCollab*>(squad->getTacticAt(i)) != NULL)
+				else if (dynamic_cast<DefenseCollab*>(squad->getTacticAt(i)) != nullptr)
 				{
 					tp = 3;
 				}
-				else if (dynamic_cast<Kamikase*>(squad->getTacticAt(i)) != NULL)
+				else if (dynamic_cast<Kamikase*>(squad->getTacticAt(i)) != nullptr)
 				{
 					tp = 4;
 				}
-				else if (dynamic_cast<Retreat*>(squad->getTacticAt(i)) != NULL)
+				else if (dynamic_cast<Retreat*>(squad->getTacticAt(i)) != nullptr)
 				{
 					tp = 5;
 				}
-				else if (dynamic_cast<MoveRandomly*>(squad->getTacticAt(i)) != NULL)
+				else if (dynamic_cast<MoveRandomly*>(squad->getTacticAt(i)) != nullptr)
 				{
 					tp = 6;
 				}
@@ -664,7 +664,7 @@ void TacticList::setSquad(Unit *squad)
 bool TacticList::hover()
 {
 	bool hover = btn_up->hover() | btn_down->hover() | btn_plus->hover() | btn_minus->hover() | btn_show->hover() | tct_set->hover();
-	vector<ItemList*>::iterator iter = lista.begin();
+	std::vector<ItemList*>::iterator iter = lista.begin();
 	while (iter != lista.end())
 	{
 		hover = hover | (*iter)->hover();
@@ -679,10 +679,10 @@ INPUT_EVENT TacticList::input(SDL_Event &event)
 		INPUT_EVENT e = tct_set->input(event);
 		if (e != NO_EVENT)
 		{
-			if ((selected != NULL) && (squad->getTacticSize() > 0))
+			if ((selected != nullptr) && (squad->getTacticSize() > 0))
 			{
 				int i = 0;
-				vector<ItemList*>::iterator iter = lista.begin();
+				std::vector<ItemList*>::iterator iter = lista.begin();
 				while (iter != lista.end())
 				{
 					if ((*iter) == selected)
@@ -747,10 +747,10 @@ INPUT_EVENT TacticList::input(SDL_Event &event)
 		switch (btn_minus->input(event))
 		{
 			case MOUSE_RELEASED_EVENT:
-				if ((selected != NULL) && (squad->getTacticSize() > 0))
+				if ((selected != nullptr) && (squad->getTacticSize() > 0))
 				{
 					int i = 0;
-					vector<ItemList*>::iterator iter = lista.begin();
+					std::vector<ItemList*>::iterator iter = lista.begin();
 					while (iter != lista.end())
 					{
 						if ((*iter) == selected)
@@ -763,7 +763,7 @@ INPUT_EVENT TacticList::input(SDL_Event &event)
 					}
 					squad->removeTactic(i);
 					delete selected;
-					selected = NULL;
+					selected = nullptr;
 				}
 				return MOUSE_RELEASED_EVENT;
 
@@ -792,13 +792,13 @@ INPUT_EVENT TacticList::input(SDL_Event &event)
 				switch (event.type)
 				{
 					case SDL_MOUSEBUTTONUP:
-						if (selected == NULL)
+						if (selected == nullptr)
 						{
 							this->height += tct_set->getHeight();
 						}
 						if (selected == lista[i])
 						{
-							selected = NULL;
+							selected = nullptr;
 							this->height -= tct_set->getHeight();
 						}
 						else
@@ -849,13 +849,13 @@ void ItemList::initialize()
 	this->width = 100;
 }
 
-ItemList::ItemList(string text, Font *font, SDL_Color color, SDL_Color shadow, string GID) :
+ItemList::ItemList(std::string text, Font *font, SDL_Color color, SDL_Color shadow, std::string GID) :
 		Label(text, font, color, shadow, GID)
 {
 	type = 0;
 	initialize();
 }
-ItemList::ItemList(int tp, string text, Font *font, SDL_Color color, SDL_Color shadow, string GID) :
+ItemList::ItemList(int tp, std::string text, Font *font, SDL_Color color, SDL_Color shadow, std::string GID) :
 		Label(text, font, color, shadow, GID)
 {
 	this->type = tp;

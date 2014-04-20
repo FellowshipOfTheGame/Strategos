@@ -30,7 +30,6 @@
 
 #define N_UNIT_TYPE             4
 
-using namespace std;
 
 class Army
 {
@@ -61,7 +60,7 @@ public:
 
 	const Dictionary *getDictionary() const;
 	void setDictionary(Dictionary* armyDictionary);
-	void setArmyName(std::string armyName);
+	void setArmyName(const std::string& armyName);
 
 	// Gets
 	Unit* getMotherUnit();
@@ -69,7 +68,7 @@ public:
 	int getTotalShips() const;
 	const std::vector<Unit*>& getUnits() const;
     unsigned int nUnits() const;
-    vector<Unit*>* getUnitsReference();
+    std::vector<Unit*>* getUnitsReference();
 
     /// Pegar unidade de acordo com o ID dela
     Unit* getUnitByID(unsigned int id) const;
@@ -82,7 +81,7 @@ public:
     void render();
 
     static Army* loadArmy(std::string armyname);
-    static void saveArmy(const Army *army, const string pth="");
+    static void saveArmy(const Army *army, const std::string pth="");
 
     CombatRound* unifyCombatRound();
 };

@@ -16,7 +16,8 @@ float slowlyRotateTo(float fromRad, float toRad)
 }
 
 Ship::Ship(const shipBaseStats &initialStats, Coordinates Coord)
-    : baseStats(initialStats), stats(initialStats), coord(Coord), unitPos(Coord)
+    : baseStats(initialStats), stats(initialStats),
+      coord(Coord), unitPos(Coord), targetPos(Coord)
 {
     currentDirection = M_PI/2;
 
@@ -27,7 +28,6 @@ Ship::Ship(const shipBaseStats &initialStats, Coordinates Coord)
 
 Ship::~Ship()
 {
-
 }
 
 const Coordinates& Ship::getPosition() const

@@ -56,13 +56,13 @@ class Dictionary
         const DictKey* getInfoFor(unsigned int pos) const;
         void generateSprites();
 
-        string title;
-        string description;
+        std::string title;
+        std::string description;
 
     private:
-        DictKey* readAttribute(fstream &input, Resource &resource);
+        DictKey* readAttribute(std::fstream &input, Resource &resource);
 
-        vector<DictKey*> keys;
+        std::vector<DictKey*> keys;
         Image *baseGFX;
 
         // Vetor de Vetores de imagens

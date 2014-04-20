@@ -4,16 +4,18 @@
 class Unit;
 class CombatData;
 
+#include <vector>
+
 struct TacticValidationData
 {
-    TacticValidationData(CombatData& cd, const vector<Unit*>& enemyU, const vector<Unit*>& alliedU)
+    TacticValidationData(CombatData& cd, const std::vector<Unit*>& enemyU, const std::vector<Unit*>& alliedU)
         : combatData(cd), enemyUnits(enemyU), alliedUnits(alliedU), validatingUnit(0)
     {
     }
 
     CombatData& combatData;
-    const vector<Unit*>& enemyUnits;
-    const vector<Unit*>& alliedUnits;
+    const std::vector<Unit*>& enemyUnits;
+    const std::vector<Unit*>& alliedUnits;
 
     Unit* validatingUnit;
 };

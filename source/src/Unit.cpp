@@ -112,7 +112,7 @@ void Unit::addTactic(Tactic *tactic)
 void Unit::removeTactic(int n)
 {
 	int i = 0;
-	vector<Tactic*>::iterator iter = tactics.begin();
+	std::vector<Tactic*>::iterator iter = tactics.begin();
 	while (iter != tactics.end())
 	{
 		if (i == n)
@@ -131,7 +131,7 @@ void Unit::setTarget(int i)
 	target = i;
 }
 
-int Unit::getTarget()
+int Unit::getTarget() const
 {
 	return target;
 }
@@ -147,7 +147,7 @@ Tactic* Unit::getTacticAt(unsigned int pos)
 {
 	if (pos < tactics.size())
 		return tactics[pos];
-	return NULL;
+	return nullptr;
 }
 
 unsigned int Unit::getTacticSize(){
@@ -234,7 +234,7 @@ unsigned long Unit::nShips() const
 
 void Unit::updateActions()
 {
-	for (list<Action*>::iterator it = shipsActions.begin(); it != shipsActions.end(); ++it)
+	for (std::list<Action*>::iterator it = shipsActions.begin(); it != shipsActions.end(); ++it)
 	{
 		if ((*it)->completed())
 		{
@@ -378,7 +378,7 @@ void Unit::moveTo(Coordinates c)
 
 void Unit::render()
 {
-	for (list<Action*>::iterator it = shipsActions.begin(); it != shipsActions.end(); ++it)
+	for (std::list<Action*>::iterator it = shipsActions.begin(); it != shipsActions.end(); ++it)
 	{
 		(*it)->render();
 	}
@@ -463,6 +463,7 @@ void Unit::render()
         }
     }
 
+    // Desenhar circulo do time
     if (team == 0)
         circleRGBA(renderer, averageCoord.x, averageCoord.y, 64, 255,0,0, 240);
     else

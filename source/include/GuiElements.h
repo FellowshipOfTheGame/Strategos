@@ -20,8 +20,6 @@ typedef enum {
 
 } INPUT_EVENT;
 
-using namespace std;
-
 class cGuiElement
 {
 protected:
@@ -32,7 +30,7 @@ protected:
 	bool shown;
 	bool enabled;
 	bool active;
-	string GID;     //GID = Global Identifier ... ID que identifica univocamente cada componente grafico instanciado
+	std::string GID;     //GID = Global Identifier ... ID que identifica univocamente cada componente grafico instanciado
 
 public:
 	cGuiElement()
@@ -108,7 +106,7 @@ class Button : public cGuiElement
         Font *font;
 
     public:
-        Button(int x, int y, int width, int height, Image *back, string GID);
+        Button(int x, int y, int width, int height, Image *back, std::string GID);
         virtual ~Button();
 
         virtual void update();
@@ -124,7 +122,7 @@ protected:
 	Image *border;
 	Image *background;
 public:
-	Box(int x, int y, int width, int height, Image *background, Image *border, string GID);
+	Box(int x, int y, int width, int height, Image *background, Image *border, std::string GID);
 	virtual ~Box();
 
 	virtual void update();
@@ -137,7 +135,7 @@ class ImageBox : public Box
 private:
 	int frame;
 public:
-	ImageBox(int x, int y, int width, int height, Image *background, int frame, Image *border, string GID);
+	ImageBox(int x, int y, int width, int height, Image *background, int frame, Image *border, std::string GID);
 	virtual ~ImageBox();
 
 	virtual void update();
@@ -148,7 +146,7 @@ public:
 class TextField : public cGuiElement
 {
 private:
-	string text;
+	std::string text;
 	Image* imgText;
 	unsigned int maxLength;
 	bool caps;
@@ -158,14 +156,14 @@ private:
 	SDL_Color background;
 
 public:
-	TextField(int x, int y, int width, int height, Image *border, SDL_Color background, string GID);
+	TextField(int x, int y, int width, int height, Image *border, SDL_Color background, std::string GID);
 	virtual ~TextField();
 
 	virtual void update();
 	virtual void draw();
 	virtual INPUT_EVENT input(SDL_Event &event);
-	void setText(string str);
-	string getText();
+	void setText(std::string str);
+	std::string getText();
 	void enterLetter(char letter);
 	void setFont(Font *font);
 	void setCaps(bool caps);
@@ -174,8 +172,8 @@ public:
 class ComboBox : public cGuiElement
 {
 private:
-	vector<string> list;
-	vector<Image*> listImg;
+	std::vector<std::string> list;
+	std::vector<Image*> listImg;
 	int selected;
 	bool drop, opened;
 
@@ -187,7 +185,7 @@ private:
 	unsigned int lenght;
 
 public:
-	ComboBox(int x, int y, int width, int height, Image *border, SDL_Color fontColor, SDL_Color fontShadow,string GID);
+	ComboBox(int x, int y, int width, int height, Image *border, SDL_Color fontColor, SDL_Color fontShadow,std::string GID);
 	//ComboBox(int x, int y, int width, int height, Image *border, string GID);
 	virtual ~ComboBox();
 
@@ -196,19 +194,19 @@ public:
 	virtual INPUT_EVENT input(SDL_Event &event);
 
 	void setFont(Font *font);
-	void addText(string str);
-	string getText();
+	void addText(std::string str);
+	std::string getText();
 	void removeText(int n);
 	int getSelectedIndex();
 	void setSelectedIndex(int i);
-	void setSelected(string str);
+	void setSelected(std::string str);
 };
 
 class Label : public cGuiElement
 {
     private:
         Font *font;
-        string text;
+        std::string text;
         SDL_Color color;
         SDL_Color shadow;
 
@@ -216,14 +214,14 @@ class Label : public cGuiElement
         Image *imgTextShadow;
 
     public:
-        Label(string Text, Font *font, SDL_Color color, SDL_Color shadow, string GID);
+        Label(std::string Text, Font *font, SDL_Color color, SDL_Color shadow, std::string GID);
         virtual ~Label();
 
         //virtual void update();
         virtual void draw();
         virtual INPUT_EVENT input(SDL_Event &event);
 
-        void setText(string str);
+        void setText(std::string str);
 };
 
 class StatusBox : public cGuiElement
@@ -246,7 +244,7 @@ private:
 	std::string GID;
 
 public:
-	StatusBox(int x, int y, Image *imgBack, Image *imgBorder, string GID);
+	StatusBox(int x, int y, Image *imgBack, Image *imgBorder, std::string GID);
 	virtual ~StatusBox();
 
 	virtual void update(){}

@@ -14,10 +14,10 @@ SDL_Texture *loadImageToMemory(const std::string &fileName)
     SDL_Texture* img = IMG_LoadTexture(Game::getGlobalGame()->getRenderer(), fileName.c_str());
 
 	/*If loading failed*/
-	if(img == NULL)
+	if(img == nullptr)
 	{
 		fprintf(stderr, "\nError loading image: %s\n", IMG_GetError());
-		return NULL;
+		return nullptr;
 	}
 
 	return img;
@@ -57,7 +57,7 @@ Resource::~Resource()
 	}
 }
 
-Image* Resource::AddImage(const char *path, std::string key)
+Image* Resource::AddImage(const char *path, const std::string& key)
 {
 	std::map<std::string, Image*>::iterator iter;
 	std::fstream file;
@@ -99,10 +99,10 @@ Image* Resource::AddImage(const char *path, std::string key)
 
     std::cerr << "ERROR: Could not load image with key '" <<key <<"' from file '" <<path <<std::endl;
 
-    return NULL;
+    return nullptr;
 }
 
-Image* Resource::LoadImage(std::fstream &file, std::string key)
+Image* Resource::LoadImage(std::fstream &file, const std::string& key)
 {
 	std::string tag = " ";
 	std::string path = "\0";
@@ -143,7 +143,7 @@ Image* Resource::LoadImage(std::fstream &file, std::string key)
 	if(success != 2)
 	{
 		std::cerr << "ERROR: Could not load image completely" <<std::endl;
-		return NULL;
+		return nullptr;
 	}
 
     SDL_Rect *rect = Image::createClip(nLines, nCols, clipWidth, clipHeight, margin, padding);
@@ -156,7 +156,7 @@ Image* Resource::LoadImage(std::fstream &file, std::string key)
 	return newImage;
 }
 
-void Resource::AddFont(const char *path, std::string key)
+void Resource::AddFont(const char *path, const std::string& key)
 {
 	std::map<std::string, Font*>::iterator iter;
 	std::fstream file;
@@ -198,7 +198,7 @@ void Resource::AddFont(const char *path, std::string key)
 		std::cerr << "ERROR: Could not load font with key '" <<key <<"' from file '" <<path <<std::endl;
 }
 
-void Resource::LoadFont(std::fstream &file, std::string key)
+void Resource::LoadFont(std::fstream &file, const std::string& key)
 {
 	std::string tag = "\0";
 	std::string path = "\0";
@@ -230,7 +230,7 @@ void Resource::LoadFont(std::fstream &file, std::string key)
 	fonts.insert(std::pair<std::string, Font*>(key, new Font(TTF_OpenFont(path.c_str(), ptSize), ptSize)));
 }
 
-Image* Resource::GetImage(std::string key)
+Image* Resource::GetImage(const std::string& key)
 {
 	std::map<std::string, Image*>::iterator iter;
 
@@ -242,10 +242,10 @@ Image* Resource::GetImage(std::string key)
 		return iter->second;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-Font* Resource::GetFont(std::string key)
+Font* Resource::GetFont(const std::string& key)
 {
 	std::map<std::string, Font*>::iterator iter;
 
@@ -257,20 +257,18 @@ Font* Resource::GetFont(std::string key)
 		return iter->second;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-
-
-void Resource::getListOfFiles(std::vector<std::string*> &myVec, std::string insideDirectory, std::string extension)
+void Resource::getListOfFiles(std::vector<std::string> &myVec, std::string insideDirectory, std::string extension)
 {
     DIR *dir;
     dirent *ent;
 
-    if ((dir = opendir(insideDirectory.c_str())) != NULL)
+    if ((dir = opendir(insideDirectory.c_str())) != nullptr)
     {
         /* print all the files and directories within directory */
-        while ((ent = readdir (dir)) != NULL)
+        while ((ent = readdir (dir)) != nullptr)
         {
             int len = strlen(ent->d_name);
             for (int i = 0, L = extension.size(); i < L; ++i)
@@ -284,10 +282,7 @@ void Resource::getListOfFiles(std::vector<std::string*> &myVec, std::string insi
             // Proximo arquivo
             if (len == -1)  continue;
 
-            string *tmp = new string(insideDirectory);
-            tmp->append(ent->d_name);
-
-            myVec.push_back( tmp );
+            myVec.push_back( insideDirectory+std::string(ent->d_name) );
         }
 
         closedir (dir);
