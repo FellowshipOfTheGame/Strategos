@@ -19,6 +19,8 @@ class Simulation : public StateMachine
     private:
         bool gameRunning;
         int simulationSTATE;
+        int simulationSpeed; // 0 = paused
+
         Image *background[4];
         Image *humanShips;
 
@@ -31,7 +33,7 @@ class Simulation : public StateMachine
         // Render
         SDL_Texture* renderCombat;
 
-        Unit* checkClickOn(Army *army);
+        Unit* checkClickOn(const Army *army);
         void drawBG(Image* img, double x, double y, double factor, SDL_Renderer *renderer);
 
 

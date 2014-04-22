@@ -54,10 +54,10 @@ void Dictionary::generateSprites()
         printf("Gerando para type %d\n", i);
 
         Image* cut = baseGFX->cutFrame(i);
-        if (cut == NULL)
+        if (cut == nullptr)
         {
-            shipsGFX[i] = NULL;
-            printf("ERROR! - NULL Surface!");
+            shipsGFX[i] = nullptr;
+            printf("ERROR! - nullptr Surface!");
         }else{
             shipsGFX[i] = Image::generateRotatedImage(cut, 360, _ROTATION_FRAMES_);
         }
@@ -124,7 +124,7 @@ int Dictionary::loadDictionary(const char *inputFile, Resource &resource)
     int nTypes=0;
     while (!dictInput.eof())
     {
-        DictKey *key = readAttribute( dictInput, title, resource);
+        DictKey *key = readAttribute( dictInput, resource);
         key->type = nTypes;
         if (key){
             keys.push_back(key);
@@ -143,10 +143,10 @@ const DictKey* Dictionary::getInfoFor(unsigned int pos) const
     if (pos < keys.size())
         return keys[pos];
 
-    return NULL;
+    return nullptr;
 }
 
-DictKey* Dictionary::readAttribute(fstream &input, std::string &title, Resource &resource)
+DictKey* Dictionary::readAttribute(fstream &input, Resource &resource)
 {
     DictKey *key = new DictKey();
     string tag;
@@ -220,7 +220,7 @@ DictKey* Dictionary::readAttribute(fstream &input, std::string &title, Resource 
 
         if (input.eof()){
             delete key;
-            return NULL;
+            return nullptr;
         }
     }
 

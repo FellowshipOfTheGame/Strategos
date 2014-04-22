@@ -33,20 +33,20 @@ void GeneticAlgorithm::initialize()
     std::string dirpath = "assets/saves/GA/" + std::to_string(armyType) + "/";
 
     //Carrega exercitos prontos (tirar o -blah para funcionar)
-    if ((dir = opendir(dirpath.c_str())) != NULL)
+    if ((dir = opendir(dirpath.c_str())) != nullptr)
     {
-        while ((ent = readdir (dir)) != NULL)
+        while ((ent = readdir (dir)) != nullptr)
         {
             if(ent->d_name[0] == 'r')
             {
-                string tmp = "GA/" + std::to_string(armyType) + "/";
+                std::string tmp = "GA/" + std::to_string(armyType) + "/";
 
                 tmp += ent->d_name;
                 tmp.replace(tmp.length()-4, 4, "\0");
 
                 Army *army = Army::loadArmy(tmp);
 
-                if(army != NULL)
+                if(army != nullptr)
                     individuos.push_back(army);
             }
         }
@@ -59,8 +59,7 @@ void GeneticAlgorithm::initialize()
         mkdir(dirpath.c_str());
     }
 
-    srand((unsigned)time(NULL));
-    //srand48((long)time(NULL));
+    srand((unsigned)time(nullptr));
 
 }
 
@@ -88,7 +87,7 @@ void GeneticAlgorithm::randomArmies(int size)
         armyName.append(std::to_string(i));
 
         Army *randomArmy = generateRandomArmy();
-        randomArmy->setArmyName(armyName.c_str());
+        randomArmy->setArmyName(armyName);
 
         //Save created army
         individuos.push_back(randomArmy);
@@ -210,9 +209,9 @@ void GeneticAlgorithm::run()
     if (armyType != 0) return; // debug
 
     printf("Iterate 2 times\n");
-    for (unsigned int i = 0; i < 3; i++)
+    for (unsigned int i = 0; i < 1; i++)
     {
-        vector<Army*> selected, rejected;
+        std::vector<Army*> selected, rejected;
 
         printf("GENERATION %d\n", i);
         // Completar exercito para INDIVIDUOS_GERACAO
@@ -252,11 +251,13 @@ void GeneticAlgorithm::run()
         Army::saveArmy(individuos[i], directory.c_str());
         printf("army[%d]\n", i+1);
     }
+
+//    exit(0);
 }
 
-void GeneticAlgorithm::selectFromPop(int n, vector<Army*>& selected, vector<Army*>& rejected)
+void GeneticAlgorithm::selectFromPop(int n, std::vector<Army*>& selected, std::vector<Army*>& rejected)
 {
-    vector<PairAF> order;
+    std::vector<PairAF> order;
 
 //    for (int i = 0; i < individuos.size(); ++i)
 //        printf("%p\n", individuos[i]);
@@ -337,9 +338,9 @@ void GeneticAlgorithm::selectFromPop(int n, vector<Army*>& selected, vector<Army
     }
 }
 
-void GeneticAlgorithm::crossOver(vector<Army*>& selected)
+void GeneticAlgorithm::crossOver(std::vector<Army*>& selected)
 {
-    vector<Army*> indCross;
+    std::vector<Army*> indCross;
 
     printf("crossover for: %d\n", selected.size());
     for (unsigned int i = 0; i < selected.size(); ++i)
@@ -367,7 +368,7 @@ void GeneticAlgorithm::crossOver(vector<Army*>& selected)
     }
 }
 
-void GeneticAlgorithm::mutate(vector<Army*>& selected)
+void GeneticAlgorithm::mutate(std::vector<Army*>& selected)
 {
     for (unsigned int i = 0; i < selected.size(); ++i)
     {
@@ -379,9 +380,9 @@ void GeneticAlgorithm::mutate(vector<Army*>& selected)
 
 //Crossover of Armies with same race/dictionary
 //Because armies can have different sizes (in units), we will use "Cut and Splice"
-void GeneticAlgorithm::crossOver(const Army *parent1, const Army *parent2, vector<Army*>& ind)
+void GeneticAlgorithm::crossOver(const Army *parent1, const Army *parent2, std::vector<Army*>& ind)
 {
-    string str;
+    std::string str;
     str.assign(parent1->getName().c_str());
     str.append(parent2->getName().c_str());
     Army* child1 = new Army(str, parent1->getDictionary());
@@ -430,7 +431,7 @@ double GeneticAlgorithm::evaluateFitness(const Army *ind)
     double fitness = 0.0;
     int countDead = 0, totalShips = 0;
 
-    const vector<Unit*>& units = ind->getUnits();
+    const std::vector<Unit*>& units = ind->getUnits();
 
     if ( units.size() == 0 ){
         return 0.0;
@@ -488,7 +489,7 @@ void GeneticAlgorithm::GoldCap(Army *army)
 
 void GeneticAlgorithm::rectifyUnitID(Army *ind)
 {
-    vector<Unit*> *units = ind->getUnitsReference();
+    std::vector<Unit*> *units = ind->getUnitsReference();
 
     for (unsigned int i = 0; i < units->size(); i++)
     {
@@ -511,7 +512,7 @@ void GeneticAlgorithm::rectifyUnitID(Army *ind)
     }
 }
 
-vector<Army*>& GeneticAlgorithm::getSelectedArmies()
+std::vector<Army*>& GeneticAlgorithm::getSelectedArmies()
 {
     return individuos;
 }
@@ -522,7 +523,7 @@ Army* GeneticAlgorithm::higherFitnessArmy()
 
     selectFromPop(1, best, rejected);
 
-    string name = "/GA/"+std::to_string(armyType)+"/"+best[0]->getName();
+    std::string name = "/GA/"+std::to_string(armyType)+"/"+best[0]->getName();
 
     return Army::loadArmy(name);
 }
@@ -550,7 +551,7 @@ void GeneticAlgorithm::mutation(Army *ind, int degree)
         break;
 
         case MUTATION_UNIT_POSITION: //Mutate a unit position
-            unit->setBluePrintCoord( Coordinates(rand()%COMBAT_AREA_WIDTH + 150, rand()%COMBAT_AREA_HEIGHT + 50) );
+            unit->setBluePrintCoord( Coordinates(rand()%TEAM_AREA_WIDTH + 25, rand()%TEAM_AREA_HEIGHT ) );
         break;
 
         default:

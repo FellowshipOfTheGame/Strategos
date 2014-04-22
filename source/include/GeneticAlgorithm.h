@@ -41,7 +41,7 @@ class GeneticAlgorithm : public Algorithm
         double evaluateFitness(const Army *ind);
         void selection();
         void randomArmies(int size);
-        void normalizeFitness(vector<PairAF> *pairs);
+        void normalizeFitness(std::vector<PairAF> *pairs);
         void rectifyUnitID(Army *ind);
         void GoldCap(Army *army);
 
@@ -54,7 +54,7 @@ class GeneticAlgorithm : public Algorithm
 
         //talvez nao use isso
         Army* higherFitnessArmy();
-        vector<Army*>& getSelectedArmies();
+        std::vector<Army*>& getSelectedArmies();
 
         // Mutation
         void mutation(Army *ind, int degree);
@@ -63,24 +63,24 @@ class GeneticAlgorithm : public Algorithm
 
     private:
         int armyType;
-        string directory;
-        vector<Army*> individuos;
+        std::string directory;
+        std::vector<Army*> individuos;
 
         /**
          * \param selected Retorna os individuos selecionados para a PROXIMA geracao
          *          Ordenados em ordem decrescente de fitness
          * \param n Numero de individuos para selecionar
          */
-        void selectFromPop(int n, vector<Army*>& selected, vector<Army*>& rejected);
+        void selectFromPop(int n, std::vector<Army*>& selected, std::vector<Army*>& rejected);
 
         /// Efetua o crossover ateh popular os INDIVIDUOS_GERACAO indivudos
-        void crossOver(vector<Army*>& selected);
+        void crossOver(std::vector<Army*>& selected);
 
         /// Efetua o crossover entre dois individuos colocando 2 filhos no vetor ind
-        void crossOver(const Army *parent1, const Army *parent2, vector<Army*>& ind);
+        void crossOver(const Army *parent1, const Army *parent2, std::vector<Army*>& ind);
 
         /// Efetua mutacao nos individuos
-        void mutate(vector<Army*>& selected);
+        void mutate(std::vector<Army*>& selected);
 };
 
 #endif

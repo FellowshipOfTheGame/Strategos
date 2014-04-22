@@ -12,7 +12,12 @@ using namespace std;
 /// quando uma morre, ambas morrem. ERRO ERRO
 
 World::World(Army *army1, Army *army2)
+    :   combatData(army1->nUnits(), army2->nUnits()),
+        tvdForArmy1(combatData, army2->getUnits(), army1->getUnits()),
+        tvdForArmy2(combatData, army1->getUnits(), army2->getUnits())
 {
+    totalSteps = 0;
+
     printf("Starting World... ");
 
     if (army1 == army2)
@@ -27,23 +32,23 @@ World::World(Army *army1, Army *army2)
 	combatLog.push_back(nullptr);
 	combatLog.push_back(nullptr);
 
-
-
 	printf("%d VS %d ", army1->nUnits(), army2->nUnits());
 
-	army1->restore();
-	army2->restore();
+	army1->restore(0);
+	army2->restore(1);
 
 	// Setar posicao de cada exercito
-    armies[1]->setReflectBasePositions(COMBAT_AREA_WIDTH);
     this->setCombatLog(0); //Game::getGlobalGame()->setCombatLog(0);
 	this->setCombatLog(1); //Game::getGlobalGame()->setCombatLog(1);
+
     printf("World Ready!\n");
 }
 
 World::~World()
 {
-
+//    printNActions();
+//    print_MaxActions();
+    printf("Steps: %d\n", totalSteps);
 }
 
 void World::calcActions()
@@ -51,13 +56,13 @@ void World::calcActions()
     // ARMY 0
     for (unsigned int n = 0; n < armies[0]->nUnits(); n++){
         Unit *unit = armies[0]->getUnitAtIndex(n);
-        unit->generateActions(armies[1]->getUnits(), armies[0]->getUnits());
+        unit->generateActions(tvdForArmy1);
     }
 
     // ARMY 1
     for (unsigned int n = 0; n < armies[1]->nUnits(); n++){
         Unit *unit = armies[1]->getUnitAtIndex(n);
-        unit->generateActions(armies[0]->getUnits(), armies[1]->getUnits());
+        unit->generateActions(tvdForArmy2);
     }
 
     // Aproximar naves mae
@@ -65,6 +70,7 @@ void World::calcActions()
     Unit *mother1 = armies[1]->getMotherUnit();
     Coordinates md1 = mother0->getAveragePos();
     Coordinates md2 = mother1->getAveragePos();
+
     if ( md1.distance( md2 ) > std::min(mother0->getUnitInfo()->stats.range,
                                         mother1->getUnitInfo()->stats.range) )
     {
@@ -75,6 +81,10 @@ void World::calcActions()
 
 int World::simulateStep()
 {
+    ++totalSteps;
+
+    combatData.ClearDistances();
+
 	//printf ("\t calcActions\n");
     calcActions();
   //  printf ("\t\t updateActions 1\n");
@@ -167,4 +177,7 @@ void World::render()
 {
     armies[0]->render();
     armies[1]->render();
+
+    SDL_RenderDrawLine(Game::getGlobalGame()->getRenderer(), TEAM_AREA_WIDTH, 0, TEAM_AREA_WIDTH, TEAM_AREA_HEIGHT);
+    SDL_RenderDrawLine(Game::getGlobalGame()->getRenderer(), TEAM_2_POSX, 0, TEAM_2_POSX, TEAM_AREA_HEIGHT);
 }

@@ -15,7 +15,9 @@
     #include "SDL2_gfx/SDL2_gfxPrimitives.h"
 #endif // _MAC_OS_
 
-Simulation::Simulation(STATE previous) : StateMachine(previous, GAMEPLAY, GAMEPLAY)
+Simulation::Simulation(STATE previous)
+    : StateMachine(previous, GAMEPLAY, GAMEPLAY),
+        simulationSpeed(0)
 {
     printf("Starting Simulation...\n");
     gameRunning = true;
@@ -58,13 +60,13 @@ Simulation::Simulation(STATE previous) : StateMachine(previous, GAMEPLAY, GAMEPL
     renderCombat = SDL_CreateTexture(Game::getGlobalGame()->getRenderer(), SDL_PIXELFORMAT_RGBA8888,
                         SDL_TEXTUREACCESS_TARGET, 2048, 2048);
 
-    if(renderCombat == NULL)
+    if(renderCombat == nullptr)
     {
         printf("SDL_CreateTexture failed: %s\n", SDL_GetError());
         exit(-9);
     }
 
-    selectedUnit = NULL;
+    selectedUnit = nullptr;
     printf("Simulation Ready!\n");
 }
 
@@ -90,6 +92,29 @@ void Simulation::onKeyDownEvent(SDL_Keysym key)
         case SDLK_RETURN:
             if (!gameRunning)
                 setNext(RESULTS);
+        break;
+
+        case SDLK_SPACE:
+            simulationSpeed = 0;
+        break;
+
+        case SDLK_0:
+            simulationSpeed = 0;
+        break;
+
+        case SDLK_1:
+            simulationSpeed = 1;
+        break;
+
+        case SDLK_KP_PLUS:
+        case SDLK_PLUS:
+            ++simulationSpeed;
+        break;
+
+        case SDLK_KP_MINUS:
+        case SDLK_MINUS:
+            if (simulationSpeed > 0)
+                --simulationSpeed;
         break;
 
         default: break;
@@ -131,30 +156,33 @@ void Simulation::onMouseDownEvent(Uint8 button)
     if(button == SDL_BUTTON_LEFT)
     {
         selectedUnit = checkClickOn(simulationWorld->getArmy(0));
-        if (!selectedUnit)
+        if (selectedUnit == nullptr)
             selectedUnit = checkClickOn(simulationWorld->getArmy(1));
-        // TODO: Assim temos preferencia para exercito 0... ????
+
+        if (selectedUnit != nullptr)
+        {
+            selectedUnit->printInfo();
+        }
     }
 }
 
-Unit* Simulation::checkClickOn(Army *army)
+Unit* Simulation::checkClickOn(const Army *army)
 {
     int mouseX, mouseY;
+	SDL_GetMouseState(&mouseX, &mouseY);
 
-    SDL_GetMouseState(&mouseX, &mouseY);
+	mouseX += camera->getX();
+	mouseY += camera->getY();
 
-    // TODO: Considerar camera!
-    const vector<Unit*>& units = army->getUnits();
+    const std::vector<Unit*>& units = army->getUnits();
     for(unsigned int i = 0; i < units.size(); i++)
     {
-        const Coordinates& coord = units[i]->getAveragePos();
-
-        if(coord.distance(mouseX, mouseY) <= 64){
+        if( units[i]->getNShipsAlive() > 0 && units[i]->hover(mouseX, mouseY) ){
             return units[i];
         }
     }
 
-    return 0;
+    return nullptr;
 }
 
 void Simulation::onMouseUpEvent(Uint8 button)
@@ -167,20 +195,14 @@ void Simulation::Logic()
     camera->update();
     bgOffsetX = camera->getX();
     bgOffsetY = camera->getY();
-//    if (bgOffsetX < -Game::getGlobalGame()->getWidth()) // Fazer loop do background
-//        bgOffsetX += Game::getGlobalGame()->getWidth();
-//
-//    if (bgOffsetY < -Game::getGlobalGame()->getHeight()) // Fazer loop do background
-//        bgOffsetY += Game::getGlobalGame()->getHeight();
 
     if (gameRunning)
     {
          if (simulationSTATE == _SIM_CONTINUE_)
          {
              // Aumentar velocidade da simulacao
-            for (int i = 0; i < 1 && simulationSTATE == _SIM_CONTINUE_; ++i){
+            for (int i = 0; i < simulationSpeed && simulationSTATE == _SIM_CONTINUE_; ++i){
                  simulationSTATE = simulationWorld->simulateStep();
-                 //printf("END STEP - SIMULATION: %d\n", simulationSTATE);
             }
         }
         else
@@ -219,17 +241,6 @@ void Simulation::Render()
     drawBG(background[1], bgOffsetX, bgOffsetY, -0.13, renderer);
     drawBG(background[2], bgOffsetX, bgOffsetY, -0.2, renderer);
     drawBG(background[3], bgOffsetX, bgOffsetY, -0.28, renderer);
-//    background[0]->DrawImage(bgOffsetX*0.10, bgOffsetY*0.10, renderer);
-//    background[1]->DrawImage(bgOffsetX*0.13, bgOffsetY*0.13, renderer);
-//    background[2]->DrawImage(bgOffsetX*0.20, bgOffsetY*0.20, renderer);
-//    background[3]->DrawImage(bgOffsetX*0.28, bgOffsetY*0.28, renderer);
-
-//    background->DrawImage(bgOffsetX, bgOffsetY, renderer);
-//    background->DrawImage(bgOffsetX + Game::getGlobalGame()->getWidth(),
-//                          bgOffsetY + Game::getGlobalGame()->getHeight(), renderer);
-//
-//    background->DrawImage(bgOffsetX + Game::getGlobalGame()->getWidth(), bgOffsetY, renderer);
-//    background->DrawImage(bgOffsetX, bgOffsetY + Game::getGlobalGame()->getHeight(), renderer);
 
     //Just TESTING
     SDL_SetRenderTarget(renderer, renderCombat);
@@ -255,7 +266,7 @@ void Simulation::Render()
 
     if(selectedUnit)
     {
-        filledCircleRGBA( renderer, selectedUnit->getAvgX(), selectedUnit->getAvgY(), 64, 0, 0, 255, 128 );
+        filledCircleRGBA( renderer, selectedUnit->getAvgX()-camera->getX(), selectedUnit->getAvgY()-camera->getY(), 64, 0, 0, 255, 128 );
     }
 }
 

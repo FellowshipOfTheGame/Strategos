@@ -10,7 +10,7 @@
 #include "StateMachine.h"
 #include "GuiElements.h"
 #include "CombatLog.h"
-using namespace std;
+
 class Result : public StateMachine
 {
 private:

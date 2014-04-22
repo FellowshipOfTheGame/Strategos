@@ -72,7 +72,7 @@ int View::createWindow(int width, int height, int bpp, Uint32 flags)
 	screenArea.w = width;
 	screenArea.h = height;
 
-	if (window == NULL)
+	if (window == nullptr)
 	{
 		fprintf(stderr, "Couldn't create the window - %d x %d x %d - %d\n", width, height, bpp, flags);
 		return -1;
@@ -181,6 +181,6 @@ bool View::update()
 void View::setBackgroundColor(Uint8 r, Uint8 g, Uint8 b)
 {
     SDL_SetRenderDrawColor(renderer, r, g, b, 255);
-    SDL_RenderFillRect(renderer, NULL);
+    SDL_RenderFillRect(renderer, nullptr);
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 }

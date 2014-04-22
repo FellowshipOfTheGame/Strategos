@@ -67,7 +67,7 @@ void Result::Render()
 	Game::getGlobalGame()->setBackgroundColor(255, 0, 0);
 	imgBackground->DrawImage(Game::getGlobalGame()->getRenderer());
 	drawGuiElements();
-	int x,y,i,j,k;
+	int x,y,i;
 	int maxx=600,minx=200;
 	int maxy=400,miny=200;
 	int size =log1->getLog().size();

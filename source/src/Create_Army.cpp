@@ -85,41 +85,40 @@ Create_Army::Create_Army(STATE previous) :
 	lbl_Descr->setText(dct->description);
 	addGuiElement(lbl_Descr);
 
-	st_box = new StatusBox(0, 0, NULL, NULL, "Statusbox");
+	st_box = new StatusBox(0, 0, nullptr, nullptr, "Statusbox");
 	st_box->update(0, 0, dct->getInfoFor(0));
 	st_box->setVisible(false);
 	addGuiElement(st_box);
 
 	// adicionando box com as imagens das naves
-	bx1 = new ImageBox(scrWidth * 0.3, scrHeight * 0.8, 50, 50, resource->GetImage("human-ships"), 0, NULL, "BX1");
+	bx1 = new ImageBox(scrWidth * 0.3, scrHeight * 0.8, 50, 50, resource->GetImage("human-ships"), 0, nullptr, "BX1");
 	addGuiElement(bx1);
-	bx2 = new ImageBox(scrWidth * 0.4, scrHeight * 0.8, 50, 50, resource->GetImage("human-ships"), 1, NULL, "BX1");
+	bx2 = new ImageBox(scrWidth * 0.4, scrHeight * 0.8, 50, 50, resource->GetImage("human-ships"), 1, nullptr, "BX1");
 	addGuiElement(bx2);
-	bx3 = new ImageBox(scrWidth * 0.5, scrHeight * 0.8, 50, 50, resource->GetImage("human-ships"), 2, NULL, "BX1");
+	bx3 = new ImageBox(scrWidth * 0.5, scrHeight * 0.8, 50, 50, resource->GetImage("human-ships"), 2, nullptr, "BX1");
 	addGuiElement(bx3);
-	bx4 = new ImageBox(scrWidth * 0.6, scrHeight * 0.8, 50, 50, resource->GetImage("human-ships"), 3, NULL, "BX1");
+	bx4 = new ImageBox(scrWidth * 0.6, scrHeight * 0.8, 50, 50, resource->GetImage("human-ships"), 3, nullptr, "BX1");
 	addGuiElement(bx4);
 
 	cmb_armys = new ComboBox(scrWidth * 0.4, scrHeight * 0.4+100, 150, 17, Game::getGlobalGame()->getResourceMNGR()->GetImage("combo-cmb"),
 	        ColorRGB8::Green, ColorRGB8::White, "CB01");
 	cmb_armys->setFont(fntEthnocentric);
 	addGuiElement(cmb_armys);
-	vector<string*> datFiles;
+	std::vector<std::string> datFiles;
 	Resource::getListOfFiles(datFiles, "assets/saves/", ".dat");
 
 	for (unsigned int i = 0; i < datFiles.size(); ++i)
 	{
-		string aux =datFiles[i]->c_str();
-		aux= aux.substr( 0, aux.find_last_of('.') );
-		aux= aux.substr( aux.find_last_of("\\/")+1 );
+		std::string& aux = datFiles[i];
+		aux = aux.substr( 0, aux.find_last_of('.') );
+		aux = aux.substr( aux.find_last_of("\\/")+1 );
 		Army *armytemp = Army::loadArmy(aux.c_str());
 		if (armytemp)
 			cmb_armys->addText(aux.c_str());
 		delete armytemp;
 	}
 
-	Game::getGlobalGame()->setEditingArmy(NULL);
-
+	Game::getGlobalGame()->setEditingArmy(nullptr);
 }
 
 Create_Army::~Create_Army()
@@ -165,13 +164,13 @@ void Create_Army::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Key
 		switch (action)
 		{
 			case MOUSE_RELEASED_EVENT:
-				if (Game::getGlobalGame()->getEditingArmy() == NULL)
+				if (Game::getGlobalGame()->getEditingArmy() == nullptr)
 				{
 					if (txt_ArmyName->getText() != "")
 					{
-						if (Game::getGlobalGame()->getDictionary(cmb_species->getText()) != NULL)
+						if (Game::getGlobalGame()->getDictionary(cmb_species->getText()) != nullptr)
 						{
-							if (Game::getGlobalGame()->getEditingArmy()==NULL)
+							if (Game::getGlobalGame()->getEditingArmy()==nullptr)
 							{
 								Game::getGlobalGame()->setEditingArmy(
 							        new Army(txt_ArmyName->getText(), Game::getGlobalGame()->getDictionary(cmb_species->getText())));

@@ -16,17 +16,19 @@
 #include "Coordinates.h"
 #include "Dictionary.h"
 
+void printNActions();
+
 class Action
 {
     public:
-        Action(){complete = 0;}
-        virtual ~Action(){}
+        Action();
+        virtual ~Action();
 
         bool complete;
 
         virtual Action* act() = 0;
-        virtual bool completed(){return 1;}
-        virtual void render(){}
+        virtual bool completed();
+        virtual void render();
 };
 
 class ExplosionAction : public Action
@@ -60,15 +62,18 @@ class DamageAction : public Action
 
 class MoveAction : public Action
 {
-public:
-	MoveAction(Ship *Source, Coordinates Coord);
-	MoveAction(Ship *Source, Ship* target);
-	Action* act();
-	bool completed();
-	void render();
+    public:
+        MoveAction(Ship *Source, const Coordinates& Coord, bool GetNear=false);
+        Action* act();
+        bool completed();
+        void render();
 
-    Ship *source, *target;
-	Coordinates coord;
+        Ship *source, *target;
+        Coordinates coord;
+
+    private:
+        bool getNearTo; // Se ativo, faz com que a acao ocorra ate que o alvo fique dentro
+                        // da distancia da nave source.
 };
 
 class AttackAction : public Action

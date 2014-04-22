@@ -11,8 +11,8 @@ Font::Font(TTF_Font *font_, int ptsize_) :
 
 	corText = ColorRGB8::Red;
 	corShadow = ColorRGB8::Black;
-	surfText = NULL;
-	surfShadow = NULL;
+	surfText = nullptr;
+	surfShadow = nullptr;
 	useShadow = false;
 }
 
@@ -76,16 +76,16 @@ void Font::CleanText()
 	{
 		SDL_FreeSurface(surfText);
 		SDL_DestroyTexture(textureText);
-		surfText = NULL;
-		textureText = NULL;
+		surfText = nullptr;
+		textureText = nullptr;
 	}
 
 	if (surfShadow)
 	{
 		SDL_FreeSurface(surfShadow);
 		SDL_DestroyTexture(textureShadow);
-		surfShadow = NULL;
-		textureShadow = NULL;
+		surfShadow = nullptr;
+		textureShadow = nullptr;
 	}
 }
 

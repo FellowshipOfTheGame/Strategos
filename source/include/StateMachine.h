@@ -35,7 +35,7 @@ public:
         this->previous = previous;
         this->current = current;
         this->next = next;
-        focus = NULL;
+        focus = nullptr;
     }
 
 	virtual ~StateMachine() { } //Deve ser Virtual pois essa clase eh usada como base apenas.
@@ -96,11 +96,11 @@ public:
             for (unsigned int i = 0; i < guiElements.size(); i++)
             {
                 INPUT_EVENT newEvent = guiElements[i]->input(event);
-                if ( dynamic_cast<TextField*>(guiElements[i]) != NULL)
+                if ( dynamic_cast<TextField*>(guiElements[i]) != nullptr)
                 {
                     if (newEvent == MOUSE_RELEASED_EVENT)
                     {
-                        if (focus != NULL)
+                        if (focus != nullptr)
                         {
                             focus->setActive(false);
                         }
@@ -119,7 +119,7 @@ public:
         }
 
         //Get KeyStates in case the key is being held
-        const Uint8 *keystate = SDL_GetKeyboardState(NULL);
+        const Uint8 *keystate = SDL_GetKeyboardState(nullptr);
         onKeyHeldEvent(keystate);
     }
 

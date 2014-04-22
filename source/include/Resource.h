@@ -35,17 +35,17 @@ class Resource
 
         // Retorna a imagem inserida (Se ela ja existe retorna a ocorrencia)
         // Ou NULL caso ocorra algum erro no carregamento
-        Image* AddImage(const char *filepath, std::string key);
-        Image* LoadImage(std::fstream &file, std::string key);
-        void AddFont(const char *filepath, std::string key);
-        void LoadFont(std::fstream &file, std::string key);
+        Image* AddImage(const char *filepath, const std::string& key);
+        Image* LoadImage(std::fstream &file, const std::string& key);
+        void AddFont(const char *filepath, const std::string& key);
+        void LoadFont(std::fstream &file, const std::string& key);
 
-        Image* GetImage(std::string key);
-        Font* GetFont(std::string key);
+        Image* GetImage(const std::string& key);
+        Font* GetFont(const std::string& key);
 
         // Retorna uma lista com o nome dos arquivos
         // O usuario se encarrega de liberar a memoria do vetor (das strings)
-        static void getListOfFiles(std::vector<std::string*> &myVec, std::string insideDirectory, std::string extension);
+        static void getListOfFiles(std::vector<std::string> &myVec, std::string insideDirectory, std::string extension);
 };
 
 #endif

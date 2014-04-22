@@ -7,11 +7,11 @@
 
 /****************************** BUTTON ******************************/
 //a principio ta pronto
-Button::Button(int x, int y, int width, int height, Image *back, string GID)
+Button::Button(int x, int y, int width, int height, Image *back, std::string GID)
 {
     stringImg = 0;
-	this->font = NULL;
-	this->text = NULL;
+	this->font = nullptr;
+	this->text = nullptr;
 	this->x = x;
 	this->y = y;
 	this->width = width;
@@ -19,7 +19,7 @@ Button::Button(int x, int y, int width, int height, Image *back, string GID)
 
 	this->curFrame = 0;
 
-	if (back != NULL)
+	if (back != nullptr)
 	{
 		this->back = back;
 		this->nFrames = back->getNumberFrames();
@@ -93,7 +93,7 @@ void Button::draw()
 	}
 
 	//Render the text on the ?Middle?
-	if (font != NULL)
+	if (font != nullptr)
 	{
 		posX = x + width / 2 - (strlen(text) * font->getPtSize()) / 2;
 		posY += frameHeight / 4;
@@ -150,22 +150,22 @@ void Button::setText(Font *font, const char *str, SDL_Color forecolor, SDL_Color
 
 /****************************** BOX ******************************/
 
-Box::Box(int x, int y, int width, int height, Image *background, Image *border, string GID)
+Box::Box(int x, int y, int width, int height, Image *background, Image *border, std::string GID)
 {
 	this->x = x;
 	this->y = y;
 	this->width = width;
 	this->height = height;
-	this->background = NULL;
-	this->border = NULL;
-	if (background != NULL)
+	this->background = nullptr;
+	this->border = nullptr;
+	if (background != nullptr)
 		this->background = background;
 	else
 	{
 		printf("WARNING: Could not find background for box %s\n", GID.c_str());
 	}
 
-	if (border != NULL)
+	if (border != nullptr)
 		this->border = border;
 	else
 	{
@@ -192,11 +192,11 @@ void Box::draw()
 	//int bottom = y + height;
 
 	/*Desenha o fundo*/
-	if (border != NULL)
+	if (border != nullptr)
 	{
 		border->DrawImage(x, y, render);
 	}
-	if (background != NULL)
+	if (background != nullptr)
 	{
 		background->DrawImage(x, y, render);
 	}
@@ -220,7 +220,7 @@ INPUT_EVENT Box::input(SDL_Event &event)
 }
 /****************************** BOX ******************************/
 
-ImageBox::ImageBox(int x, int y, int width, int height, Image *background, int frame, Image *border, string GID) :
+ImageBox::ImageBox(int x, int y, int width, int height, Image *background, int frame, Image *border, std::string GID) :
 		Box(x, y, width, height, background, border, GID)
 {
 	this->frame = frame;
@@ -241,11 +241,11 @@ void ImageBox::draw()
 	//int right = x + width;
 	//int bottom = y + height;
 	/*Desenha o fundo*/
-	if (border != NULL)
+	if (border != nullptr)
 	{
 		border->DrawImage(x, y, render);
 	}
-	if (background != NULL)
+	if (background != nullptr)
 	{
 		background->DrawImage(x, y, frame, render);
 	}
@@ -270,7 +270,7 @@ INPUT_EVENT ImageBox::input(SDL_Event &event)
 
 /****************************** TEXT_FIELD ******************************/
 
-TextField::TextField(int x, int y, int width, int height, Image *border, SDL_Color background, string GID)
+TextField::TextField(int x, int y, int width, int height, Image *border, SDL_Color background, std::string GID)
     : imgText(0)
 {
 	this->x = x;
@@ -287,7 +287,7 @@ TextField::TextField(int x, int y, int width, int height, Image *border, SDL_Col
 	this->active = false;
 	this->shown = true;
 	this->enabled = true;
-	font = NULL;
+	font = nullptr;
 }
 
 TextField::~TextField()
@@ -311,7 +311,7 @@ void TextField::draw()
     if (imgText)
         imgText->DrawImage(x+5, y, renderer);
 }
-void TextField::setText(string str)
+void TextField::setText(std::string str)
 {
 	this->text = str;
 
@@ -322,7 +322,7 @@ void TextField::setText(string str)
         imgText = 0;
 
 }
-string TextField::getText()
+std::string TextField::getText()
 {
 	return text;
 }
@@ -414,10 +414,10 @@ void TextField::setFont(Font *font)
 
 /****************************** COMBO_BOX ******************************/
 
-ComboBox::ComboBox(int x, int y, int width, int height, Image *border, SDL_Color fontColor, SDL_Color fontShadow, string GID)
+ComboBox::ComboBox(int x, int y, int width, int height, Image *border, SDL_Color fontColor, SDL_Color fontShadow, std::string GID)
 {
 	//list = new std::vector<std::string>(1);
-	this->font = NULL;
+	this->font = nullptr;
 	this->drop = false;
 	this->x = x;
 	this->y = y;
@@ -516,7 +516,7 @@ void ComboBox::draw()
 			this->height = ((cell_height) * (list.size() + 1));
 
 			// Renderizar fundo
-			if (border != NULL){
+			if (border != nullptr){
                 for (i = 0; i < list.size()+1; i++){
                     border->DrawImage(x, y + cell_height*i, 0, renderer);
                     for (j = 0; j < lenght; j++){
@@ -541,7 +541,7 @@ void ComboBox::draw()
 		else
 		{
 			this->height = cell_height;
-			if (border != NULL)
+			if (border != nullptr)
 			{
 				border->DrawImage(x, y - 3, 0, renderer);
 				for (i = 0; i < lenght; i++){
@@ -568,7 +568,7 @@ void ComboBox::update()
 {
 }
 
-void ComboBox::addText(string str)
+void ComboBox::addText(std::string str)
 {
 	if (str.size() > lenght)
 		lenght = str.size() + 2;
@@ -579,12 +579,12 @@ void ComboBox::addText(string str)
 	listImg.push_back(t);
 }
 
-string ComboBox::getText()
+std::string ComboBox::getText()
 {
     if (selected < list.size())
         return this->list[this->selected];
 
-    return string();
+    return std::string();
 }
 
 void ComboBox::removeText(int n)
@@ -607,7 +607,7 @@ void ComboBox::setSelectedIndex(int i)
 	this->selected = i;
 }
 
-void ComboBox::setSelected(string str)
+void ComboBox::setSelected(std::string str)
 {
 	for (unsigned int i = 0; i < list.size() - 2; i++)
 	{
@@ -621,7 +621,7 @@ void ComboBox::setSelected(string str)
 
 /****************************** LABEL ******************************/
 //a principio ta pronto
-Label::Label(string Text, Font *font, SDL_Color color, SDL_Color shadow, string GID)
+Label::Label(std::string Text, Font *font, SDL_Color color, SDL_Color shadow, std::string GID)
     : text(Text)
 {
 	this->color = color;
@@ -653,14 +653,14 @@ INPUT_EVENT Label::input(SDL_Event &event)
 	return NO_EVENT;
 }
 
-void Label::setText(string str)
+void Label::setText(std::string str)
 {
 	text.assign(str);
 }
 
 /****************************** STATUS_BOX ******************************/
 //necessita que dictionary esteja funcionando
-StatusBox::StatusBox(int x, int y, Image *imgBack, Image *imgBorder, string GID)
+StatusBox::StatusBox(int x, int y, Image *imgBack, Image *imgBorder, std::string GID)
 {
 	width = 170;
 	height = 150;

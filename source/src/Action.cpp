@@ -16,9 +16,46 @@
 
 #include "SDL2_gfxPrimitives.h"
 
+static int _N_ACTIONS_ = 0;
+static int _N_ACTIONS_EXPLOSION_ = 0;
+static int _N_ACTIONS_DMG_ = 0;
+static int _N_ACTIONS_MOVE_ = 0;
+
+void printNActions(){
+    printf("TOTAL Actions: %d\n", _N_ACTIONS_);
+    printf("TOTAL Explosions: %d\n", _N_ACTIONS_EXPLOSION_);
+    printf("TOTAL Damage: %d\n", _N_ACTIONS_DMG_);
+    printf("TOTAL Move: %d\n", _N_ACTIONS_MOVE_);
+    _N_ACTIONS_ = 0;
+    _N_ACTIONS_EXPLOSION_ = 0;
+    _N_ACTIONS_DMG_ = 0;
+    _N_ACTIONS_MOVE_ = 0;
+}
+
+Action::Action()
+    : complete(0)
+{
+    ++_N_ACTIONS_;
+}
+
+Action::~Action(){
+
+}
+
+bool Action::completed(){
+    return 1;
+}
+
+void Action::render(){
+
+}
+
+///
+
 ExplosionAction::ExplosionAction(Coordinates pos, Image *explosionImg)
     : img(explosionImg), timer(0), position(pos)
 {
+    ++_N_ACTIONS_EXPLOSION_;
 }
 
 Action* ExplosionAction::act()
@@ -51,6 +88,7 @@ void ExplosionAction::render()
 DamageAction::DamageAction(Coordinates pos)
     : timer(0), position(pos)
 {
+    ++_N_ACTIONS_DMG_;
 }
 
 Action* DamageAction::act()
@@ -81,59 +119,40 @@ void DamageAction::render()
 
 ///
 
-MoveAction::MoveAction(Ship *Source, Coordinates Coord)
-    : source(Source), target(0), coord(Coord)
+MoveAction::MoveAction(Ship *Source, const Coordinates& Coord, bool GetNear)
+    : source(Source), target(0), coord(Coord), getNearTo(GetNear)
 {
+    ++_N_ACTIONS_MOVE_;
 
-}
-
-MoveAction::MoveAction(Ship *Source, Ship* Target)
-    : source(Source), target(Target)
-{
-    Coordinates tc = target->getPosition();
-    float dist = tc.distance(source->getPosition());
-
-    if (dist > source->getBaseStats().range)
+    if (getNearTo)
     {
-        float direction = atan2(source->getY() - target->getY(), source->getX() - target->getX());
-        dist -= (source->getBaseStats().range-30);
-        coord.x = source->getX() - dist * cos(direction);
-        coord.y = source->getY() - dist * sin(direction);
-    }
-    else
-    {
-        coord = source->getPosition();
-    }
+        double dist = Coord.distance(source->getPosition());
 
-//    printf("Move To: %lf, %lf\n", coord.x, coord.y);
+        if (dist >= source->getBaseStats().range)
+        {
+            double direction = atan2(source->getY() - Coord.y, source->getX() - Coord.x);
+            coord.x = source->getX() - (dist-source->getBaseStats().range*0.9) * cos(direction);
+            coord.y = source->getY() - (dist-source->getBaseStats().range*0.9) * sin(direction);
+        }
+    }else{
+
+            // !!!! Ja foi iniciado com Coord !!!!
+            // coord = Coord;
+
+    }
 }
 
 Action* MoveAction::act()
 {
-    // Terminar a acao quando chegar proximo do destino
-    if (coord.distance(source->getX(), source->getY()) < 5.0)
-    {
-        complete = 1;
-    }
-    else
-    {
-        source->moveTo(coord);
-        complete = 1;
-    }
+    source->moveTo( coord );
+    complete = 1;
 
-    return 0;
+    return nullptr;
 }
 
 bool MoveAction::completed()
 {
     return complete;
-
-    float dist = sqrt( pow( source->getX()-coord.x, 2)
-                     + pow( source->getY()-coord.y, 2) );
-    if ( dist < 20 )
-        return 1;
-
-    return 0;
 }
 
 void MoveAction::render()
@@ -142,8 +161,10 @@ void MoveAction::render()
 //                coord.x - cOX, coord.y - cOY, 255, 0, 0, 32);
 
     if (target)
-    lineRGBA(Game::getGlobalGame()->getRenderer(), source->getX(), source->getY() ,
-                target->getX(), target->getY(), 255, 0, 0, 32);
+    {
+        lineRGBA(Game::getGlobalGame()->getRenderer(), source->getX(), source->getY() ,
+                    target->getX(), target->getY(), 255, 0, 0, 32);
+    }
 }
 
 AttackAction::AttackAction(Ship *Source, Ship *Target, const DictKey *srcInfo, const DictKey *trgetInfo)
@@ -175,7 +196,7 @@ Action* AttackAction::act()
     {
         direction = atan2(coord.y - target->getPosition().y, coord.x - target->getPosition().x);
 
-        float speed = std::min( dist, 14.0f );
+        float speed = std::min( dist, 16.0f );
 
         coord.x -= speed*cos(direction);
         coord.y -= speed*sin(direction);
@@ -212,43 +233,38 @@ void AttackAction::render( )
 //    circleRGBA( Game::getGlobalGame()->getScreenSurface(), coord.x - cOX, coord.y - cOY, 1, 128+rand()%128, rand()%128, rand()%128, 200+rand()%55 );
 
     // Normal
-    shootEffect->DrawImage((int) (coord.x ), (int) (coord.y ), frame, ( (direction+PI) * 180.0) /PI, Game::getGlobalGame()->getRenderer());
+    shootEffect->DrawImage((int) (coord.x ), (int) (coord.y ), frame, ( (direction+M_PI) * 180.0) /M_PI, Game::getGlobalGame()->getRenderer());
 }
 
 KamikazeAction::KamikazeAction(Ship *Source, Ship *Target, Image *imgShoot)
-    : source(Source), target(Target), coord(Source->getPosition()), distance(0),explosionEffect(imgShoot)
+    :   source(Source), target(Target), coord(Source->getPosition()),
+        distance(0), explosionEffect(imgShoot)
 {
 }
 
 Action* KamikazeAction::act()
 {
-    if (!target->isAlive())
+    if ( !target->isAlive() )
     {
         complete = 1;
         source->kill();
+
+        return 0;
     }
 
-    float dist = source->getPosition().distance(target->getPosition());
-    if ( dist < 20.0f )
+    double dist = source->getPosition().distance(target->getPosition());
+    if ( dist < 15.0 )
     {
     	source->kill();
+        target->takeDamage(source->getBaseStats().damage * distance/2);
 
-        target->takeDamage(source->getBaseStats().damage * distance/500);
-
-//        printf("%p kamikaze to %p for %f damage\n", source, target, source->getBaseStats().damage * distance/400);
         complete = 1;
     }
     else
     {
-        float direction = atan2(source->getY() - target->getPosition().y, source->getX() - target->getPosition().x);
-
-        // Causar dano a nave kamikaze [NERF]
-        source->takeDamage( std::max( source->getHP()/100, 0.3) );
-
-        float speed = std::min( dist, 14.0f );
-        distance += speed;
-
-        source->move(-speed*cos(direction), -speed*sin(direction));
+        distance += 1;
+        source->getStats().currentSpeed = std::min(dist, std::max(source->getBaseStats().speed*5, 10.0));
+        source->moveTo(target->getPosition());
     }
 
     return 0;

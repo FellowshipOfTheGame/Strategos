@@ -14,18 +14,29 @@
     #include "SDL2_gfx/SDL2_gfxPrimitives.h"
 #endif // _MAC_OS_
 
-Unit::Unit(unsigned long ID, const DictKey *info, Coordinates position)
-    : id(ID), mySquadInfo(info), bluePrintCoord(position),
+
+#define LIFE_BAR_SIZE   70
+
+static int max_tatics_per_unit = 0;
+
+void print_MaxActions()
+{
+    printf("Limit Actions: %d\n", max_tatics_per_unit);
+    max_tatics_per_unit = 0;
+}
+
+Unit::Unit(unsigned int ID, const DictKey *info, Coordinates position)
+    : bluePrintCoord(position), mySquadInfo(info), id(ID),
     target(-1), baseCoord(position), averageCoord(position),
         basicTacticMoveRandom( TacticInfo(0), TacticTrigger(0, 0, TRIGGER_LOGIC_OR) ),
         basicTacticAttackNearest( TacticInfo(0), TacticTrigger(0, 0, TRIGGER_LOGIC_OR) ),
         basicTacticRetreat( TacticInfo(0), TacticTrigger(0, 0, TRIGGER_LOGIC_OR) )
 {
-	restoreShips();
+	restoreUnit(0);
 }
 
 Unit::Unit(const Unit* copy)
-    :   id(copy->id), mySquadInfo(copy->mySquadInfo), bluePrintCoord(copy->bluePrintCoord),
+    :   bluePrintCoord(copy->bluePrintCoord), mySquadInfo(copy->mySquadInfo), id(copy->id),
         target(-1), baseCoord(bluePrintCoord), averageCoord(bluePrintCoord),
         basicTacticMoveRandom( copy->basicTacticMoveRandom ),
         basicTacticAttackNearest( copy->basicTacticAttackNearest ),
@@ -36,16 +47,16 @@ Unit::Unit(const Unit* copy)
     for (unsigned int i = 0; i < copy->tactics.size(); ++i)
         tactics.push_back(Tactic::copy(copy->tactics[i]));
 
-    restoreShips();
+    restoreUnit(copy->team);
 }
 
 Unit::~Unit()
 {
-	for (int i = 0; i < tactics.size(); ++i){
+	for (unsigned int i = 0; i < tactics.size(); ++i){
         delete tactics[i];
     }
 
-    for (int i = 0; i < ships.size(); ++i){
+    for (unsigned int i = 0; i < ships.size(); ++i){
         delete ships[i];
     }
 
@@ -53,7 +64,7 @@ Unit::~Unit()
         delete *it;
 }
 
-void Unit::restoreShips()
+void Unit::restoreUnit(int teamID, const Coordinates atBaseP)
 {
     for (unsigned int i = 0; i < ships.size(); ++i)
         delete ships[i];
@@ -63,14 +74,14 @@ void Unit::restoreShips()
         delete *it;
     shipsActions.clear();
 
-    baseCoord = bluePrintCoord;
-    averageCoord = bluePrintCoord;
+    baseCoord = atBaseP;
+    averageCoord = atBaseP;
 
-    double circleRadius = 42.0;
+    double circleRadius = 12.0 * (mySquadInfo->squadSize-1);
     float dAngle = 6.283185306 / mySquadInfo->squadSize;
 	for (unsigned int i = 0; i < mySquadInfo->squadSize; i++)
 	{
-		Coordinates coordships(bluePrintCoord);
+		Coordinates coordships(atBaseP);
 		coordships.x += circleRadius * cos(i * dAngle);
 		coordships.y += -circleRadius * sin(i * dAngle);
 		Ship *nship = new Ship(mySquadInfo->stats, coordships);
@@ -80,6 +91,17 @@ void Unit::restoreShips()
 
 	shipsAlive = mySquadInfo->squadSize;
 	target = -1;
+	team = teamID;
+}
+
+int Unit::getTeam() const
+{
+    return team;
+}
+
+void Unit::restoreUnit(int teamID)
+{
+    restoreUnit(teamID, bluePrintCoord);
 }
 
 void Unit::addTactic(Tactic *tactic)
@@ -90,7 +112,7 @@ void Unit::addTactic(Tactic *tactic)
 void Unit::removeTactic(int n)
 {
 	int i = 0;
-	vector<Tactic*>::iterator iter = tactics.begin();
+	std::vector<Tactic*>::iterator iter = tactics.begin();
 	while (iter != tactics.end())
 	{
 		if (i == n)
@@ -109,7 +131,7 @@ void Unit::setTarget(int i)
 	target = i;
 }
 
-int Unit::getTarget()
+int Unit::getTarget() const
 {
 	return target;
 }
@@ -125,7 +147,7 @@ Tactic* Unit::getTacticAt(unsigned int pos)
 {
 	if (pos < tactics.size())
 		return tactics[pos];
-	return NULL;
+	return nullptr;
 }
 
 unsigned int Unit::getTacticSize(){
@@ -140,7 +162,7 @@ Ship* Unit::getShip(unsigned long gid)
     return nullptr;
 }
 
-unsigned long Unit::getID(){
+unsigned int Unit::getID() const{
 	return id;
 }
 
@@ -148,15 +170,15 @@ void Unit::setID(int id){
 	this->id = id;
 }
 
-int Unit::getType(){
+int Unit::getType() const{
 	return mySquadInfo->type;
 }
 
-float Unit::getBaseX(){
+float Unit::getBaseX() const{
 	return baseCoord.x;
 }
 
-float Unit::getBaseY(){
+float Unit::getBaseY() const{
 	return baseCoord.y;
 }
 
@@ -164,66 +186,55 @@ void Unit::setBluePrintCoord(const Coordinates& coord){
     bluePrintCoord = coord;
 }
 
-const Coordinates& Unit::getBluePrintCoord(){
+const Coordinates& Unit::getBluePrintCoord() const{
 	return bluePrintCoord;
 }
 
-float Unit::getBluePrintX(){
+float Unit::getBluePrintX() const{
 	return bluePrintCoord.x;
 }
 
-float Unit::getBluePrintY(){
+float Unit::getBluePrintY() const{
 	return bluePrintCoord.y;
 }
 
-float Unit::getAvgX(){
+float Unit::getAvgX() const{
 	return averageCoord.x;
 }
 
-float Unit::getAvgY(){
+float Unit::getAvgY() const{
 	return averageCoord.y;
 }
 
-const Coordinates& Unit::getBaseCoord(){
+const Coordinates& Unit::getBaseCoord() const{
 	return baseCoord;
 }
 
-const shipBaseStats& Unit::getSquadBaseStats(){
+const shipBaseStats& Unit::getSquadBaseStats() const{
 	return mySquadInfo->stats;
 }
 
-int Unit::getNShipsAlive(){
+int Unit::getNShipsAlive() const{
     return shipsAlive;
 }
 
-const Coordinates& Unit::getAveragePos(){
+const Coordinates& Unit::getAveragePos() const{
     return averageCoord;
 }
 
-bool Unit::hover(float camOX, float camOY)
+bool Unit::hover(float mX, float mY) const
 {
-	int mouseX, mouseY;
-	SDL_GetMouseState(&mouseX, &mouseY);
-
-	if (averageCoord.distance(mouseX - camOX, mouseY - camOY) < 64)
-	{
-		return true;
-	}
-
-	return false;
+	return (averageCoord.distance(mX, mY) < 64);
 }
 
 unsigned long Unit::nShips() const
 {
-    //should use getNShipsAlive
-	//return ships.size();
-
     return mySquadInfo->squadSize;
 }
 
 void Unit::updateActions()
 {
-	for (list<Action*>::iterator it = shipsActions.begin(); it != shipsActions.end(); ++it)
+	for (std::list<Action*>::iterator it = shipsActions.begin(); it != shipsActions.end(); ++it)
 	{
 		if ((*it)->completed())
 		{
@@ -233,13 +244,11 @@ void Unit::updateActions()
 		else
 		{
 			Action* reaction = (*it)->act();
-			if (reaction)
-            {
+			if (reaction){
                 shipsActions.push_back(reaction);
             }
 		}
 	}
-
 }
 
 int Unit::update()
@@ -261,11 +270,43 @@ int Unit::update()
 	totalPos.y /= shipsAlive;
 	averageCoord = totalPos;
 
+//	if (max_tatics_per_unit < shipsActions.size()){
+//        max_tatics_per_unit = shipsActions.size();
+//
+//        int EA = 0;
+//        int DA = 0;
+//        int MA = 0;
+//        int AA = 0;
+//        int KA = 0;
+//
+//        for (Action* ac : shipsActions)
+//        {
+//            if (dynamic_cast<ExplosionAction*>(ac))
+//                EA++;
+//            else if (dynamic_cast<DamageAction*>(ac))
+//                DA++;
+//            else if (dynamic_cast<MoveAction*>(ac))
+//                MA++;
+//            else if (dynamic_cast<AttackAction*>(ac))
+//                AA++;
+//            else if (dynamic_cast<KamikazeAction*>(ac))
+//                KA++;
+//        }
+//
+//        printf("ExpAc: %d\n", EA);
+//        printf("DmgAc: %d\n", DA);
+//        printf("MovAc: %d\n", MA);
+//        printf("AtkAc: %d\n", AA);
+//        printf("KamAc: %d\n\n", KA);
+//
+//	}
+
 	return shipsAlive;
 }
 
 void Unit::printInfo()
 {
+    printf("\nUNIT: %d\n", id);
 	printf("maxHP: %lf\n", mySquadInfo->stats.maxHP);
 	printf("damage: %lf\n", mySquadInfo->stats.damage);
 	printf("speed: %lf\n", mySquadInfo->stats.speed);
@@ -273,10 +314,26 @@ void Unit::printInfo()
 	printf("shield: %lf\n", mySquadInfo->stats.shield);
 	printf("dodge: %lf%%\n", mySquadInfo->stats.dodge);
 	printf("atkCooldown: %d\n", mySquadInfo->stats.maxAtkCD);
-	printf("squadSize: %d\n", mySquadInfo->squadSize);
+	printf("squadSize: %d \t Alive: %d\n", mySquadInfo->squadSize, shipsAlive);
 
+    printf("Tactics: %d\n", tactics.size());
 	for (unsigned int i = 0; i < tactics.size(); i++)
-		tactics[i]->printTactic();
+		printf("-> %s\n",tactics[i]->printTactic().c_str());
+
+    printf("Actions: %d\n", shipsActions.size());
+    for (Action* ac : shipsActions)
+    {
+        if (dynamic_cast<ExplosionAction*>(ac))
+            printf("-> Explosion Action\n");
+        else if (dynamic_cast<DamageAction*>(ac))
+            printf("-> Damage Action\n");
+        else if (dynamic_cast<MoveAction*>(ac))
+            printf("-> Move Action\n");
+        else if (dynamic_cast<AttackAction*>(ac))
+            printf("-> Attack Action\n");
+        else if (dynamic_cast<KamikazeAction*>(ac))
+            printf("-> Kamikaze Action\n");
+    }
 }
 
 const DictKey* Unit::getUnitInfo() const
@@ -284,39 +341,25 @@ const DictKey* Unit::getUnitInfo() const
 	return mySquadInfo;
 }
 
-void Unit::generateActions(const vector<Unit*>& enemyUnits, const vector<Unit*>& alliedUnits)
+void Unit::generateActions(TacticValidationData& tvd)
 {
+    tvd.validatingUnit = this;
+
 	for (unsigned int i = 0; i < tactics.size(); i++)
 	{
 		if (tactics[i]->testTrigger(this))
 		{
-//            tactics[i]->debugPrint();
-			if (tactics[i]->validateTactic(shipsActions, this, enemyUnits, alliedUnits) != 0)
-			{
-//				printf("VALIDADA: ");
-//				printf("okok\n");
+			if (tactics[i]->validateTactic(shipsActions, tvd) != 0){
 				return;
 			}
-//				printf("okok\n");
 		}
 	}
 
 	// Validar taticas basicas
-	basicTacticMoveRandom.validateTactic(shipsActions, this, enemyUnits, alliedUnits);
-	basicTacticAttackNearest.validateTactic(shipsActions, this, enemyUnits, alliedUnits);
+	basicTacticMoveRandom.validateTactic(shipsActions, tvd);
+	basicTacticAttackNearest.validateTactic(shipsActions, tvd);
 	if (this->mySquadInfo->type != 0)
-		basicTacticRetreat.validateTactic(shipsActions, this, enemyUnits, alliedUnits);
-}
-
-void Unit::setBasePos(const Coordinates& pos)
-{
-    for (unsigned int j = 0; j < ships.size(); j++)
-    {
-        ships[j]->move(pos);
-    }
-
-	averageCoord += pos;
-	baseCoord += pos;
+		basicTacticRetreat.validateTactic(shipsActions, tvd);
 }
 
 void Unit::moveTo(Coordinates c)
@@ -335,72 +378,96 @@ void Unit::moveTo(Coordinates c)
 
 void Unit::render()
 {
-	for (list<Action*>::iterator it = shipsActions.begin(); it != shipsActions.end(); ++it)
+	for (std::list<Action*>::iterator it = shipsActions.begin(); it != shipsActions.end(); ++it)
 	{
 		(*it)->render();
 	}
 
-	// Printar todas as direcoes da nave DEBUG
-	/*for(unsigned int j = 0; j < _ROTATION_FRAMES_; j++)
-	 {
-	 Image *img = mySquadInfo->shipsGFX[j];
-	 img->DrawImage(j * 32, mySquadInfo->type * 34, Game::getGlobalGame()->getScreenSurface());
-	 }*/
+    SDL_Renderer* renderer = Game::getGlobalGame()->getRenderer();
 
-	for (unsigned int j = 0; j < nShips(); j++)
-	{
-		Ship *ship = ships[j];
-
-		if (!mySquadInfo->shipsGFX)
+    if (!mySquadInfo->shipsGFX){
 			printf("No img");
+    }else{
+        for (unsigned int j = 0; j < nShips(); j++)
+        {
+            Ship *ship = ships[j];
 
-		if (mySquadInfo->shipsGFX && ship->isAlive())
-		{
-			float x = ship->getDirection() * 180 / PI;
-			if (x < 0)
-				x += 360;
+            if (!ship->isAlive()) continue;
 
-			while (x < 0.0) x += 360.0;
-			while (x > 360.0) x -= 360.0;
+            float x = ship->getDirection() * 180.0 / M_PI;
+            while (x < 0.0)     x += 360.0;
 
-			int frame = ((int(x) % 360) / (360 / _ROTATION_FRAMES_)) % _ROTATION_FRAMES_;
-			Image *img = mySquadInfo->shipsGFX[frame];
+            int frame = ((int(x) % 360) / (360 / _ROTATION_FRAMES_)) % _ROTATION_FRAMES_;
+            Image *img = mySquadInfo->shipsGFX[frame];
 
-//			circleRGBA(Game::getGlobalGame()->getScreenSurface(), ship->getX() - cOffX, ship->getY() - cOffY, mySquadInfo->stats.range, 0, 0, 255, 40);
             if (img){
-                img->DrawImage(ship->getX() - (img->getFrameWidth() / 2), ship->getY() - (img->getFrameHeight() / 2),
-                        Game::getGlobalGame()->getRenderer());
-            }else{
-//                filledCircleRGBA(Game::getGlobalGame()->getRenderer(),
-//                           ship->getX() - cOffX, ship->getY() - cOffY,
-//                           mySquadInfo->stats.range, 255, 0, 0, 128);
+                img->DrawImage(ship->getX() - (img->getFrameWidth() / 2), ship->getY() - (img->getFrameHeight() / 2), renderer);
             }
 
             SDL_Rect rLife;
-            rLife.x = ship->getX();
-            rLife.y = ship->getY();
-            rLife.w = ship->getHP()/20;
-            rLife.h = 2;
+            rLife.x = ship->getX() - LIFE_BAR_SIZE/2;
+            rLife.y = ship->getY() - 32;
+            rLife.h = 4;
 
-            // Barra de vida
-            SDL_SetRenderDrawColor(Game::getGlobalGame()->getRenderer(), 0,255,0, 200);
-            SDL_RenderFillRect(Game::getGlobalGame()->getRenderer(), &rLife);
-//            for (int i = 0; i < 5; ++i){
-//                arcRGBA(Game::getGlobalGame()->getRenderer(), ship->getX() - (img->getFrameWidth() / 2) - cOffX, ship->getY() - (img->getFrameHeight() / 2) - cOffY,
-//                         30-i, 180, 360, 255, 255, 255, 255);
-//            }
+            // Barra de vida fundo
+            SDL_SetRenderDrawColor(renderer, 0,0,0, 200);
+            rLife.w = LIFE_BAR_SIZE;
+            SDL_RenderFillRect(renderer, &rLife);
+
+            // Interior
+            rLife.x += 1;
+            rLife.y += 1;
+            rLife.h -= 2;
+            rLife.w = (ship->getHP()/ship->getBaseStats().maxHP)*LIFE_BAR_SIZE-2;
+            SDL_SetRenderDrawColor(renderer,
+                                   255*(1.0-ship->getHP()/ship->getBaseStats().maxHP),
+                                   255*(ship->getHP()/ship->getBaseStats().maxHP), 0, 200);
+            SDL_RenderFillRect(renderer, &rLife);
 
             // Barra de Shield
-            if (ship->getStats().currentShield > 0){
-                SDL_SetRenderDrawColor(Game::getGlobalGame()->getRenderer(), 228,228,228, 250);
-                rLife.w = ship->getStats().currentShield/20;
-                rLife.y += 2;
-                SDL_RenderFillRect(Game::getGlobalGame()->getRenderer(), &rLife);
+            if (ship->getStats().currentShield > 0)
+            {
+                SDL_SetRenderDrawColor(renderer, 228,228,228, 200);
+                rLife.w = ship->getStats().currentShield/ship->getBaseStats().shield*LIFE_BAR_SIZE-2;
+                SDL_RenderFillRect(renderer, &rLife);
             }
-		}
-	}
 
-	circleRGBA(Game::getGlobalGame()->getRenderer(), averageCoord.x, averageCoord.y, 64, 0, 128, 0, 128);
+            // Target line
+            SDL_RenderDrawLine(renderer, ship->getPosition().x, ship->getPosition().y,
+                               ship->getTargetPos().x, ship->getTargetPos().y );
+
+            // Debug
+            SDL_Rect a;
+            a.x = ship->getPosition().x;
+            a.y = ship->getPosition().y;
+            a.w = 5;
+            a.h = 5;
+            if (ship->getMoving() == move_not_moving){
+                SDL_SetRenderDrawColor(renderer, 255, 0,0 ,255);
+            }else if (ship->getMoving() == move_action){
+                SDL_SetRenderDrawColor(renderer, 0, 255, 0 ,255);
+            }else{
+                SDL_SetRenderDrawColor(renderer, 0, 0,255 ,255);
+            }
+            SDL_RenderFillRect(renderer, &a );
+
+            if (ship->getStats().isKamikasing)
+            {
+                a.x -=5;
+                a.y -=5;
+                a.w += 10;
+                a.h += 10;
+                SDL_SetRenderDrawColor(renderer, 0, 255,255 ,255);
+                SDL_RenderFillRect(renderer, &a );
+            }
+        }
+    }
+
+    // Desenhar circulo do time
+    if (team == 0)
+        circleRGBA(renderer, averageCoord.x, averageCoord.y, 64, 255,0,0, 240);
+    else
+        circleRGBA(renderer, averageCoord.x, averageCoord.y, 64, 0,0,255, 240);
 }
 
 CombatRound* Unit::unifyCombatRound()

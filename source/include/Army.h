@@ -19,12 +19,17 @@
 #include "Tactic.h"
 #include "Dictionary.h"
 
-#define COMBAT_AREA_WIDTH 800
-#define COMBAT_AREA_HEIGHT 700
+#define TEAM_AREA_WIDTH 800
+#define TEAM_AREA_HEIGHT 700
+
+#define COMBAT_ARENA_WIDTH  ((TEAM_AREA_WIDTH*2)+448)
+#define COMBAT_ARENA_HEIGHT    TEAM_AREA_HEIGHT
+
+#define TEAM_2_POSX     (COMBAT_ARENA_WIDTH-TEAM_AREA_WIDTH)
+#define TEAM_2_POSY     (COMBAT_ARENA_HEIGHT-TEAM_AREA_HEIGHT)
 
 #define N_UNIT_TYPE             4
 
-using namespace std;
 
 class Army
 {
@@ -40,15 +45,13 @@ public:
 	Army(const std::string& armyName, const Dictionary* armyDictionary);
 	~Army();
 
-    // Altera a posicao base de todo o Army
-    // Todas as naves movem relativamente a pos
-    void setBasePos(Coordinates pos);
-
     // Percorre Tactics e gera acoes para as naves
     int update();
     void updateActions();
 
-    void restore();
+    // Resetar Army como o time X
+    // Altera o lado das naves
+    void restore(int asTeam);
 
     // Adiciona um Unit para o Army
     void addUnit(Unit *unit);
@@ -57,9 +60,7 @@ public:
 
 	const Dictionary *getDictionary() const;
 	void setDictionary(Dictionary* armyDictionary);
-	void setArmyName(std::string armyName);
-
-	void setReflectBasePositions(int startWidth);
+	void setArmyName(const std::string& armyName);
 
 	// Gets
 	Unit* getMotherUnit();
@@ -67,7 +68,7 @@ public:
 	int getTotalShips() const;
 	const std::vector<Unit*>& getUnits() const;
     unsigned int nUnits() const;
-    vector<Unit*>* getUnitsReference();
+    std::vector<Unit*>* getUnitsReference();
 
     /// Pegar unidade de acordo com o ID dela
     Unit* getUnitByID(unsigned int id) const;
@@ -80,7 +81,7 @@ public:
     void render();
 
     static Army* loadArmy(std::string armyname);
-    static void saveArmy(const Army *army, const string pth="");
+    static void saveArmy(const Army *army, const std::string pth="");
 
     CombatRound* unifyCombatRound();
 };

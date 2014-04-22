@@ -1,0 +1,46 @@
+
+======================= Créditos =======================
+Ivan Caramello (desenvolvedor)
+Matheus Lin (desenvolvedor e artista)
+Bruno Toderi (desenvolvedor)
+Guilherme 'Kurama' (desenvolvedor)
+Helder S. L. Moraes(desenvolvedor)
+Mateus Malvessi Pereira (desenvolvedor)
+Yvan Cezarino Fernandes (arte)
+Ana Luiza Figueiroa (arte)
+Stéfanie Fares Sabbag (arte)
+
+
+======================= Descrição =======================
+
+Strategos (General em grego e sigla para "STRATegy Evolutive Genetic Optimized Simulator"),
+é um "jogo de estratégia em tempo real que se utiliza de Algoritmos Genéticos e Paralelização".
+Nele, você toma a posição de um general antes de uma batalha: tendo a disposição suas tropas,
+deve posicioná-las no mapa e dar a elas Táticas. Definidas as formações iniciais e as Táticas de cada unidade,
+a batalha se inicia e não se pode mais controlar suas tropas, que agora seguem as regras traçadas por você anteriormente.
+
+A cada unidade são atribuidas 'Táticas', comportamentos que ela deve seguir sob determinadas condições.
+Exemplos de táticas são "atire em quem estiver atirando na unidade X", "atire colaborativamente com a unidade X",
+“defenda a unidade X” e outros. Cada tática possui dois Triggers, gatilhos usados para ativar a tática,
+esses triggers podem conferir a vida da unidade e outros atributos para decidir se uma tática deve ser ativada.
+Sendo dois triggers, estes ainda podem ser combinados com a lógica de AND ou OR, para aumentar a variedade.
+Durante o jogo, cada unidade simplesmente verifica suas regras e quando encontrar uma que pode ser ativada, ela é acionada.
+A cada passo da simulação as naves checam novamente suas táticas e escolhem a que se encaixa na situação.
+
+Como os únicos parâmetros introduzidos pelo jogador são os tipos das unidades, as posições iniciais,
+suas táticas e gatilhos, o computador gera estratégias através de algoritmos evolutivos.
+Com eles, o Computador inicialmente cria um conjunto de estrategias iniciais, aleatórias,
+e então testa essas estratégias umas contra as outras, em batalhas seguindo as regras convencionais do jogo.
+Feitas as batalhas, as estratégias derrotadas seriam "eliminadas", enquanto as que venceram sofreriam mutações
+de seus parâmetros ou seriam cruzadas, juntando partes de estrategias diferentes, e esses novos conjuntos
+seriam testados e selecionados, continuando o processo. Ao final de várias iterações,
+teriamos estratégias que são boas e diferentes, pois elas continuam sempre evoluindo.
+
+Realizar batalhas inteiras do computador contra ele mesmo, diversas vezes,
+pode levar muito mais tempo do que estamos dispostos a esperar antes de um jogo.
+Tanto a tomada de ação das unidades quanto as próprias batalhas são, porém, independentes umas das outras.
+Assim, não há problema em executá-las todas ao mesmo tempo, ou ao menos utilizando todos os recursos
+que eu computador dispor para realizá-las juntas, usando vários núcleos e outras estratégias.
+Assim, a otimização feita a partir da Paralelização do código, tanto durante a batalha quanto
+durante o 'treinamento' do computador, poderiam ocorrer em tempos bem mais razoáveis.
+

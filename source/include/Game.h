@@ -26,17 +26,17 @@ class Game
 	private:
 	    static Game *globalGame;
 
-		fstream cfgFile;
+		std::fstream cfgFile;
 		Resource resources;
 		View *view;
-		vector<Dictionary*> dict;
+		std::vector<Dictionary*> dict;
 		Army *editingArmy;
 		Army *armySim1, *armySim2;
 		bool run;
 		int globalSeed;
         GeneticAlgorithm *algorithm[3];
 
-        vector<CombatLog *>   combatLog;
+        std::vector<CombatLog *>   combatLog;
 
 		void loadDictionaries();
 
@@ -72,7 +72,7 @@ class Game
         }
 		Resource *getResourceMNGR();
 		Dictionary *getDictionary(int id);
-		Dictionary *getDictionary(string name);
+		Dictionary *getDictionary(std::string name);
 
         void generateSprites(const Dictionary *d){
             for (unsigned int i = 0; i < dict.size(); ++i)
@@ -95,11 +95,11 @@ class Game
 		void setEditingArmy(Army* editingArmy);
 
 		Army* getArmy1();
-		void setArmy1(string str);
+		void setArmy1(std::string str);
 		void setArmy1(Army *a);
 
 		Army* getArmy2();
-		void setArmy2(string str);
+		void setArmy2(std::string str);
 		void setArmy2(Army *a);
 
 //        void setGA(GeneticAlgorithm *ga);

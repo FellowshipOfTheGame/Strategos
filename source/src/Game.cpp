@@ -26,9 +26,9 @@ Game::Game()
 
 	view = new View();
 	view->createWindow(screenWidth, screenHeight, screenBPP, 0); // SDL_DOUBLEBUF | SDL_HWSURFACE
-//
+
 	run = true;
-	editingArmy = NULL;
+	editingArmy = nullptr;
 
 	algorithm[0] = new GeneticAlgorithm(0);
 	algorithm[1] = new GeneticAlgorithm(1);
@@ -36,7 +36,7 @@ Game::Game()
 	combatLog.push_back(nullptr);
 	combatLog.push_back(nullptr);
 
-	initRand((unsigned int) time(NULL));
+	initRand((unsigned int) time(nullptr));
 	loadDictionaries();
 
     // TODO: Alterar para 3 na versao final
@@ -49,7 +49,7 @@ Game::Game()
 
 Game::~Game()
 {
-	if (editingArmy != NULL)
+	if (editingArmy != nullptr)
 		delete editingArmy;
 
 	while (dict.size())
@@ -79,7 +79,6 @@ void Game::setRunning(bool state)
 
 void Game::update()
 {
-	//	run = world->simulateStep();
 	run = view->update();
 }
 
@@ -94,7 +93,7 @@ Dictionary* Game::getDictionary(int id)
 	return dict[id];
 }
 
-Dictionary *Game::getDictionary(string name)
+Dictionary *Game::getDictionary(std::string name)
 {
 	for (unsigned int i = 0; i < dict.size(); ++i)
 	{
@@ -104,7 +103,7 @@ Dictionary *Game::getDictionary(string name)
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 SDL_Renderer *Game::getRenderer()
@@ -119,7 +118,6 @@ void Game::readCFGKey(const char *key, void *info)
 
 unsigned long Game::createNewGID()
 {
-
 	return 0;
 }
 
@@ -135,17 +133,15 @@ void Game::setEditingArmy(Army* editingArmy)
 
 void Game::loadDictionaries()
 {
-	vector<string*> dnyFiles;
+	std::vector<std::string> dnyFiles;
 	Resource::getListOfFiles(dnyFiles, "assets/dictionary/", ".dny");
 
 	for (unsigned int i = 0; i < dnyFiles.size(); ++i)
 	{
 		Dictionary *dny = new Dictionary();
-		dny->loadDictionary(dnyFiles[i]->c_str(), resources);
+		dny->loadDictionary(dnyFiles[i].c_str(), resources);
 		if (dny)
 			dict.push_back(dny);
-
-		delete dnyFiles[i];
 	}
 
 	printf("== Loaded %u dictionaries ==\n", dict.size());
@@ -156,22 +152,18 @@ Army* Game::getArmy1()
 	return armySim1;
 }
 
-void Game::setArmy1(string str)
+void Game::setArmy1(std::string str)
 {
-	if (armySim1 != NULL)
+	if (armySim1 != nullptr)
 		delete armySim1;
 	armySim1 = Army::loadArmy(str);
 }
 
 void Game::setArmy1(Army *a)
 {
-	if (!a)
-	{
-		printf ("nulo\n");
-	}
-	if (armySim1 != NULL)
+	if (armySim1 != nullptr)
 		delete armySim1;
-	armySim1  = a;
+	armySim1 = a;
 }
 
 Army* Game::getArmy2()
@@ -179,20 +171,16 @@ Army* Game::getArmy2()
 	return armySim2;
 }
 
-void Game::setArmy2(string str)
+void Game::setArmy2(std::string str)
 {
-	if (armySim2 != NULL)
+	if (armySim2 != nullptr)
 		delete armySim2;
 	armySim2  = Army::loadArmy(str);
 }
 
 void Game::setArmy2(Army *a)
 {
-	if (!a)
-	{
-		printf ("nulo\n");
-	}
-	if (armySim2 != NULL)
+	if (armySim2 != nullptr)
 		delete armySim2;
 	armySim2 = a;
 }

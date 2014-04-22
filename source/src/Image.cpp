@@ -20,12 +20,12 @@ Image::Image(SDL_Texture *image, int frames, SDL_Rect *rect, int cX, int cY)
 {
     //totalImages++; printf("Images: %i/%i\n", deletedImages, totalImages);
 
-    if (rect != NULL){
+    if (rect != nullptr){
         cut = rect;
     }else{
         cut = new SDL_Rect;
         cut->x = cut->y = 0;
-        SDL_QueryTexture(image, NULL, NULL, &(cut->w), &(cut->h));
+        SDL_QueryTexture(image, nullptr, nullptr, &(cut->w), &(cut->h));
 //        cut->w = image->w;
 //        cut->h = image->h;
     }
@@ -204,7 +204,7 @@ Image* Image::cutFrame(int frame)
 {
     if (frame > nframes){
         printf("Frame nao existe - %d. Limit: %d\n", frame, nframes);
-        return NULL;
+        return nullptr;
     }
 
     SDL_Renderer* renderer = Game::getGlobalGame()->getRenderer();
@@ -215,10 +215,10 @@ Image* Image::cutFrame(int frame)
     SDL_Texture* tex = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888,
                         SDL_TEXTUREACCESS_TARGET, cut[0].w, cut[0].h);
 
-    if(tex == NULL)
+    if(tex == nullptr)
     {
         printf("SDL_CreateTexture failed: %s\n", SDL_GetError());
-        return NULL;
+        return nullptr;
     }
 
     SDL_SetRenderTarget(Game::getGlobalGame()->getRenderer(), tex);
@@ -229,7 +229,7 @@ Image* Image::cutFrame(int frame)
     SDL_Rect offset;
     offset.x = offset.y = 0;
 
-    return new Image(tex, 1, NULL, centerX, centerY);
+    return new Image(tex, 1, nullptr, centerX, centerY);
 }
 
 Image** Image::generateRotatedImage(Image *source, float angle, int frames)
@@ -247,12 +247,12 @@ Image** Image::generateRotatedImage(Image *source, float angle, int frames)
     {
         SDL_Texture* tex = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, source->cut[0].w, source->cut[0].h);
         SDL_SetRenderTarget(Game::getGlobalGame()->getRenderer(), tex);
-        SDL_RenderCopyEx(renderer, source->picture, &source->cut[0], NULL, rotSum, &p, flip );
+        SDL_RenderCopyEx(renderer, source->picture, &source->cut[0], nullptr, rotSum, &p, flip );
         rotSum -= rot;
 
         SDL_SetTextureBlendMode(tex, SDL_BLENDMODE_BLEND);
 
-        vec[i] = new Image( tex, 1, NULL, source->centerX, source->centerY);
+        vec[i] = new Image( tex, 1, nullptr, source->centerX, source->centerY);
     }
 
     SDL_SetRenderTarget(renderer, 0);

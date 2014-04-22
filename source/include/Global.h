@@ -16,8 +16,6 @@
 #include <math.h>
 #include "Game.h"
 
-#define PI 3.14159265
-
 #define FRAMES_PER_SECOND       25
 #define RULE_PARAM              7
 #define CONFIG_FILE             "setup.cfg"

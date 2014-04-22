@@ -37,7 +37,7 @@ Unit_Setup::Unit_Setup(STATE previous) :
 	imgBackground = resource->GetImage("bg_unit_setup_1");
 	squad_selec = resource->GetImage("squadfocus-bg");
 	blueprint = new ImageBox(scrWidth * 0.05, scrHeight * 0.15, resource->GetImage("blueprint1-bg")->getFrameWidth(),
-	        resource->GetImage("blueprint1-bg")->getFrameHeight(), resource->GetImage("blueprint1-bg"), 0, NULL, "BX1");
+	        resource->GetImage("blueprint1-bg")->getFrameHeight(), resource->GetImage("blueprint1-bg"), 0, nullptr, "BX1");
 	addGuiElement(blueprint);
 
 	//label de titulo
@@ -63,13 +63,13 @@ Unit_Setup::Unit_Setup(STATE previous) :
 	addGuiElement(btn_Move);
 
 	//Box de naves
-	bx1 = new ImageBox(scrWidth * 0.3, scrHeight * 0.1, 50, 50, resource->GetImage("human-ships"), 0, NULL, "BX1");
+	bx1 = new ImageBox(scrWidth * 0.3, scrHeight * 0.1, 50, 50, resource->GetImage("human-ships"), 0, nullptr, "BX1");
 	addGuiElement(bx1);
-	bx2 = new ImageBox(scrWidth * 0.4, scrHeight * 0.1, 50, 50, resource->GetImage("human-ships"), 1, NULL, "BX1");
+	bx2 = new ImageBox(scrWidth * 0.4, scrHeight * 0.1, 50, 50, resource->GetImage("human-ships"), 1, nullptr, "BX1");
 	addGuiElement(bx2);
-	bx3 = new ImageBox(scrWidth * 0.5, scrHeight * 0.1, 50, 50, resource->GetImage("human-ships"), 2, NULL, "BX1");
+	bx3 = new ImageBox(scrWidth * 0.5, scrHeight * 0.1, 50, 50, resource->GetImage("human-ships"), 2, nullptr, "BX1");
 	addGuiElement(bx3);
-	bx4 = new ImageBox(scrWidth * 0.6, scrHeight * 0.1, 50, 50, resource->GetImage("human-ships"), 3, NULL, "BX1");
+	bx4 = new ImageBox(scrWidth * 0.6, scrHeight * 0.1, 50, 50, resource->GetImage("human-ships"), 3, nullptr, "BX1");
 	addGuiElement(bx4);
 	// adicionando box com as imagens das naves
 	dct = Game::getGlobalGame()->getDictionary(0);
@@ -87,7 +87,7 @@ Unit_Setup::Unit_Setup(STATE previous) :
 	addGuiElement(list);
 	printf("list\n");
 	//else
-	squad_focus = NULL;
+	squad_focus = nullptr;
 	put_squad = false;
 	move_squad= false;
 	squad_type = 0;
@@ -158,7 +158,7 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
 				if (!put_squad)
 				{
 					Game::getGlobalGame()->getEditingArmy()->removeUnit(squad_focus->getID());
-					squad_focus = NULL;
+					squad_focus = nullptr;
 				}
 				break;
 
@@ -285,7 +285,7 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
 					{
 						if (squad_focus == Game::getGlobalGame()->getEditingArmy()->getUnitByID(i))
 						{
-							squad_focus = NULL;
+							squad_focus = nullptr;
 							list->setVisible(false);
 						}
 						else

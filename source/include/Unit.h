@@ -24,24 +24,26 @@
 #include "Dictionary.h"
 #include "Image.h"
 
-using namespace std;
-
+void print_MaxActions();
 
 class Unit
 {
     private:
         // Imutable Data
-        unsigned long id; // TODO: O que exatamente eh id? Posicao na Army? Apenas um numero id usado para taticas?
-        const DictKey *mySquadInfo;
         Coordinates bluePrintCoord;
-        vector<Tactic*> tactics;
+        const DictKey *mySquadInfo;
+        std::vector<Tactic*> tactics;
+
+        // Team Data
+        unsigned int id;   // TODO: O que exatamente eh id? Posicao na Army? Apenas um numero id usado para taticas?
+        int team;  // Time 0 ou 1, durante a batalha.
 
         // Dynamic Combat Data
         int shipsAlive;
         int target;
         Coordinates baseCoord, averageCoord;
-        vector<Ship*> ships;
-        list<Action*> shipsActions;
+        std::vector<Ship*> ships;
+        std::list<Action*> shipsActions;
 
         // Taticas basicas
         MoveRandomly basicTacticMoveRandom;
@@ -50,7 +52,7 @@ class Unit
 
     public:
         Unit(const Unit* copy);
-        Unit(unsigned long ID, const DictKey *info, Coordinates position);
+        Unit(unsigned int ID, const DictKey *info, Coordinates position);
         ~Unit();
 
         /// Atualiza ships
@@ -66,21 +68,34 @@ class Unit
         ///
         void updateActions();
 
+        // Taticas
         void addTactic(Tactic *tactic);
         void removeTactic(int n);
         void setTacticAt(Tactic *tactic, int pos);
-
-        // Gets
         Tactic* getTacticAt(unsigned int pos);
         unsigned int getTacticSize();
-        unsigned long getID();
+
+        // Team
+        unsigned int getID() const;
         void setID(int id);
-        int getType();
+        int getTeam() const;
+
+        /// Retorna o tipo da unidade
+        int getType() const;
+
+        void setTarget(int i);
+        int getTarget() const;
+
+        /// Ships
         Ship* getShip(unsigned long gid);
         unsigned long nShips() const;
-        void setTarget(int i);
-        int getTarget();
-        void restoreShips();
+
+        /// Recria todas as naves da unidade
+        /// Altera a posicao base
+        void restoreUnit(int teamID, const Coordinates atBaseP);
+
+        /// Reseta as naves na posicao da BluePrint
+        void restoreUnit(int teamID);
 
         /// Retorna o numero de naves vivas
         ///
@@ -88,18 +103,17 @@ class Unit
         ///
         /// Este valor eh atualizado na funcao update()
         ///
-        int getNShipsAlive();
+        int getNShipsAlive() const;
 
-        /// Verifica se o mouse esta sobre a unidade
+        /// Verifica a posicao esta sobre a unidade
         ///
-        /// \param  camOX   Posicao X da camera
-        /// \param  camOY   Posicao Y da camera
-        /// \return Retorna se o mouse esta sobre a nave
+        /// \param  mX   Posicao X
+        /// \param  mY   Posicao Y
+        /// \return Retorna se a posicao X,Y esta sobre a unidade
         ///
-        /// A posicao da camera eh considerada para verificar se o mouse
-        /// esta sobre a camera. Eh usada a posicao MEDIA da unidade.
+        /// A posicao MEDIA da unidade eh usada.
         ///
-        bool hover(float camOX, float camOY);
+        bool hover(float mX, float mY) const;
 
         /// Retorna a posicao media do esquadrao
         ///
@@ -108,34 +122,32 @@ class Unit
         /// A posicao media eh calculada considerando apenas as naves vivas.
         /// Este valor eh atualizado na funcao update()
         ///
-        const Coordinates& getAveragePos();
+        const Coordinates& getAveragePos() const;
 
         /// Retorna a coordernada X base INICIAL da batalha
         /// \return Retorna a posicao X base inicial
-        float getBaseX();
+        float getBaseX() const;
 
         /// Retorna a coordernada Y base INICIAL da batalha
         /// \return Retorna a posicao Y base inicial
-        float getBaseY();
+        float getBaseY() const;
 
         /// Retorna a coordernada X media
-        float getAvgX();
+        float getAvgX() const;
 
         /// Retorna a coordernada Y media
-        float getAvgY();
+        float getAvgY() const;
 
-        float getBluePrintX();
-        float getBluePrintY();
-        const Coordinates& getBluePrintCoord();
+        float getBluePrintX() const;
+        float getBluePrintY() const;
+        const Coordinates& getBluePrintCoord() const;
         void setBluePrintCoord(const Coordinates& coord);
 
         /// Retorna as coordenadas base INICIAIS
         /// \return Retorna as coordenadas base iniciais da unidade
-        const Coordinates& getBaseCoord();
+        const Coordinates& getBaseCoord() const;
 
-        void setBasePos(const Coordinates& pos);
-
-        const shipBaseStats& getSquadBaseStats();
+        const shipBaseStats& getSquadBaseStats() const;
         const DictKey* getUnitInfo() const;
 
         // Mover Unidade
@@ -149,11 +161,11 @@ class Unit
         /// \param enemyUnits Vetor com unidades INIMIGAS.
         /// \param alliedUnits Vetor com unidades ALIADAS [esta unidade inclusive]
         ///
-        void generateActions(const vector<Unit*>& enemyUnits, const vector<Unit*>& alliedUnits);
+        void generateActions(TacticValidationData& tvd);
 
         /// Desenha a unidade considerando a posicao da camera
         void render();
-//        int amountAlive();
+
         CombatRound* unifyCombatRound();
 };
 
