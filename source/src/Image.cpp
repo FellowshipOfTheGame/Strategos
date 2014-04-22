@@ -98,10 +98,12 @@ void Image::DrawImage(int x, int y, int frame, double rotation, SDL_Renderer *de
 	offset.w = cut[frame].w;
 	offset.h = cut[frame].h;
 
-	SDL_Point point{centerX, centerY};
+	SDL_Point point;
+	point.x = centerX;
+	point.y = centerY;
 
 //	SDL_BlitSurface(picture, &cut[0], destination, &offset);
-	SDL_RenderCopyEx(destination, picture, &cut[frame], &offset, rotation, &point, SDL_RendererFlip());
+	SDL_RenderCopyEx(destination, picture, &cut[frame], &offset, rotation, &point, SDL_FLIP_NONE);
 }
 
 bool Image::Hover(int x, int y)

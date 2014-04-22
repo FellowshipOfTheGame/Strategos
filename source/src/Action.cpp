@@ -120,7 +120,7 @@ void DamageAction::render()
 ///
 
 MoveAction::MoveAction(Ship *Source, const Coordinates& Coord, bool GetNear)
-    : source(Source), target(0), coord(Coord), getNearTo(GetNear)
+    : source(Source), coord(Coord), getNearTo(GetNear)
 {
     ++_N_ACTIONS_MOVE_;
 
@@ -159,18 +159,14 @@ void MoveAction::render()
 {
 //    lineRGBA(Game::getGlobalGame()->getScreenSurface(), source->getX() - cOX, source->getY() - cOY,
 //                coord.x - cOX, coord.y - cOY, 255, 0, 0, 32);
-
-    if (target)
-    {
-        lineRGBA(Game::getGlobalGame()->getRenderer(), source->getX(), source->getY() ,
-                    target->getX(), target->getY(), 255, 0, 0, 32);
-    }
 }
 
 AttackAction::AttackAction(Ship *Source, Ship *Target, const DictKey *srcInfo, const DictKey *trgetInfo)
-    : sourceInfo(srcInfo), targetInfo(trgetInfo), source(Source), target(Target), coord(Source->getPosition()), shootEffect(sourceInfo->shootGFX)
+    : sourceInfo(srcInfo), targetInfo(trgetInfo),
+        source(Source), target(Target),
+        coord(Source->getPosition()), shootEffect(srcInfo->shootGFX),
+        frame(0)
 {
-    frame = -1;
 }
 
 Action* AttackAction::act()

@@ -56,7 +56,6 @@ Tactic* Tactic::copy(const Tactic *source)
 AttackNearestEnemy::AttackNearestEnemy(const TacticInfo& Info, const TacticTrigger& trigger) :
 		Tactic(Info, trigger, TACTIC_ATTACK_NEAREST_ENEMY)
 {
-
 }
 
 int AttackNearestEnemy::validateTactic(std::list<Action*> &newActions, TacticValidationData& tvd)

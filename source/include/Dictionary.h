@@ -42,8 +42,6 @@ class DictKey
         ~DictKey()
         {
         }
-
-
 };
 
 class Dictionary

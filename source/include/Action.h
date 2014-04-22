@@ -68,7 +68,7 @@ class MoveAction : public Action
         bool completed();
         void render();
 
-        Ship *source, *target;
+        Ship *source;
         Coordinates coord;
 
     private:
