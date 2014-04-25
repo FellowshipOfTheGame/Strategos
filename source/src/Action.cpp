@@ -162,10 +162,9 @@ void MoveAction::render()
 }
 
 AttackAction::AttackAction(Ship *Source, Ship *Target, const DictKey *srcInfo, const DictKey *trgetInfo)
-    : sourceInfo(srcInfo), targetInfo(trgetInfo),
+    : frame(0), sourceInfo(srcInfo), targetInfo(trgetInfo),
         source(Source), target(Target),
-        coord(Source->getPosition()), shootEffect(srcInfo->shootGFX),
-        frame(0)
+        coord(Source->getPosition()), shootEffect(srcInfo->shootGFX)
 {
 }
 

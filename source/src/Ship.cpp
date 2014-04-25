@@ -4,15 +4,24 @@
 
 using namespace std;
 
-float slowlyRotateTo(float fromRad, float toRad)
+int slowlyRotateTo(float fromRad, float toRad)
 {
-	return toRad-fromRad;
+//	return toRad-fromRad;
+//
+//	if (fabs(toRad-fromRad) < M_PI)
+//        return toRad-fromRad;
+//    if (toRad>fromRad)
+//        return toRad-fromRad-M_PI;//*2.0f;
+//    return toRad-fromRad+M_PI*2.0f;
 
-	if (fabs(toRad-fromRad) < M_PI)
-        return toRad-fromRad;
-    if (toRad>fromRad)
-        return toRad-fromRad-M_PI;//*2.0f;
-    return toRad-fromRad+M_PI*2.0f;
+
+    float dir = (fromRad - toRad); // * 180.0/M_PI;
+
+	if (dir > 0 && fabs(dir) <= M_PI) return -1;
+	else if (dir > 0 && fabs(dir) > M_PI) return 1;
+	else if (dir < 0 && fabs(dir) <= M_PI) return 1;
+	else if (dir < 0 && fabs(dir) > M_PI) return -1;
+
 }
 
 Ship::Ship(const shipBaseStats &initialStats, Coordinates Coord)
@@ -53,21 +62,39 @@ int Ship::update()
     if (stats.curKamikazeCD > 0)
         --(stats.curKamikazeCD);
 
-    if (stats.isMoving == move_not_moving) //So dar uma nova coordenada quando 'terminar' o movimento atual
+    // So dar uma nova coordenada quando 'terminar' o movimento atual
+    // Evitar que as naves fiquem totalmente paradas
+    if (stats.isMoving == move_not_moving)
     {
-        targetPos.x = unitPos.x+rand()%30-rand()%30;
-        targetPos.y = unitPos.y+rand()%30-rand()%30;
+        targetPos.x = unitPos.x+(rand()%2*SPACIAL_UNIT-rand()%2*SPACIAL_UNIT);
+        targetPos.y = unitPos.y+(rand()%2*SPACIAL_UNIT-rand()%2*SPACIAL_UNIT);
         stats.isMoving = move_flying;
     }
 
-    currentDirection += slowlyRotateTo( currentDirection, coord.angleTo(targetPos) )/15;
+    const float destDir = coord.angleTo(targetPos);
+    const float angularVelocity = 5.0 * M_PI/180.0; // rad/frame
+    const int sign = slowlyRotateTo( currentDirection, destDir );
 
     double distance = coord.distance(targetPos);
 
-    if (distance > stats.currentSpeed)
+    if (distance > 0.8*SPACIAL_UNIT)
     {
-        coord.x -= ((coord.x-targetPos.x)/distance)*stats.currentSpeed;
-        coord.y -= ((coord.y-targetPos.y)/distance)*stats.currentSpeed;
+        // Mover diretamente para o alvo
+//        coord.x -= ((coord.x-targetPos.x)/distance)*stats.currentSpeed;
+//        coord.y -= ((coord.y-targetPos.y)/distance)*stats.currentSpeed;
+
+        float angledif = fabs(currentDirection - destDir);
+        if (angledif > M_PI)
+            angledif = 2.0*M_PI - angledif;
+
+        // Dependendo da situacao a nave pode ficar em loop [girando em torno de um centro]
+        if ( angledif > angularVelocity )
+            currentDirection += angularVelocity*sign;
+        else
+            currentDirection = destDir;
+
+        coord.x += cos(currentDirection)*stats.currentSpeed;
+        coord.y -= sin(currentDirection)*stats.currentSpeed;
     }
     else
     {

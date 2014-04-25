@@ -13,7 +13,8 @@
 #include "Army.h"
 #include "Tactic.h"
 
-#define INDIVIDUOS_GERACAO  50
+#define INDIVIDUOS_GERACAO  30
+#define SELECT_FROM_POP 20
 #define GOLD_AMOUNT 400
 
 struct PairAF
@@ -36,8 +37,8 @@ class GeneticAlgorithm : public Algorithm
         }
         ~GeneticAlgorithm();
 
-        void initialize();
-        void run();
+        void initialize() override;
+        void run() override;
         double evaluateFitness(const Army *ind);
         void selection();
         void randomArmies(int size);

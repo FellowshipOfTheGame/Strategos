@@ -94,7 +94,7 @@ class Trigger_Always : public Trigger
         Trigger_Always();
         ~Trigger_Always();
 
-        bool testTrigger(Unit *unit);
+        bool testTrigger(Unit *unit) override;
 };
 
 class Trigger_Life : public Trigger
@@ -103,7 +103,7 @@ class Trigger_Life : public Trigger
         Trigger_Life(int lifeTrigger, int trigOP);
         ~Trigger_Life();
 
-        bool testTrigger(Unit *unit);
+        bool testTrigger(Unit *unit) override;
 };
 
 #endif // _TRIGGER_H_

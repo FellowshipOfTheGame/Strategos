@@ -209,7 +209,7 @@ void GeneticAlgorithm::run()
     if (armyType != 0) return; // debug
 
     printf("Iterate 2 times\n");
-    for (unsigned int i = 0; i < 1; i++)
+    for (unsigned int i = 0; i < 10; i++)
     {
         std::vector<Army*> selected, rejected;
 
@@ -219,7 +219,7 @@ void GeneticAlgorithm::run()
         randomArmies( INDIVIDUOS_GERACAO - individuos.size() + 2 );
 
         // Apply the selection - currently Tournament
-        selectFromPop(20, selected, rejected);
+        selectFromPop(SELECT_FROM_POP, selected, rejected);
 
         for (unsigned int r = 0; r < rejected.size(); ++r){
             delete rejected[r];

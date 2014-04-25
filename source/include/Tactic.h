@@ -42,7 +42,7 @@ struct TacticInfo
     {
     }
 
-    unsigned int allyUnitID; // Unidade aliada para interagir
+    int allyUnitID; // Unidade aliada para interagir
 };
 
 class Tactic
@@ -136,7 +136,7 @@ class AttackNearestEnemy : public Tactic
         AttackNearestEnemy(const TacticInfo& info, const TacticTrigger& trigger);
         ~AttackNearestEnemy() {}
 
-        void debugPrint(){printf("AttackNearestEnemy");}
+        void debugPrint() override {printf("AttackNearestEnemy");}
 
         int validateTactic(std::list<Action*> &newActions, TacticValidationData& tvd ) override;
 };
@@ -150,7 +150,7 @@ class AttackWeakestEnemy : public Tactic
     public:
         AttackWeakestEnemy(const TacticInfo& info, const TacticTrigger& trigger);
 
-        void debugPrint(){printf("AttackWeakestEnemy");}
+        void debugPrint() override {printf("AttackWeakestEnemy");}
 
         int validateTactic(std::list<Action*> &newActions, TacticValidationData& tvd ) override;
 };
@@ -168,7 +168,7 @@ class AttackCollab : public Tactic
 
         std::string printTactic();
 
-        void debugPrint(){printf("AttackCollab");}
+        void debugPrint() override {printf("AttackCollab");}
 
         int validateTactic(std::list<Action*> &newActions, TacticValidationData& tvd ) override;
 };
@@ -184,7 +184,7 @@ class DefenseCollab : public Tactic
         ~DefenseCollab(){};
         std::string printTactic();
 
-        void debugPrint(){printf("DefenseCollab");}
+        void debugPrint() override {printf("DefenseCollab");}
 
         int validateTactic(std::list<Action*> &newActions, TacticValidationData& tvd ) override;
 };
@@ -200,7 +200,7 @@ class Kamikase : public Tactic
     public:
         Kamikase(const TacticInfo& info, const TacticTrigger& trigger);
 
-        void debugPrint(){printf("Kamikase");}
+        void debugPrint() override {printf("Kamikase");}
 
         int validateTactic(std::list<Action*> &newActions, TacticValidationData& tvd ) override;
 };
@@ -214,7 +214,7 @@ class Retreat : public Tactic
 
         std::string printTactic();
 
-        void debugPrint(){printf("Retreat");}
+        void debugPrint() override {printf("Retreat");}
 
         int validateTactic(std::list<Action*> &newActions, TacticValidationData& tvd ) override;
 };
@@ -229,7 +229,7 @@ class MoveRandomly : public Tactic
     public:
         MoveRandomly(const TacticInfo& info, const TacticTrigger& trigger);
 
-        void debugPrint(){printf("MoveRandomly");}
+        void debugPrint() override {printf("MoveRandomly");}
 
         int validateTactic(std::list<Action*> &newActions, TacticValidationData& tvd ) override;
 };

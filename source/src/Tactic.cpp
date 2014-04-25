@@ -202,7 +202,7 @@ int AttackCollab::validateTactic(std::list<Action*> &newActions, TacticValidatio
 
     int target = allyUnit->getTarget();
 
-    if (target >= tvd.enemyUnits.size() || target < 0)
+    if (target >= (int)tvd.enemyUnits.size() || target < 0)
         return 0;
 
 	Unit *enemyUnit = tvd.enemyUnits[target];

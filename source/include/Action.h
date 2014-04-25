@@ -36,9 +36,9 @@ class ExplosionAction : public Action
     public:
         ExplosionAction(Coordinates pos, Image *explosionImg);
 
-        Action* act();
-        bool completed();
-        void render();
+        Action* act() override;
+        bool completed() override;
+        void render() override;
 
     private:
         Image* img;
@@ -51,9 +51,9 @@ class DamageAction : public Action
     public:
         DamageAction(Coordinates pos);
 
-        Action* act();
-        bool completed();
-        void render();
+        Action* act() override;
+        bool completed() override;
+        void render() override;
 
     private:
         int timer;
@@ -64,9 +64,9 @@ class MoveAction : public Action
 {
     public:
         MoveAction(Ship *Source, const Coordinates& Coord, bool GetNear=false);
-        Action* act();
-        bool completed();
-        void render();
+        Action* act() override;
+        bool completed() override;
+        void render() override;
 
         Ship *source;
         Coordinates coord;
@@ -88,9 +88,9 @@ class AttackAction : public Action
         AttackAction(Ship *Source, Ship *Target, const DictKey *sourceInfo, const DictKey *targetInfo);
         ~AttackAction(){}
 
-        Action* act();
-        bool completed();
-        void render( );
+        Action* act() override;
+        bool completed() override;
+        void render() override;
 
         Ship *source, *target;
         Coordinates coord;
@@ -104,9 +104,9 @@ public:
     KamikazeAction(Ship *Source, Ship *Target, Image *imgShoot);
 	~KamikazeAction(){}
 
-	Action* act();
-	bool completed();
-	void render( );
+	Action* act() override;
+	bool completed() override;
+	void render() override;
 
 	Ship *source, *target;
 	Coordinates coord;
