@@ -472,12 +472,13 @@ void Unit::render()
 
 CombatRound* Unit::unifyCombatRound()
 {
-	printf ("unificando unit\n");
+	printf ("unificando unit %d\n", this->id);
 	CombatRound* _new;
 	_new = new CombatRound();
 	 for (unsigned int i = 0; i < ships.size(); ++i)
 	 {
-		 _new->ConcatCombatRound(ships[i]->getDmgperround());
+		 _new = _new->ConcatCombatRound(ships[i]->getDmgperround());
+		 _new->print();
 	 }
 	return _new;
 }

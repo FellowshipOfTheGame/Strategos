@@ -15,6 +15,7 @@ Army::Army(const string& armyName, const Dictionary *armyDictionary) :
 {
 	totalShips = 0;
 	isPlayer = 0;
+	fitness =0;
 }
 
 Army::~Army()
@@ -65,7 +66,7 @@ Army* Army::loadArmy(string armyname)
 		else if (tag.compare("player:") == 0)
 		{
 			file >> isPlayer;
-			printf("\tFitness: %lf\n", isPlayer);
+			printf("\tPlayer: %lf\n", isPlayer);
 		}
 		else if (tag.compare("dictionary:") == 0)
 		{
@@ -475,8 +476,9 @@ CombatRound* Army::unifyCombatRound()
 	_new = new CombatRound();
 	 for (unsigned int i = 0; i < units.size(); ++i)
 	 {
-		 _new->ConcatCombatRound(units[i]->unifyCombatRound());
+		 _new = _new->ConcatCombatRound(units[i]->unifyCombatRound());
 	 }
+	 _new->print();
 	return _new;
 }
 

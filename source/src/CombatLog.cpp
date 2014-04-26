@@ -59,7 +59,9 @@ CombatRound::CombatRound(std::vector<CombatRoundItem*>& origin)
 
 	while (iter != origin.end())
 	{
-		log.push_back( (*iter)->clone() );
+	    CombatRoundItem *temp = ((*iter)->clone());
+		log.push_back( temp );
+		iter++;
 	}
 
 }
@@ -73,7 +75,7 @@ const std::vector<CombatRoundItem*>& CombatRound::getLog() const
 {
 	return log;
 }
-
+//TODO fazer a inserção em orderm crescente de step
 void CombatRound::addLog(CombatRoundItem *round)
 {
 	if (log.size()<1)
@@ -92,15 +94,7 @@ void CombatRound::addLog(CombatRoundItem *round)
 	}
 //	printf ("adicionando dano\n");
 	log.push_back(round->clone());
-	std::sort(log.begin(), log.end());
-
-//	vector<CombatRoundItem*>::iterator iter = log.begin();
-//	while (iter != log.end())
-//	{
-//		printf ("[%d, %d] ",(*iter)->getStep(),(*iter)->getRoundDamage());
-//		iter++;
-//	}
-//	printf ("\n");
+	std::sort(log.begin(), log.end()); //não ordenando
 
 }
 
@@ -116,6 +110,18 @@ CombatRound* CombatRound::ConcatCombatRound(CombatRound* cb)
 		iter++;
 	}
 	return _new;
+}
+
+void CombatRound::print()
+{
+	printf ("imprimendo conbat round\n \t");
+	std::vector<CombatRoundItem*>::iterator iter = log.begin();
+	while (iter != log.end())
+	{
+		printf ("[%d, %d] ",(*iter)->getStep(),(*iter)->getRoundDamage());
+		iter++;
+	}
+	printf ("\n");
 }
 
 /*****************************************************************************/

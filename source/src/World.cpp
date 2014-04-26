@@ -136,6 +136,7 @@ CombatLog* World::getCombatLog(int i)
 	return combatLog[i];
 }
 
+//TODO possivelmente pode ser removido
 CombatRound* World::getCombatRound(int i)
 {
 	if (i==0){

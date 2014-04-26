@@ -43,7 +43,7 @@ Game::Game()
     // 1 apenas para agilizar debugs
     for (int i = 0; i < 1; ++i){
         algorithm[i]->initialize();
-        algorithm[i]->run();
+        //algorithm[i]->run();
     }
 }
 
@@ -203,10 +203,10 @@ void Game::setCombatLog(int i)
 	combatLog[i] = new CombatLog();
 }
 
-CombatRound* Game::getCombatRound(int i)
+void Game::setCombatLog(int i, CombatLog *cmbLog)
 {
-	if (i==0){
-        return armySim1->unifyCombatRound();
-       } else{
-	return armySim2->unifyCombatRound();}
+	CombatLog *x =combatLog[i];
+	if (x!=nullptr)
+		delete x;
+	combatLog[i] = cmbLog;
 }
