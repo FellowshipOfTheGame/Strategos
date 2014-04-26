@@ -41,10 +41,15 @@ Game::Game()
 
     // TODO: Alterar para 3 na versao final
     // 1 apenas para agilizar debugs
-    for (int i = 0; i < 1; ++i){
+
+    printf("Starting GA\n");
+    clock_t time = clock();
+    for (int i = 0; i < 1; ++i)
+    {
         algorithm[i]->initialize();
         algorithm[i]->run();
     }
+    printf("GA time: %lfs\n", (clock()-time) / (double)CLOCKS_PER_SEC);
 }
 
 Game::~Game()

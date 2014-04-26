@@ -62,7 +62,7 @@ Army* Army::loadArmy(string armyname)
 
 	Coordinates position;
 
-	printf("Loading Army: %s\n", path.c_str());
+//	printf("Loading Army: %s\n", path.c_str());
 
 	file.open(path.c_str(), fstream::in);
 	if (!file.is_open())
@@ -78,17 +78,17 @@ Army* Army::loadArmy(string armyname)
 		if (tag.compare("name:") == 0)
 		{
 			file >> name;
-			printf("\tName: %s\n", name.c_str());
+//			printf("\tName: %s\n", name.c_str());
 		}
 		else if (tag.compare("fitness:") == 0)
 		{
 			file >> fitness;
-			printf("\tFitness: %lf\n", fitness);
+//			printf("\tFitness: %lf\n", fitness);
 		}
 		else if (tag.compare("player:") == 0)
 		{
 			file >> isPlayer;
-			printf("\tFitness: %lf\n", isPlayer);
+//			printf("\tPlayer: %d\n", isPlayer);
 		}
 		else if (tag.compare("dictionary:") == 0)
 		{
@@ -111,7 +111,7 @@ Army* Army::loadArmy(string armyname)
                 loadedArmy->setIsPlayer();
             }
 			loadedArmy->setFitness(fitness);
-			printf("\tDict: %s\n", dictName.c_str());
+//			printf("\tDict: %s\n", dictName.c_str());
 		}
 		else if (tag.compare("squadKind:") == 0)
 		{
@@ -246,7 +246,7 @@ Army* Army::loadArmy(string armyname)
 			}
 		}
 	}
-	printf("Army successfully loaded\n");
+//	printf("Army successfully loaded\n");
 	return loadedArmy;
 }
 
@@ -259,7 +259,7 @@ void Army::saveArmy(const Army *army, const string pth)
 	path.append(pth.c_str());
 	path.append(army->getName());
 	path.append(SAVE_EXT);
-	printf ("saving %s\n",path.c_str());
+//	printf ("saving %s\n",path.c_str());
 	file.open(path.c_str(), ios::out);
 
 	const std::vector<Unit*>& units = army->getUnits();
@@ -287,7 +287,7 @@ void Army::saveArmy(const Army *army, const string pth)
 	}
 
 	file.close();
-	printf ("Army's ready\n");
+//	printf ("Army's ready\n");
 }
 
 // Sets
