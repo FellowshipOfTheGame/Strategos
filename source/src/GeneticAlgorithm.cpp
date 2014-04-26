@@ -7,6 +7,10 @@
 #include <dirent.h>
 #include <time.h>
 #include <sstream>
+
+#include <thread>
+
+
 #include "GeneticAlgorithm.h"
 #include "World.h"
 #include "Global.h"
@@ -16,6 +20,10 @@
 #define MUTATION_UNIT_POSITION  2
 #define MUTATION_TOTAL          3
 
+void threadSimulate(  )
+{
+
+}
 
 GeneticAlgorithm::~GeneticAlgorithm()
 {
@@ -206,6 +214,9 @@ Army* GeneticAlgorithm::generateRandomArmy()
 
 void GeneticAlgorithm::run()
 {
+    unsigned concurentThreadsSupported = std::thread::hardware_concurrency();
+    printf("Threads max support: %d\n", concurentThreadsSupported);
+
     if (armyType != 0) return; // debug
 
     printf("Iterate 2 times\n");
@@ -267,7 +278,8 @@ void GeneticAlgorithm::selectFromPop(int n, std::vector<Army*>& selected, std::v
     for (unsigned int i = 0; i < individuos.size(); ++i)
     {
         int nBattlesToFit = 1;
-        double fit = 0;
+        double fitA = 0;
+        double fitB = 0;
         for (int b = 0; b < nBattlesToFit; ++b)
         {
             unsigned int opponent = rand()%individuos.size();
@@ -276,9 +288,14 @@ void GeneticAlgorithm::selectFromPop(int n, std::vector<Army*>& selected, std::v
 
             int ret = _SIM_CONTINUE_;
 
+            Army* armyA = individuos[i];
+            Army* armyB = individuos[opponent];
+            Army* armyAclone = Army::clone( individuos[i] );
+            Army* armyBclone = Army::clone( individuos[opponent] );
+
             //Sequencial
             printf("->Battle: %d with %d -- Units: %d vs %d\n", i, opponent, individuos[i]->nUnits(), individuos[opponent]->nUnits());
-            World *world = new World(individuos[i], individuos[opponent]);
+            World *world = new World(armyAclone, armyBclone);
 
             while(ret == _SIM_CONTINUE_){
                 ret = world->simulateStep();
@@ -295,9 +312,11 @@ void GeneticAlgorithm::selectFromPop(int n, std::vector<Army*>& selected, std::v
 
             delete world;
 
-            fit += evaluateFitness(individuos[i]) + moreFit;
+            fitA += evaluateFitness(armyAclone) + moreFit;
+            fitB += evaluateFitness(armyBclone);
         }
-        fit /= nBattlesToFit;
+        fitA /= nBattlesToFit;
+        fitB /= nBattlesToFit;
 
         // Criar lista
         order.push_back( PairAF(individuos[i], fit) );

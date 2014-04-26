@@ -42,6 +42,7 @@ private:
 	int totalShips;
 
 public:
+    static Army* clone( const Army* army );
 	Army(const std::string& armyName, const Dictionary* armyDictionary);
 	~Army();
 

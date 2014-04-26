@@ -8,6 +8,18 @@
 
 using namespace std;
 
+static Army* clone( const Army* army )
+{
+    Army *clone = new Army(army->name, army->dictionary);
+
+    for (int i = 0; i < army->units.size(); ++i)
+    {
+        clone->addUnit( new Unit( army->units[i] ) );
+    }
+
+    return clone;
+}
+
 Army::Army(const string& armyName, const Dictionary *armyDictionary) :
 		name(armyName), dictionary(armyDictionary), motherUnit(0)
 {
