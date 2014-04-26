@@ -82,6 +82,9 @@ class GeneticAlgorithm : public Algorithm
 
         /// Efetua mutacao nos individuos
         void mutate(std::vector<Army*>& selected);
+
+        //
+        void threadSimulate( int from, int n );
 };
 
 #endif

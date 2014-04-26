@@ -14,6 +14,7 @@
 #define _ARMY_H_
 
 #include <string>
+#include <mutex>
 
 #include "Unit.h"
 #include "Tactic.h"
@@ -41,10 +42,17 @@ private:
 	std::vector<Unit*> units; // Todas as unidades da army, incluindo unidade Mae
 	int totalShips;
 
+    std::mutex army_mutex;
+	float fitness;
+	int isPlayer;
+
 public:
     static Army* clone( const Army* army );
 	Army(const std::string& armyName, const Dictionary* armyDictionary);
 	~Army();
+
+    void Lock();
+    void Unlock();
 
     // Percorre Tactics e gera acoes para as naves
     int update();
@@ -85,6 +93,16 @@ public:
     static void saveArmy(const Army *army, const std::string pth="");
 
     CombatRound* unifyCombatRound();
+
+    void setFitness(float ft);
+     float getFitness() const;
+
+    void setIsPlayer() {
+    	isPlayer = 1;
+    }
+     int getIsPlayer() const{
+    	return isPlayer;
+    }
 };
 
 #endif
