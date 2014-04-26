@@ -41,6 +41,9 @@ private:
 	std::vector<Unit*> units; // Todas as unidades da army, incluindo unidade Mae
 	int totalShips;
 
+	float fitness;
+	int isPlayer;
+
 public:
 	Army(const std::string& armyName, const Dictionary* armyDictionary);
 	~Army();
@@ -84,6 +87,16 @@ public:
     static void saveArmy(const Army *army, const std::string pth="");
 
     CombatRound* unifyCombatRound();
+
+    void setFitness(float ft);
+     float getFitness() const;
+
+    void setIsPlayer() {
+    	isPlayer = 1;
+    }
+     int getIsPlayer() const{
+    	return isPlayer;
+    }
 };
 
 #endif

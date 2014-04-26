@@ -299,6 +299,8 @@ void GeneticAlgorithm::selectFromPop(int n, std::vector<Army*>& selected, std::v
         }
         fit /= nBattlesToFit;
 
+        individuos[i]->setFitness(individuos[i]->getFitness()*0.7+fit*0.3);
+
         // Criar lista
         order.push_back( PairAF(individuos[i], fit) );
     }

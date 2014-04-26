@@ -2,6 +2,8 @@
  *  Strategos - Army.cpp
  *
  */
+#include <stdio.h>
+
 #include "Global.h"
 #include "Trigger.h"
 #include "Army.h"
@@ -12,6 +14,7 @@ Army::Army(const string& armyName, const Dictionary *armyDictionary) :
 		name(armyName), dictionary(armyDictionary), motherUnit(0)
 {
 	totalShips = 0;
+	isPlayer = 0;
 }
 
 Army::~Army()
@@ -31,7 +34,8 @@ Army* Army::loadArmy(string armyname)
 	fstream file;
 	Dictionary *workingDict;
 	string tag, name, dictName;
-	int unitType, id = 0;
+	int unitType, id = 0, isPlayer;
+	float fitness;
 
 	Coordinates position;
 
@@ -53,6 +57,16 @@ Army* Army::loadArmy(string armyname)
 			file >> name;
 			printf("\tName: %s\n", name.c_str());
 		}
+		else if (tag.compare("fitness:") == 0)
+		{
+			file >> fitness;
+			printf("\tFitness: %lf\n", fitness);
+		}
+		else if (tag.compare("player:") == 0)
+		{
+			file >> isPlayer;
+			printf("\tFitness: %lf\n", isPlayer);
+		}
 		else if (tag.compare("dictionary:") == 0)
 		{
 			file >> dictName;
@@ -69,6 +83,11 @@ Army* Army::loadArmy(string armyname)
 			}
 
 			loadedArmy = new Army(name, workingDict);
+			if (isPlayer)
+            {
+                loadedArmy->setIsPlayer();
+            }
+			loadedArmy->setFitness(fitness);
 			printf("\tDict: %s\n", dictName.c_str());
 		}
 		else if (tag.compare("squadKind:") == 0)
@@ -223,6 +242,10 @@ void Army::saveArmy(const Army *army, const string pth)
 	const std::vector<Unit*>& units = army->getUnits();
 
 	file << "name: " << army->getName() << endl;
+
+	file << "fitness: " << army->getFitness() << endl;
+
+	file << "player: " << army->getIsPlayer() << endl;
 
 	file << "dictionary: " << army->getDictionary()->title << endl << endl;
 
@@ -455,4 +478,13 @@ CombatRound* Army::unifyCombatRound()
 		 _new->ConcatCombatRound(units[i]->unifyCombatRound());
 	 }
 	return _new;
+}
+
+void Army::setFitness(float ft)
+{
+	fitness = ft;
+}
+float Army::getFitness() const
+{
+	return fitness;
 }
