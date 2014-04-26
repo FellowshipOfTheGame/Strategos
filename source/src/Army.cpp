@@ -10,8 +10,21 @@
 
 using namespace std;
 
+Army* Army::clone( const Army* army )
+{
+    Army *clone = new Army(army->name, army->dictionary);
+    clone->fitness = army->getFitness();
+
+    for (int i = 0; i < army->units.size(); ++i)
+    {
+        clone->addUnit( new Unit( army->units[i] ) );
+    }
+
+    return clone;
+}
+
 Army::Army(const string& armyName, const Dictionary *armyDictionary) :
-		name(armyName), dictionary(armyDictionary), motherUnit(0)
+		name(armyName), dictionary(armyDictionary), motherUnit(0), fitness(0)
 {
 	totalShips = 0;
 	isPlayer = 0;
@@ -23,6 +36,16 @@ Army::~Army()
 	for (unsigned int i = 0; i < units.size(); ++i){
 		delete units[i];
 	}
+}
+
+void Army::Lock()
+{
+    army_mutex.lock();
+}
+
+void Army::Unlock()
+{
+    army_mutex.unlock();
 }
 
 Army* Army::loadArmy(string armyname)
@@ -486,6 +509,7 @@ void Army::setFitness(float ft)
 {
 	fitness = ft;
 }
+
 float Army::getFitness() const
 {
 	return fitness;

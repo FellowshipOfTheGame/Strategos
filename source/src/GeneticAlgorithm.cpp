@@ -7,6 +7,10 @@
 #include <dirent.h>
 #include <time.h>
 #include <sstream>
+
+#include <thread>
+
+
 #include "GeneticAlgorithm.h"
 #include "World.h"
 #include "Global.h"
@@ -16,6 +20,13 @@
 #define MUTATION_UNIT_POSITION  2
 #define MUTATION_TOTAL          3
 
+GeneticAlgorithm::GeneticAlgorithm(int _armyType)
+    : Algorithm(), armyType(_armyType)
+{
+    directory = "GA/"+std::to_string(armyType)+"/";
+
+    allowedThreads = std::thread::hardware_concurrency();
+}
 
 GeneticAlgorithm::~GeneticAlgorithm()
 {
@@ -92,7 +103,7 @@ void GeneticAlgorithm::randomArmies(int size)
         //Save created army
         individuos.push_back(randomArmy);
 
-        Army::saveArmy(randomArmy, directory.c_str());
+//        Army::saveArmy(randomArmy, directory.c_str());
     }
 
 }
@@ -206,6 +217,9 @@ Army* GeneticAlgorithm::generateRandomArmy()
 
 void GeneticAlgorithm::run()
 {
+    unsigned concurentThreadsSupported = std::thread::hardware_concurrency();
+    printf("Threads max support: %d\n", concurentThreadsSupported);
+
     if (armyType != 0) return; // debug
 
     printf("Iterate 2 times\n");
@@ -257,17 +271,65 @@ void GeneticAlgorithm::run()
 
 void GeneticAlgorithm::selectFromPop(int n, std::vector<Army*>& selected, std::vector<Army*>& rejected)
 {
-    std::vector<PairAF> order;
-
-//    for (int i = 0; i < individuos.size(); ++i)
-//        printf("%p\n", individuos[i]);
-
     // Executar batalhas para calcular o fitnes
     printf("Battle for %d individuos\n", individuos.size());
+
+    std::vector<std::thread> threads;
+
+    const int nPerThread = individuos.size()/allowedThreads;
+    for (int i = 0; i < allowedThreads; ++i){
+        threads.push_back( std::thread(&GeneticAlgorithm::threadSimulate, this, i*nPerThread, nPerThread ) );
+    }
+
+    for (int i = 0; i < allowedThreads; ++i){
+        threads[i].join();
+    }
+
+    // Ordenar
+    // TODO: Fazer algo melhor que bubble sort =)
     for (unsigned int i = 0; i < individuos.size(); ++i)
+    {   for (unsigned int j = 0; j < individuos.size(); ++j)
+        {
+            if (individuos[i]->getFitness() > individuos[j]->getFitness())
+            {
+                Army* tmp = individuos[i];
+                individuos[i] = individuos[j];
+                individuos[j] = tmp;
+            }
+        }
+    }
+
+    printf("TOP 10:\n");
+    for (int i = 0; i < 10; ++i){
+        printf("Fit[%d] = %lf [%d]\n", i, individuos[i]->getFitness(), individuos[i]->nUnits());
+    }
+
+    printf("Selecting and Rejecting...");
+
+    // Selecionar os N primeiros
+    for (unsigned int i = 0; i < individuos.size(); ++i){
+        if (i < n)
+            selected.push_back(individuos[i]);
+        else
+            rejected.push_back(individuos[i]);
+    }
+
+    if (n == 1)
+    {
+        printf("BEST: %lf\n", individuos[0]->getFitness());
+    }
+}
+
+void GeneticAlgorithm::threadSimulate( int from, int n )
+{
+    for (unsigned int i = from; i < from+n; ++i)
     {
         int nBattlesToFit = 1;
-        double fit = 0;
+        double fitA = 0;
+
+        Army* armyA = individuos[i];
+        Army* armyAclone = Army::clone( armyA );
+
         for (int b = 0; b < nBattlesToFit; ++b)
         {
             unsigned int opponent = rand()%individuos.size();
@@ -276,9 +338,12 @@ void GeneticAlgorithm::selectFromPop(int n, std::vector<Army*>& selected, std::v
 
             int ret = _SIM_CONTINUE_;
 
+            Army* armyB = individuos[opponent];
+            Army* armyBclone = Army::clone( armyB );
+
             //Sequencial
             printf("->Battle: %d with %d -- Units: %d vs %d\n", i, opponent, individuos[i]->nUnits(), individuos[opponent]->nUnits());
-            World *world = new World(individuos[i], individuos[opponent]);
+            World *world = new World(armyAclone, armyBclone);
 
             while(ret == _SIM_CONTINUE_){
                 ret = world->simulateStep();
@@ -295,48 +360,20 @@ void GeneticAlgorithm::selectFromPop(int n, std::vector<Army*>& selected, std::v
 
             delete world;
 
-            fit += evaluateFitness(individuos[i]) + moreFit;
+            fitA += evaluateFitness(armyAclone) + moreFit;
+            const double fitB = evaluateFitness(armyBclone);
+            delete armyBclone;
+
+            // Utilizar essa batalha para o exercito B tambem, mas com peso menor.
+            individuos[opponent]->Lock();
+                individuos[opponent]->setFitness(individuos[opponent]->getFitness()*0.8 + fitB*0.2);
+            individuos[opponent]->Unlock();
         }
-        fit /= nBattlesToFit;
+        fitA /= nBattlesToFit;
 
-        individuos[i]->setFitness(individuos[i]->getFitness()*0.7+fit*0.3);
-
-        // Criar lista
-        order.push_back( PairAF(individuos[i], fit) );
-    }
-
-    // Ordenar
-    // TODO: Fazer algo melhor que bubble sort =)
-    for (unsigned int i = 0; i < order.size(); ++i)
-    {   for (unsigned int j = 0; j < order.size(); ++j)
-        {
-            if (order[i].fitness > order[j].fitness)
-            {
-                PairAF tmp = order[i];
-                order[i] = order[j];
-                order[j] = tmp;
-            }
-        }
-    }
-
-    printf("TOP 10:\n");
-    for (int i = 0; i < 10; ++i){
-        printf("Fit[%d] = %lf [%d]\n", i, order[i].fitness, order[i].ind->nUnits());
-    }
-
-    printf("Selecting and Rejecting...");
-
-    // Selecionar os N primeiros
-    for (unsigned int i = 0; i < order.size(); ++i){
-        if (i < n)
-            selected.push_back(order[i].ind);
-        else
-            rejected.push_back(order[i].ind);
-    }
-
-    if (n == 1)
-    {
-        printf("BEST: %lf\n", order[0].fitness);
+        armyA->Lock();
+            armyA->setFitness(individuos[i]->getFitness()*0.7 + fitA*0.3);
+        armyA->Unlock();
     }
 }
 

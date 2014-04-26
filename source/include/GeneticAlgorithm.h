@@ -30,11 +30,7 @@ struct PairAF
 class GeneticAlgorithm : public Algorithm
 {
     public:
-        GeneticAlgorithm(int _armyType) : Algorithm(),
-            armyType(_armyType)
-        {
-            directory = "GA/"+std::to_string(armyType)+"/";
-        }
+        GeneticAlgorithm(int _armyType);
         ~GeneticAlgorithm();
 
         void initialize() override;
@@ -67,6 +63,8 @@ class GeneticAlgorithm : public Algorithm
         std::string directory;
         std::vector<Army*> individuos;
 
+        int allowedThreads;
+
         /**
          * \param selected Retorna os individuos selecionados para a PROXIMA geracao
          *          Ordenados em ordem decrescente de fitness
@@ -82,6 +80,9 @@ class GeneticAlgorithm : public Algorithm
 
         /// Efetua mutacao nos individuos
         void mutate(std::vector<Army*>& selected);
+
+        //
+        void threadSimulate( int from, int n );
 };
 
 #endif
