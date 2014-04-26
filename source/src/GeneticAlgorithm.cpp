@@ -20,6 +20,14 @@
 #define MUTATION_UNIT_POSITION  2
 #define MUTATION_TOTAL          3
 
+GeneticAlgorithm::GeneticAlgorithm(int _armyType)
+    : Algorithm(), armyType(_armyType)
+{
+    directory = "GA/"+std::to_string(armyType)+"/";
+
+    allowedThreads = std::thread::hardware_concurrency();
+}
+
 GeneticAlgorithm::~GeneticAlgorithm()
 {
     for (unsigned int i = 0; i < individuos.size(); ++i)
@@ -266,15 +274,14 @@ void GeneticAlgorithm::selectFromPop(int n, std::vector<Army*>& selected, std::v
     // Executar batalhas para calcular o fitnes
     printf("Battle for %d individuos\n", individuos.size());
 
-    int nThreads = 4;
     std::vector<std::thread> threads;
 
-    const int nPerThread = individuos.size()/nThreads;
-    for (int i = 0; i < nThreads; ++i){
+    const int nPerThread = individuos.size()/allowedThreads;
+    for (int i = 0; i < allowedThreads; ++i){
         threads.push_back( std::thread(&GeneticAlgorithm::threadSimulate, this, i*nPerThread, nPerThread ) );
     }
 
-    for (int i = 0; i < nThreads; ++i){
+    for (int i = 0; i < allowedThreads; ++i){
         threads[i].join();
     }
 
