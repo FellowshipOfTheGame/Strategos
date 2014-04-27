@@ -10,3 +10,7 @@
 *.db
 Strategos.cscope_file_list
 *.out
+.cproject
+.project
+/Debug
+/.settings
