@@ -328,7 +328,9 @@ void GeneticAlgorithm::threadSimulate( int from, int n )
         double fitA = 0;
 
         Army* armyA = individuos[i];
+        armyA->Lock();
         Army* armyAclone = Army::clone( armyA );
+        armyA->Unlock();
 
         for (int b = 0; b < nBattlesToFit; ++b)
         {
@@ -339,9 +341,12 @@ void GeneticAlgorithm::threadSimulate( int from, int n )
             int ret = _SIM_CONTINUE_;
 
             Army* armyB = individuos[opponent];
+            armyB->Lock();
             Army* armyBclone = Army::clone( armyB );
+            armyB->Unlock();
 
             //Sequencial
+
             printf("->Battle: %d with %d -- Units: %d vs %d\n", i, opponent, individuos[i]->nUnits(), individuos[opponent]->nUnits());
             World *world = new World(armyAclone, armyBclone);
 
@@ -365,15 +370,16 @@ void GeneticAlgorithm::threadSimulate( int from, int n )
             delete armyBclone;
 
             // Utilizar essa batalha para o exercito B tambem, mas com peso menor.
-            individuos[opponent]->Lock();
-                individuos[opponent]->setFitness(individuos[opponent]->getFitness()*0.8 + fitB*0.2);
-            individuos[opponent]->Unlock();
+            armyB->Lock();
+            	armyB->setFitness(armyB->getFitness()*0.8 + fitB*0.2);
+			armyB->Unlock();
         }
         fitA /= nBattlesToFit;
 
         armyA->Lock();
-            armyA->setFitness(individuos[i]->getFitness()*0.7 + fitA*0.3);
+            armyA->setFitness(armyA->getFitness()*0.7 + fitA*0.3);
         armyA->Unlock();
+        delete armyAclone;
     }
 }
 
