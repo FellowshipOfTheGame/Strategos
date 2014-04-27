@@ -349,12 +349,9 @@ void GeneticAlgorithm::threadSimulate( int from, int n )
             Army* armyBclone = Army::clone( armyB );
             armyB->Unlock();
 
-            //Sequencial
-<<<<<<< HEAD
 
-=======
 #ifdef _DEBUG_
->>>>>>> c89e109a8e03b31ac3c9e5fe503d892c06595125
+//Sequencial
             printf("->Battle: %d with %d -- Units: %d vs %d\n", i, opponent, individuos[i]->nUnits(), individuos[opponent]->nUnits());
 #endif
             World *world = new World(armyAclone, armyBclone);
