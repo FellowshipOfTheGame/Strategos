@@ -33,6 +33,9 @@ class CombatRoundItem
 		CombatRoundItem* clone();
 		bool operator <(CombatRoundItem* origin) const;
 		bool operator ==(CombatRoundItem* origin) const;
+		static bool compareMinor(CombatRoundItem *i, CombatRoundItem *j);
+		static bool compareEqual(CombatRoundItem *i, CombatRoundItem *j);
+		static bool compareMaxDamage(CombatRoundItem *i, CombatRoundItem *j);
 };
 
 class CombatRound

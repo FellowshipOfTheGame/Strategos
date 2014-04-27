@@ -225,6 +225,14 @@ void Simulation::Logic()
             }
             gameRunning = false;
             printf("Enter to see the results!\n");
+            printf ("\t\tarmy 0\n");
+            CombatLog *log = simulationWorld->getCombatLog(0);
+            log->setRegister(simulationWorld->getArmy(0)->unifyCombatRound());
+            Game::getGlobalGame()->setCombatLog(0, log);
+            printf ("\t\tarmy 1\n");
+            log = simulationWorld->getCombatLog(1);
+			log->setRegister(simulationWorld->getArmy(1)->unifyCombatRound());
+            Game::getGlobalGame()->setCombatLog(1, log);
          }
     }
  }

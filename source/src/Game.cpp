@@ -43,7 +43,7 @@ Game::Game()
     // 1 apenas para agilizar debugs
     for (int i = 0; i < 1; ++i){
         algorithm[i]->initialize();
-        //algorithm[i]->run();
+        algorithm[i]->run();
     }
 }
 

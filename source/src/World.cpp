@@ -46,6 +46,13 @@ World::World(Army *army1, Army *army2)
 
 World::~World()
 {
+	std::vector<CombatLog*>::iterator iter = combatLog.begin();
+	while (iter != combatLog.end())
+	{
+		if ((*iter) != NULL)
+			delete (*iter);
+		iter++;
+	}
 //    printNActions();
 //    print_MaxActions();
     printf("Steps: %d\n", totalSteps);

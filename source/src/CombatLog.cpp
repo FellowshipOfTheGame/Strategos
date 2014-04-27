@@ -47,6 +47,22 @@ bool CombatRoundItem::operator == ( CombatRoundItem* origin) const
    return (step == origin->getStep());
 }
 
+bool CombatRoundItem::compareMinor(CombatRoundItem *i, CombatRoundItem *j)
+{
+	return (i->getStep() < j->getStep());
+}
+
+bool CombatRoundItem::compareEqual(CombatRoundItem *i, CombatRoundItem *j)
+{
+	return (i->getStep() == j->getStep());
+}
+
+bool CombatRoundItem::compareMaxDamage(CombatRoundItem *i, CombatRoundItem *j)
+{
+	return (i->getRoundDamage() < j->getRoundDamage());
+}
+
+
 /*****************************************************************************/
 
 CombatRound::CombatRound()
@@ -63,11 +79,19 @@ CombatRound::CombatRound(std::vector<CombatRoundItem*>& origin)
 		log.push_back( temp );
 		iter++;
 	}
+	std::sort(log.begin(), log.end(),CombatRoundItem::compareMinor);
 
 }
 
 CombatRound::~CombatRound()
 {
+	std::vector<CombatRoundItem*>::const_iterator iter = log.begin();
+
+	while (iter != log.end())
+	{
+		delete (*iter);
+		iter++;
+	}
 	log.clear();
 }
 
@@ -75,7 +99,7 @@ const std::vector<CombatRoundItem*>& CombatRound::getLog() const
 {
 	return log;
 }
-//TODO fazer a inserção em orderm crescente de step
+
 void CombatRound::addLog(CombatRoundItem *round)
 {
 	if (log.size()<1)
@@ -84,17 +108,20 @@ void CombatRound::addLog(CombatRoundItem *round)
 		return;
 	}
 
-	CombatRoundItem *elem = *std::find(log.begin(), log.end(), round);
+	std::sort(log.begin(), log.end(),CombatRoundItem::compareMinor);
+	std::vector<CombatRoundItem*>::const_iterator iter = log.begin();
 
-	if (round == elem)
+	while (iter != log.end())
 	{
-		printf ("somando dano\n");
-		elem->addRoundDamage(round->getRoundDamage());
-		return;
+		if (CombatRoundItem::compareEqual(round,(*iter)))
+		{
+			(*iter)->addRoundDamage(round->getRoundDamage());
+			return;
+		}
+		iter++;
 	}
-//	printf ("adicionando dano\n");
 	log.push_back(round->clone());
-	std::sort(log.begin(), log.end()); //não ordenando
+
 
 }
 
@@ -109,12 +136,13 @@ CombatRound* CombatRound::ConcatCombatRound(CombatRound* cb)
 		_new->addLog((*iter));
 		iter++;
 	}
+
 	return _new;
 }
 
 void CombatRound::print()
 {
-	printf ("imprimendo conbat round\n \t");
+	printf ("imprimindo combat round\n \t");
 	std::vector<CombatRoundItem*>::iterator iter = log.begin();
 	while (iter != log.end())
 	{
@@ -146,6 +174,12 @@ CombatLog::CombatLog()
 
 CombatLog::~CombatLog()
 {
+	std::vector<CombatLogItem*>::iterator iter = combatline.begin();
+	while (iter != combatline.end())
+	{
+		delete (*iter);
+		iter++;
+	}
 	this->combatline.clear();
 }
 
