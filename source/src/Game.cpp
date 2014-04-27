@@ -47,7 +47,7 @@ Game::Game()
     for (int i = 0; i < 1; ++i)
     {
         algorithm[i]->initialize();
-        algorithm[i]->run();
+        //algorithm[i]->run();
     }
     printf("GA time: %lfs\n", (clock()-time) / (double)CLOCKS_PER_SEC);
 }
@@ -208,10 +208,10 @@ void Game::setCombatLog(int i)
 	combatLog[i] = new CombatLog();
 }
 
-CombatRound* Game::getCombatRound(int i)
+void Game::setCombatLog(int i, CombatLog *cmbLog)
 {
-	if (i==0){
-        return armySim1->unifyCombatRound();
-       } else{
-	return armySim2->unifyCombatRound();}
+	CombatLog *x =combatLog[i];
+	if (x!=nullptr)
+		delete x;
+	combatLog[i] = cmbLog;
 }

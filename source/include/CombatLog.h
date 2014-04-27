@@ -48,6 +48,7 @@ class CombatRound
 		void addLog(CombatRoundItem *round);
 
 		CombatRound* ConcatCombatRound(CombatRound* cb);
+		void print();
 
 };
 

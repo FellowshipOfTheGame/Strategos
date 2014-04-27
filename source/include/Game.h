@@ -108,8 +108,7 @@ class Game
 		CombatLog* getCombatLog(int i);
 
 		void setCombatLog(int i);
-
-		CombatRound* getCombatRound(int i);
+		void setCombatLog(int i, CombatLog *cmbLog);
 
 		SDL_Renderer *getRenderer();
 };
