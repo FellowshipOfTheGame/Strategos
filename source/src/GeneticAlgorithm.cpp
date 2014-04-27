@@ -20,6 +20,8 @@
 #define MUTATION_UNIT_POSITION  2
 #define MUTATION_TOTAL          3
 
+//#define _DEBUG_
+
 GeneticAlgorithm::GeneticAlgorithm(int _armyType)
     : Algorithm(), armyType(_armyType)
 {
@@ -92,7 +94,10 @@ void GeneticAlgorithm::randomArmies(int size)
     // Criar o maximo de naves possivel pois a quantidade de illenium gasta ainda nao esta entrando no fitness
     for(int i = 1; i <= size; i++)
     {
+
+#ifdef _DEBUG_
         printf("Generating %d... ", i);
+#endif
 
         armyName.assign("r");
         armyName.append(std::to_string(i));
@@ -217,17 +222,15 @@ Army* GeneticAlgorithm::generateRandomArmy()
 
 void GeneticAlgorithm::run()
 {
-    unsigned concurentThreadsSupported = std::thread::hardware_concurrency();
-    printf("Threads max support: %d\n", concurentThreadsSupported);
-
     if (armyType != 0) return; // debug
 
-    printf("Iterate 2 times\n");
     for (unsigned int i = 0; i < 10; i++)
     {
         std::vector<Army*> selected, rejected;
 
+#ifdef _DEBUG_
         printf("GENERATION %d\n", i);
+#endif
         // Completar exercito para INDIVIDUOS_GERACAO
         // Adicionar 2 aleatorios sempre
         randomArmies( INDIVIDUOS_GERACAO - individuos.size() + 2 );
@@ -247,7 +250,7 @@ void GeneticAlgorithm::run()
         // Apply Mutation
         mutate(selected);
 
-        printf("Iteration Individuals: %d\n", selected.size());
+//        printf("Iteration Individuals: %d\n", selected.size());
         for (unsigned int j = 0; j < selected.size(); ++j){
             individuos.push_back(selected[j]);
         }
@@ -257,13 +260,17 @@ void GeneticAlgorithm::run()
     char buffer[8];
 
     //Save the strongest armies
+#ifdef _DEBUG_
     printf("Salvando Individuos... %d\n", individuos.size());
+#endif
     for (unsigned int i = 0; i < individuos.size(); i++)
     {
         sprintf(buffer, "r%d", i+1);
         individuos[i]->setArmyName(buffer);
         Army::saveArmy(individuos[i], directory.c_str());
+#ifdef _DEBUG_
         printf("army[%d]\n", i+1);
+#endif
     }
 
 //    exit(0);
@@ -272,7 +279,9 @@ void GeneticAlgorithm::run()
 void GeneticAlgorithm::selectFromPop(int n, std::vector<Army*>& selected, std::vector<Army*>& rejected)
 {
     // Executar batalhas para calcular o fitnes
+#ifdef _DEBUG_
     printf("Battle for %d individuos\n", individuos.size());
+#endif
 
     std::vector<std::thread> threads;
 
@@ -299,12 +308,12 @@ void GeneticAlgorithm::selectFromPop(int n, std::vector<Army*>& selected, std::v
         }
     }
 
-    printf("TOP 10:\n");
-    for (int i = 0; i < 10; ++i){
-        printf("Fit[%d] = %lf [%d]\n", i, individuos[i]->getFitness(), individuos[i]->nUnits());
-    }
+//    printf("TOP 10:\n");
+//    for (int i = 0; i < 10; ++i){
+//        printf("Fit[%d] = %lf [%d]\n", i, individuos[i]->getFitness(), individuos[i]->nUnits());
+//    }
 
-    printf("Selecting and Rejecting...");
+//    printf("Selecting and Rejecting...");
 
     // Selecionar os N primeiros
     for (unsigned int i = 0; i < individuos.size(); ++i){
@@ -312,11 +321,6 @@ void GeneticAlgorithm::selectFromPop(int n, std::vector<Army*>& selected, std::v
             selected.push_back(individuos[i]);
         else
             rejected.push_back(individuos[i]);
-    }
-
-    if (n == 1)
-    {
-        printf("BEST: %lf\n", individuos[0]->getFitness());
     }
 }
 
@@ -346,8 +350,13 @@ void GeneticAlgorithm::threadSimulate( int from, int n )
             armyB->Unlock();
 
             //Sequencial
+<<<<<<< HEAD
 
+=======
+#ifdef _DEBUG_
+>>>>>>> c89e109a8e03b31ac3c9e5fe503d892c06595125
             printf("->Battle: %d with %d -- Units: %d vs %d\n", i, opponent, individuos[i]->nUnits(), individuos[opponent]->nUnits());
+#endif
             World *world = new World(armyAclone, armyBclone);
 
             while(ret == _SIM_CONTINUE_){
@@ -356,12 +365,14 @@ void GeneticAlgorithm::threadSimulate( int from, int n )
 
             double moreFit = 0;
             if (ret == _SIM_DRAW_){
-                printf("Draw!\n");
+//                printf("Draw!\n");
                 moreFit = 0.05;
             }else if (ret == _SIM_ARMY0_WIN_){
-                printf("Winner: %d\n", i);
+//                printf("Winner: %d\n", i);
                 moreFit = 0.1;
-            }else{printf("Winner: %d\n", opponent);}
+            }else{
+//                printf("Winner: %d\n", opponent);
+            }
 
             delete world;
 
@@ -387,7 +398,7 @@ void GeneticAlgorithm::crossOver(std::vector<Army*>& selected)
 {
     std::vector<Army*> indCross;
 
-    printf("crossover for: %d\n", selected.size());
+//    printf("crossover for: %d\n", selected.size());
     for (unsigned int i = 0; i < selected.size(); ++i)
     {
         unsigned int other = rand()%selected.size();
@@ -397,7 +408,7 @@ void GeneticAlgorithm::crossOver(std::vector<Army*>& selected)
         crossOver(selected[i], selected[other], indCross); // Memory Leak
     }
 
-    printf("CrossOvers: %d [%d]\n", indCross.size(), indCross.capacity());
+//    printf("CrossOvers: %d [%d]\n", indCross.size(), indCross.capacity());
 
     // Deletar alguns individuos extras aleatoriamente
     while (indCross.size() > 0 && (indCross.size() + selected.size()) > INDIVIDUOS_GERACAO)
@@ -407,7 +418,7 @@ void GeneticAlgorithm::crossOver(std::vector<Army*>& selected)
         indCross.erase( it );
     }
 
-    printf("CrossOvers: %d\n", indCross.size());
+//    printf("CrossOvers: %d\n", indCross.size());
     for (unsigned int i = 0; i < indCross.size(); ++i){
         selected.push_back(indCross[i]);
     }

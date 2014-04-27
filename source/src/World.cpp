@@ -18,7 +18,7 @@ World::World(Army *army1, Army *army2)
 {
     totalSteps = 0;
 
-    printf("Starting World... ");
+//    printf("Starting World... ");
 
     if (army1 == army2)
     {
@@ -32,16 +32,16 @@ World::World(Army *army1, Army *army2)
 	combatLog.push_back(nullptr);
 	combatLog.push_back(nullptr);
 
-	printf("%d VS %d ", army1->nUnits(), army2->nUnits());
+//	printf("%d VS %d ", army1->nUnits(), army2->nUnits());
 
 	army1->restore(0);
 	army2->restore(1);
 
 	// Setar posicao de cada exercito
-    this->setCombatLog(0); //Game::getGlobalGame()->setCombatLog(0);
-	this->setCombatLog(1); //Game::getGlobalGame()->setCombatLog(1);
+    this->setCombatLog(0);
+	this->setCombatLog(1);
 
-    printf("World Ready!\n");
+//    printf("World Ready!\n");
 }
 
 World::~World()
@@ -55,7 +55,7 @@ World::~World()
 	}
 //    printNActions();
 //    print_MaxActions();
-    printf("Steps: %d\n", totalSteps);
+//    printf("Steps: %d\n", totalSteps);
 }
 
 void World::calcActions()
