@@ -7,6 +7,7 @@
 #include <dirent.h>
 #include <time.h>
 #include <sstream>
+#include <set>
 
 #include <thread>
 
@@ -545,10 +546,10 @@ void GeneticAlgorithm::rectifyUnitID(Army *ind)
     std::vector<Unit*> *units = ind->getUnitsReference();
 
     // Criar mapa de units dessa Army
-    std::set<Unit*> unitsmap;
+    std::set<const Unit*> unitsmap;
     for (unsigned int i = 0; i < units->size(); i++){
         units->at(i)->setID(i);
-        unitsmap.insert( units[i] );
+        unitsmap.insert( units->at(i) );
     }
 
     // Verificar todas as units
