@@ -58,7 +58,7 @@ Army* Army::loadArmy(string armyname)
 	fstream file;
 	Dictionary *workingDict;
 	string tag, name, dictName;
-	int unitType, id = 0, isPlayer;
+	int unitType, isPlayer;
 	float fitness;
 
 	Coordinates position;
@@ -71,6 +71,16 @@ Army* Army::loadArmy(string armyname)
 		printf("error on loading Army!\n");
 		return nullptr;
 	}
+
+    struct AllyIDTactic{
+        AllyIDTactic(Tactic* t, int ID) : tactic(t), id(ID)
+        {}
+
+        Tactic* tactic;
+        int id;
+    };
+
+    std::vector<AllyIDTactic> to_fix_ally;
 
 	while (!file.eof())
 	{
@@ -123,8 +133,7 @@ Army* Army::loadArmy(string armyname)
 			file >> position.x;
 			file >> position.y;
 
-			Unit *unit = loadedArmy->createUnit(id, unitType, position);
-			++id;
+			Unit *unit = loadedArmy->createUnit(unitType, position);
 			if (!unit)
 			{
 				printf("Erro ao carregar Army!\n");
@@ -218,24 +227,45 @@ Army* Army::loadArmy(string armyname)
 						tatica = new AttackWeakestEnemy(info, tacticTrigger);
 						break;
 
-					case TACTIC_ATTACK_COLLAB:
-						file >> info.allyUnitID;
-						tatica = new AttackCollab(info, tacticTrigger);
-						break;
+					case TACTIC_ATTACK_COLLAB:{
+						int idOnVec;
+						file >> idOnVec;
 
-					case TACTIC_DEFENSE_COLAB:
-						file >> info.allyUnitID;
-						tatica = new DefenseCollab(info, tacticTrigger);
+						if ( loadedArmy->getUnitAtIndex(idOnVec) ){ // Ja carregou a Unit
+                            info.allyUnit = loadedArmy->getUnitAtIndex(idOnVec);
+                            tatica = new AttackCollab(info, tacticTrigger);
+                        }else{  // Precisa carregar a Unit
+                            tatica = new AttackCollab(info, tacticTrigger);
+                            to_fix_ally.push_back( AllyIDTactic(tatica, idOnVec) );
+                        }
+
 						break;
+                    }
+
+					case TACTIC_DEFENSE_COLAB:{
+					    int idOnVec;
+						file >> idOnVec;
+
+						if ( loadedArmy->getUnitAtIndex(idOnVec) ){ // Ja carregou a Unit
+                            info.allyUnit = loadedArmy->getUnitAtIndex(idOnVec);
+                            tatica = new DefenseCollab(info, tacticTrigger);
+                        }else{  // Precisa carregar a Unit
+                            tatica = new DefenseCollab(info, tacticTrigger);
+                            to_fix_ally.push_back( AllyIDTactic(tatica, idOnVec) );
+                        }
+
+                        break;
+					}
 
 					case TACTIC_KAMIKASE:
 						tatica = new Kamikase(info, tacticTrigger);
 						break;
 
-					case TACTIC_RETREAT:
-						file >> info.allyUnitID;
+					case TACTIC_RETREAT:{
+					    int ignoredValue; // TODO: Remove this from Retreat?
+						file >> ignoredValue;
 						tatica = new Retreat(info, tacticTrigger);
-						break;
+						break;}
 
 					case TACTIC_MOVE_RANDOM:
 						tatica = new MoveRandomly(info, tacticTrigger);
@@ -246,6 +276,18 @@ Army* Army::loadArmy(string armyname)
 //				printf(" - ");
 			}
 		}
+
+		// Fix all tactics to have the Unit* pointer
+		for (int i = 0; i < to_fix_ally.size(); ++i)
+        {
+            if (to_fix_ally[i].id >= loadedArmy->nUnits())
+            {
+                printf("ERROR: Unit with invalid tactic ally index\n");
+                exit(8);
+            }
+
+            to_fix_ally[i].tactic->setInfo ( TacticInfo(loadedArmy->getUnitAtIndex(to_fix_ally[i].id) ) );
+        }
 	}
 //	printf("Army successfully loaded\n");
 	return loadedArmy;
@@ -320,10 +362,14 @@ void Army::addUnit(Unit *unit)
     units.push_back(unit);
 }
 
-Unit *Army::createUnit(int id, int unitType, Coordinates position)
+Unit *Army::createUnit(int unitType, Coordinates position)
 {
+    // Evitar que crie duas naves mae
+    if ( unitType == 0 && motherUnit != 0 )
+        return nullptr;
+
 	const DictKey *unitInfo = dictionary->getInfoFor(unitType);
-	Unit *unit = new Unit(id, unitInfo, position);
+	Unit *unit = new Unit(units.size(), unitInfo, position);
 
 	addUnit(unit);
 

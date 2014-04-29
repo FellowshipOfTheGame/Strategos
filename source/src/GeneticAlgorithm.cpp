@@ -117,7 +117,6 @@ Army* GeneticAlgorithm::generateRandomArmy()
 {
     Trigger* triggers[2];
     Army *randomArmy = 0;
-    int u = 0;
     int gold = GOLD_AMOUNT;
 
     switch(armyType)
@@ -136,7 +135,7 @@ Army* GeneticAlgorithm::generateRandomArmy()
     }
 
     //Mothership
-    randomArmy->createUnit(0, 0, Coordinates(20, Game::getGlobalGame()->getHeight()/2));
+    randomArmy->createUnit(0, Coordinates(20, Game::getGlobalGame()->getHeight()/2));
 
     //Create units until run out of money
     while (gold >= 10)
@@ -146,7 +145,7 @@ Army* GeneticAlgorithm::generateRandomArmy()
         if(gold - randValue*10 >= 0)
         {
             gold -= randValue*10;
-            randomArmy->createUnit(++u, randValue, Coordinates(rand()%800, rand()%Game::getGlobalGame()->getHeight()%600));
+            randomArmy->createUnit(randValue, Coordinates(rand()%800, rand()%Game::getGlobalGame()->getHeight()%600));
         }
     }
 
@@ -192,10 +191,10 @@ Army* GeneticAlgorithm::generateRandomArmy()
                     tactic = new AttackWeakestEnemy(TacticInfo(0), tacticTrig);
                     break;
                 case 2:
-                    tactic = new AttackCollab(TacticInfo(rand()%nUnits), tacticTrig);
+                    tactic = new AttackCollab(TacticInfo(randomArmy->getUnitAtIndex(rand()%nUnits)), tacticTrig);
                     break;
                 case 3:
-                    tactic = new DefenseCollab(TacticInfo(rand()%nUnits), tacticTrig);
+                    tactic = new DefenseCollab(TacticInfo(randomArmy->getUnitAtIndex(rand()%nUnits)), tacticTrig);
                     break;
                 case 4:
                     tactic = new Kamikase(TacticInfo(0), tacticTrig);
@@ -540,15 +539,22 @@ void GeneticAlgorithm::GoldCap(Army *army)
 //    printf("%d\n", army->nUnits());
 }
 
+// Garante que uma Army nao possui inconsistencia nas suas taticas
 void GeneticAlgorithm::rectifyUnitID(Army *ind)
 {
     std::vector<Unit*> *units = ind->getUnitsReference();
 
+    // Criar mapa de units dessa Army
+    std::set<Unit*> unitsmap;
+    for (unsigned int i = 0; i < units->size(); i++){
+        units->at(i)->setID(i);
+        unitsmap.insert( units[i] );
+    }
+
+    // Verificar todas as units
     for (unsigned int i = 0; i < units->size(); i++)
     {
-        units->at(i)->setID(i);
-
-        //Rectify AttackCollab and DefenseCollab
+        // Rectify AttackCollab and DefenseCollab
         for (unsigned int j = 0; j < units->at(i)->getTacticSize(); j++)
         {
             Tactic *tactic = units->at(i)->getTacticAt(j);
@@ -557,9 +563,11 @@ void GeneticAlgorithm::rectifyUnitID(Army *ind)
             || tactic->getType() == TACTIC_DEFENSE_COLAB
             || tactic->getType() == TACTIC_RETREAT) // TODO: Retreat tem ally???
             {
-                //If allyUnit is out of range, AttackCollab or DefenseCollab with the Mothership
-                if(tactic->getInfo().allyUnitID >= units->size())
-                    tactic->setInfo(TacticInfo(0));
+                // If allyUnit is out of range, AttackCollab or DefenseCollab with the Mothership
+                // or the reference does not belong to this army, give it a new ally
+                if (tactic->getInfo().allyUnit == nullptr
+                ||  unitsmap.find( tactic->getInfo().allyUnit ) == unitsmap.end() )
+                    tactic->setInfo( TacticInfo( ind->getUnitAtIndex( rand()%units->size() ) ) );
             }
         }
     }
@@ -620,13 +628,15 @@ void GeneticAlgorithm::mutateUnitType(Army* ind, int unitID, int newType)
     if(removed->getType() == 0)    //Do not let mothership's type mutate
         return;
 
-    while(newType == removed->getType())
+    while (newType == removed->getType())
         newType = rand()%(N_UNIT_TYPE-1) + 1;   //Mothership is always 0
 
     ind->removeUnit(unitID);
-    Unit *newUnit = ind->createUnit(removed->getID(), newType, removed->getBluePrintCoord());
+
+    Unit *newUnit = ind->createUnit( newType, removed->getBluePrintCoord() );
     for (unsigned int i = 0; i < removed->getTacticSize(); ++i)
         newUnit->addTactic( Tactic::copy(removed->getTacticAt(i)) );
+
     delete removed;
 }
 

@@ -243,18 +243,20 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
 				SDL_GetMouseState(&mouseX, &mouseY);
 				if ((put_squad) && (!move_squad))
 				{
-				Game::getGlobalGame()->getEditingArmy()->createUnit(Game::getGlobalGame()->getEditingArmy()->nUnits(), squad_type,
-				        new Coordinates(mouseX - blueprint->getX(), mouseY - blueprint->getY()));
-				squad_focus = Game::getGlobalGame()->getEditingArmy()->getUnitByID(Game::getGlobalGame()->getEditingArmy()->nUnits() - 1);
-				put_squad = false;
-				squad_type = 0;
-				sprintf(str, "%d\n", Game::getGlobalGame()->getEditingArmy()->nUnits());
-				squad_number.push_back(
-				        new Label(str, Game::getGlobalGame()->getResourceMNGR()->GetFont("jostix-14"), ColorRGB8::Green, ColorRGB8::White,
-				                "LB02"));
-				squad_number[(squad_number.size() - 1)]->setPosition(squad_focus->getAvgX() + blueprint->getX(),
-				        squad_focus->getAvgY() + blueprint->getY());
-				list->setSquad(squad_focus);
+				    Army *editingArmy = Game::getGlobalGame()->getEditingArmy();
+
+                    editingArmy->createUnit(squad_type, new Coordinates(mouseX - blueprint->getX(), mouseY - blueprint->getY()));
+
+                    squad_focus = editingArmy->getUnitAtIndex(editingArmy->nUnits() - 1);
+                    put_squad = false;
+                    squad_type = 0;
+                    sprintf(str, "%d\n", editingArmy->nUnits());
+                    squad_number.push_back(
+                            new Label(str, Game::getGlobalGame()->getResourceMNGR()->GetFont("jostix-14"),
+                                      ColorRGB8::Green, ColorRGB8::White, "LB02"));
+                    squad_number[(squad_number.size() - 1)]->setPosition(squad_focus->getAvgX() + blueprint->getX(),
+                                                                         squad_focus->getAvgY() + blueprint->getY());
+                    list->setSquad(squad_focus);
 				}
 				else
 				{

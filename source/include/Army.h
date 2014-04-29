@@ -64,7 +64,7 @@ public:
 
     // Adiciona um Unit para o Army
     void addUnit(Unit *unit);
-	Unit* createUnit(int id, int unitType, Coordinates position);
+	Unit* createUnit(int unitType, Coordinates position);
 	Unit* removeUnit(unsigned int i);
 
 	const Dictionary *getDictionary() const;

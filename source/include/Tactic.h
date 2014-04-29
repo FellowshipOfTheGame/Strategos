@@ -37,12 +37,12 @@ class Unit;
 
 struct TacticInfo
 {
-    TacticInfo(unsigned int unitID)
-        : allyUnitID(unitID)
+    TacticInfo(const Unit* unit)
+        : allyUnit(unit)
     {
     }
 
-    int allyUnitID; // Unidade aliada para interagir
+    const Unit* allyUnit; // Unidade aliada para interagir
 };
 
 class Tactic
@@ -74,7 +74,7 @@ class Tactic
 
         void setInfo(const TacticInfo& info_)
         {
-            info.allyUnitID = info_.allyUnitID;
+            info.allyUnit = info_.allyUnit;
         }
 
         const TacticInfo& getInfo() const

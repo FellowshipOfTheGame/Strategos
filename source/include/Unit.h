@@ -40,7 +40,7 @@ class Unit
 
         // Dynamic Combat Data
         int shipsAlive;
-        int target;
+        Unit* target;
         Coordinates baseCoord, averageCoord;
         std::vector<Ship*> ships;
         std::list<Action*> shipsActions;
@@ -83,8 +83,8 @@ class Unit
         /// Retorna o tipo da unidade
         int getType() const;
 
-        void setTarget(int i);
-        int getTarget() const;
+        void setTarget(Unit* unit);
+        Unit* getTarget() const;
 
         /// Ships
         Ship* getShip(unsigned long gid);

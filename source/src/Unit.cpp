@@ -27,17 +27,17 @@ void print_MaxActions()
 
 Unit::Unit(unsigned int ID, const DictKey *info, Coordinates position)
     : bluePrintCoord(position), mySquadInfo(info), id(ID),
-    target(-1), baseCoord(position), averageCoord(position),
-        basicTacticMoveRandom( TacticInfo(0), TacticTrigger(0, 0, TRIGGER_LOGIC_OR) ),
-        basicTacticAttackNearest( TacticInfo(0), TacticTrigger(0, 0, TRIGGER_LOGIC_OR) ),
-        basicTacticRetreat( TacticInfo(0), TacticTrigger(0, 0, TRIGGER_LOGIC_OR) )
+    target(nullptr), baseCoord(position), averageCoord(position),
+        basicTacticMoveRandom( TacticInfo(nullptr), TacticTrigger(0, 0, TRIGGER_LOGIC_OR) ),
+        basicTacticAttackNearest( TacticInfo(nullptr), TacticTrigger(0, 0, TRIGGER_LOGIC_OR) ),
+        basicTacticRetreat( TacticInfo(nullptr), TacticTrigger(0, 0, TRIGGER_LOGIC_OR) )
 {
 	restoreUnit(0);
 }
 
 Unit::Unit(const Unit* copy)
     :   bluePrintCoord(copy->bluePrintCoord), mySquadInfo(copy->mySquadInfo), id(copy->id),
-        target(-1), baseCoord(bluePrintCoord), averageCoord(bluePrintCoord),
+        target(nullptr), baseCoord(bluePrintCoord), averageCoord(bluePrintCoord),
         basicTacticMoveRandom( copy->basicTacticMoveRandom ),
         basicTacticAttackNearest( copy->basicTacticAttackNearest ),
         basicTacticRetreat( copy->basicTacticRetreat )
@@ -90,7 +90,7 @@ void Unit::restoreUnit(int teamID, const Coordinates atBaseP)
 	}
 
 	shipsAlive = mySquadInfo->squadSize;
-	target = -1;
+	target = nullptr;
 	team = teamID;
 }
 
@@ -126,12 +126,12 @@ void Unit::removeTactic(int n)
 	}
 }
 
-void Unit::setTarget(int i)
+void Unit::setTarget(Unit *unit)
 {
-	target = i;
+	target = unit;
 }
 
-int Unit::getTarget() const
+Unit* Unit::getTarget() const
 {
 	return target;
 }

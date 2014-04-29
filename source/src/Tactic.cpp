@@ -63,7 +63,7 @@ int AttackNearestEnemy::validateTactic(std::list<Action*> &newActions, TacticVal
 	if (tvd.enemyUnits.size() == 0 || tvd.validatingUnit->getNShipsAlive() == 0)
 		return 0;
 
-	tvd.validatingUnit->setTarget(-1);
+	tvd.validatingUnit->setTarget( nullptr );
 
 	int Ret = 0;
 
@@ -72,7 +72,7 @@ int AttackNearestEnemy::validateTactic(std::list<Action*> &newActions, TacticVal
 	if (nearestUnit == nullptr) return 0;
 
 	float minDist = tvd.combatData.getUnitDistance(tvd.validatingUnit, nearestUnit);
-    tvd.validatingUnit->setTarget( nearestUnit->getID() );
+    tvd.validatingUnit->setTarget( nearestUnit );
 
 	if (minDist < tvd.validatingUnit->getSquadBaseStats().range)
 	{
@@ -114,11 +114,10 @@ AttackWeakestEnemy::AttackWeakestEnemy(const TacticInfo& Info, const TacticTrigg
 
 int AttackWeakestEnemy::validateTactic(std::list<Action*> &newActions, TacticValidationData& tvd)
 {
-	tvd.validatingUnit->setTarget(-1);
-	if (tvd.enemyUnits.size() == 0)
-	{
+	if ( tvd.enemyUnits.empty() )
 		return 0;
-	}
+
+	tvd.validatingUnit->setTarget( nullptr );
 
 	int Ret = 0;
 	float minHP = 100;
@@ -159,7 +158,7 @@ int AttackWeakestEnemy::validateTactic(std::list<Action*> &newActions, TacticVal
 	}
 
     if (wekeastUnit == nullptr) return 0;
-    tvd.validatingUnit->setTarget( wekeastUnit->getID() );
+    tvd.validatingUnit->setTarget( wekeastUnit );
 
 	// Atacar naves da unidade aleatoriamente
     for (unsigned int i = 0; i < tvd.validatingUnit->nShips(); ++i)
@@ -190,27 +189,22 @@ AttackCollab::AttackCollab(const TacticInfo& Info, const TacticTrigger& trigger)
 
 int AttackCollab::validateTactic(std::list<Action*> &newActions, TacticValidationData& tvd)
 {
-	tvd.validatingUnit->setTarget(-1);
-
     // TODO: Algumas unidades chegam aqui com aliados invalidos! arrumar!
-	if (info.allyUnitID >= tvd.alliedUnits.size())
+	if (info.allyUnit == nullptr)
         return 0;
 
-	Unit *allyUnit = tvd.alliedUnits[info.allyUnitID];
-	if (allyUnit->getTarget() == -1)
+	tvd.validatingUnit->setTarget( nullptr );
+
+	const Unit *allyUnit = info.allyUnit;
+	if (allyUnit->getTarget() == nullptr)
         return 0;
 
-    int target = allyUnit->getTarget();
-
-    if (target >= (int)tvd.enemyUnits.size() || target < 0)
-        return 0;
-
-	Unit *enemyUnit = tvd.enemyUnits[target];
+    Unit* enemyUnit = allyUnit->getTarget();
 	if (enemyUnit->getNShipsAlive() == 0){
 		return 0;
 	}
 
-	tvd.validatingUnit->setTarget(target);
+	tvd.validatingUnit->setTarget( enemyUnit );
 
     double dist = tvd.combatData.getUnitDistance(tvd.validatingUnit, enemyUnit);
 //    double dist = tvd.validatingUnit->getAveragePos().distance(enemyUnit->getAveragePos());
@@ -261,7 +255,7 @@ std::string AttackCollab::printTactic()
 	std::string str = Tactic::printTactic();
 
 	str.append(" ");
-	str.append(std::to_string(info.allyUnitID));
+	str.append(std::to_string(info.allyUnit->getID()));
 
 	return str;
 }
@@ -281,16 +275,17 @@ int DefenseCollab::validateTactic(std::list<Action*> &newActions, TacticValidati
 	for (unsigned int j = 0; j < tvd.enemyUnits.size(); j++)
 	{
 		// Interrompe caso tenha encontrado um inimigo para atacar
-		if (tvd.enemyUnits[j]->getTarget() == info.allyUnitID)
+		if (tvd.enemyUnits[j]->getTarget() == info.allyUnit)
 		{
 			enemyUnit = tvd.enemyUnits[j];
-			tvd.validatingUnit->setTarget(j);
 			break;
 		}
 	}
 
 	if (enemyUnit == nullptr || enemyUnit->getNShipsAlive() == 0)
 		return 0;
+
+    tvd.validatingUnit->setTarget( enemyUnit );
 
     // Para cada ship da unidade
 	for (unsigned int i = 0; i < tvd.validatingUnit->nShips(); i++)
@@ -350,7 +345,7 @@ std::string DefenseCollab::printTactic()
 	str = Tactic::printTactic();
 
 	str.append(" ");
-	str.append(std::to_string(info.allyUnitID));
+	str.append(std::to_string(info.allyUnit->getID()));
 
 	return str;
 }
@@ -377,7 +372,7 @@ int Kamikase::validateTactic(std::list<Action*> &newActions, TacticValidationDat
 	if (nearestUnit == nullptr) return 0;
 
 	double minDist = tvd.combatData.getUnitDistance(tvd.validatingUnit, nearestUnit);
-    tvd.validatingUnit->setTarget( nearestUnit->getID() );
+    tvd.validatingUnit->setTarget( nearestUnit );
 
 	if (minDist < tvd.validatingUnit->getSquadBaseStats().range)
 	{
@@ -454,7 +449,7 @@ std::string Retreat::printTactic()
 	str = Tactic::printTactic();
 
 	str.append(" ");
-	str.append(std::to_string(info.allyUnitID)); // TODO: info.allyUnitID Not used for Retreat?
+	str.append(std::to_string(info.allyUnit->getID())); // TODO: info.allyUnitID Not used for Retreat?
 
 	return str;
 }
