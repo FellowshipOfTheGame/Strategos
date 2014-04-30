@@ -51,8 +51,8 @@ void GeneticAlgorithm::initialize()
     {
         while ((ent = readdir (dir)) != nullptr)
         {
-            if(ent->d_name[0] == 'r')
-            {
+//            if(ent->d_name[0] == 'r')
+//            {
                 std::string tmp = "GA/" + std::to_string(armyType) + "/";
 
                 tmp += ent->d_name;
@@ -62,7 +62,7 @@ void GeneticAlgorithm::initialize()
 
                 if(army != nullptr)
                     individuos.push_back(army);
-            }
+//            }
         }
 
         closedir (dir);
@@ -146,11 +146,11 @@ Army* GeneticAlgorithm::generateRandomArmy()
         if(gold - randValue*10 >= 0)
         {
             gold -= randValue*10;
-            randomArmy->createUnit(randValue, Coordinates(rand()%800, rand()%Game::getGlobalGame()->getHeight()%600));
+            randomArmy->createUnit(randValue, Coordinates(rand()%TEAM_AREA_WIDTH, rand()%TEAM_AREA_HEIGHT));
         }
     }
 
-    int nUnits = randomArmy->nUnits();
+    const int nUnits = randomArmy->nUnits();
     int randValue;
 
     //Go through each unit adding tactics
@@ -217,6 +217,8 @@ Army* GeneticAlgorithm::generateRandomArmy()
         }
     }
 
+    rectifyUnit(randomArmy);
+
     return randomArmy;
 }
 
@@ -224,13 +226,13 @@ void GeneticAlgorithm::run()
 {
     if (armyType != 0) return; // debug
 
-    for (unsigned int i = 0; i < 10; i++)
+    for (unsigned int i = 0; i < 5; i++)
     {
         std::vector<Army*> selected, rejected;
 
-#ifdef _DEBUG_
+//#ifdef _DEBUG_
         printf("GENERATION %d\n", i);
-#endif
+//#endif
         // Completar exercito para INDIVIDUOS_GERACAO
         // Adicionar 2 aleatorios sempre
         randomArmies( INDIVIDUOS_GERACAO - individuos.size() + 2 );
@@ -430,7 +432,6 @@ void GeneticAlgorithm::mutate(std::vector<Army*>& selected)
     }
 }
 
-
 //Crossover of Armies with same race/dictionary
 //Because armies can have different sizes (in units), we will use "Cut and Splice"
 void GeneticAlgorithm::crossOver(const Army *parent1, const Army *parent2, std::vector<Army*>& ind)
@@ -447,12 +448,13 @@ void GeneticAlgorithm::crossOver(const Army *parent1, const Army *parent2, std::
     unsigned int i;
     for (i = 0; i < parent1->nUnits() && i < parent2->nUnits(); ++i )
     {
+        // Adiciona do pai 1 para filho 1, 2 -> 2
         if (rand()%2 == 0)
         {
             child1->addUnit( new Unit( parent1->getUnitAtIndex(i) ) );
             child2->addUnit( new Unit( parent2->getUnitAtIndex(i) ) );
         }
-        else
+        else // Adiciona do pai 1 no filho 2, 2 -> 1
         {
             child1->addUnit( new Unit( parent2->getUnitAtIndex(i) ) );
             child2->addUnit( new Unit( parent1->getUnitAtIndex(i) ) );
@@ -468,11 +470,13 @@ void GeneticAlgorithm::crossOver(const Army *parent1, const Army *parent2, std::
         child2->addUnit( new Unit( parent2->getUnitAtIndex(i) ) );
     }
 
+    // Garantir valor das unidades
     GoldCap(child1);
     GoldCap(child2);
 
-    rectifyUnitID(child1);
-    rectifyUnitID(child2);
+    // Garantir consistencia das unidades
+    rectifyUnit(child1);
+    rectifyUnit(child2);
 
     //Save the new armies
     ind.push_back(child1);
@@ -519,7 +523,8 @@ double GeneticAlgorithm::evaluateFitness(const Army *ind)
     return fitness;
 }
 
-//limita a qtd de gold que os filhos terão
+// Limita a qtd de gold que a Army pode ter
+// Remove unidades aleatorias - NAO GARANTE CONSISTENCIA das taticas
 void GeneticAlgorithm::GoldCap(Army *army)
 {
 	int gold=0, n;
@@ -537,28 +542,29 @@ void GeneticAlgorithm::GoldCap(Army *army)
 		Unit* removed = army->removeUnit(n);
 		delete removed; // TODO: Talvez usar isso em outra army?
 	}
+
 //    printf("%d\n", army->nUnits());
 }
 
 // Garante que uma Army nao possui inconsistencia nas suas taticas
-void GeneticAlgorithm::rectifyUnitID(Army *ind)
+void GeneticAlgorithm::rectifyUnit(Army *ind)
 {
-    std::vector<Unit*> *units = ind->getUnitsReference();
+    const std::vector<Unit*>& units = ind->getUnits();
 
     // Criar mapa de units dessa Army
     std::set<const Unit*> unitsmap;
-    for (unsigned int i = 0; i < units->size(); i++){
-        units->at(i)->setID(i);
-        unitsmap.insert( units->at(i) );
+    for (unsigned int i = 0; i < units.size(); i++){
+        units[i]->setID(i);
+        unitsmap.insert( units[i] );
     }
 
     // Verificar todas as units
-    for (unsigned int i = 0; i < units->size(); i++)
+    for (unsigned int i = 0; i < units.size(); i++)
     {
         // Rectify AttackCollab and DefenseCollab
-        for (unsigned int j = 0; j < units->at(i)->getTacticSize(); j++)
+        for (unsigned int j = 0; j < units[i]->getTacticSize(); j++)
         {
-            Tactic *tactic = units->at(i)->getTacticAt(j);
+            Tactic *tactic = units[i]->getTacticAt(j);
 
             if(tactic->getType() == TACTIC_ATTACK_COLLAB
             || tactic->getType() == TACTIC_DEFENSE_COLAB
@@ -568,7 +574,10 @@ void GeneticAlgorithm::rectifyUnitID(Army *ind)
                 // or the reference does not belong to this army, give it a new ally
                 if (tactic->getInfo().allyUnit == nullptr
                 ||  unitsmap.find( tactic->getInfo().allyUnit ) == unitsmap.end() )
-                    tactic->setInfo( TacticInfo( ind->getUnitAtIndex( rand()%units->size() ) ) );
+                {
+                    const Unit* ally = ind->getUnitAtIndex( rand()%units.size() );
+                    tactic->setInfo( TacticInfo(ally) );
+                }
             }
         }
     }
@@ -590,7 +599,6 @@ Army* GeneticAlgorithm::higherFitnessArmy()
     return Army::loadArmy(name);
 }
 
-
 void GeneticAlgorithm::mutation(Army *ind, int degree)
 {
     int unitID = rand()%ind->nUnits();
@@ -604,6 +612,7 @@ void GeneticAlgorithm::mutation(Army *ind, int degree)
     switch(degree)
     {
         case MUTATION_UNIT_TYPE:{ //Mutate a unit type
+            // Pode causar inconsistencia nas taticas [rectify no final dessa funcao arruma]
             mutateUnitType(ind, unitID, newType);
         }
         break;
@@ -613,13 +622,17 @@ void GeneticAlgorithm::mutation(Army *ind, int degree)
         break;
 
         case MUTATION_UNIT_POSITION: //Mutate a unit position
-            unit->setBluePrintCoord( Coordinates(rand()%TEAM_AREA_WIDTH + 25, rand()%TEAM_AREA_HEIGHT ) );
+            unit->setBluePrintCoord( Coordinates(rand()%TEAM_AREA_WIDTH, rand()%TEAM_AREA_HEIGHT ) );
         break;
 
         default:
             break;
     }
+
+    // Garantir valor
     GoldCap(ind);
+    // Garantir consistencia
+    rectifyUnit(ind);
 }
 
 void GeneticAlgorithm::mutateUnitType(Army* ind, int unitID, int newType)

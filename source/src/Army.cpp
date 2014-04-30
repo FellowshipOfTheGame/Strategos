@@ -55,7 +55,6 @@ Army* Army::loadArmy(string armyname)
 	path.append(SAVE_PATH);
 	path.append(armyname);
 	path.append(SAVE_EXT);
-	fstream file;
 	Dictionary *workingDict;
 	string tag, name, dictName;
 	int unitType, isPlayer;
@@ -63,9 +62,10 @@ Army* Army::loadArmy(string armyname)
 
 	Coordinates position;
 
-//	printf("Loading Army: %s\n", path.c_str());
+	printf("Loading Army: %s\n", path.c_str());
 
-	file.open(path.c_str(), fstream::in);
+    // Abrir arquivo para leitura
+	ifstream file( path.c_str() );
 	if (!file.is_open())
 	{
 		printf("error on loading Army!\n");
@@ -215,16 +215,14 @@ Army* Army::loadArmy(string armyname)
 				file >> ruleID;
 //				printf("%d", ruleID);
 
-				TacticInfo info(0);
-
 				switch (ruleID)
 				{
 					case TACTIC_ATTACK_NEAREST_ENEMY:
-						tatica = new AttackNearestEnemy(info, tacticTrigger);
+						tatica = new AttackNearestEnemy(TacticInfo(nullptr), tacticTrigger);
 						break;
 
 					case TACTIC_ATTACK_WEAKEST_ENEMY:
-						tatica = new AttackWeakestEnemy(info, tacticTrigger);
+						tatica = new AttackWeakestEnemy(TacticInfo(nullptr), tacticTrigger);
 						break;
 
 					case TACTIC_ATTACK_COLLAB:{
@@ -232,10 +230,9 @@ Army* Army::loadArmy(string armyname)
 						file >> idOnVec;
 
 						if ( loadedArmy->getUnitAtIndex(idOnVec) ){ // Ja carregou a Unit
-                            info.allyUnit = loadedArmy->getUnitAtIndex(idOnVec);
-                            tatica = new AttackCollab(info, tacticTrigger);
+                            tatica = new AttackCollab(TacticInfo(loadedArmy->getUnitAtIndex(idOnVec)), tacticTrigger);
                         }else{  // Precisa carregar a Unit
-                            tatica = new AttackCollab(info, tacticTrigger);
+                            tatica = new AttackCollab(TacticInfo(nullptr), tacticTrigger);
                             to_fix_ally.push_back( AllyIDTactic(tatica, idOnVec) );
                         }
 
@@ -247,10 +244,9 @@ Army* Army::loadArmy(string armyname)
 						file >> idOnVec;
 
 						if ( loadedArmy->getUnitAtIndex(idOnVec) ){ // Ja carregou a Unit
-                            info.allyUnit = loadedArmy->getUnitAtIndex(idOnVec);
-                            tatica = new DefenseCollab(info, tacticTrigger);
+                            tatica = new DefenseCollab(TacticInfo(loadedArmy->getUnitAtIndex(idOnVec)), tacticTrigger);
                         }else{  // Precisa carregar a Unit
-                            tatica = new DefenseCollab(info, tacticTrigger);
+                            tatica = new DefenseCollab(TacticInfo(nullptr), tacticTrigger);
                             to_fix_ally.push_back( AllyIDTactic(tatica, idOnVec) );
                         }
 
@@ -258,17 +254,17 @@ Army* Army::loadArmy(string armyname)
 					}
 
 					case TACTIC_KAMIKASE:
-						tatica = new Kamikase(info, tacticTrigger);
+						tatica = new Kamikase(TacticInfo(nullptr), tacticTrigger);
 						break;
 
 					case TACTIC_RETREAT:{
 					    int ignoredValue; // TODO: Remove this from Retreat?
 						file >> ignoredValue;
-						tatica = new Retreat(info, tacticTrigger);
+						tatica = new Retreat(TacticInfo(nullptr), tacticTrigger);
 						break;}
 
 					case TACTIC_MOVE_RANDOM:
-						tatica = new MoveRandomly(info, tacticTrigger);
+						tatica = new MoveRandomly(TacticInfo(nullptr), tacticTrigger);
 						break;
 				}
 
@@ -276,19 +272,20 @@ Army* Army::loadArmy(string armyname)
 //				printf(" - ");
 			}
 		}
-
-		// Fix all tactics to have the Unit* pointer
-		for (int i = 0; i < to_fix_ally.size(); ++i)
-        {
-            if (to_fix_ally[i].id >= loadedArmy->nUnits())
-            {
-                printf("ERROR: Unit with invalid tactic ally index\n");
-                exit(8);
-            }
-
-            to_fix_ally[i].tactic->setInfo ( TacticInfo(loadedArmy->getUnitAtIndex(to_fix_ally[i].id) ) );
-        }
 	}
+
+	// Fix all tactics to have the Unit* pointer
+    for (int i = 0; i < to_fix_ally.size(); ++i)
+    {
+        if (to_fix_ally[i].id >= loadedArmy->nUnits())
+        {
+            printf("ERROR: Unit with invalid tactic ally index: %d, max: %d\n", to_fix_ally[i].id, loadedArmy->nUnits() );
+            exit(8);
+        }
+
+        to_fix_ally[i].tactic->setInfo( TacticInfo(loadedArmy->getUnitAtIndex(to_fix_ally[i].id) ) );
+    }
+
 //	printf("Army successfully loaded\n");
 	return loadedArmy;
 }
@@ -308,11 +305,8 @@ void Army::saveArmy(const Army *army, const string pth)
 	const std::vector<Unit*>& units = army->getUnits();
 
 	file << "name: " << army->getName() << endl;
-
 	file << "fitness: " << army->getFitness() << endl;
-
 	file << "player: " << army->getIsPlayer() << endl;
-
 	file << "dictionary: " << army->getDictionary()->title << endl << endl;
 
 	for (unsigned int i = 0; i < units.size(); i++)
@@ -320,6 +314,7 @@ void Army::saveArmy(const Army *army, const string pth)
 		file << "squadKind: " << units[i]->getType() << endl;
 		file << "position: " << units[i]->getBluePrintX() << " " << units[i]->getBluePrintY() << endl;
 
+        printf("NTactics: %d\n", units[i]->getTacticSize());
 		for (unsigned int j = 0; j < units[i]->getTacticSize(); j++)
 		{
 			file << "rule: ";
@@ -387,14 +382,10 @@ Unit* Army::removeUnit(unsigned int i)
 	totalShips -= (*it)->nShips();
 
 	units.erase(it);
-	vector<Unit*>::iterator iter = units.begin();
-	i = 0;
-	while (iter != units.end())
-	{
-		(*iter)->setID(i);
-		iter++;
-		i++;
-	}
+	for (int i = 0; i < units.size(); ++i)
+    {
+        units[i]->setID(i);
+    }
 
 	return removed;
 }

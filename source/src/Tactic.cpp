@@ -449,7 +449,10 @@ std::string Retreat::printTactic()
 	str = Tactic::printTactic();
 
 	str.append(" ");
-	str.append(std::to_string(info.allyUnit->getID())); // TODO: info.allyUnitID Not used for Retreat?
+	if (info.allyUnit == nullptr)
+        str.append(std::to_string(0)); // TODO: info.allyUnitID Not used for Retreat?
+	else
+        str.append(std::to_string(info.allyUnit->getID())); // TODO: info.allyUnitID Not used for Retreat?
 
 	return str;
 }

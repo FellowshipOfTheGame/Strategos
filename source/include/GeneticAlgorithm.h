@@ -13,8 +13,8 @@
 #include "Army.h"
 #include "Tactic.h"
 
-#define INDIVIDUOS_GERACAO  30
-#define SELECT_FROM_POP 20
+#define INDIVIDUOS_GERACAO  20
+#define SELECT_FROM_POP 10
 #define GOLD_AMOUNT 400
 
 struct PairAF
@@ -35,11 +35,12 @@ class GeneticAlgorithm : public Algorithm
 
         void initialize() override;
         void run() override;
+
         double evaluateFitness(const Army *ind);
         void selection();
         void randomArmies(int size);
         void normalizeFitness(std::vector<PairAF> *pairs);
-        void rectifyUnitID(Army *ind);
+        void rectifyUnit(Army *ind);
         void GoldCap(Army *army);
 
         static bool highToLow(PairAF p1, PairAF p2)

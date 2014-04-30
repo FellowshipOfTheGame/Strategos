@@ -47,6 +47,7 @@ Game::Game()
     for (int i = 0; i < 1; ++i)
     {
         algorithm[i]->initialize();
+        for (int j = 0; j < 5; ++j)
         algorithm[i]->run();
     }
     printf("GA time: %lfs\n", (clock()-time) / (double)CLOCKS_PER_SEC);
