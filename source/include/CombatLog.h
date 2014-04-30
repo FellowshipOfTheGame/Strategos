@@ -7,13 +7,14 @@
 #ifndef COMBATLOG_H_
 #define COMBATLOG_H_
 
-#include "Army.h"
-#include "Unit.h"
-#include "Ship.h"
 #include <time.h>
 #include <algorithm>
 #include <iostream>
 #include <vector>
+
+#include "Army.h"
+#include "Unit.h"
+#include "Ship.h"
 
 class CombatRoundItem
 {

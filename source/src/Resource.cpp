@@ -2,9 +2,7 @@
 #include <SDL_Image.h>
 
 #include "Global.h"
-
 #include "Resource.h"
-#include "GuiElements.h"
 
 ////Carregar uma imagem
 SDL_Texture *loadImageToMemory(const std::string &fileName)

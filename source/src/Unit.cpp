@@ -5,7 +5,6 @@
 
 #include "Global.h"
 #include "Unit.h"
-#include "Random.h"
 #include "Ship.h"
 
 #if defined(WIN32)

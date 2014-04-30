@@ -3,7 +3,8 @@
  *
  */
 
-#include "time.h"
+#include <time.h>
+
 #include "Random.h"
 #include "Game.h"
 #include "CombatLog.h"

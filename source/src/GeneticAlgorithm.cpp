@@ -5,12 +5,10 @@
 //
 
 #include <dirent.h>
-#include <time.h>
 #include <sstream>
 #include <set>
 
 #include <thread>
-
 
 #include "GeneticAlgorithm.h"
 #include "World.h"

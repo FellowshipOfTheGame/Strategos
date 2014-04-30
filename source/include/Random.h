@@ -9,9 +9,6 @@
 #ifndef _RANDOM_H
 #define _RANDOM_H_
 
-#include <stdlib.h>
-#include <time.h>
-
 void initRand(int seed);
 double drand();
 int nrand(int n);

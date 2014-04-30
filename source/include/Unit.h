@@ -22,7 +22,6 @@
 #include "Tactic.h"
 #include "Action.h"
 #include "Dictionary.h"
-#include "Image.h"
 
 void print_MaxActions();
 

@@ -2,17 +2,7 @@
  * Novo projeto Strategos
  */
 
-#include <time.h>
-
 #include "Game.h"
-#include "GeneticAlgorithm.h"
-
-/*
-    TODO:
-
-    Arrumar exercitos durante o combate, o da direita precisa ser invertido
-
-*/
 
 using namespace std;
 

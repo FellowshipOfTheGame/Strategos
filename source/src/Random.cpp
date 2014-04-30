@@ -8,6 +8,9 @@
 
 #include "Random.h"
 
+#include <stdlib.h>
+#include <time.h>
+
 void initRand(int seed)
 {
 	srand(seed);
