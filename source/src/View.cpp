@@ -11,7 +11,7 @@
 #include "Simulation.h"
 #include "Play.h"
 #include "Result.h"
-#include "global.h"
+#include "Global.h"
 
 View::View()
 {

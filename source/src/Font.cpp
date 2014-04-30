@@ -1,4 +1,4 @@
-#include "global.h"
+#include "Global.h"
 #include "Font.h"
 
 /** Define uma fonte, isto e, seu typeface */
