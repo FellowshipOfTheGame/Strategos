@@ -67,20 +67,20 @@ Create_Army::Create_Army(STATE previous) :
 	txt_ArmyName->setFont(Game::getGlobalGame()->getResourceMNGR()->GetFont("jostix-14"));
 	txt_ArmyName->setText("");
 	addGuiElement(txt_ArmyName);
-	dct = Game::getGlobalGame()->getDictionary(0);
+
 	cmb_species = new ComboBox(scrWidth * 0.4, scrHeight * 0.4, 150, 17, Game::getGlobalGame()->getResourceMNGR()->GetImage("combo-cmb"),
 	        ColorRGB8::Green, ColorRGB8::White, "CB01");
-	cmb_species->setFont(fntEthnocentric);
-	cmb_species->addText(dct->title);
-	dct = Game::getGlobalGame()->getDictionary(1);
-	cmb_species->addText(dct->title);
-	dct = Game::getGlobalGame()->getDictionary(2);
-	cmb_species->addText(dct->title);
 
+    cmb_species->setFont(fntEthnocentric);
+    for (int i = 0; i < Game::getGlobalGame()->getNDictionary(); ++i)
+    {
+        dct = Game::getGlobalGame()->getDictionary(i);
+        cmb_species->addText(dct->title);
+    }
 	addGuiElement(cmb_species);
 
+    // Default: Dict 0
 	dct = Game::getGlobalGame()->getDictionary(0);
-
 	lbl_Descr = new Label("Description", resource->GetFont("jostix-14"), ColorRGB8::Green, ColorRGB8::White, "LB02");
 	lbl_Descr->setPosition(scrWidth * 0.15, scrHeight * 0.6);
 	lbl_Descr->setText(dct->description);

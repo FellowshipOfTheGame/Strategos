@@ -587,7 +587,7 @@ std::string ComboBox::getText()
     if (selected < list.size())
         return this->list[this->selected];
 
-    return std::string();
+    return std::string("---");
 }
 
 void ComboBox::removeText(int n)

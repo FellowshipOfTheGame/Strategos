@@ -58,21 +58,25 @@ class Game
 			return view->getRendererFrameBuffer();
 		}
 
-		int getWidth()
+		int getWidth() const
 		{
 			return view->getWidth();
 		}
-		int getHeight()
+
+		int getHeight() const
 		{
 			return view->getHeight();
 		}
-        int getScreenBPP()
+
+        int getScreenBPP() const
         {
             return view->getBPP();
         }
+
 		Resource *getResourceMNGR();
 		Dictionary *getDictionary(int id);
-		Dictionary *getDictionary(std::string name);
+		Dictionary *getDictionary(const std::string& name) const;
+		int getNDictionary() const;
 
         void generateSprites(const Dictionary *d){
             for (unsigned int i = 0; i < dict.size(); ++i)
@@ -91,15 +95,15 @@ class Game
 		unsigned long createNewGID();
 		void readCFGKey(const char *key, void *info);
 
-		Army* getEditingArmy();
+		Army* getEditingArmy() const;
 		void setEditingArmy(Army* editingArmy);
 
-		Army* getArmy1();
-		void setArmy1(std::string str);
+		Army* getArmy1() const;
+		void setArmy1(const std::string& str);
 		void setArmy1(Army *a);
 
-		Army* getArmy2();
-		void setArmy2(std::string str);
+		Army* getArmy2() const;
+		void setArmy2(const std::string& str);
 		void setArmy2(Army *a);
 
 //        void setGA(GeneticAlgorithm *ga);

@@ -100,7 +100,7 @@ Dictionary* Game::getDictionary(int id)
 	return dict[id];
 }
 
-Dictionary *Game::getDictionary(std::string name)
+Dictionary *Game::getDictionary(const std::string& name) const
 {
 	for (unsigned int i = 0; i < dict.size(); ++i)
 	{
@@ -111,6 +111,11 @@ Dictionary *Game::getDictionary(std::string name)
 	}
 
 	return nullptr;
+}
+
+int Game::getNDictionary() const
+{
+    return dict.size();
 }
 
 SDL_Renderer *Game::getRenderer()
@@ -128,7 +133,7 @@ unsigned long Game::createNewGID()
 	return 0;
 }
 
-Army* Game::getEditingArmy()
+Army* Game::getEditingArmy() const
 {
 	return editingArmy;
 }
@@ -154,12 +159,12 @@ void Game::loadDictionaries()
 	printf("== Loaded %u dictionaries ==\n", dict.size());
 }
 
-Army* Game::getArmy1()
+Army* Game::getArmy1() const
 {
 	return armySim1;
 }
 
-void Game::setArmy1(std::string str)
+void Game::setArmy1(const std::string& str)
 {
 	if (armySim1 != nullptr)
 		delete armySim1;
@@ -173,12 +178,12 @@ void Game::setArmy1(Army *a)
 	armySim1 = a;
 }
 
-Army* Game::getArmy2()
+Army* Game::getArmy2() const
 {
 	return armySim2;
 }
 
-void Game::setArmy2(std::string str)
+void Game::setArmy2(const std::string& str)
 {
 	if (armySim2 != nullptr)
 		delete armySim2;

@@ -12,45 +12,90 @@
 
 using namespace std;
 
-Army* Army::clone( const Army* army )
+Tactic* Army::loadTactic(std::ifstream& file, const TacticTrigger& tacticTrigger, std::vector<AllyIDTactic>& to_fix_ally)
 {
-    Army *clone = new Army(army->name, army->dictionary);
-    clone->fitness = army->getFitness();
+    Tactic *tatica = nullptr;
 
-    for (int i = 0; i < army->units.size(); ++i)
+    int ruleID;
+    file >> ruleID;
+//				printf("%d", ruleID);
+
+    switch (ruleID)
     {
-        clone->addUnit( new Unit( army->units[i] ) );
+        case TACTIC_ATTACK_NEAREST_ENEMY:
+            tatica = new AttackNearestEnemy(TacticInfo(nullptr), tacticTrigger);
+            break;
+
+        case TACTIC_ATTACK_WEAKEST_ENEMY:
+            tatica = new AttackWeakestEnemy(TacticInfo(nullptr), tacticTrigger);
+            break;
+
+        case TACTIC_ATTACK_COLLAB:{
+            int idOnVec;
+            file >> idOnVec;
+
+            tatica = new AttackCollab(TacticInfo(nullptr), tacticTrigger);
+            to_fix_ally.push_back( AllyIDTactic(tatica, idOnVec) );
+
+            break;
+        }
+
+        case TACTIC_DEFENSE_COLAB:{
+            int idOnVec;
+            file >> idOnVec;
+
+            tatica = new DefenseCollab(TacticInfo(nullptr), tacticTrigger);
+            to_fix_ally.push_back( AllyIDTactic(tatica, idOnVec) );
+
+            break;
+        }
+
+        case TACTIC_KAMIKASE:
+            tatica = new Kamikase(TacticInfo(nullptr), tacticTrigger);
+            break;
+
+        case TACTIC_RETREAT:{
+            int ignoredValue; // TODO: Remove this from Retreat?
+            file >> ignoredValue;
+            tatica = new Retreat(TacticInfo(nullptr), tacticTrigger);
+            break;}
+
+        case TACTIC_MOVE_RANDOM:
+            tatica = new MoveRandomly(TacticInfo(nullptr), tacticTrigger);
+            break;
+
+        default:
+            printf("Unkown tactic: %d\n", ruleID);
+            return nullptr;
     }
 
-    return clone;
+    return tatica;
 }
 
-Army::Army(const string& armyName, const Dictionary *armyDictionary) :
-		name(armyName), dictionary(armyDictionary), motherUnit(0), fitness(0)
+Trigger* Army::loadTrigger(ifstream& file)
 {
-	totalShips = 0;
-	isPlayer = 0;
-	fitness =0;
+    int trigger, value, operation;
+    file >> trigger;
+    file >> value;
+    file >> operation;
+//                printf("%d%d.%d", trigger, value, operation);
+    switch (trigger)
+    {
+        case TRIGGER_ALWAYS:
+            return new Trigger_Always();
+
+        case TRIGGER_LIFE:
+            return new Trigger_Life(value, operation);
+
+        default:
+            printf("ERROR: Unkown Trigger: %d\n", trigger);
+            return nullptr;
+    }
+
+    return nullptr;
 }
 
-Army::~Army()
-{
-	for (unsigned int i = 0; i < units.size(); ++i){
-		delete units[i];
-	}
-}
-
-void Army::Lock()
-{
-    army_mutex.lock();
-}
-
-void Army::Unlock()
-{
-    army_mutex.unlock();
-}
-
-Army* Army::loadArmy(string armyname)
+Army* Army::loadArmy(const string& armyname)
 {
 	Army *loadedArmy = nullptr;
 	string path;
@@ -73,14 +118,6 @@ Army* Army::loadArmy(string armyname)
 		printf("error on loading Army!\n");
 		return nullptr;
 	}
-
-    struct AllyIDTactic{
-        AllyIDTactic(Tactic* t, int ID) : tactic(t), id(ID)
-        {}
-
-        Tactic* tactic;
-        int id;
-    };
 
     std::vector<AllyIDTactic> to_fix_ally;
 
@@ -157,119 +194,28 @@ Army* Army::loadArmy(string armyname)
 
 				// Ler Triggers
 				Trigger *trig1=0, *trig2=0;
-				int trigger, value, operation, logic;
+				int logic;
 
 				// LER PRIMEIRO TRIGGER
-				file >> trigger;
-				file >> value;
-                file >> operation;
-//                printf("%d%d.%d", trigger, value, operation);
-				switch (trigger)
-				{
-					case TRIGGER_ALWAYS:
-						trig1 = new Trigger_Always();
-                    break;
-
-					case TRIGGER_LIFE:
-						trig1 = new Trigger_Life(value, operation);
-                    break;
-
-                    default:
-                        printf("ERROR: Unkown Trigger: %d\n", trigger);
-                        delete loadedArmy;
-
-                        return nullptr;
-                    break;
-				}
+				trig1 = loadTrigger(file);
+				if (trig1 == nullptr){
+                    delete loadedArmy;
+                    return nullptr;
+                }
 
 				// Ler Operador Logico
 				file >> logic;
 //				printf("%d", logic);
 
 				// LER SEGUNDO TRIGGER
-				file >> trigger;
-				file >> value;
-                file >> operation;
-//                printf("%d%d.%d", trigger, value, operation);
-				switch (trigger)
-				{
-					case TRIGGER_ALWAYS:
-						trig2 = new Trigger_Always;
-                    break;
-
-					case TRIGGER_LIFE:
-						trig2 = new Trigger_Life(value, operation);
-                    break;
-
-                    default:
-                        printf("ERROR: Unkown Trigger: %d\n", trigger);
-                        delete loadedArmy;
-
-                        return nullptr;
-                    break;
-				}
-
-				TacticTrigger tacticTrigger(trig1, trig2, logic);
+				trig2 = loadTrigger(file);
+				if (trig2 == nullptr){
+                    delete loadedArmy;
+                    return nullptr;
+                }
 
 				// Ler valores de tatica
-				Tactic *tatica = nullptr;
-				int ruleID;
-				file >> ruleID;
-//				printf("%d", ruleID);
-
-				switch (ruleID)
-				{
-					case TACTIC_ATTACK_NEAREST_ENEMY:
-						tatica = new AttackNearestEnemy(TacticInfo(nullptr), tacticTrigger);
-						break;
-
-					case TACTIC_ATTACK_WEAKEST_ENEMY:
-						tatica = new AttackWeakestEnemy(TacticInfo(nullptr), tacticTrigger);
-						break;
-
-					case TACTIC_ATTACK_COLLAB:{
-						int idOnVec;
-						file >> idOnVec;
-
-						if ( loadedArmy->getUnitAtIndex(idOnVec) ){ // Ja carregou a Unit
-                            tatica = new AttackCollab(TacticInfo(loadedArmy->getUnitAtIndex(idOnVec)), tacticTrigger);
-                        }else{  // Precisa carregar a Unit
-                            tatica = new AttackCollab(TacticInfo(nullptr), tacticTrigger);
-                            to_fix_ally.push_back( AllyIDTactic(tatica, idOnVec) );
-                        }
-
-						break;
-                    }
-
-					case TACTIC_DEFENSE_COLAB:{
-					    int idOnVec;
-						file >> idOnVec;
-
-						if ( loadedArmy->getUnitAtIndex(idOnVec) ){ // Ja carregou a Unit
-                            tatica = new DefenseCollab(TacticInfo(loadedArmy->getUnitAtIndex(idOnVec)), tacticTrigger);
-                        }else{  // Precisa carregar a Unit
-                            tatica = new DefenseCollab(TacticInfo(nullptr), tacticTrigger);
-                            to_fix_ally.push_back( AllyIDTactic(tatica, idOnVec) );
-                        }
-
-                        break;
-					}
-
-					case TACTIC_KAMIKASE:
-						tatica = new Kamikase(TacticInfo(nullptr), tacticTrigger);
-						break;
-
-					case TACTIC_RETREAT:{
-					    int ignoredValue; // TODO: Remove this from Retreat?
-						file >> ignoredValue;
-						tatica = new Retreat(TacticInfo(nullptr), tacticTrigger);
-						break;}
-
-					case TACTIC_MOVE_RANDOM:
-						tatica = new MoveRandomly(TacticInfo(nullptr), tacticTrigger);
-						break;
-				}
-
+				Tactic *tatica = loadTactic(file, TacticTrigger(trig1, trig2, logic), to_fix_ally);
 				unit->addTactic(tatica);
 //				printf(" - ");
 			}
@@ -277,7 +223,7 @@ Army* Army::loadArmy(string armyname)
 	}
 
 	// Fix all tactics to have the Unit* pointer
-    for (int i = 0; i < to_fix_ally.size(); ++i)
+    for (unsigned int i = 0; i < to_fix_ally.size(); ++i)
     {
         if (to_fix_ally[i].id >= loadedArmy->nUnits())
         {
@@ -328,6 +274,44 @@ void Army::saveArmy(const Army *army, const string pth)
 
 	file.close();
 //	printf ("Army's ready\n");
+}
+
+Army* Army::clone( const Army* army )
+{
+    Army *clone = new Army(army->name, army->dictionary);
+    clone->fitness = army->getFitness();
+
+    for (unsigned int i = 0; i < army->units.size(); ++i)
+    {
+        clone->addUnit( new Unit( army->units[i] ) );
+    }
+
+    return clone;
+}
+
+Army::Army(const string& armyName, const Dictionary *armyDictionary) :
+		name(armyName), dictionary(armyDictionary), motherUnit(0), fitness(0)
+{
+	totalShips = 0;
+	isPlayer = 0;
+	fitness =0;
+}
+
+Army::~Army()
+{
+	for (unsigned int i = 0; i < units.size(); ++i){
+		delete units[i];
+	}
+}
+
+void Army::Lock()
+{
+    army_mutex.lock();
+}
+
+void Army::Unlock()
+{
+    army_mutex.unlock();
 }
 
 // Sets
@@ -384,7 +368,7 @@ Unit* Army::removeUnit(unsigned int i)
 	totalShips -= (*it)->nShips();
 
 	units.erase(it);
-	for (int i = 0; i < units.size(); ++i)
+	for (unsigned int i = 0; i < units.size(); ++i)
     {
         units[i]->setID(i);
     }
