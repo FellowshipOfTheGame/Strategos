@@ -290,7 +290,7 @@ void GeneticAlgorithm::run()
 //    exit(0);
 }
 
-void GeneticAlgorithm::selectFromPop(int n, std::vector<Army*>& selected, std::vector<Army*>& rejected)
+void GeneticAlgorithm::selectFromPop(unsigned int n, std::vector<Army*>& selected, std::vector<Army*>& rejected)
 {
     // Executar batalhas para calcular o fitnes
 #ifdef _DEBUG_
@@ -338,7 +338,7 @@ void GeneticAlgorithm::selectFromPop(int n, std::vector<Army*>& selected, std::v
     }
 }
 
-void GeneticAlgorithm::threadSimulate( int from, int n )
+void GeneticAlgorithm::threadSimulate( unsigned int from, unsigned int n )
 {
     for (unsigned int i = from; i < from+n; ++i)
     {

@@ -71,7 +71,7 @@ class GeneticAlgorithm : public Algorithm
          *          Ordenados em ordem decrescente de fitness
          * \param n Numero de individuos para selecionar
          */
-        void selectFromPop(int n, std::vector<Army*>& selected, std::vector<Army*>& rejected);
+        void selectFromPop(unsigned int n, std::vector<Army*>& selected, std::vector<Army*>& rejected);
 
         /// Efetua o crossover ateh popular os INDIVIDUOS_GERACAO indivudos
         void crossOver(std::vector<Army*>& selected);
@@ -83,7 +83,7 @@ class GeneticAlgorithm : public Algorithm
         void mutate(std::vector<Army*>& selected);
 
         //
-        void threadSimulate( int from, int n );
+        void threadSimulate( unsigned int from, unsigned int n );
 };
 
 #endif

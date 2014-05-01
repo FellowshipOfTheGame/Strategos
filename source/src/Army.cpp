@@ -225,7 +225,7 @@ Army* Army::loadArmy(const string& armyname)
 	// Fix all tactics to have the Unit* pointer
     for (unsigned int i = 0; i < to_fix_ally.size(); ++i)
     {
-        if (to_fix_ally[i].id >= loadedArmy->nUnits())
+        if (to_fix_ally[i].id >= (int) loadedArmy->nUnits())
         {
             printf("ERROR: Unit with invalid tactic ally index: %d, max: %d\n", to_fix_ally[i].id, loadedArmy->nUnits() );
             exit(8);
