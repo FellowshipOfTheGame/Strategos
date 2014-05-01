@@ -4,6 +4,11 @@
 //
 //
 
+#ifdef _UNIX_
+    #include <sys/types.h>
+    #include <sys/stat.h>
+#endif // _UNIX_
+
 #include <dirent.h>
 #include <sstream>
 #include <set>
@@ -46,32 +51,39 @@ void GeneticAlgorithm::initialize()
 
     std::string dirpath = "assets/saves/GA/" + std::to_string(armyType) + "/";
 
-    //Carrega exercitos prontos (tirar o -blah para funcionar)
-    if ((dir = opendir(dirpath.c_str())) != nullptr)
+    dir = opendir(dirpath.c_str());
+    if (dir == nullptr)
     {
-        while ((ent = readdir (dir)) != nullptr)
-        {
-//            if(ent->d_name[0] == 'r')
-//            {
-                std::string tmp = "GA/" + std::to_string(armyType) + "/";
+        printf("Creating directory %s\n", dirpath.c_str());
 
-                tmp += ent->d_name;
-                tmp.replace(tmp.length()-4, 4, "\0");
-
-                Army *army = Army::loadArmy(tmp);
-
-                if(army != nullptr)
-                    individuos.push_back(army);
-//            }
-        }
-
-        closedir (dir);
-    }
-    else
-    {
-        printf("Could not open directory\n");
+#ifdef _UNIX_
+        mkdir(dirpath.c_str(), S_IRUSR | S_IWUSR | S_IROTH | S_IWOTH );
+#else
         mkdir(dirpath.c_str());
+#endif
+
+        if ( (dir = opendir(dirpath.c_str())) == nullptr )
+        {
+            printf("couldn't create directory %s\n", dirpath.c_str());
+            return;
+        }
     }
+
+    // Carregar exercitos prontos
+    while ((ent = readdir (dir)) != nullptr)
+    {
+        std::string tmp = "GA/" + std::to_string(armyType) + "/";
+
+        tmp += ent->d_name;
+        tmp.replace(tmp.length()-4, 4, "\0");
+
+        Army *army = Army::loadArmy(tmp);
+
+        if(army != nullptr)
+            individuos.push_back(army);
+    }
+
+    closedir (dir);
 
     srand((unsigned)time(nullptr));
 
