@@ -20,7 +20,8 @@
 #include <map>
 
 #include "Image.h"
-#include "Font.h"
+
+class Font;
 
 SDL_Texture *loadImageToMemory(const std::string &fileName);
 
