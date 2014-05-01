@@ -4,6 +4,8 @@
  */
 
 #include "Global.h"
+#include "Game.h"
+
 #include "Unit.h"
 #include "Ship.h"
 

@@ -9,6 +9,7 @@
 */
 
 #include "Global.h"
+#include "Game.h"
 #include "Action.h"
 #include "World.h"
 #include "Unit.h"

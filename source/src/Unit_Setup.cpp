@@ -6,7 +6,10 @@
  */
 
 #include "Unit_Setup.h"
+
 #include "Global.h"
+#include "Game.h"
+
 #include "Image.h"
 //#include "GuiTactics.cpp"
 //TODO arrumar blueprint

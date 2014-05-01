@@ -11,8 +11,10 @@
 #include <thread>
 
 #include "GeneticAlgorithm.h"
-#include "World.h"
+
 #include "Global.h"
+#include "Game.h"
+#include "World.h"
 
 #define MUTATION_UNIT_TYPE      0
 #define MUTATION_UNIT_TACTIC    1

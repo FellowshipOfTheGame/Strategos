@@ -1,10 +1,14 @@
+#include <vector>
+#include <math.h>
+
 #include "GuiTactics.h"
+
 #include "Global.h"
+#include "Game.h"
 #include "Image.h"
 #include "Unit.h"
 #include "Tactic.h"
-#include "math.h"
-#include <vector>
+
 using namespace ColorRGB8;
 //TODO arrumar posicionamento dos elementos
 /****************************** TacticSet ******************************/

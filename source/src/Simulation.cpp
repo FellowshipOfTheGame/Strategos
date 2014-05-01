@@ -1,7 +1,9 @@
 //  Simulation.cpp
 
 #include "Simulation.h"
+
 #include "Global.h"
+#include "Game.h"
 
 #if defined(WIN32)
     #include "SDL2_gfx\SDL2_gfxPrimitives.h"

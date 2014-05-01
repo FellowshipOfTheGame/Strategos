@@ -1,8 +1,11 @@
+
 #include <dirent.h>
 #include <SDL_Image.h>
 
-#include "Global.h"
 #include "Resource.h"
+
+#include "Global.h"
+#include "Game.h"
 
 ////Carregar uma imagem
 SDL_Texture *loadImageToMemory(const std::string &fileName)

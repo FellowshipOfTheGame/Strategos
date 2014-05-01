@@ -5,8 +5,9 @@
  *
  */
 
-#include "Create_Army.h"
 #include "Global.h"
+#include "Game.h"
+#include "Create_Army.h"
 #include "Image.h"
 
 Create_Army::Create_Army(STATE previous) :

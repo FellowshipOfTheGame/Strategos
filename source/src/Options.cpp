@@ -4,7 +4,9 @@
  */
 
 #include "Options.h"
+
 #include "Global.h"
+#include "Game.h"
 
 Options::Options(STATE previous) : StateMachine(previous, OPTIONS, OPTIONS)
 {

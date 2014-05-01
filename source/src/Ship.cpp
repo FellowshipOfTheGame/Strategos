@@ -1,4 +1,7 @@
+
 #include "Ship.h"
+
+#include "CombatLog.h"
 #include "Global.h"
 #include "Random.h"
 

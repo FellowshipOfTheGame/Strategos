@@ -1,7 +1,10 @@
+
+#include <vector>
+
 #include "Global.h"
+#include "Game.h"
 #include "GuiElements.h"
 #include "Ship.h"
-#include <vector>
 
 #include "SDL2_gfx\SDL2_gfxPrimitives.h"
 

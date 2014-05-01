@@ -6,8 +6,10 @@
  */
 
 #include "Menu.h"
+
 #include "Global.h"
 
+#include "Game.h"
 
 Menu::Menu(STATE previous) : StateMachine(previous, MENU, MENU)
 {

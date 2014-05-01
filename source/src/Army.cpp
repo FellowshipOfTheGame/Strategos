@@ -5,6 +5,8 @@
 #include <stdio.h>
 
 #include "Global.h"
+#include "Game.h"
+
 #include "Trigger.h"
 #include "Army.h"
 

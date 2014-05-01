@@ -1,8 +1,10 @@
 
 #include "Image.h"
-#include "SDL2_rotozoom.h"
 
 #include "Global.h"
+#include "Game.h"
+
+#include "SDL2_rotozoom.h" // from SDL_GFX
 
 bool compareColors(const SDL_Color color1, const SDL_Color color2)
 {

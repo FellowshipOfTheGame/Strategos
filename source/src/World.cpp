@@ -4,7 +4,9 @@
  */
 
 #include "World.h"
+
 #include "Global.h"
+#include "Game.h"
 
 using namespace std;
 

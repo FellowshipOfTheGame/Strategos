@@ -1,6 +1,8 @@
 #include "Global.h"
 #include "Font.h"
 
+#include <stdio.h>
+
 /** Define uma fonte, isto e, seu typeface */
 Font::Font(TTF_Font *font_, int ptsize_) :
 		ptsize(ptsize_)

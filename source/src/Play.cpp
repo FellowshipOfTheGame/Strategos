@@ -7,7 +7,9 @@
 //
 
 #include "Play.h"
+
 #include "Global.h"
+#include "Game.h"
 
 
 Play::Play(STATE previous) :

@@ -1,5 +1,7 @@
 #include "Result.h"
+
 #include "Global.h"
+#include "Game.h"
 #include "Image.h"
 #include "CombatLog.h"
 

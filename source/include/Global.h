@@ -10,11 +10,7 @@
 #ifndef _GLOBAL_H_
 #define _GLOBAL_H_
 
-#include <string>
-#include <vector>
-#include <cstdio>
-#include <math.h>
-#include "Game.h"
+#include <SDL.h>
 
 #define FRAMES_PER_SECOND       25
 #define RULE_PARAM              7
