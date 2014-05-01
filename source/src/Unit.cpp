@@ -9,12 +9,7 @@
 #include "Unit.h"
 #include "Ship.h"
 
-#if defined(WIN32)
-    #include "SDL2_gfx\SDL2_gfxPrimitives.h"
-#elif defined(__APPLE__)
-    #include "SDL2_gfx/SDL2_gfxPrimitives.h"
-#endif // _MAC_OS_
-
+#include "SDL2_gfx/SDL2_gfxPrimitives.h"
 
 #define LIFE_BAR_SIZE   70
 

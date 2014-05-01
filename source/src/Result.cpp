@@ -5,13 +5,7 @@
 #include "Image.h"
 #include "CombatLog.h"
 
-#ifdef WIN32
-#include "SDL2_gfx\SDL2_gfxPrimitives.h"
-#endif
-
-#ifdef __APPLE__
-#include "SDL_gfx/SDL_gfxPrimitives.h"
-#endif // _MAC_OS_
+#include "SDL2_gfx/SDL2_gfxPrimitives.h"
 
 Result::Result(STATE previous) :
 	StateMachine(previous, RESULTS, RESULTS)

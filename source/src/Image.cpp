@@ -4,8 +4,6 @@
 #include "Global.h"
 #include "Game.h"
 
-#include "SDL2_rotozoom.h" // from SDL_GFX
-
 bool compareColors(const SDL_Color color1, const SDL_Color color2)
 {
     if (color1.r != color2.r) return false;

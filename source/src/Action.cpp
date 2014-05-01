@@ -15,7 +15,7 @@
 #include "Unit.h"
 #include "Ship.h"
 
-#include "SDL2_gfxPrimitives.h"
+#include "SDL2_gfx/SDL2_gfxPrimitives.h"
 
 static int _N_ACTIONS_ = 0;
 static int _N_ACTIONS_EXPLOSION_ = 0;

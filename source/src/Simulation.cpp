@@ -5,11 +5,7 @@
 #include "Global.h"
 #include "Game.h"
 
-#if defined(WIN32)
-    #include "SDL2_gfx\SDL2_gfxPrimitives.h"
-#elif defined(__APPLE__)
-    #include "SDL2_gfx/SDL2_gfxPrimitives.h"
-#endif // _MAC_OS_
+#include "SDL2_gfx/SDL2_gfxPrimitives.h"
 
 Simulation::Simulation(STATE previous)
     : StateMachine(previous, GAMEPLAY, GAMEPLAY),
