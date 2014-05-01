@@ -318,6 +318,7 @@ void Unit_Setup::Logic()
 	//verifica unit selecionada
 	//verifica se um componente foi modificado
 	updateGuiElements();
+
 	//faz as naves se moverem
 	Game::getGlobalGame()->getEditingArmy()->update();
 }

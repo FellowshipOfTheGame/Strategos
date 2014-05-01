@@ -262,7 +262,7 @@ void Army::saveArmy(const Army *army, const string pth)
 		file << "squadKind: " << units[i]->getType() << endl;
 		file << "position: " << units[i]->getBluePrintX() << " " << units[i]->getBluePrintY() << endl;
 
-        printf("NTactics: %d\n", units[i]->getTacticSize());
+//        printf("NTactics: %d\n", units[i]->getTacticSize());
 		for (unsigned int j = 0; j < units[i]->getTacticSize(); j++)
 		{
 			file << "rule: ";
@@ -471,6 +471,8 @@ void Army::updateActions()
 
 int Army::update()
 {
+    if (units.empty()) return 0;
+
     int t = 0;
 
     // Se a nave mae estiver morta, o exercito perdeu.
