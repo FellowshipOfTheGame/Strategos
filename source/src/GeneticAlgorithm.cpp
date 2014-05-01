@@ -28,6 +28,23 @@
 
 //#define _DEBUG_
 
+// Static
+Trigger* GeneticAlgorithm::generateRandomTrigger()
+{
+    int randValue = rand()%TRIGGER_TOTAL;
+
+    switch (randValue)
+    {
+        case TRIGGER_ALWAYS:
+            return new Trigger_Always();
+
+        case TRIGGER_LIFE:
+            return new Trigger_Life(rand()%100+1, rand()%TRIGGER_OPERATION_TOTAL);
+    }
+
+    return nullptr;
+}
+
 GeneticAlgorithm::GeneticAlgorithm(int _armyType)
     : Algorithm(), armyType(_armyType)
 {
@@ -107,7 +124,6 @@ void GeneticAlgorithm::randomArmies(int size)
     // Criar o maximo de naves possivel pois a quantidade de illenium gasta ainda nao esta entrando no fitness
     for(int i = 1; i <= size; i++)
     {
-
 #ifdef _DEBUG_
         printf("Generating %d... ", i);
 #endif
@@ -120,15 +136,12 @@ void GeneticAlgorithm::randomArmies(int size)
 
         //Save created army
         individuos.push_back(randomArmy);
-
-//        Army::saveArmy(randomArmy, directory.c_str());
     }
 
 }
 
 Army* GeneticAlgorithm::generateRandomArmy()
 {
-    Trigger* triggers[2];
     Army *randomArmy = 0;
     int gold = GOLD_AMOUNT;
 
@@ -173,24 +186,10 @@ Army* GeneticAlgorithm::generateRandomArmy()
         // Gera K taticas
         for(int k = 0; k < 4; k++)
         {
+            // Gerar TacticTrigger
             // Gera 2 triggers, seus operadores e valores associados
-            for(int l = 0; l < 2; l++)
-            {
-                randValue = rand()%TRIGGER_TOTAL;
-
-                switch (randValue)
-                {
-                    case TRIGGER_ALWAYS:
-                        triggers[l] = new Trigger_Always();
-                    break;
-
-                    case TRIGGER_LIFE:
-                        triggers[l] = new Trigger_Life(rand()%100+1, rand()%3);
-                    break;
-                }
-            }
-
-           TacticTrigger tacticTrig(triggers[0], triggers[1], rand()%2);
+            TacticTrigger tacticTrig(generateRandomTrigger(),
+                                     generateRandomTrigger(), rand()%2);
 
             //Gera a tatica
             Tactic *tactic=0;
@@ -198,10 +197,10 @@ Army* GeneticAlgorithm::generateRandomArmy()
             switch (randValue)
             {
                 case 0:
-                    tactic = new AttackNearestEnemy(TacticInfo(0), tacticTrig);
+                    tactic = new AttackNearestEnemy(TacticInfo(nullptr), tacticTrig);
                     break;
                 case 1:
-                    tactic = new AttackWeakestEnemy(TacticInfo(0), tacticTrig);
+                    tactic = new AttackWeakestEnemy(TacticInfo(nullptr), tacticTrig);
                     break;
                 case 2:
                     tactic = new AttackCollab(TacticInfo(randomArmy->getUnitAtIndex(rand()%nUnits)), tacticTrig);
@@ -210,13 +209,14 @@ Army* GeneticAlgorithm::generateRandomArmy()
                     tactic = new DefenseCollab(TacticInfo(randomArmy->getUnitAtIndex(rand()%nUnits)), tacticTrig);
                     break;
                 case 4:
-                    tactic = new Kamikase(TacticInfo(0), tacticTrig);
+                    tactic = new Kamikase(TacticInfo(nullptr), tacticTrig);
                     break;
                 case 5:
-                    tactic = new Retreat(TacticInfo(0), tacticTrig);
+                    tactic = new Retreat(TacticInfo(nullptr), tacticTrig);
                     break;
             }
 
+            // Evitar que a nave mae recebe alguns tipos de taticas
             if ((unit->getType()==0 && (randValue<2)) || (unit->getType()!=0))
             {
                  unit->addTactic(tactic);
@@ -264,7 +264,6 @@ void GeneticAlgorithm::run()
         // Apply Mutation
         mutate(selected);
 
-//        printf("Iteration Individuals: %d\n", selected.size());
         for (unsigned int j = 0; j < selected.size(); ++j){
             individuos.push_back(selected[j]);
         }
@@ -651,11 +650,12 @@ void GeneticAlgorithm::mutateUnitType(Army* ind, int unitID, int newType)
 {
     Unit *removed = ind->getUnitAtIndex(unitID);
 
-    if(removed->getType() == 0)    //Do not let mothership's type mutate
+    // Do not let mothership's type mutate
+    if(removed->getType() == 0)
         return;
 
     while (newType == removed->getType())
-        newType = rand()%(N_UNIT_TYPE-1) + 1;   //Mothership is always 0
+        newType = rand()%(N_UNIT_TYPE-1) + 1;   // Mothership is always 0
 
     ind->removeUnit(unitID);
 
@@ -683,8 +683,6 @@ void GeneticAlgorithm::mutateTactic(Tactic *tactic, int degree)
     {
         case 0: //  -> Trigger type
         {
-            newValue = rand()%TRIGGER_TOTAL;
-
             if (whichTrigger == 0){
                 triggerValue = tactic->getTacticTrigger().getTriggerA()->getValue();
                 triggerOperator = tactic->getTacticTrigger().getTriggerA()->getRelationalOperator();
@@ -693,22 +691,24 @@ void GeneticAlgorithm::mutateTactic(Tactic *tactic, int degree)
                 triggerOperator = tactic->getTacticTrigger().getTriggerB()->getRelationalOperator();
             }
 
+            Trigger *newtrigger = nullptr;
+
+            newValue = rand()%TRIGGER_TOTAL;
             switch (newValue)
             {
                 case TRIGGER_ALWAYS:
-                    if (whichTrigger == 0)
-                        tactic->getTacticTrigger().setTriggerA( new Trigger_Always() );
-                    else
-                        tactic->getTacticTrigger().setTriggerB( new Trigger_Always() );
+                    newtrigger = new Trigger_Always();
                 break;
 
                 case TRIGGER_LIFE:
-                    if (whichTrigger == 0)
-                        tactic->getTacticTrigger().setTriggerA( new Trigger_Life( triggerValue, triggerOperator ) );
-                    else
-                        tactic->getTacticTrigger().setTriggerB( new Trigger_Life( triggerValue, triggerOperator ) );
+                    newtrigger = new Trigger_Life( triggerValue, triggerOperator );
                 break;
             }
+
+            if (whichTrigger == 0)
+                tactic->getTacticTrigger().setTriggerA( newtrigger );
+            else
+                tactic->getTacticTrigger().setTriggerB( newtrigger );
         }
         break;
 
@@ -738,98 +738,3 @@ void GeneticAlgorithm::mutateTactic(Tactic *tactic, int degree)
         break;
     }
 }
-
-/*
-// Tournament Selection
-void GeneticAlgorithm::selection()
-{
-    printf("Selection...\n");
-//    vector<PairAF> order;
-
-    //Run the tournament
-    //armies.size() have to be even
-    for (unsigned int i = 0; i+1 < armies.size(); i+=2)
-    {
-        int ret = _SIM_CONTINUE_;
-        //Sequencial
-        printf("Battle: %d with %d\n", i, i+1 );
-        printf("Units: %d vs %d\n", armies[i]->nUnits(), armies[i+1]->nUnits() );
-        World *world = new World(armies[i], armies[i+1]);
-
-        while(ret == _SIM_CONTINUE_){
-            ret = world->simulateStep();
-        }
-
-        delete world;
-
-        //Thread Concurrency
-
-        //OMP parallel
-    }
-
-    printf("_B.1_");
-
-    //Verificar se as naves voltam com o status
-    //Calculate the fitness and assemble a map
-    for (unsigned int i = 0; i < armies.size(); i++)
-    {
-        double fitness = evaluateFitness(armies[i]);
-        order.push_back(PairAF(armies[i], fitness));
-    }
-
-    printf("_B.2_");
-
-    //Take the best half of the army
-    int half = armies.size()/2;
-
-    //printf("half: %d\n", half);
-
-    //Make sure it is an even number
-    if(half % 2 != 0)
-        half++;
-
-    //It is currently applying elitism with chance of mutation in between generations
-    for(int i = 0; i < half; i+=2)
-    {
-        double chance0 = (double)rand()/(double)RAND_MAX;		//crossover
-        double chance1 = (double)rand()/(double)RAND_MAX;       //mudar tipo
-        double chance2 = (double)rand()/(double)RAND_MAX;		//mudar tatica
-
-        if(armies[i]->getDictionary() == armies[i+1]->getDictionary() && chance0 <= 0.25)
-            crossOver(armies[i], armies[i+1]);
-
-        if(chance1 <= 0.25)
-            mutation(armies[i], rand()%3+1);
-        if(chance2 <= 0.25)
-            mutation(armies[i+1], rand()%3+1);
-
-        selected.push_back(armies[i]);
-        selected.push_back(armies[i+1]);
-    }
-
-    //Roulette-wheel selection
-    //{
-        //Normalize fitness
-        //normalizeFitness(&order);
-        //Sort pairs from highest to lowest
-        //std::sort(order.begin(), order.end(), GeneticAlgorithm::highToLow);
-    //}
-}
-
-//Nao esta sendo usada no momento
-void GeneticAlgorithm::normalizeFitness(vector<PairAF> *pairs)
-{
-    double sum = 0;
-
-    for (unsigned int i = 0; i < pairs->size(); i++)
-    {
-        sum += pairs->at(i).fitness;
-    }
-
-    for (unsigned int i = 0; i < pairs->size(); i++)
-    {
-        pairs->at(i).fitness /= sum;
-    }
-}
-
-*/

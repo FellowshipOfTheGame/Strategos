@@ -84,6 +84,10 @@ class GeneticAlgorithm : public Algorithm
 
         //
         void threadSimulate( unsigned int from, unsigned int n );
+
+
+        /// Gen things
+        static Trigger* generateRandomTrigger();
 };
 
 #endif
