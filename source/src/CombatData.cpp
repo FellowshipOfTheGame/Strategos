@@ -1,7 +1,7 @@
 #include "CombatData.h"
 
 CombatData::CombatData(int nU1, int nU2)
-    : nUnits1(nU1), nUnits2(nU2)
+    : randomengine(1337), nUnits1(nU1), nUnits2(nU2)
 {
     distancesUnit = new double*[nU1];
 

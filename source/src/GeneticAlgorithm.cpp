@@ -38,7 +38,7 @@ Tactic* GeneticAlgorithm::generateRandomTactic( const Army* forArmy, int forUnit
     // Gerar TacticTrigger
     // Gera 2 triggers, seus operadores e valores associados
     TacticTrigger tacticTrig(generateRandomTrigger(),
-                             generateRandomTrigger(), rand()%2);
+                             generateRandomTrigger(), rand()%TRIGGER_LOGIC_TOTAL);
 
     // Gerar tatica valida para nave mae tambem
     int randValue = rand()%TACTIC_NUMBER;
@@ -145,9 +145,6 @@ void GeneticAlgorithm::initialize()
     }
 
     closedir (dir);
-
-    srand((unsigned)time(nullptr));
-
 }
 
 void GeneticAlgorithm::randomArmies(int size)
@@ -230,9 +227,7 @@ Army* GeneticAlgorithm::generateRandomArmy()
         const int nTacticsToGen = rand()%6+1;
         for(int k = 0; k < nTacticsToGen; k++)
         {
-            Tactic *tactic = generateRandomTactic(randomArmy, j);
-
-            unit->addTactic(tactic);
+            unit->addTactic( generateRandomTactic(randomArmy, j) );
         }
     }
 
@@ -252,9 +247,12 @@ void GeneticAlgorithm::run()
 //#ifdef _DEBUG_
         printf("GENERATION %d\n", i);
 //#endif
+
+        srand(time(nullptr));
+
         // Completar exercito para INDIVIDUOS_GERACAO
-        // Adicionar 2 aleatorios sempre
-        randomArmies( INDIVIDUOS_GERACAO - individuos.size() + 2 );
+        // Adicionar 4 aleatorios sempre
+        randomArmies( INDIVIDUOS_GERACAO - individuos.size() + 4);
 
         // Apply the selection - currently Tournament
         selectFromPop(SELECT_FROM_POP, selected, rejected);
@@ -328,10 +326,10 @@ void GeneticAlgorithm::selectFromPop(unsigned int n, std::vector<Army*>& selecte
         }
     }
 
-//    printf("TOP 10:\n");
-//    for (int i = 0; i < 10; ++i){
-//        printf("Fit[%d] = %lf [%d]\n", i, individuos[i]->getFitness(), individuos[i]->nUnits());
-//    }
+    printf("TOP 5:\n");
+    for (int i = 0; i < 5; ++i){
+        printf("Fit[%d] = %lf [%d]\n", i, individuos[i]->getFitness(), individuos[i]->nUnits());
+    }
 
 //    printf("Selecting and Rejecting...");
 
@@ -386,7 +384,7 @@ void GeneticAlgorithm::threadSimulate( unsigned int from, unsigned int n )
                 moreFit = 0.05;
             }else if (ret == _SIM_ARMY0_WIN_){
 //                printf("Winner: %d\n", i);
-                moreFit = 0.1;
+                moreFit = 0.15;
             }else{
 //                printf("Winner: %d\n", opponent);
             }
@@ -445,7 +443,7 @@ void GeneticAlgorithm::mutate(std::vector<Army*>& selected)
 {
     for (unsigned int i = 0; i < selected.size(); ++i)
     {
-        if ( (double)rand()/(double)RAND_MAX < 0.2)
+        if ( (double)rand()/(double)RAND_MAX < 0.4)
             mutation(selected[i], rand()%MUTATION_TOTAL);
     }
 }
@@ -608,11 +606,13 @@ std::vector<Army*>& GeneticAlgorithm::getSelectedArmies()
 
 Army* GeneticAlgorithm::higherFitnessArmy()
 {
+    printf("Selecting higherFitnessArmy\n");
     std::vector<Army*> best, rejected;
 
     selectFromPop(1, best, rejected);
 
-    std::string name = "/GA/"+std::to_string(armyType)+"/"+best[0]->getName();
+    std::string name = "GA/"+std::to_string(armyType)+"/"+best[0]->getName();
+    printf("Selected: %s\n", name.c_str());
 
     return Army::loadArmy(name);
 }
@@ -649,8 +649,7 @@ void GeneticAlgorithm::mutation(Army *ind, int degree)
             unit = ind->createUnit(RANDOM_UNIT, Coordinates(rand()%TEAM_AREA_WIDTH, rand()%TEAM_AREA_HEIGHT));
             for (int i = 0; i < ntactics; ++i)
             {
-                Tactic* tactic = generateRandomTactic(ind, unit->getID());
-                unit->addTactic(tactic);
+                unit->addTactic( generateRandomTactic(ind, unit->getID()) );
             }
         }
         break;

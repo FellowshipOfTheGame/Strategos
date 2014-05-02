@@ -5,7 +5,7 @@
 
 #include <time.h>
 
-#include "Random.h"
+#include "RandomEngine.h"
 #include "Game.h"
 #include "CombatLog.h"
 
@@ -37,7 +37,7 @@ Game::Game()
 	combatLog.push_back(nullptr);
 	combatLog.push_back(nullptr);
 
-	initRand((unsigned int) time(nullptr));
+	srand((unsigned int) time(nullptr));
 	loadDictionaries();
 
     // TODO: Alterar para 3 na versao final

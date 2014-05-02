@@ -55,7 +55,7 @@ class Unit
         ~Unit();
 
         /// Atualiza ships
-        int update();
+        int update(RandomEngine& randE);
 
         /// Atualiza Ships e efetua Actions da unidade
         /// \return Retorna o numero de naves vivas
@@ -149,8 +149,9 @@ class Unit
         const shipBaseStats& getSquadBaseStats() const;
         const DictKey* getUnitInfo() const;
 
-        // Mover Unidade
-        void moveTo(Coordinates c);
+        /// Mover Unidade
+        /// Faz com que todas as Ships movam-se para a corrdenada 'c'.
+        void moveTo(const Coordinates& c);
 
         // Others
         void printInfo();

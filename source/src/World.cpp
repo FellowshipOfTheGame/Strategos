@@ -33,7 +33,6 @@ World::World(Army *army1, Army *army2)
 
 	combatLog.push_back(nullptr);
 	combatLog.push_back(nullptr);
-
 //	printf("%d VS %d ", army1->nUnits(), army2->nUnits());
 
 	army1->restore(0);
@@ -101,9 +100,9 @@ int World::simulateStep()
    // printf ("\t\t updateActions 2\n");
     armies[1]->updateActions();
    // printf ("\t\t Update 1 \n");
-    int N0 = armies[0]->update();
+    int N0 = armies[0]->update(combatData.randomengine);
    // printf ("\t\t Update 2 \n");
-    int N1 = armies[1]->update();
+    int N1 = armies[1]->update(combatData.randomengine);
 
     makeLog(armies[0],this->getCombatLog(0));
     makeLog(armies[1],this->getCombatLog(1));

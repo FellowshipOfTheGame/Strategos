@@ -18,7 +18,10 @@ class CombatData
 
         void ClearDistances();
 
+        RandomEngine randomengine;
+
     private:
+
         int miss, total;
 
         double** distancesUnit;

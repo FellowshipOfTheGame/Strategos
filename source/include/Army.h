@@ -70,7 +70,7 @@ class Army
         void Unlock();
 
         // Percorre Tactics e gera acoes para as naves
-        int update();
+        int update(RandomEngine& randE);
         void updateActions();
 
         // Resetar Army como o time X

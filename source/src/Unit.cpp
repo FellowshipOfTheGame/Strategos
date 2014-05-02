@@ -247,7 +247,7 @@ void Unit::updateActions()
 	}
 }
 
-int Unit::update()
+int Unit::update(RandomEngine& randE)
 {
     // Atualizar numero de naves vivas e posicao media
     shipsAlive = 0;
@@ -256,7 +256,7 @@ int Unit::update()
 	{
 		if (ships[i]->isAlive())
 		{
-			ships[i]->update();
+			ships[i]->update(randE);
 			totalPos += ships[i]->getPosition();
 			++shipsAlive;
 //            printf("-> HP: %lf, (%d, %d)\n", ships[i]->getHP(), ships[i]->getX(), ships[i]->getY());
@@ -358,14 +358,12 @@ void Unit::generateActions(TacticValidationData& tvd)
 		basicTacticRetreat.validateTactic(shipsActions, tvd);
 }
 
-void Unit::moveTo(Coordinates c)
+void Unit::moveTo(const Coordinates& c)
 {
 	for (unsigned int i = 0; i < nShips(); ++i)
 	{
 		if (ships[i]->isAlive())
 		{
-			Coordinates rndCoord((rand() % 128) - (rand() % 128), (rand() % 128) - (rand() % 128));
-			rndCoord += c;
 			ships[i]->moveTo(c);
 		}
 	}

@@ -11,6 +11,7 @@
 #include "Game.h"
 
 #include "Image.h"
+
 //#include "GuiTactics.cpp"
 //TODO arrumar blueprint
 //TODO adicionar botao para mover unidades
@@ -320,7 +321,8 @@ void Unit_Setup::Logic()
 	updateGuiElements();
 
 	//faz as naves se moverem
-	Game::getGlobalGame()->getEditingArmy()->update();
+	RandomEngine rnd(0);
+	Game::getGlobalGame()->getEditingArmy()->update(rnd);
 }
 
 void Unit_Setup::Render()

@@ -3,7 +3,6 @@
 
 #include "CombatLog.h"
 #include "Global.h"
-#include "Random.h"
 
 using namespace std;
 
@@ -57,7 +56,7 @@ float Ship::getDirection() const
     return currentDirection;
 }
 
-int Ship::update()
+int Ship::update(RandomEngine& randE)
 {
     if (stats.currentAtkCD > 0)
         --(stats.currentAtkCD);
@@ -69,8 +68,8 @@ int Ship::update()
     // Evitar que as naves fiquem totalmente paradas
     if (stats.isMoving == move_not_moving)
     {
-        targetPos.x = unitPos.x+(rand()%2*SPACIAL_UNIT-rand()%2*SPACIAL_UNIT);
-        targetPos.y = unitPos.y+(rand()%2*SPACIAL_UNIT-rand()%2*SPACIAL_UNIT);
+        targetPos.x = unitPos.x+ randE.nextInt()%int(2*SPACIAL_UNIT)-randE.nextInt()%int(2*SPACIAL_UNIT);
+        targetPos.y = unitPos.y+ randE.nextInt()%int(2*SPACIAL_UNIT)-randE.nextInt()%int(2*SPACIAL_UNIT);
         stats.isMoving = move_flying;
     }
 

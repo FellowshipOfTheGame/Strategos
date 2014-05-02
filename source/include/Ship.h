@@ -4,9 +4,9 @@
 #define _SHIP_H_
 
 #include "Coordinates.h"
+#include "RandomEngine.h"
 
 class CombatRound;
-
 
 struct shipBaseStats
 {
@@ -73,7 +73,7 @@ class Ship
         Ship(const shipBaseStats &initialStats, Coordinates Coord);
         ~Ship();
 
-        int update();
+        int update(RandomEngine& randE);
         bool isAlive() const;
 
         SHIP_MOVE getMoving() {return stats.isMoving;}

@@ -469,7 +469,7 @@ void Army::updateActions()
 	}
 }
 
-int Army::update()
+int Army::update(RandomEngine& randE)
 {
     if (units.empty()) return 0;
 
@@ -481,7 +481,7 @@ int Army::update()
 
 	for (unsigned int i = 0; i < units.size(); i++)
 	{
-		t += units[i]->update();
+		t += units[i]->update(randE);
 	}
 
 	return t;

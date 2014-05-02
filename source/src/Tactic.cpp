@@ -82,17 +82,13 @@ int AttackNearestEnemy::validateTactic(std::list<Action*> &newActions, TacticVal
 
 			if (iShip->isAlive() && iShip->getStats().currentAtkCD == 0)
 			{
-				while (1)
-				{
-					int s = rand() % nearestUnit->nShips();
-					if (nearestUnit->getShip(s)->isAlive())
-					{
-						iShip->getStats().currentAtkCD = iShip->getBaseStats().maxAtkCD;
-						newActions.push_back(new AttackAction(iShip, nearestUnit->getShip(s), tvd.validatingUnit->getUnitInfo(), nearestUnit->getUnitInfo()));
-						++Ret;
-						break;
-					}
-				}
+                int s = tvd.combatData.randomengine.nextInt() % nearestUnit->nShips();
+				while (!nearestUnit->getShip(s)->isAlive())
+                    s = tvd.combatData.randomengine.nextInt() % nearestUnit->nShips();
+
+                iShip->getStats().currentAtkCD = iShip->getBaseStats().maxAtkCD;
+                newActions.push_back(new AttackAction(iShip, nearestUnit->getShip(s), tvd.validatingUnit->getUnitInfo(), nearestUnit->getUnitInfo()));
+                ++Ret;
 			}
 		}
 	}
@@ -167,9 +163,9 @@ int AttackWeakestEnemy::validateTactic(std::list<Action*> &newActions, TacticVal
 
         if (iShip->isAlive() && iShip->getStats().currentAtkCD == 0)
         {
-            int s = rand() % wekeastUnit->nShips();
+            int s = tvd.combatData.randomengine.nextInt() % wekeastUnit->nShips();
             while ( !wekeastUnit->getShip(s)->isAlive() ){
-                s = rand() % wekeastUnit->nShips();
+                s = tvd.combatData.randomengine.nextInt() % wekeastUnit->nShips();
             }
 
             iShip->getStats().currentAtkCD = iShip->getBaseStats().maxAtkCD;
@@ -218,9 +214,9 @@ int AttackCollab::validateTactic(std::list<Action*> &newActions, TacticValidatio
 
 			if (iShip->isAlive() && iShip->getStats().currentAtkCD == 0)
 			{
-                int s = rand() % enemyUnit->nShips();
+                int s = tvd.combatData.randomengine.nextInt() % enemyUnit->nShips();
 				while ( !enemyUnit->getShip(s)->isAlive() ){
-                    s = rand() % enemyUnit->nShips();
+                    s = tvd.combatData.randomengine.nextInt() % enemyUnit->nShips();
 				}
 
 				iShip->getStats().currentAtkCD = iShip->getBaseStats().maxAtkCD;
@@ -382,9 +378,9 @@ int Kamikase::validateTactic(std::list<Action*> &newActions, TacticValidationDat
 
 			if (iShip->isAlive() && iShip->getStats().isKamikasing == false)
 			{
-                int s = rand()%nearestUnit->nShips();
+                int s = tvd.combatData.randomengine.nextInt()%nearestUnit->nShips();
 				while (!nearestUnit->getShip(s)->isAlive()){
-                    s = rand()%nearestUnit->nShips();
+                    s = tvd.combatData.randomengine.nextInt()%nearestUnit->nShips();
 				}
 
                 iShip->getStats().isKamikasing = true;
@@ -425,15 +421,15 @@ int Retreat::validateTactic(std::list<Action*> &newActions, TacticValidationData
 	if (tvd.validatingUnit->getAveragePos().distance(motherShipUnit->getAveragePos()) > tvd.validatingUnit->getSquadBaseStats().range)
 	{
 	    motherAvrg = motherShipUnit->getAveragePos();
-        motherAvrg.x += rand() % 300 - rand() % 300;
-        motherAvrg.y += rand() % 300 - rand() % 300;
+        motherAvrg.x += tvd.combatData.randomengine.nextInt() % 300 - tvd.combatData.randomengine.nextInt() % 300;
+        motherAvrg.y += tvd.combatData.randomengine.nextInt() % 300 - tvd.combatData.randomengine.nextInt() % 300;
 
 		for (unsigned int i = 0; i < tvd.validatingUnit->nShips(); i++)
 		{
 			Ship *iShip = tvd.validatingUnit->getShip(i);
 			if (iShip->isAlive() && iShip->getStats().isMoving != move_action)
 			{
-                Coordinates rndCoord((rand() % 128) - (rand() % 128), (rand() % 128) - (rand() % 128));
+                Coordinates rndCoord((tvd.combatData.randomengine.nextInt() % 128) - (tvd.combatData.randomengine.nextInt() % 128), (tvd.combatData.randomengine.nextInt() % 128) - (tvd.combatData.randomengine.nextInt() % 128));
                 newActions.push_back(new MoveAction(iShip, motherAvrg + rndCoord));
 			}
 		}
@@ -474,19 +470,19 @@ int MoveRandomly::validateTactic(std::list<Action*> &newActions, TacticValidatio
 	}
 
 	Coordinates coordBase = tvd.validatingUnit->getAveragePos();
-	coordBase.x += rand() % 200 - rand() % 200;
-	coordBase.y += rand() % 200 - rand() % 200;
+	coordBase.x += tvd.combatData.randomengine.nextInt() % 200 - tvd.combatData.randomengine.nextInt() % 200;
+	coordBase.y += tvd.combatData.randomengine.nextInt() % 200 - tvd.combatData.randomengine.nextInt() % 200;
 
 	for (unsigned int i = 0; i < tvd.validatingUnit->nShips(); ++i)
 	{
 	    if (tvd.validatingUnit->getShip(i)->getStats().isMoving != move_action)
         {
-            Coordinates rndCoord((rand()%64) - (rand()%64), (rand()%64) - (rand()%64));
+            Coordinates rndCoord((tvd.combatData.randomengine.nextInt()%64) - (tvd.combatData.randomengine.nextInt()%64), (tvd.combatData.randomengine.nextInt()%64) - (tvd.combatData.randomengine.nextInt()%64));
             newActions.push_back(new MoveAction(tvd.validatingUnit->getShip(i), coordBase + rndCoord));
 	    }
 	}
 
-	cooldown = (rand() % 90) + 30;
+	cooldown = (tvd.combatData.randomengine.nextInt() % 90) + 30;
 
 	return 1;
 }
