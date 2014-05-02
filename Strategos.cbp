@@ -112,7 +112,7 @@
 		<Unit filename="source/include/Play.h">
 			<Option virtualFolder="Telas/" />
 		</Unit>
-		<Unit filename="source/include/Random.h" />
+		<Unit filename="source/include/RandomEngine.h" />
 		<Unit filename="source/include/Resource.h" />
 		<Unit filename="source/include/Result.h" />
 		<Unit filename="source/include/Ship.h" />
@@ -172,7 +172,7 @@
 		<Unit filename="source/src/Play.cpp">
 			<Option virtualFolder="Telas/" />
 		</Unit>
-		<Unit filename="source/src/Random.cpp" />
+		<Unit filename="source/src/RandomEngine.cpp" />
 		<Unit filename="source/src/Resource.cpp" />
 		<Unit filename="source/src/Result.cpp" />
 		<Unit filename="source/src/Ship.cpp" />
