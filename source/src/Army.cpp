@@ -294,7 +294,7 @@ Army::Army(const string& armyName, const Dictionary *armyDictionary) :
 {
 	totalShips = 0;
 	isPlayer = 0;
-	fitness =0;
+	fitness = DONT_HAVE_FITNESS;
 }
 
 Army::~Army()

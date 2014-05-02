@@ -374,36 +374,52 @@ void GeneticAlgorithm::threadSimulate( unsigned int from, unsigned int n )
 #endif
             World *world = new World(armyAclone, armyBclone);
 
+            int steps = 0;
             while(ret == _SIM_CONTINUE_){
+                ++steps;
                 ret = world->simulateStep();
             }
 
-            double moreFit = 0;
+            // Bonus para ganhadores
+            double moreFitA = 0;
+            double moreFitB = 0;
             if (ret == _SIM_DRAW_){
 //                printf("Draw!\n");
-                moreFit = 0.05;
+                moreFitA = 0.05;
+                moreFitB = 0.05;
             }else if (ret == _SIM_ARMY0_WIN_){
 //                printf("Winner: %d\n", i);
-                moreFit = 0.15;
+                moreFitA = 0.15;
             }else{
+                moreFitB = 0.15;
 //                printf("Winner: %d\n", opponent);
             }
 
             delete world;
 
-            fitA += evaluateFitness(armyAclone) + moreFit;
-            const double fitB = evaluateFitness(armyBclone);
+            fitA += evaluateFitness(armyAclone, steps) + moreFitA;
+            const double fitB = evaluateFitness(armyBclone, steps) + moreFitB;
             delete armyBclone;
 
             // Utilizar essa batalha para o exercito B tambem, mas com peso menor.
             armyB->Lock();
-            	armyB->setFitness(armyB->getFitness()*0.8 + fitB*0.2);
+                if (armyB->getFitness() == DONT_HAVE_FITNESS){
+                    armyB->setFitness(fitB);
+//                    printf("%d FitB: %lf\n", opponent, fitB);
+                }else{
+                    armyB->setFitness(armyB->getFitness()*0.8 + fitB*0.2);
+                }
 			armyB->Unlock();
         }
         fitA /= nBattlesToFit;
 
         armyA->Lock();
-            armyA->setFitness(armyA->getFitness()*0.7 + fitA*0.3);
+            if (armyA->getFitness() == DONT_HAVE_FITNESS){
+                armyA->setFitness(fitA);
+//                printf("%d FitA: %lf\n", i, fitA);
+            }else{
+                armyA->setFitness(armyA->getFitness()*0.7 + fitA*0.3);
+            }
         armyA->Unlock();
         delete armyAclone;
     }
@@ -499,7 +515,7 @@ void GeneticAlgorithm::crossOver(const Army *parent1, const Army *parent2, std::
     ind.push_back(child2);
 }
 
-double GeneticAlgorithm::evaluateFitness(const Army *ind)
+double GeneticAlgorithm::evaluateFitness(const Army *ind, int simSteps)
 {
     double fitness = 0.0;
     int countDead = 0, totalShips = 0;
@@ -518,23 +534,28 @@ double GeneticAlgorithm::evaluateFitness(const Army *ind)
 
     Unit *motherUnit = units[0];
 
-    // O peso da mothership eh maior
-    if(motherUnit->getNShipsAlive() == 0)
-        countDead += ind->getTotalShips()*5;
-
-    // Porcentagem de perdas
-    for (unsigned int i = 1; i < units.size(); i++)
-    {
-        countDead += units[i]->nShips()-units[i]->getNShipsAlive();
-        totalShips += units[i]->nShips();
+    // Perder -> Quanto mais demorar melhor. -0.5 a 0.5
+    if(motherUnit->getNShipsAlive() == 0){
+        if (simSteps > 1000000)
+            return 0.5;
+        return -0.5+simSteps/1000000.0;
+    }else{ // Ganhar: Quanto mais rapido melhor. 0.5 a 1.5
+        return 0.5+1.0/(double)simSteps;
     }
-    totalShips += units[0]->nShips();
 
-    if (totalShips == 0)
-        fitness = 0;
-    else{
-        fitness = 1.0 - (double)totalShips/((double)countDead+1);
-    }
+//    // Porcentagem de perdas
+//    for (unsigned int i = 1; i < units.size(); i++)
+//    {
+//        countDead += units[i]->nShips()-units[i]->getNShipsAlive();
+//        totalShips += units[i]->nShips();
+//    }
+//    totalShips += units[0]->nShips();
+//
+//    if (totalShips == 0)
+//        fitness = 0;
+//    else{
+//        fitness = 1.0 - (double)totalShips/((double)countDead+1);
+//    }
 
     return fitness;
 }

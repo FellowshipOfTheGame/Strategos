@@ -36,7 +36,7 @@ class GeneticAlgorithm : public Algorithm
         void initialize() override;
         void run() override;
 
-        double evaluateFitness(const Army *ind);
+        double evaluateFitness(const Army *ind, int simSteps);
         void selection();
         void randomArmies(int size);
         void normalizeFitness(std::vector<PairAF> *pairs);
