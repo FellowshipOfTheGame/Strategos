@@ -24,11 +24,55 @@
 #define MUTATION_UNIT_TYPE      0
 #define MUTATION_UNIT_TACTIC    1
 #define MUTATION_UNIT_POSITION  2
-#define MUTATION_TOTAL          3
+#define MUTATION_ADD_UNIT       3
+#define MUTATION_TOTAL          4
+
+// 4 tipos, 0 sendo a nave mae
+#define RANDOM_UNIT (rand()%3 +1)
 
 //#define _DEBUG_
 
 // Static
+Tactic* GeneticAlgorithm::generateRandomTactic( const Army* forArmy, int forUnitID )
+{
+    // Gerar TacticTrigger
+    // Gera 2 triggers, seus operadores e valores associados
+    TacticTrigger tacticTrig(generateRandomTrigger(),
+                             generateRandomTrigger(), rand()%2);
+
+    // Gerar tatica valida para nave mae tambem
+    int randValue = rand()%TACTIC_NUMBER;
+    while ( forUnitID==0 && randValue > 3 )
+        randValue = rand()%TACTIC_NUMBER;
+
+    switch (randValue)
+    {
+        case TACTIC_ATTACK_NEAREST_ENEMY:
+            return new AttackNearestEnemy(TacticInfo(nullptr), tacticTrig);
+
+        case TACTIC_ATTACK_WEAKEST_ENEMY:
+            return new AttackWeakestEnemy(TacticInfo(nullptr), tacticTrig);
+
+        case TACTIC_ATTACK_COLLAB:
+            randValue = rand()%forArmy->nUnits();
+                while (randValue == forUnitID) randValue = rand()%forArmy->nUnits();
+            return new AttackCollab(TacticInfo(forArmy->getUnitAtIndex(randValue)), tacticTrig);
+
+        case TACTIC_DEFENSE_COLAB:
+            randValue = rand()%forArmy->nUnits();
+                while (randValue == forUnitID) randValue = rand()%forArmy->nUnits();
+            return new DefenseCollab(TacticInfo(forArmy->getUnitAtIndex(randValue)), tacticTrig);
+
+        case TACTIC_KAMIKASE:
+            return new Kamikase(TacticInfo(nullptr), tacticTrig);
+
+        case TACTIC_RETREAT:
+            return new Retreat(TacticInfo(nullptr), tacticTrig);
+    }
+
+    return nullptr;
+}
+
 Trigger* GeneticAlgorithm::generateRandomTrigger()
 {
     int randValue = rand()%TRIGGER_TOTAL;
@@ -166,7 +210,7 @@ Army* GeneticAlgorithm::generateRandomArmy()
     //Create units until run out of money
     while (gold >= 10)
     {
-        int randValue = rand()%3 + 1;
+        int randValue = RANDOM_UNIT;
 
         if(gold - randValue*10 >= 0)
         {
@@ -176,7 +220,6 @@ Army* GeneticAlgorithm::generateRandomArmy()
     }
 
     const int nUnits = randomArmy->nUnits();
-    int randValue;
 
     //Go through each unit adding tactics
     for(int j = 0; j < nUnits; j++)
@@ -184,48 +227,12 @@ Army* GeneticAlgorithm::generateRandomArmy()
         Unit *unit = randomArmy->getUnitAtIndex(j);
 
         // Gera K taticas
-        for(int k = 0; k < 4; k++)
+        const int nTacticsToGen = rand()%6+1;
+        for(int k = 0; k < nTacticsToGen; k++)
         {
-            // Gerar TacticTrigger
-            // Gera 2 triggers, seus operadores e valores associados
-            TacticTrigger tacticTrig(generateRandomTrigger(),
-                                     generateRandomTrigger(), rand()%2);
+            Tactic *tactic = generateRandomTactic(randomArmy, j);
 
-            //Gera a tatica
-            Tactic *tactic=0;
-            randValue = rand()%TACTIC_NUMBER;
-            switch (randValue)
-            {
-                case 0:
-                    tactic = new AttackNearestEnemy(TacticInfo(nullptr), tacticTrig);
-                    break;
-                case 1:
-                    tactic = new AttackWeakestEnemy(TacticInfo(nullptr), tacticTrig);
-                    break;
-                case 2:
-                    tactic = new AttackCollab(TacticInfo(randomArmy->getUnitAtIndex(rand()%nUnits)), tacticTrig);
-                    break;
-                case 3:
-                    tactic = new DefenseCollab(TacticInfo(randomArmy->getUnitAtIndex(rand()%nUnits)), tacticTrig);
-                    break;
-                case 4:
-                    tactic = new Kamikase(TacticInfo(nullptr), tacticTrig);
-                    break;
-                case 5:
-                    tactic = new Retreat(TacticInfo(nullptr), tacticTrig);
-                    break;
-            }
-
-            // Evitar que a nave mae recebe alguns tipos de taticas
-            if ((unit->getType()==0 && (randValue<2)) || (unit->getType()!=0))
-            {
-                 unit->addTactic(tactic);
-            }
-            else
-            {
-                unit->addTactic(new AttackNearestEnemy(TacticInfo(0), tacticTrig));
-                delete tactic;
-            }
+            unit->addTactic(tactic);
         }
     }
 
@@ -634,6 +641,18 @@ void GeneticAlgorithm::mutation(Army *ind, int degree)
 
         case MUTATION_UNIT_POSITION: //Mutate a unit position
             unit->setBluePrintCoord( Coordinates(rand()%TEAM_AREA_WIDTH, rand()%TEAM_AREA_HEIGHT ) );
+        break;
+
+        case MUTATION_ADD_UNIT:
+        {
+            int ntactics = rand()%6+1;
+            unit = ind->createUnit(RANDOM_UNIT, Coordinates(rand()%TEAM_AREA_WIDTH, rand()%TEAM_AREA_HEIGHT));
+            for (int i = 0; i < ntactics; ++i)
+            {
+                Tactic* tactic = generateRandomTactic(ind, unit->getID());
+                unit->addTactic(tactic);
+            }
+        }
         break;
 
         default:

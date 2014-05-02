@@ -88,6 +88,7 @@ class GeneticAlgorithm : public Algorithm
 
         /// Gen things
         static Trigger* generateRandomTrigger();
+        static Tactic* generateRandomTactic( const Army* forArmy, int forUnitID );
 };
 
 #endif
