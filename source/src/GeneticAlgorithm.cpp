@@ -35,6 +35,15 @@
 static std::mutex printMutex;
 #define printTH(x...){ printMutex.lock(); printf(x); printMutex.unlock(); }
 
+void createDir(const std::string& dir)
+{
+    #ifdef _UNIX_
+        mkdir(dir.c_str(), S_IRUSR | S_IWUSR | S_IROTH | S_IWOTH );
+    #else
+        mkdir(dir.c_str());
+    #endif
+}
+
 // Static
 Tactic* GeneticAlgorithm::generateRandomTactic( const Army* forArmy, int forUnitID )
 {
@@ -109,29 +118,40 @@ GeneticAlgorithm::~GeneticAlgorithm()
     }
 }
 
+void GeneticAlgorithm::createNeededDirectory()
+{
+    DIR *dir;
+    std::string dirpath = "assets/saves/";
+
+    dir = opendir(dirpath.c_str());
+        if (!dir) createDir(dirpath);
+    closedir(dir);
+
+    dirpath += "GA/";
+    dir = opendir(dirpath.c_str());
+        if (!dir) createDir(dirpath);
+    closedir(dir);
+
+    dirpath += std::to_string(armyType)+"/";
+    dir = opendir(dirpath.c_str());
+        if (!dir) createDir(dirpath);
+    closedir(dir);
+}
+
 void GeneticAlgorithm::initialize()
 {
     DIR *dir;
     dirent *ent;
+
+    createNeededDirectory();
 
     std::string dirpath = "assets/saves/GA/" + std::to_string(armyType) + "/";
 
     dir = opendir(dirpath.c_str());
     if (dir == nullptr)
     {
-        printf("Creating directory %s\n", dirpath.c_str());
-
-#ifdef _UNIX_
-        mkdir(dirpath.c_str(), S_IRUSR | S_IWUSR | S_IROTH | S_IWOTH );
-#else
-        mkdir(dirpath.c_str());
-#endif
-
-        if ( (dir = opendir(dirpath.c_str())) == nullptr )
-        {
-            printf("couldn't create directory %s\n", dirpath.c_str());
-            return;
-        }
+        printf("Error opening directory: %s\n", dirpath.c_str());
+        exit(-5);
     }
 
     // Carregar exercitos prontos
@@ -242,8 +262,6 @@ Army* GeneticAlgorithm::generateRandomArmy()
 
 void GeneticAlgorithm::run()
 {
-    if (armyType != 0) return; // debug
-
     for (unsigned int i = 0; i < 5; i++)
     {
         std::vector<Army*> selected, rejected;
