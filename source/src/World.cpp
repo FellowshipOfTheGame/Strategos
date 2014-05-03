@@ -104,21 +104,20 @@ int World::simulateStep()
    // printf ("\t\t Update 2 \n");
     int N1 = armies[1]->update(combatData.randomengine);
 
-    makeLog(armies[0],this->getCombatLog(0));
-    makeLog(armies[1],this->getCombatLog(1));
+    makeLog(armies[0], this->getCombatLog(0));
+    makeLog(armies[1], this->getCombatLog(1));
 
     if (N0 == 0 && N1 == 0)
     {
         return _SIM_DRAW_;
     }
-    else
-    	if (N0 == 0){
+    else if (N0 == 0){
         return _SIM_ARMY1_WIN_;
-    	}
-    	else if (N1 == 0)
-    	{
+    }
+    else if (N1 == 0)
+    {
         return _SIM_ARMY0_WIN_;
-    	}
+    }
 //    else
 //        printf("Sobrando: %d, %d\n", N0, N1);
 

@@ -32,6 +32,9 @@
 
 //#define _DEBUG_
 
+static std::mutex printMutex;
+#define printTH(x...){ printMutex.lock(); printf(x); printMutex.unlock(); }
+
 // Static
 Tactic* GeneticAlgorithm::generateRandomTactic( const Army* forArmy, int forUnitID )
 {
@@ -43,7 +46,7 @@ Tactic* GeneticAlgorithm::generateRandomTactic( const Army* forArmy, int forUnit
     // Gerar tatica valida para nave mae tambem
     int randValue = rand()%TACTIC_NUMBER;
     while ( forUnitID==0 && randValue > 3 )
-        randValue = rand()%TACTIC_NUMBER;
+        randValue = rand()%3;
 
     switch (randValue)
     {
@@ -88,6 +91,7 @@ Trigger* GeneticAlgorithm::generateRandomTrigger()
 
     return nullptr;
 }
+
 
 GeneticAlgorithm::GeneticAlgorithm(int _armyType)
     : Algorithm(), armyType(_armyType)
@@ -297,9 +301,7 @@ void GeneticAlgorithm::run()
 void GeneticAlgorithm::selectFromPop(unsigned int n, std::vector<Army*>& selected, std::vector<Army*>& rejected)
 {
     // Executar batalhas para calcular o fitnes
-#ifdef _DEBUG_
     printf("Battle for %d individuos\n", individuos.size());
-#endif
 
     std::vector<std::thread> threads;
 
@@ -344,6 +346,11 @@ void GeneticAlgorithm::selectFromPop(unsigned int n, std::vector<Army*>& selecte
 
 void GeneticAlgorithm::threadSimulate( unsigned int from, unsigned int n )
 {
+    printMutex.lock();
+    std::cout << "Thread Start: " << std::this_thread::get_id() ;
+    printf(" - %d %d!\n", from, n);
+    printMutex.unlock();
+
     for (unsigned int i = from; i < from+n; ++i)
     {
         int nBattlesToFit = 1;
@@ -423,6 +430,11 @@ void GeneticAlgorithm::threadSimulate( unsigned int from, unsigned int n )
         armyA->Unlock();
         delete armyAclone;
     }
+
+    printMutex.lock();
+    std::cout << "Thread Finished: " << std::this_thread::get_id();
+    printf(" - %d %d!\n", from, n);
+    printMutex.unlock();
 }
 
 void GeneticAlgorithm::crossOver(std::vector<Army*>& selected)
@@ -518,7 +530,7 @@ void GeneticAlgorithm::crossOver(const Army *parent1, const Army *parent2, std::
 double GeneticAlgorithm::evaluateFitness(const Army *ind, int simSteps)
 {
     double fitness = 0.0;
-    int countDead = 0, totalShips = 0;
+//    int countDead = 0, totalShips = 0;
 
     const std::vector<Unit*>& units = ind->getUnits();
 

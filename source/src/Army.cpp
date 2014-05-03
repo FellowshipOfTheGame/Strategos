@@ -411,10 +411,7 @@ Unit* Army::getUnitByID(unsigned int id) const
 
 Unit* Army::getUnitAtIndex(unsigned int id) const
 {
-	if (id < units.size())
-		return units[id];
-	else
-		return nullptr;
+    return units[id];
 }
 
 const vector<Unit*>& Army::getUnits() const
@@ -530,12 +527,12 @@ CombatRound* Army::unifyCombatRound()
 	return _new;
 }
 
-void Army::setFitness(float ft)
+void Army::setFitness(double ft)
 {
 	fitness = ft;
 }
 
-float Army::getFitness() const
+double Army::getFitness() const
 {
 	return fitness;
 }

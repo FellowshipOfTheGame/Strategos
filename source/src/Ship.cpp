@@ -6,17 +6,8 @@
 
 using namespace std;
 
-int slowlyRotateTo(float fromRad, float toRad)
+int directionTo(float fromRad, float toRad)
 {
-//	return toRad-fromRad;
-//
-//	if (fabs(toRad-fromRad) < M_PI)
-//        return toRad-fromRad;
-//    if (toRad>fromRad)
-//        return toRad-fromRad-M_PI;//*2.0f;
-//    return toRad-fromRad+M_PI*2.0f;
-
-
     float dir = (fromRad - toRad); // * 180.0/M_PI;
 
 	if (dir > 0 && fabs(dir) <= M_PI) return -1;
@@ -24,6 +15,7 @@ int slowlyRotateTo(float fromRad, float toRad)
 	else if (dir < 0 && fabs(dir) <= M_PI) return 1;
 	else if (dir < 0 && fabs(dir) > M_PI) return -1;
 
+    return 0;
 }
 
 Ship::Ship(const shipBaseStats &initialStats, Coordinates Coord)
@@ -75,7 +67,7 @@ int Ship::update(RandomEngine& randE)
 
     const float destDir = coord.angleTo(targetPos);
     const float angularVelocity = 5.0 * M_PI/180.0; // rad/frame
-    const int sign = slowlyRotateTo( currentDirection, destDir );
+    const int sign = directionTo( currentDirection, destDir );
 
     double distance = coord.distance(targetPos);
 
@@ -177,8 +169,8 @@ int Ship::logUpdate()
 		if (status == 0)
 		{
 			status = 1;
-		}
-		else
+		}else{
 			status = 2;
+		}
 	return status;
 }

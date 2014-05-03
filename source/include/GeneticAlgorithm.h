@@ -14,7 +14,7 @@
 #include "Tactic.h"
 
 #define INDIVIDUOS_GERACAO  20
-#define SELECT_FROM_POP 10
+#define SELECT_FROM_POP 5
 #define GOLD_AMOUNT 400
 
 struct PairAF

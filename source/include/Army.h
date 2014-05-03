@@ -45,7 +45,7 @@ class Army
         int totalShips;
 
         std::mutex army_mutex;
-        float fitness;
+        double fitness;
         int isPlayer;
 
         // Para fazer load
@@ -100,6 +100,7 @@ class Army
         Unit* getUnitByID(unsigned int id) const;
 
         /// Pegar unidade de acordo com a posicao dela no vetor
+        /// Nao checa se id eh um indice valido
         Unit* getUnitAtIndex(unsigned int id) const;
 
         void printUnits() const;
@@ -108,8 +109,9 @@ class Army
 
         CombatRound* unifyCombatRound();
 
-        void setFitness(float ft);
-        float getFitness() const;
+        /// Fitness
+        void setFitness(double ft);
+        double getFitness() const;
 
         void setIsPlayer() {
             isPlayer = 1;

@@ -141,21 +141,16 @@ void Unit::setTacticAt(Tactic *tactic, int pos)
 
 Tactic* Unit::getTacticAt(unsigned int pos)
 {
-	if (pos < tactics.size())
-		return tactics[pos];
-	return nullptr;
+    return tactics[pos];
 }
 
 unsigned int Unit::getTacticSize(){
 	return tactics.size();
 }
 
-Ship* Unit::getShip(unsigned long gid)
+Ship* Unit::getShip(unsigned long gid) const
 {
-    if (gid < ships.size())
-        return ships[gid];
-
-    return nullptr;
+    return ships[gid];
 }
 
 unsigned int Unit::getID() const{

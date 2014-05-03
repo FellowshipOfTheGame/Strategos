@@ -71,8 +71,12 @@ class Unit
         void addTactic(Tactic *tactic);
         void removeTactic(int n);
         void setTacticAt(Tactic *tactic, int pos);
-        Tactic* getTacticAt(unsigned int pos);
+
+        /// Retorna o numero de taticas dentro da unit
         unsigned int getTacticSize();
+
+        /// Nao checa se pos eh um indice valido. Ver o maximo com getTacticSize
+        Tactic* getTacticAt(unsigned int pos);
 
         // Team
         unsigned int getID() const;
@@ -86,7 +90,8 @@ class Unit
         Unit* getTarget() const;
 
         /// Ships
-        Ship* getShip(unsigned long gid);
+        /// Nao checa se gid eh um valor valido.
+        Ship* getShip(unsigned long gid) const;
         unsigned long nShips() const;
 
         /// Recria todas as naves da unidade

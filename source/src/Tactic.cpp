@@ -63,15 +63,13 @@ int AttackNearestEnemy::validateTactic(std::list<Action*> &newActions, TacticVal
 	if (tvd.enemyUnits.size() == 0 || tvd.validatingUnit->getNShipsAlive() == 0)
 		return 0;
 
-	tvd.validatingUnit->setTarget( nullptr );
-
 	int Ret = 0;
 
     // Encontrar unidade mais proxima
-	Unit *nearestUnit = tvd.combatData.getNearestUnit(tvd.validatingUnit, tvd.enemyUnits);
+    double minDist;
+	Unit *nearestUnit = tvd.combatData.getNearestUnit(tvd.validatingUnit, tvd.enemyUnits, minDist);
 	if (nearestUnit == nullptr) return 0;
 
-	float minDist = tvd.combatData.getUnitDistance(tvd.validatingUnit, nearestUnit);
     tvd.validatingUnit->setTarget( nearestUnit );
 
 	if (minDist < tvd.validatingUnit->getSquadBaseStats().range)
@@ -357,17 +355,16 @@ int Kamikase::validateTactic(std::list<Action*> &newActions, TacticValidationDat
 {
 	if (tvd.enemyUnits.size() == 0)
 		return 0;
-
-	int Ret = 0;
-
 	if (tvd.validatingUnit->getNShipsAlive() == 0)
 		return 0;
 
+	int Ret = 0;
+
     // Encontrar unidade mais proxima
-	Unit *nearestUnit = tvd.combatData.getNearestUnit(tvd.validatingUnit, tvd.enemyUnits);
+    double minDist;
+	Unit *nearestUnit = tvd.combatData.getNearestUnit(tvd.validatingUnit, tvd.enemyUnits, minDist);
 	if (nearestUnit == nullptr) return 0;
 
-	double minDist = tvd.combatData.getUnitDistance(tvd.validatingUnit, nearestUnit);
     tvd.validatingUnit->setTarget( nearestUnit );
 
 	if (minDist < tvd.validatingUnit->getSquadBaseStats().range)

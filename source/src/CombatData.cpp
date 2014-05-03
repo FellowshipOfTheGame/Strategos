@@ -72,19 +72,19 @@ double CombatData::getUnitDistance(const Unit* a, const Unit* b)
 //    return it->second;
 //}
 
-Unit* CombatData::getNearestUnit(const Unit* from, const std::vector<Unit*>& to)
+Unit* CombatData::getNearestUnit(const Unit* from, const std::vector<Unit*>& to, double &outDist)
 {
     Unit *nearestUnit = nullptr;
-    double minDist = 999999;
+    outDist = 999999;
 
 	for (unsigned int i = 0; i < to.size(); ++i)
 	{
 	    if (to[i]->getNShipsAlive() == 0) continue;
 
         double dist = getUnitDistance(from, to[i]);
-        if (dist < minDist)
+        if (dist < outDist)
         {
-            minDist = dist;
+            outDist = dist;
             nearestUnit = to[i];
         }
 	}
