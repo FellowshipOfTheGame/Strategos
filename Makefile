@@ -37,6 +37,7 @@ all: $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJS)
 	g++ $(LDFLAGS) -o $(EXECUTABLE) $(OBJS) $(LDLIBS)
+	mv $(EXECUTABLE) bin/Release/
 
 depend: .depend
 

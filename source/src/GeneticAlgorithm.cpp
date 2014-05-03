@@ -132,6 +132,11 @@ void GeneticAlgorithm::createNeededDirectory()
         if (!dir) createDir(dirpath);
     closedir(dir);
 
+    dirpath += "saves/";
+    dir = opendir(dirpath.c_str());
+        if (!dir) createDir(dirpath);
+    closedir(dir);
+
     dirpath += std::to_string(armyType)+"/";
     dir = opendir(dirpath.c_str());
         if (!dir) createDir(dirpath);
