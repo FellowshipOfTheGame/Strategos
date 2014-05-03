@@ -37,11 +37,18 @@ static std::mutex printMutex;
 
 void createDir(const std::string& dir)
 {
+    int error = 0;
+    printf("Creating dir: %s\n", dir.c_str());
     #ifdef _UNIX_
-        mkdir(dir.c_str(), S_IRUSR | S_IWUSR | S_IROTH | S_IWOTH );
+        error = mkdir(dir.c_str(), S_IRWXU | S_IRWXG | S_IRUSR | S_IWUSR | S_IROTH | S_IWOTH | S_IXOTH );
     #else
-        mkdir(dir.c_str());
+        error = mkdir(dir.c_str());
     #endif
+
+    if (error == -1)
+    {
+        printf("Failed to create dir. Error: %d\n", errno);
+    }
 }
 
 // Static
@@ -128,11 +135,6 @@ void GeneticAlgorithm::createNeededDirectory()
     closedir(dir);
 
     dirpath += "GA/";
-    dir = opendir(dirpath.c_str());
-        if (!dir) createDir(dirpath);
-    closedir(dir);
-
-    dirpath += "saves/";
     dir = opendir(dirpath.c_str());
         if (!dir) createDir(dirpath);
     closedir(dir);
