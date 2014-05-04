@@ -1,4 +1,3 @@
-
 *.exe
 *.dll
 *.dat
@@ -14,3 +13,4 @@ Strategos.cscope_file_list
 .project
 /Debug
 /.settings
+bin/Release/strategos
