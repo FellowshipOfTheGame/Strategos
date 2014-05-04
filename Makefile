@@ -26,8 +26,8 @@ includes = $(include_project) $(include_lib)
 
 EXECUTABLE = strategos
 
-CPPFLAGS= $(includes) -std=c++11 -D$(OS) -g
-LDFLAGS= -g
+CPPFLAGS= $(includes) -std=c++11 -std=gnu++11 -D$(OS)
+LDFLAGS=
 LDLIBS= -lSDL2 -lSDL2_image -lSDL2_ttf
 
 SRCS_CPP = $(wildcard source/src/*.cpp) $(wildcard source/SDL2_gfx/*.cpp)
