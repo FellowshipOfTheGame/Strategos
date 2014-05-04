@@ -13,6 +13,8 @@ CXX=g++
 
 # Remove
 RM=rm -f
+# Move --> Windows: move,	Linux: mv
+MV=mv
 
 #####
 
@@ -24,8 +26,8 @@ includes = $(include_project) $(include_lib)
 
 EXECUTABLE = strategos
 
-CPPFLAGS= $(includes) -std=c++11 -D$(OS)
-LDFLAGS=
+CPPFLAGS= $(includes) -std=c++11 -D$(OS) -g
+LDFLAGS= -g
 LDLIBS= -lSDL2 -lSDL2_image -lSDL2_ttf
 
 SRCS_CPP = $(wildcard source/src/*.cpp) $(wildcard source/SDL2_gfx/*.cpp)
@@ -37,12 +39,12 @@ all: $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJS)
 	g++ $(LDFLAGS) -o $(EXECUTABLE) $(OBJS) $(LDLIBS)
-	mv $(EXECUTABLE) bin/Release/
+	$(MV) $(EXECUTABLE) bin/Release/
 
 depend: .depend
 
 .depend: $(SRCS)
-	rm -f ./.depend
+	$(RM) ./.depend
 	$(CXX) $(CPPFLAGS) -MM $^>>./.depend;
 
 clean:

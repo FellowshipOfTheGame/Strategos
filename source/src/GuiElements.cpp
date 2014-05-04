@@ -144,7 +144,7 @@ void Button::setText(Font *font, const char *str, SDL_Color forecolor, SDL_Color
 
 	SDL_Texture* t = font->renderText( Game::getGlobalGame()->getRenderer(), text, forecolor );
     if (t){
-        stringImg = new Image(t, 1, 0, 0, 0);
+        stringImg = new Image(t, 1, nullptr, 0, 0);
     }
 
 	this->forecolor = forecolor;
@@ -320,7 +320,7 @@ void TextField::setText(std::string str)
 
     delete imgText;
 	if (text.size() > 0)
-        imgText = new Image(font->renderText(Game::getGlobalGame()->getRenderer(), text.c_str(), ColorRGB8::White), 1, 0, 0, 0);
+        imgText = new Image(font->renderText(Game::getGlobalGame()->getRenderer(), text.c_str(), ColorRGB8::White), 1, nullptr, 0, 0);
     else
         imgText = 0;
 
@@ -360,7 +360,7 @@ void TextField::enterLetter(char letter)
 
 	delete imgText;
 	if (text.size() > 0)
-        imgText = new Image(font->renderText(Game::getGlobalGame()->getRenderer(), text.c_str(), ColorRGB8::White), 1, 0, 0, 0);
+        imgText = new Image(font->renderText(Game::getGlobalGame()->getRenderer(), text.c_str(), ColorRGB8::White), 1, nullptr, 0, 0);
     else
         imgText = 0;
 }
@@ -410,7 +410,7 @@ void TextField::setFont(Font *font)
 
 	delete imgText;
 	if (text.size() > 0)
-        imgText = new Image(font->renderText(Game::getGlobalGame()->getRenderer(), text.c_str(), ColorRGB8::White), 1, 0, 0, 0);
+        imgText = new Image(font->renderText(Game::getGlobalGame()->getRenderer(), text.c_str(), ColorRGB8::White), 1, nullptr, 0, 0);
     else
         imgText = 0;
 }
@@ -577,7 +577,7 @@ void ComboBox::addText(std::string str)
 		lenght = str.size() + 2;
 	this->list.push_back(str);
 
-	Image *t = new Image(font->renderText(Game::getGlobalGame()->getRenderer(), str.c_str(), color), 1, 0, 0, 0);
+	Image *t = new Image(font->renderText(Game::getGlobalGame()->getRenderer(), str.c_str(), color), 1, nullptr, 0, 0);
 
 	listImg.push_back(t);
 }
@@ -636,8 +636,8 @@ Label::Label(std::string Text, Font *font, SDL_Color color, SDL_Color shadow, st
 	this->shown = true;
 	this->active = true;
 
-	imgText = new Image( font->renderText(Game::getGlobalGame()->getRenderer(), text.c_str(), color), 1, 0, 0, 0 );
-	imgTextShadow = new Image( font->renderText(Game::getGlobalGame()->getRenderer(), text.c_str(), shadow), 1, 0, 0, 0 );
+	imgText = new Image( font->renderText(Game::getGlobalGame()->getRenderer(), text.c_str(), color), 1, nullptr, 0, 0 );
+	imgTextShadow = new Image( font->renderText(Game::getGlobalGame()->getRenderer(), text.c_str(), shadow), 1, nullptr, 0, 0 );
 }
 
 Label::~Label()

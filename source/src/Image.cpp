@@ -23,7 +23,7 @@ Image::Image(SDL_Texture *image, int frames, SDL_Rect *rect, int cX, int cY)
     if (rect != nullptr){
         cut = rect;
     }else{
-        cut = new SDL_Rect;
+        cut = new SDL_Rect[1];
         cut->x = cut->y = 0;
         SDL_QueryTexture(image, nullptr, nullptr, &(cut->w), &(cut->h));
 //        cut->w = image->w;

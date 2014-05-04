@@ -97,10 +97,8 @@ class Ship
         const Coordinates& getPosition() const;
         const Coordinates& getTargetPos() const;
         int logUpdate();
-        CombatRound* getDmgperround()
-		{
-			return this->dmgperround;
-		}
+
+        CombatRound* getDmgperround();
 };
 
 #endif

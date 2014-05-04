@@ -164,13 +164,16 @@ int Ship::logUpdate()
 	if (this->stats.currentHP>0)
 	{
 		deathTime++;
-	}
-	else
-		if (status == 0)
-		{
-			status = 1;
-		}else{
-			status = 2;
-		}
+	}else if (status == 0){
+        status = 1;
+    }else{
+        status = 2;
+    }
+
 	return status;
+}
+
+CombatRound* Ship::getDmgperround()
+{
+    return this->dmgperround;
 }
