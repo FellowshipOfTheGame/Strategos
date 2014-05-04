@@ -71,6 +71,14 @@ Game::~Game()
 
 	globalGame = 0;
 
+	std::vector<CombatLog*>::iterator iter = combatLog.begin();
+	while (iter != combatLog.end())
+	{
+		if ((*iter) != NULL)
+			delete (*iter);
+		iter++;
+	}
+
 	delete view;
 }
 

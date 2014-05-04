@@ -67,11 +67,11 @@ void Result::Render()
 {
 	SDL_Renderer* renderer = Game::getGlobalGame()->getRenderer();
 
-	int x,y,i;
+	int i;
 	int maxx=600,minx=200;
 	int maxy=400,miny=200;
-	int divy, xnext, ynext, val;
-	int maxStep=0, maxDmg=0;
+	double x, y, xnext, ynext;
+	double maxStep=0, minStep=0, maxDmg=0;
 	CombatRoundItem *min,*max;
     SDL_Rect rFrame;
     rFrame.x = minx;
@@ -79,7 +79,7 @@ void Result::Render()
     rFrame.w = maxx-minx;
     rFrame.h = maxy-miny;
     int size,pass;
-    int sX, sY, tX, tY;
+    double sX, sY, tX, tY;
 
     Game::getGlobalGame()->setBackgroundColor(255, 255, 255);
     //imgBackground->DrawImage(renderer);
@@ -91,19 +91,27 @@ void Result::Render()
     if (log1->getLog().size())
     {
     	maxStep = log1->getLog()[log1->getLog().size()-1]->getStep();
+    	minStep = log1->getLog()[0]->getStep();
     	max = (*std::max_element(log1->getLog().begin(),log1->getLog().end(), CombatRoundItem::compareMaxDamage));
     	maxDmg = max->getRoundDamage();
+    } else {
+    	minStep = 99999;
     }
     if (log2->getLog().size())
     {
-    	maxStep = (log2->getLog()[log2->getLog().size()-1]->getStep() < maxStep)?maxStep:log2->getLog()[log2->getLog().size()-1]->getStep();
+    	if ((log2->getLog()[log2->getLog().size()-1]->getStep() < maxStep))
+    	{
+    		maxStep = log2->getLog()[log2->getLog().size()-1]->getStep();
+    	}
+    	minStep = (log2->getLog()[0]->getStep() < minStep)?log2->getLog()[0]->getStep():minStep;
     	max = (*std::max_element(log1->getLog().begin(),log1->getLog().end(), CombatRoundItem::compareMaxDamage));
     	int auxmaxDmg =  max->getRoundDamage();
     	if (auxmaxDmg > maxDmg)
     		maxDmg = auxmaxDmg;
     }
 
-    sX = 400/(maxStep);
+    sX = (rFrame.w)/(maxStep- minStep);
+    printf ("%lf\n",sX);
     sY = (-rFrame.h)/(maxDmg);
 
     tX = rFrame.x;
@@ -116,7 +124,7 @@ void Result::Render()
 
         SDL_SetRenderDrawColor(renderer, 255,0,0, 0);
         i =0;
-        pass = 0;
+        pass = min->getStep();
         x = tX;
         y = tY;
         xnext = tX;
@@ -127,7 +135,6 @@ void Result::Render()
 			{
 				xnext = (pass+1)*sX + tX;
 				ynext = (log1->getLog()[i]->getRoundDamage()*sY) + tY;
-				printf ("%d %d\n",x,xnext);
 				i++;
 			}
 			else
@@ -149,7 +156,7 @@ void Result::Render()
 
         SDL_SetRenderDrawColor(renderer, 0,0,255, 0);
         i =0;
-        pass = 0;
+        pass = min->getStep();
         x = tX;
 		y = tY;
 		xnext = tX;
