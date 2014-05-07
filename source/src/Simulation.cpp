@@ -36,8 +36,10 @@ Simulation::Simulation(STATE previous)
 
     if (!Game::getGlobalGame()->getArmy1()){
     	printf ("primeiro ponteiro nulo\n");
+    	exit(-5);
     }else if (!Game::getGlobalGame()->getArmy2()){
         printf ("segundo ponteiro nulo\n");
+    	exit(-5);
     }else{
     	printf ("ambos nao nulos");
     }

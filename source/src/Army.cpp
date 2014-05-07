@@ -286,6 +286,19 @@ Army* Army::clone( const Army* army )
         clone->addUnit( new Unit( army->units[i] ) );
     }
 
+    for (unsigned int i = 0; i < army->units.size(); ++i)
+    {
+        const vector<Unit*>& units = army->getUnits();
+        for (unsigned int j = 0; j < units[i]->getTacticSize(); ++j)
+        {
+            const Tactic *originalTactic = units[i]->getTacticAt(j);
+            if ( originalTactic->getInfo().allyUnit ){
+                const int originalID = originalTactic->getInfo().allyUnit->getID();
+                clone->getUnitAtIndex(i)->getTacticAt(j)->setInfo( TacticInfo(clone->getUnitAtIndex(originalID)) );
+            }
+        }
+    }
+
     return clone;
 }
 

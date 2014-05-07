@@ -115,6 +115,13 @@ void Play::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keysym key
                 Game::getGlobalGame()->setArmy2(algorithm[0]->higherFitnessArmy());
             }
 
+            if (Game::getGlobalGame()->getArmy1() == nullptr
+                || Game::getGlobalGame()->getArmy2() == nullptr)
+            {
+                printf("ERROR: Army not loaded!\n");
+                return;
+            }
+
             printf("ARMY2: %p\n", Game::getGlobalGame()->getArmy2());
 
             /*if (algorithm){

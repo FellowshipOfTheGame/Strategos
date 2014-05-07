@@ -35,6 +35,11 @@
 static std::mutex printMutex;
 #define printTH(x...){ printMutex.lock(); printf(x); printMutex.unlock(); }
 
+const double mutation_chance = 0.3;
+const int add_random_armies = 2;
+const int num_geracoes = 50;
+
+
 void createDir(const std::string& dir)
 {
     int error = 0;
@@ -269,7 +274,7 @@ Army* GeneticAlgorithm::generateRandomArmy()
 
 void GeneticAlgorithm::run()
 {
-    for (unsigned int i = 0; i < 5; i++)
+    for (unsigned int i = 0; i < num_geracoes; i++)
     {
         std::vector<Army*> selected, rejected;
 
@@ -280,8 +285,9 @@ void GeneticAlgorithm::run()
         srand(time(nullptr));
 
         // Completar exercito para INDIVIDUOS_GERACAO
-        // Adicionar 4 aleatorios sempre
-        randomArmies( INDIVIDUOS_GERACAO - individuos.size() + 4);
+        randomArmies( INDIVIDUOS_GERACAO - individuos.size());
+        // Adicionar alguns individuos aleatorios
+        randomArmies( add_random_armies );
 
         // Apply the selection - currently Tournament
         selectFromPop(SELECT_FROM_POP, selected, rejected);
@@ -292,12 +298,15 @@ void GeneticAlgorithm::run()
         individuos.clear();
         rejected.clear();
 
+        Army* best = Army::clone(selected[0]);
+
         // Apply CrossOver
         crossOver(selected);
 
         // Apply Mutation
         mutate(selected);
 
+        individuos.push_back(best);
         for (unsigned int j = 0; j < selected.size(); ++j){
             individuos.push_back(selected[j]);
         }
@@ -476,6 +485,8 @@ void GeneticAlgorithm::crossOver(std::vector<Army*>& selected)
         crossOver(selected[i], selected[other], indCross); // Memory Leak
     }
 
+
+
 //    printf("CrossOvers: %d [%d]\n", indCross.size(), indCross.capacity());
 
     // Deletar alguns individuos extras aleatoriamente
@@ -496,7 +507,7 @@ void GeneticAlgorithm::mutate(std::vector<Army*>& selected)
 {
     for (unsigned int i = 0; i < selected.size(); ++i)
     {
-        if ( (double)rand()/(double)RAND_MAX < 0.4)
+        if ( (double)rand()/(double)RAND_MAX < mutation_chance)
             mutation(selected[i], rand()%MUTATION_TOTAL);
     }
 }
@@ -505,14 +516,8 @@ void GeneticAlgorithm::mutate(std::vector<Army*>& selected)
 //Because armies can have different sizes (in units), we will use "Cut and Splice"
 void GeneticAlgorithm::crossOver(const Army *parent1, const Army *parent2, std::vector<Army*>& ind)
 {
-    std::string str;
-    str.assign(parent1->getName().c_str());
-    str.append(parent2->getName().c_str());
-    Army* child1 = new Army(str, parent1->getDictionary());
-
-    str.assign(parent2->getName().c_str());
-    str.append(parent1->getName().c_str());
-    Army* child2 = new Army(str, parent2->getDictionary());
+    Army* child1 = new Army(parent1->getName(), parent1->getDictionary());
+    Army* child2 = new Army(parent2->getName(), parent2->getDictionary());
 
     unsigned int i;
     for (i = 0; i < parent1->nUnits() && i < parent2->nUnits(); ++i )
@@ -538,6 +543,11 @@ void GeneticAlgorithm::crossOver(const Army *parent1, const Army *parent2, std::
     for (; i < parent2->nUnits(); ++i){
         child2->addUnit( new Unit( parent2->getUnitAtIndex(i) ) );
     }
+
+//    if ( (double)rand()/(double)RAND_MAX < 0.1)
+//            mutation(child1, rand()%MUTATION_TOTAL);
+//    if ( (double)rand()/(double)RAND_MAX < 0.1)
+//            mutation(child2, rand()%MUTATION_TOTAL);
 
     // Garantir valor das unidades
     GoldCap(child1);
@@ -571,11 +581,12 @@ double GeneticAlgorithm::evaluateFitness(const Army *ind, int simSteps)
 
     Unit *motherUnit = units[0];
 
+    const double max_steps = 900000.0;
     // Perder -> Quanto mais demorar melhor. -0.5 a 0.5
     if(motherUnit->getNShipsAlive() == 0){
-        if (simSteps > 1000000)
+        if (simSteps > max_steps)
             return 0.5;
-        return -0.5+simSteps/1000000.0;
+        return -0.5+simSteps/max_steps;
     }else{ // Ganhar: Quanto mais rapido melhor. 0.5 a 1.5
         return 0.5+1.0/(double)simSteps;
     }

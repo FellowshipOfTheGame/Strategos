@@ -13,9 +13,9 @@
 #include "Army.h"
 #include "Tactic.h"
 
-#define INDIVIDUOS_GERACAO  20
-#define SELECT_FROM_POP 5
-#define GOLD_AMOUNT 400
+#define INDIVIDUOS_GERACAO  30
+#define SELECT_FROM_POP 2
+#define GOLD_AMOUNT 350
 
 struct PairAF
 {

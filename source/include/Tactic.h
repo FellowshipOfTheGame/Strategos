@@ -37,10 +37,13 @@ class Unit;
 
 struct TacticInfo
 {
+    TacticInfo(const TacticInfo& ti)
+        : allyUnit(ti.allyUnit)
+    {}
+
     TacticInfo(const Unit* unit)
         : allyUnit(unit)
-    {
-    }
+    {}
 
     const Unit* allyUnit; // Unidade aliada para interagir
 };
