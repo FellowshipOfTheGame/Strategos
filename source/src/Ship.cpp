@@ -18,15 +18,13 @@ int directionTo(float fromRad, float toRad)
     return 0;
 }
 
-Ship::Ship(const shipBaseStats &initialStats, Coordinates Coord)
+Ship::Ship(const shipBaseStats &initialStats, const Coordinates& Coord, CombatRound* log)
     : baseStats(initialStats), stats(initialStats),
-      coord(Coord), unitPos(Coord), targetPos(Coord)
+      coord(Coord), unitPos(Coord), targetPos(Coord), myLog(log)
 {
     currentDirection = M_PI/2;
 
     status = 0;
-    deathTime=0;
-    dmgperround = new CombatRound();
 }
 
 Ship::~Ship()
@@ -120,10 +118,8 @@ shipCurrentStats &Ship::getStats()
 
 bool Ship::takeDamage(double damage)
 {
-    //registra quanto de dano bruto foi recebido
-	CombatRoundItem *temp = new CombatRoundItem(this->deathTime, damage);
-	dmgperround->addLog(temp);
-	delete temp;
+    RoundData rd(damage, 0,0,0);
+
     //printf ("shiled: %3d hp:%3d \n",stats.currentShield, stats.currentHP);
     if (stats.currentShield > 0)
     {
@@ -135,6 +131,11 @@ bool Ship::takeDamage(double damage)
     }
 
     stats.currentHP -= damage;
+
+    if (myLog){
+        rd.deaths = (stats.currentHP <= 0);
+        myLog->addLog(rd);
+    }
 
     return (stats.currentHP <= 0);
 }
@@ -157,23 +158,4 @@ int Ship::getX() const{
 
 int Ship::getY() const{
     return coord.y;
-}
-
-int Ship::logUpdate()
-{
-	if (this->stats.currentHP>0)
-	{
-		deathTime++;
-	}else if (status == 0){
-        status = 1;
-    }else{
-        status = 2;
-    }
-
-	return status;
-}
-
-CombatRound* Ship::getDmgperround()
-{
-    return this->dmgperround;
 }

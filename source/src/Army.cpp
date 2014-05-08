@@ -447,7 +447,7 @@ const std::string& Army::getName() const
 	return name;
 }
 
-void Army::restore(int asTeam)
+void Army::restore(int asTeam, CombatLog *log)
 {
     int offX = 0;
     int offY = 0;
@@ -460,13 +460,13 @@ void Army::restore(int asTeam)
         for (unsigned int i = 0; i < units.size(); i++){
             const int x = TEAM_AREA_WIDTH - units[i]->getBluePrintX() + offX;
             const int y = TEAM_AREA_HEIGHT - units[i]->getBluePrintY() + offY;
-            units[i]->restoreUnit( 1, Coordinates(x, y) );
+            units[i]->restoreUnit( 1, Coordinates(x, y), log );
         }
     }
     else
     {
         for (unsigned int i = 0; i < units.size(); i++){
-            units[i]->restoreUnit( 0 );
+            units[i]->restoreUnit( 0, log );
         }
     }
 }
@@ -525,19 +525,6 @@ void Army::render()
 //          k->shipsGFX[i]->DrawImage(i*37, j*37, Game::getGlobalGame()->getRenderer());
 //        }
 //    }
-}
-
-CombatRound* Army::unifyCombatRound()
-{
-	printf ("unificando army - begin\n");
-	CombatRound* _new;
-	_new = new CombatRound();
-	 for (unsigned int i = 0; i < units.size(); ++i)
-	 {
-		 _new = _new->ConcatCombatRound(units[i]->unifyCombatRound());
-	 }
-	 printf ("unificando army - end\n");
-	return _new;
 }
 
 void Army::setFitness(double ft)

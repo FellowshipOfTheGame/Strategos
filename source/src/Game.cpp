@@ -13,7 +13,7 @@
 Game* Game::globalGame = 0;
 
 Game::Game()
-    : armySim1(0), armySim2(0)
+    : armySim1(nullptr), armySim2(nullptr), log1(nullptr), log2(nullptr)
 {
 	int screenWidth = 1024, screenHeight = 768, screenBPP = 0;
     globalGame = this;
@@ -31,24 +31,19 @@ Game::Game()
 	run = true;
 	editingArmy = nullptr;
 
+    // Criar um GA para cada tipo de Army
 	algorithm[0] = new GeneticAlgorithm(0);
 	algorithm[1] = new GeneticAlgorithm(1);
 	algorithm[2] = new GeneticAlgorithm(2);
-	combatLog.push_back(nullptr);
-	combatLog.push_back(nullptr);
 
 	srand((unsigned int) time(nullptr));
 	loadDictionaries();
 
-    // TODO: Alterar para 3 na versao final
-    // 1 apenas para agilizar debugs
-
     printf("Starting GA\n");
     clock_t time = clock();
-    for (int i = 0; i < 1; ++i)
+    for (int i = 0; i < 1; ++i) // TODO: Alterar para 3 na versao final 1 apenas para agilizar debugs
     {
         algorithm[i]->initialize();
-        for (int j = 0; j < 1; ++j)
         algorithm[i]->run();
     }
     printf("GA time: %lfs\n", (clock()-time) / (double)CLOCKS_PER_SEC);
@@ -70,14 +65,6 @@ Game::~Game()
 	delete algorithm[2];
 
 	globalGame = 0;
-
-	std::vector<CombatLog*>::iterator iter = combatLog.begin();
-	while (iter != combatLog.end())
-	{
-		if ((*iter) != NULL)
-			delete (*iter);
-		iter++;
-	}
 
 	delete view;
 }
@@ -177,6 +164,11 @@ void Game::setArmy1(const std::string& str)
 	if (armySim1 != nullptr)
 		delete armySim1;
 	armySim1 = Army::loadArmy(str);
+
+	if (log1)
+        delete log1;
+
+    log1 = new CombatLog(armySim1->nUnits());
 }
 
 void Game::setArmy1(Army *a)
@@ -184,6 +176,12 @@ void Game::setArmy1(Army *a)
 	if (armySim1 != nullptr)
 		delete armySim1;
 	armySim1 = a;
+
+
+	if (log1)
+        delete log1;
+
+    log1 = new CombatLog(armySim1->nUnits());
 }
 
 Army* Game::getArmy2() const
@@ -196,6 +194,11 @@ void Game::setArmy2(const std::string& str)
 	if (armySim2 != nullptr)
 		delete armySim2;
 	armySim2  = Army::loadArmy(str);
+
+	if (log2)
+        delete log2;
+
+    log2 = new CombatLog(armySim2->nUnits());
 }
 
 void Game::setArmy2(Army *a)
@@ -203,6 +206,11 @@ void Game::setArmy2(Army *a)
 	if (armySim2 != nullptr)
 		delete armySim2;
 	armySim2 = a;
+
+	if (log2)
+        delete log2;
+
+    log2 = new CombatLog(armySim2->nUnits());
 }
 
 GeneticAlgorithm** Game::getGA()
@@ -212,21 +220,8 @@ GeneticAlgorithm** Game::getGA()
 
 CombatLog* Game::getCombatLog(int i)
 {
-	return combatLog[i];
-}
+    if (i == 0)
+        return log1;
 
-void Game::setCombatLog(int i)
-{
-	CombatLog *x =combatLog[i];
-	if (x!=nullptr)
-		delete x;
-	combatLog[i] = new CombatLog();
-}
-
-void Game::setCombatLog(int i, CombatLog *cmbLog)
-{
-	CombatLog *x =combatLog[i];
-	if (x!=nullptr)
-		delete x;
-	combatLog[i] = cmbLog;
+	return log2;
 }

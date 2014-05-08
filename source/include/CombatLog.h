@@ -1,115 +1,91 @@
-/*
- * CombatLog.h
- *
- *  Created on: 31/08/2013
- *      Author: Eldhelion
- */
 #ifndef COMBATLOG_H_
 #define COMBATLOG_H_
 
-#include <time.h>
-#include <algorithm>
-#include <iostream>
 #include <vector>
+#include <map>
 
-#include "Army.h"
-#include "Unit.h"
-#include "Ship.h"
-
-class CombatRoundItem
+struct RoundData
 {
-	private:
-		int step;
-		double roundDamage;
-	public:
-		CombatRoundItem(int s, double d);
-		CombatRoundItem(int s);
-		CombatRoundItem(CombatRoundItem* origin);
+    RoundData()
+        : damageReceived(0), damageDealt(0), deaths(0), kills(0)
+            {}
 
-		void addRoundDamage(int roundDamage);
+    RoundData(double dR, double dD, int d, int k)
+        : damageReceived(dR), damageDealt(dD), deaths(d), kills(k)
+            {}
 
-		int getRoundDamage() const;
-		int getStep();
+    const RoundData& operator +=(const RoundData& x)
+    {
+        damageReceived += x.damageReceived;
+        damageDealt += x.damageDealt;
 
-		CombatRoundItem* clone();
-		bool operator <(CombatRoundItem* origin) const;
-		bool operator ==(CombatRoundItem* origin) const;
-		static bool compareMinor(CombatRoundItem *i, CombatRoundItem *j);
-		static bool compareEqual(CombatRoundItem *i, CombatRoundItem *j);
-		static bool compareMaxDamage(CombatRoundItem *i, CombatRoundItem *j);
+        deaths += x.deaths;
+        kills += x.kills;
+
+        return *this;
+    }
+
+    const RoundData& operator =(const RoundData& x)
+    {
+        damageReceived = x.damageReceived;
+        damageDealt = x.damageDealt;
+
+        deaths = x.deaths;
+        kills = x.kills;
+
+        return *this;
+    }
+
+    double damageReceived;
+    double damageDealt;
+
+    int deaths;
+    int kills;
 };
+
+typedef std::map<int, RoundData> LogMap;
 
 class CombatRound
 {
 	private:
-		std::vector<CombatRoundItem*> log;
+		LogMap log;
+		int current_step;
+
 	public:
 		CombatRound();
-		CombatRound(std::vector<CombatRoundItem*>& origin);
 		~CombatRound();
-		const std::vector<CombatRoundItem*>& getLog() const;
 
-		void addLog(CombatRoundItem *round);
+		const LogMap& getLog() const;
 
-		CombatRound* ConcatCombatRound(CombatRound* cb);
-		void print();
+		void addLog(const RoundData& data);
+		void addLog(int time, const RoundData& data);
 
+		void print() const;
+
+		void nextStep();
+
+		int getLastLoggedTime() const;
+		int getFirstLoggedTime() const;
 };
 
-class CombatLogItem
-{
-	private:
-		time_t time;
-		int squadNum, shipNum;
-	public:
-		CombatLogItem(int squad, int ship);
-		~CombatLogItem();
-
-		int getShipNum() const
-		{
-			return shipNum;
-		}
-
-		int getSquadNum() const
-		{
-			return squadNum;
-		}
-
-		time_t getTime() const
-		{
-			return time;
-		}
-};
-
+// Log de uma army
 class CombatLog
 {
-	private:
-		std::vector<CombatLogItem*> combatline;
-		CombatRound *combatRegister;
-		int damageDealt, damageTaken;
-	public:
-		CombatLog();
-		~CombatLog();
-		void addLog(int squad, int ship);
-		std::vector<CombatLogItem*> getLog();
+    private:
+        // Guarda o log geral de todas as unidades
+        CombatRound generalLog;
 
-		int getTotalDamageDealt() const
-		{
-			return damageDealt;
-		}
+        // Guarda o log especifico para cada Unit
+        std::vector<CombatRound> unitLog;
 
-		int getTotalDamageTaken() const
-		{
-			return damageTaken;
-		}
+    public:
+        CombatLog(int nUnits);
 
-		int getLogSize()
-		{
-			return combatline.size();
-		}
+        CombatRound* getLogForUnit(int unitID);
+        const CombatRound* getGeneralLog() const;
+        void nextStep();
 
-		void setRegister(CombatRound *cb);
-		CombatRound* getRegister();
+        void calculateGeneralLog();
 };
 
 #endif /* COMBATLOG_H_ */

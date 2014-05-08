@@ -37,7 +37,7 @@ static std::mutex printMutex;
 
 const double mutation_chance = 0.3;
 const int add_random_armies = 2;
-const int num_geracoes = 50;
+const int num_geracoes = 5;
 
 
 void createDir(const std::string& dir)
@@ -413,7 +413,7 @@ void GeneticAlgorithm::threadSimulate( unsigned int from, unsigned int n )
 //Sequencial
             printf("->Battle: %d with %d -- Units: %d vs %d\n", i, opponent, individuos[i]->nUnits(), individuos[opponent]->nUnits());
 #endif
-            World *world = new World(armyAclone, armyBclone);
+            World *world = new World(armyAclone, armyBclone, nullptr, nullptr);
 
             int steps = 0;
             while(ret == _SIM_CONTINUE_){

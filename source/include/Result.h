@@ -18,7 +18,11 @@ private:
     Button *btn_Next;
 
     Label *alive,*dead;
-    CombatRound *log1, *log2;
+    CombatLog *original_log1, *original_log2;
+
+    CombatRound normalized_generalLog1, normalized_generalLog2;
+
+    void normalizeRounds(const CombatRound* l1, const CombatRound* l2, const CombatRound& out1, const CombatRound& out2);
 
 public:
     Result(STATE previous);

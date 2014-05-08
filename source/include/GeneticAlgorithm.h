@@ -13,7 +13,7 @@
 #include "Army.h"
 #include "Tactic.h"
 
-#define INDIVIDUOS_GERACAO  30
+#define INDIVIDUOS_GERACAO  8
 #define SELECT_FROM_POP 2
 #define GOLD_AMOUNT 350
 

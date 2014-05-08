@@ -32,11 +32,10 @@ class Game
 		std::vector<Dictionary*> dict;
 		Army *editingArmy;
 		Army *armySim1, *armySim2;
+		CombatLog *log1, *log2;
 		bool run;
 		int globalSeed;
         GeneticAlgorithm *algorithm[3];
-
-        std::vector<CombatLog *>   combatLog;
 
 		void loadDictionaries();
 
@@ -106,13 +105,9 @@ class Game
 		void setArmy2(const std::string& str);
 		void setArmy2(Army *a);
 
-//        void setGA(GeneticAlgorithm *ga);
         GeneticAlgorithm **getGA();
 
 		CombatLog* getCombatLog(int i);
-
-		void setCombatLog(int i);
-		void setCombatLog(int i, CombatLog *cmbLog);
 
 		SDL_Renderer *getRenderer();
 };
