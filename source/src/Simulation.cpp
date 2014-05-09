@@ -5,7 +5,7 @@
 #include "Global.h"
 #include "Game.h"
 
-#include "SDL2_gfx/SDL2_gfxPrimitives.h"
+#include <SDL2_gfx/SDL2_gfxPrimitives.h>
 
 Simulation::Simulation(STATE previous)
     : StateMachine(previous, GAMEPLAY, GAMEPLAY),

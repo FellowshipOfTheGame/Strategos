@@ -32,8 +32,6 @@ class GeneticAlgorithm : public Algorithm
     public:
         GeneticAlgorithm(int _armyType);
         ~GeneticAlgorithm();
-
-        void initialize() override;
         void run() override;
 
         double evaluateFitness(const Army *ind, int simSteps);
@@ -50,18 +48,15 @@ class GeneticAlgorithm : public Algorithm
 
         Army *generateRandomArmy();
 
-        //talvez nao use isso
-        Army* higherFitnessArmy();
-        std::vector<Army*>& getSelectedArmies();
-
         // Mutation
         void mutation(Army *ind, int degree);
         void mutateUnitType(Army* ind, int unitID, int newType);
         void mutateTactic(Tactic *tactic, int degree);
 
+    protected:
+        virtual void addInitialArmy(Army *army);
     private:
-        int armyType;
-        std::string directory;
+        
         std::vector<Army*> individuos;
 
         int allowedThreads;
@@ -84,12 +79,12 @@ class GeneticAlgorithm : public Algorithm
 
         //
         void threadSimulate( unsigned int from, unsigned int n );
-
-        void createNeededDirectory();
-
         /// Gen things
         static Trigger* generateRandomTrigger();
         static Tactic* generateRandomTactic( const Army* forArmy, int forUnitID );
+
+        virtual Army* higherFitnessArmy();
+        virtual std::vector<Army*>& getSelectedArmies();
 };
 
 #endif

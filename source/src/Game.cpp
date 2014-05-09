@@ -205,7 +205,7 @@ void Game::setArmy2(Army *a)
 	armySim2 = a;
 }
 
-GeneticAlgorithm** Game::getGA()
+Algorithm** Game::getAlgorithm()
 {
 	return algorithm;
 }

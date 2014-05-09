@@ -4,12 +4,6 @@
 //
 //
 
-#ifdef _UNIX_
-    #include <sys/types.h>
-    #include <sys/stat.h>
-#endif // _UNIX_
-
-#include <dirent.h>
 #include <sstream>
 #include <set>
 
@@ -40,21 +34,7 @@ const int add_random_armies = 2;
 const int num_geracoes = 50;
 
 
-void createDir(const std::string& dir)
-{
-    int error = 0;
-    printf("Creating dir: %s\n", dir.c_str());
-    #ifdef _UNIX_
-        error = mkdir(dir.c_str(), S_IRWXU | S_IRWXG | S_IRUSR | S_IWUSR | S_IROTH | S_IWOTH | S_IXOTH );
-    #else
-        error = mkdir(dir.c_str());
-    #endif
 
-    if (error == -1)
-    {
-        printf("Failed to create dir. Error: %d\n", errno);
-    }
-}
 
 // Static
 Tactic* GeneticAlgorithm::generateRandomTactic( const Army* forArmy, int forUnitID )
@@ -115,9 +95,8 @@ Trigger* GeneticAlgorithm::generateRandomTrigger()
 
 
 GeneticAlgorithm::GeneticAlgorithm(int _armyType)
-    : Algorithm(), armyType(_armyType)
+    : Algorithm(_armyType)
 {
-    directory = "GA/"+std::to_string(armyType)+"/";
 
     allowedThreads = std::thread::hardware_concurrency();
 }
@@ -130,58 +109,6 @@ GeneticAlgorithm::~GeneticAlgorithm()
     }
 }
 
-void GeneticAlgorithm::createNeededDirectory()
-{
-    DIR *dir;
-    std::string dirpath = "assets/saves/";
-
-    dir = opendir(dirpath.c_str());
-        if (!dir) createDir(dirpath);
-    closedir(dir);
-
-    dirpath += "GA/";
-    dir = opendir(dirpath.c_str());
-        if (!dir) createDir(dirpath);
-    closedir(dir);
-
-    dirpath += std::to_string(armyType)+"/";
-    dir = opendir(dirpath.c_str());
-        if (!dir) createDir(dirpath);
-    closedir(dir);
-}
-
-void GeneticAlgorithm::initialize()
-{
-    DIR *dir;
-    dirent *ent;
-
-    createNeededDirectory();
-
-    std::string dirpath = "assets/saves/GA/" + std::to_string(armyType) + "/";
-
-    dir = opendir(dirpath.c_str());
-    if (dir == nullptr)
-    {
-        printf("Error opening directory: %s\n", dirpath.c_str());
-        exit(-5);
-    }
-
-    // Carregar exercitos prontos
-    while ((ent = readdir (dir)) != nullptr)
-    {
-        std::string tmp = "GA/" + std::to_string(armyType) + "/";
-
-        tmp += ent->d_name;
-        tmp.replace(tmp.length()-4, 4, "\0");
-
-        Army *army = Army::loadArmy(tmp);
-
-        if(army != nullptr)
-            individuos.push_back(army);
-    }
-
-    closedir (dir);
-}
 
 void GeneticAlgorithm::randomArmies(int size)
 {
@@ -271,6 +198,11 @@ Army* GeneticAlgorithm::generateRandomArmy()
 
     return randomArmy;
 }
+void GeneticAlgorithm::addInitialArmy(Army *army)
+{
+    individuos.push_back(army);
+
+}
 
 void GeneticAlgorithm::run()
 {
@@ -321,15 +253,8 @@ void GeneticAlgorithm::run()
 #endif
     for (unsigned int i = 0; i < individuos.size(); i++)
     {
-        sprintf(buffer, "r%d", i+1);
-        individuos[i]->setArmyName(buffer);
-        Army::saveArmy(individuos[i], directory.c_str());
-#ifdef _DEBUG_
-        printf("army[%d]\n", i+1);
-#endif
+        saveArmy(individuos[i], i);
     }
-
-//    exit(0);
 }
 
 void GeneticAlgorithm::selectFromPop(unsigned int n, std::vector<Army*>& selected, std::vector<Army*>& rejected)
