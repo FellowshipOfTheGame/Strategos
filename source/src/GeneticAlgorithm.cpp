@@ -237,35 +237,19 @@ void GeneticAlgorithm::threadSimulate( unsigned int from, unsigned int n )
 //Sequencial
             printf("->Battle: %d with %d -- Units: %d vs %d\n", i, opponent, individuos[i]->nUnits(), individuos[opponent]->nUnits());
 #endif
-            int steps;
-            int ret = this->objective->fight(armyAclone, armyBclone,&steps);
-
-            // Bonus para ganhadores
-            double moreFitA = 0;
-            double moreFitB = 0;
-            if (ret == _SIM_DRAW_){
-//                printf("Draw!\n");
-                moreFitA = 0.05;
-                moreFitB = 0.05;
-            }else if (ret == _SIM_ARMY0_WIN_){
-//                printf("Winner: %d\n", i);
-                moreFitA = 0.15;
-            }else{
-                moreFitB = 0.15;
-//                printf("Winner: %d\n", opponent);
-            }
-
-            fitA += this->objective->calculateFitness(armyAclone, steps) + moreFitA;
-            const double fitB = this->objective->calculateFitness(armyBclone, steps) + moreFitB;
+            double _fitA, _fitB;
+            this->objective->evaluate(armyAclone, armyBclone, &_fitA, &_fitB);
             delete armyBclone;
+
+            fitA += _fitA;
 
             // Utilizar essa batalha para o exercito B tambem, mas com peso menor.
             armyB->Lock();
                 if (armyB->getFitness() == DONT_HAVE_FITNESS){
-                    armyB->setFitness(fitB);
+                    armyB->setFitness(_fitB);
 //                    printf("%d FitB: %lf\n", opponent, fitB);
                 }else{
-                    armyB->setFitness(armyB->getFitness()*0.8 + fitB*0.2);
+                    armyB->setFitness(armyB->getFitness()*0.8 + _fitB*0.2);
                 }
 			armyB->Unlock();
         }

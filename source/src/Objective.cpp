@@ -113,3 +113,24 @@ int Objective::fight(Army *a, Army *b, int *steps)
     delete world;
     return *steps;
 }
+void Objective::evaluate(Army *a, Army *b, double *fitA, double *fitB){
+    int steps;
+    int ret = this->fight(a, b,&steps);
+
+    double moreFitA = 0;
+    double moreFitB = 0;
+    if (ret == _SIM_DRAW_){
+//                printf("Draw!\n");
+        moreFitA = 0.05;
+        moreFitB = 0.05;
+    }else if (ret == _SIM_ARMY0_WIN_){
+//                printf("Winner: %d\n", i);
+        moreFitA = 0.15;
+    }else{
+        moreFitB = 0.15;
+//                printf("Winner: %d\n", opponent);
+    }
+
+    *fitA = this->calculateFitness(a, steps) + moreFitA;
+    *fitB = this->calculateFitness(b, steps) + moreFitB;
+}
