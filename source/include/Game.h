@@ -34,7 +34,7 @@ class Game
 		Army *armySim1, *armySim2;
 		bool run;
 		int globalSeed;
-        GeneticAlgorithm *algorithm[3];
+        Algorithm *algorithm[3];
 
         std::vector<CombatLog *>   combatLog;
 
@@ -107,7 +107,7 @@ class Game
 		void setArmy2(Army *a);
 
 //        void setGA(GeneticAlgorithm *ga);
-        GeneticAlgorithm **getGA();
+        Algorithm **getAlgorithm();
 
 		CombatLog* getCombatLog(int i);
 

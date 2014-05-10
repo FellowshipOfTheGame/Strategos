@@ -94,7 +94,7 @@ void Play::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keysym key
 	{
 		if (action == MOUSE_RELEASED_EVENT)
         {
-            GeneticAlgorithm **algorithm = Game::getGlobalGame()->getGA();
+            Algorithm **algorithm = Game::getGlobalGame()->getAlgorithm();
 
             const std::vector<Army*>& ar = algorithm[0]->getSelectedArmies();
             printf("NArmies: %u\n", ar.size());

@@ -9,9 +9,12 @@
 
 #include <stdio.h>
 
-#include "Algorithm.h"
-#include "Army.h"
-#include "Tactic.h"
+#include <Algorithm.h>
+#include <Army.h>
+#include <InitManager.h>
+#include <CrossoverManager.h>
+#include <MutationManager.h>
+#include <Objective.h>
 
 #define INDIVIDUOS_GERACAO  30
 #define SELECT_FROM_POP 2
@@ -32,36 +35,22 @@ class GeneticAlgorithm : public Algorithm
     public:
         GeneticAlgorithm(int _armyType);
         ~GeneticAlgorithm();
-
-        void initialize() override;
         void run() override;
 
-        double evaluateFitness(const Army *ind, int simSteps);
         void selection();
         void randomArmies(int size);
         void normalizeFitness(std::vector<PairAF> *pairs);
-        void rectifyUnit(Army *ind);
-        void GoldCap(Army *army);
+        
 
         static bool highToLow(PairAF p1, PairAF p2)
         {
             return (p1.fitness > p2.fitness);
         }
 
-        Army *generateRandomArmy();
-
-        //talvez nao use isso
-        Army* higherFitnessArmy();
-        std::vector<Army*>& getSelectedArmies();
-
-        // Mutation
-        void mutation(Army *ind, int degree);
-        void mutateUnitType(Army* ind, int unitID, int newType);
-        void mutateTactic(Tactic *tactic, int degree);
-
+    protected:
+        virtual void addInitialArmy(Army *army);
     private:
-        int armyType;
-        std::string directory;
+        
         std::vector<Army*> individuos;
 
         int allowedThreads;
@@ -76,20 +65,21 @@ class GeneticAlgorithm : public Algorithm
         /// Efetua o crossover ateh popular os INDIVIDUOS_GERACAO indivudos
         void crossOver(std::vector<Army*>& selected);
 
-        /// Efetua o crossover entre dois individuos colocando 2 filhos no vetor ind
-        void crossOver(const Army *parent1, const Army *parent2, std::vector<Army*>& ind);
-
         /// Efetua mutacao nos individuos
         void mutate(std::vector<Army*>& selected);
 
         //
         void threadSimulate( unsigned int from, unsigned int n );
 
-        void createNeededDirectory();
+        void repair(std::vector<Army *> selected);
 
-        /// Gen things
-        static Trigger* generateRandomTrigger();
-        static Tactic* generateRandomTactic( const Army* forArmy, int forUnitID );
+        virtual Army* higherFitnessArmy();
+        virtual std::vector<Army*>& getSelectedArmies();
+
+        InitManager *init;
+        CrossoverManager *crossover;
+        MutationManager *mutation;
+        Objective *objective;
 };
 
 #endif
