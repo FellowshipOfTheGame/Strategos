@@ -89,6 +89,9 @@
 		<Unit filename="source/include/Create_Army.h">
 			<Option virtualFolder="Telas/" />
 		</Unit>
+		<Unit filename="source/include/CrossoverManager.h">
+			<Option virtualFolder="Genetico/" />
+		</Unit>
 		<Unit filename="source/include/Dictionary.h" />
 		<Unit filename="source/include/Font.h" />
 		<Unit filename="source/include/Game.h" />
@@ -103,8 +106,17 @@
 			<Option virtualFolder="Gui/" />
 		</Unit>
 		<Unit filename="source/include/Image.h" />
+		<Unit filename="source/include/InitManager.h">
+			<Option virtualFolder="Genetico/" />
+		</Unit>
 		<Unit filename="source/include/Menu.h">
 			<Option virtualFolder="Telas/" />
+		</Unit>
+		<Unit filename="source/include/MutationManager.h">
+			<Option virtualFolder="Genetico/" />
+		</Unit>
+		<Unit filename="source/include/Objective.h">
+			<Option virtualFolder="Genetico/" />
 		</Unit>
 		<Unit filename="source/include/Options.h">
 			<Option virtualFolder="Telas/" />
@@ -114,7 +126,9 @@
 		</Unit>
 		<Unit filename="source/include/RandomEngine.h" />
 		<Unit filename="source/include/Resource.h" />
-		<Unit filename="source/include/Result.h" />
+		<Unit filename="source/include/Result.h">
+			<Option virtualFolder="Telas/" />
+		</Unit>
 		<Unit filename="source/include/Ship.h" />
 		<Unit filename="source/include/Simulation.h">
 			<Option virtualFolder="Telas/" />
@@ -137,7 +151,6 @@
 		<Unit filename="source/include/World.h">
 			<Option virtualFolder="Simulacao/" />
 		</Unit>
-		<Unit filename="source/include/XMLParser.h" />
 		<Unit filename="source/src/Action.cpp">
 			<Option virtualFolder="Simulacao/" />
 		</Unit>
@@ -152,6 +165,9 @@
 		<Unit filename="source/src/Create_Army.cpp">
 			<Option virtualFolder="Telas/" />
 		</Unit>
+		<Unit filename="source/src/CrossoverManager.cpp">
+			<Option virtualFolder="Genetico/" />
+		</Unit>
 		<Unit filename="source/src/Dictionary.cpp" />
 		<Unit filename="source/src/Font.cpp" />
 		<Unit filename="source/src/Game.cpp" />
@@ -165,8 +181,17 @@
 			<Option virtualFolder="Gui/" />
 		</Unit>
 		<Unit filename="source/src/Image.cpp" />
+		<Unit filename="source/src/InitManager.cpp">
+			<Option virtualFolder="Genetico/" />
+		</Unit>
 		<Unit filename="source/src/Menu.cpp">
 			<Option virtualFolder="Telas/" />
+		</Unit>
+		<Unit filename="source/src/MutationManager.cpp">
+			<Option virtualFolder="Genetico/" />
+		</Unit>
+		<Unit filename="source/src/Objective.cpp">
+			<Option virtualFolder="Genetico/" />
 		</Unit>
 		<Unit filename="source/src/Options.cpp" />
 		<Unit filename="source/src/Play.cpp">
@@ -174,7 +199,9 @@
 		</Unit>
 		<Unit filename="source/src/RandomEngine.cpp" />
 		<Unit filename="source/src/Resource.cpp" />
-		<Unit filename="source/src/Result.cpp" />
+		<Unit filename="source/src/Result.cpp">
+			<Option virtualFolder="Telas/" />
+		</Unit>
 		<Unit filename="source/src/Ship.cpp" />
 		<Unit filename="source/src/Simulation.cpp">
 			<Option virtualFolder="Telas/" />
@@ -193,7 +220,6 @@
 		<Unit filename="source/src/World.cpp">
 			<Option virtualFolder="Simulacao/" />
 		</Unit>
-		<Unit filename="source/src/XMLParser.cpp" />
 		<Unit filename="source/src/main.cpp" />
 		<Extensions>
 			<code_completion />

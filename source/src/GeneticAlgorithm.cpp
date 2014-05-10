@@ -17,7 +17,6 @@
 
 
 
-
 //#define _DEBUG_
 
 static std::mutex printMutex;
@@ -31,8 +30,8 @@ const int num_geracoes = 50;
 GeneticAlgorithm::GeneticAlgorithm(int _armyType)
     : Algorithm(_armyType)
 {
-
     allowedThreads = std::thread::hardware_concurrency();
+
     this->init = new InitManager(_armyType);
     this->crossover = new CrossoverManager();
     this->mutation = new MutationManager();
@@ -225,7 +224,7 @@ void GeneticAlgorithm::threadSimulate( unsigned int from, unsigned int n )
             while (opponent == i)
                 opponent = rand()%individuos.size();
 
-            
+
 
             Army* armyB = individuos[opponent];
             armyB->Lock();
