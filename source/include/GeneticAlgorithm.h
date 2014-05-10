@@ -9,10 +9,10 @@
 
 #include <stdio.h>
 
-#include "Algorithm.h"
-#include "Army.h"
-#include "Tactic.h"
+#include <Algorithm.h>
+#include <Army.h>
 #include <CrossoverManager.h>
+#include <MutationManager.h>
 #include <Objective.h>
 
 #define INDIVIDUOS_GERACAO  30
@@ -48,11 +48,6 @@ class GeneticAlgorithm : public Algorithm
 
         Army *generateRandomArmy();
 
-        // Mutation
-        void mutation(Army *ind, int degree);
-        void mutateUnitType(Army* ind, int unitID, int newType);
-        void mutateTactic(Tactic *tactic, int degree);
-
     protected:
         virtual void addInitialArmy(Army *army);
     private:
@@ -86,6 +81,7 @@ class GeneticAlgorithm : public Algorithm
         virtual std::vector<Army*>& getSelectedArmies();
 
         CrossoverManager *crossover;
+        MutationManager *mutation;
         Objective *objective;
 };
 
