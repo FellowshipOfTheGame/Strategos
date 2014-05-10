@@ -1,6 +1,7 @@
 #include <MutationManager.h>
 
 #include <Unit.h>
+#include <InitManager.h>
 
 #define MUTATION_UNIT_TYPE      0
 #define MUTATION_UNIT_TACTIC    1
@@ -57,7 +58,7 @@ void MutationManager::mutate(Army *ind, int degree)
             unit = ind->createUnit(RANDOM_UNIT, Coordinates(rand()%TEAM_AREA_WIDTH, rand()%TEAM_AREA_HEIGHT));
             for (int i = 0; i < ntactics; ++i)
             {
-                unit->addTactic( generateRandomTactic(ind, unit->getID()) );
+                unit->addTactic( InitManager::generateRandomTactic(ind, unit->getID()) );
             }
         }
         break;

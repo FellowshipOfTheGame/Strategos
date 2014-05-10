@@ -11,6 +11,7 @@
 
 #include <Algorithm.h>
 #include <Army.h>
+#include <InitManager.h>
 #include <CrossoverManager.h>
 #include <MutationManager.h>
 #include <Objective.h>
@@ -46,8 +47,6 @@ class GeneticAlgorithm : public Algorithm
             return (p1.fitness > p2.fitness);
         }
 
-        Army *generateRandomArmy();
-
     protected:
         virtual void addInitialArmy(Army *army);
     private:
@@ -73,13 +72,11 @@ class GeneticAlgorithm : public Algorithm
         void threadSimulate( unsigned int from, unsigned int n );
 
         void repair(std::vector<Army *> selected);
-        /// Gen things
-        static Trigger* generateRandomTrigger();
-        static Tactic* generateRandomTactic( const Army* forArmy, int forUnitID );
 
         virtual Army* higherFitnessArmy();
         virtual std::vector<Army*>& getSelectedArmies();
 
+        InitManager *init;
         CrossoverManager *crossover;
         MutationManager *mutation;
         Objective *objective;
