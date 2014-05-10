@@ -114,7 +114,9 @@
 		</Unit>
 		<Unit filename="source/include/RandomEngine.h" />
 		<Unit filename="source/include/Resource.h" />
-		<Unit filename="source/include/Result.h" />
+		<Unit filename="source/include/Result.h">
+			<Option virtualFolder="Telas/" />
+		</Unit>
 		<Unit filename="source/include/Ship.h" />
 		<Unit filename="source/include/Simulation.h">
 			<Option virtualFolder="Telas/" />
@@ -174,7 +176,9 @@
 		</Unit>
 		<Unit filename="source/src/RandomEngine.cpp" />
 		<Unit filename="source/src/Resource.cpp" />
-		<Unit filename="source/src/Result.cpp" />
+		<Unit filename="source/src/Result.cpp">
+			<Option virtualFolder="Telas/" />
+		</Unit>
 		<Unit filename="source/src/Ship.cpp" />
 		<Unit filename="source/src/Simulation.cpp">
 			<Option virtualFolder="Telas/" />
