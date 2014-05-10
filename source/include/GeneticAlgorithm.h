@@ -12,6 +12,8 @@
 #include "Algorithm.h"
 #include "Army.h"
 #include "Tactic.h"
+#include <CrossoverManager.h>
+#include <Objective.h>
 
 #define INDIVIDUOS_GERACAO  30
 #define SELECT_FROM_POP 2
@@ -34,12 +36,10 @@ class GeneticAlgorithm : public Algorithm
         ~GeneticAlgorithm();
         void run() override;
 
-        double evaluateFitness(const Army *ind, int simSteps);
         void selection();
         void randomArmies(int size);
         void normalizeFitness(std::vector<PairAF> *pairs);
-        void rectifyUnit(Army *ind);
-        void GoldCap(Army *army);
+        
 
         static bool highToLow(PairAF p1, PairAF p2)
         {
@@ -71,20 +71,22 @@ class GeneticAlgorithm : public Algorithm
         /// Efetua o crossover ateh popular os INDIVIDUOS_GERACAO indivudos
         void crossOver(std::vector<Army*>& selected);
 
-        /// Efetua o crossover entre dois individuos colocando 2 filhos no vetor ind
-        void crossOver(const Army *parent1, const Army *parent2, std::vector<Army*>& ind);
-
         /// Efetua mutacao nos individuos
         void mutate(std::vector<Army*>& selected);
 
         //
         void threadSimulate( unsigned int from, unsigned int n );
+
+        void repair(std::vector<Army *> selected);
         /// Gen things
         static Trigger* generateRandomTrigger();
         static Tactic* generateRandomTactic( const Army* forArmy, int forUnitID );
 
         virtual Army* higherFitnessArmy();
         virtual std::vector<Army*>& getSelectedArmies();
+
+        CrossoverManager *crossover;
+        Objective *objective;
 };
 
 #endif
