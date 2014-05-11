@@ -68,6 +68,15 @@ void Result::normalizeRounds(const CombatRound* l1, const CombatRound* l2, const
 
     printf("Normal range: %d, %d\n", timeMin, timeMax);
 
+    double maxDmgDealt = std::max(l1->getMaximumData().damageDealt, l2->getMaximumData().damageDealt);
+    double maxDmgReceived = std::max(l1->getMaximumData().damageReceived, l2->getMaximumData().damageReceived);
+    double maxDeaths = std::max(l1->getMaximumData().deaths, l2->getMaximumData().deaths);
+    double maxKills = std::max(l1->getMaximumData().kills, l2->getMaximumData().kills);
+
+    printf("MaxDmgDealt: %.2lf\n", maxDmgDealt);
+    printf("MaxDmgReceived: %.2lf\n", maxDmgReceived);
+    printf("MaxDeaths: %d\n", maxDeaths);
+    printf("MaxKills: %d\n", maxKills);
 }
 
 void Result::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keysym key, Uint8 button)

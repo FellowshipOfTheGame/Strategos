@@ -103,7 +103,14 @@ bool Ship::isAlive() const
 
 void Ship::kill()
 {
+    if (stats.currentHP <= 0) return;
+
 	stats.currentHP = -1;
+
+	if (myLog)
+    {
+        myLog->addLog( RoundData(0, 0, 1, 0) );
+    }
 }
 
 const shipBaseStats &Ship::getBaseStats() const
@@ -138,6 +145,14 @@ bool Ship::takeDamage(double damage)
     }
 
     return (stats.currentHP <= 0);
+}
+
+bool Ship::dealDamage(double damage, bool wasLetal)
+{
+    if (myLog)
+    {
+        myLog->addLog( RoundData(0, damage, 0, wasLetal) );
+    }
 }
 
 void Ship::moveTo(const Coordinates& c)

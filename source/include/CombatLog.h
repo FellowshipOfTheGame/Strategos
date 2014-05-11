@@ -51,6 +51,9 @@ class CombatRound
 		LogMap log;
 		int current_step;
 
+        // Guarda os valores dos maximos gerais
+		RoundData maxData;
+
 	public:
 		CombatRound();
 		~CombatRound();
@@ -66,6 +69,8 @@ class CombatRound
 
 		int getLastLoggedTime() const;
 		int getFirstLoggedTime() const;
+
+		const RoundData& getMaximumData() const;
 };
 
 // Log de uma army

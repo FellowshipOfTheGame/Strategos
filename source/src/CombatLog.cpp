@@ -64,6 +64,18 @@ void CombatRound::addLog(int time, const RoundData& data)
     }else{
         log[time] = data;
     }
+
+    RoundData& chkdata = log[time];
+
+    // Guardar maximos
+    if (chkdata.damageDealt > maxData.damageDealt)
+        maxData.damageDealt = chkdata.damageDealt;
+    if (chkdata.damageReceived > maxData.damageReceived)
+        maxData.damageReceived = chkdata.damageReceived;
+    if (chkdata.deaths > maxData.deaths)
+        maxData.deaths = chkdata.deaths;
+    if (chkdata.kills > maxData.kills)
+        maxData.kills = chkdata.kills;
 }
 
 void CombatRound::print() const
@@ -100,4 +112,10 @@ int CombatRound::getFirstLoggedTime() const
 
     return log.begin()->first;
 }
+
+const RoundData& CombatRound::getMaximumData() const
+{
+    return maxData;
+}
+
 /*****************************************************************************/
