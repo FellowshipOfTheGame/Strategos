@@ -47,7 +47,7 @@ Result::~Result()
 	delete btn_Next;
 }
 
-void Result::normalizeRounds(const CombatRound* l1, const CombatRound* l2, const CombatRound& out1, const CombatRound& out2)
+void Result::normalizeRounds(const CombatRound* l1, const CombatRound* l2, CombatRound& out1, CombatRound& out2)
 {
     int timeMin = INT_MAX;
     int timeMax = 0;
@@ -68,15 +68,39 @@ void Result::normalizeRounds(const CombatRound* l1, const CombatRound* l2, const
 
     printf("Normal range: %d, %d\n", timeMin, timeMax);
 
-    double maxDmgDealt = std::max(l1->getMaximumData().damageDealt, l2->getMaximumData().damageDealt);
-    double maxDmgReceived = std::max(l1->getMaximumData().damageReceived, l2->getMaximumData().damageReceived);
-    double maxDeaths = std::max(l1->getMaximumData().deaths, l2->getMaximumData().deaths);
-    double maxKills = std::max(l1->getMaximumData().kills, l2->getMaximumData().kills);
+    const double graphWidth = 700;
+    const double graphHeight = 400;
+
+    // Criar o mapa novo com no maximo graphWidth tempos para L1
+    for (LogMap::const_iterator it = l1->getLog().begin(); it != l1->getLog().end(); ++it)
+    {
+        int time = it->first*(double)graphWidth/(double)timeMax;
+        out1.addLog( time, it->second );
+    }
+
+    // Criar o mapa novo com no maximo graphWidth tempos para L2
+    for (LogMap::const_iterator it = l2->getLog().begin(); it != l2->getLog().end(); ++it)
+    {
+        int time = it->first*(double)graphWidth/(double)timeMax;
+        out1.addLog( time, it->second );
+    }
+
+    // Contar maximos para normalizar
+    RoundData maximumOf1 = out1.getMaximumData();
+    RoundData maximumOf2 = out2.getMaximumData();
+
+    const double maxDmgDealt = std::max(maximumOf1.damageDealt, maximumOf2.damageDealt);
+    const double maxDmgReceived = std::max(maximumOf1.damageReceived, maximumOf2.damageReceived);
+    const int maxDeaths = std::max(maximumOf1.deaths, maximumOf2.deaths);
+    const int maxKills = std::max(maximumOf1.kills, maximumOf2.kills);
 
     printf("MaxDmgDealt: %.2lf\n", maxDmgDealt);
     printf("MaxDmgReceived: %.2lf\n", maxDmgReceived);
     printf("MaxDeaths: %d\n", maxDeaths);
     printf("MaxKills: %d\n", maxKills);
+
+    // Normalizando
+
 }
 
 void Result::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keysym key, Uint8 button)

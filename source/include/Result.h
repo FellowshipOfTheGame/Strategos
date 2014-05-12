@@ -22,7 +22,7 @@ private:
 
     CombatRound normalized_generalLog1, normalized_generalLog2;
 
-    void normalizeRounds(const CombatRound* l1, const CombatRound* l2, const CombatRound& out1, const CombatRound& out2);
+    void normalizeRounds(const CombatRound* l1, const CombatRound* l2, CombatRound& out1, CombatRound& out2);
 
 public:
     Result(STATE previous);
