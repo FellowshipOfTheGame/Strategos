@@ -28,7 +28,7 @@ Result::Result(STATE previous) :
 	original_log1->calculateGeneralLog();
 	original_log2->calculateGeneralLog();
 
-	normalizeRounds(original_log1->getGeneralLog(), original_log1->getGeneralLog(), normalized_generalLog1, normalized_generalLog2);
+	normalizeRounds(original_log1->getGeneralLog(), original_log1->getGeneralLog());
 
 //	log1->getGeneralLog().print();
 //	log2->getGeneralLog().print();
@@ -47,7 +47,7 @@ Result::~Result()
 	delete btn_Next;
 }
 
-void Result::normalizeRounds(const CombatRound* l1, const CombatRound* l2, CombatRound& out1, CombatRound& out2)
+void Result::normalizeRounds(const CombatRound* l1, const CombatRound* l2)
 {
     int timeMin = INT_MAX;
     int timeMax = 0;
@@ -68,26 +68,28 @@ void Result::normalizeRounds(const CombatRound* l1, const CombatRound* l2, Comba
 
     printf("Normal range: %d, %d\n", timeMin, timeMax);
 
-    const double graphWidth = 700;
+    const double graphWidth = 900;
     const double graphHeight = 400;
 
     // Criar o mapa novo com no maximo graphWidth tempos para L1
+    CombatRound reduced1;
     for (LogMap::const_iterator it = l1->getLog().begin(); it != l1->getLog().end(); ++it)
     {
         int time = it->first*(double)graphWidth/(double)timeMax;
-        out1.addLog( time, it->second );
+        reduced1.addLog( time, it->second );
     }
 
     // Criar o mapa novo com no maximo graphWidth tempos para L2
+    CombatRound reduced2;
     for (LogMap::const_iterator it = l2->getLog().begin(); it != l2->getLog().end(); ++it)
     {
         int time = it->first*(double)graphWidth/(double)timeMax;
-        out1.addLog( time, it->second );
+        reduced2.addLog( time, it->second );
     }
 
     // Contar maximos para normalizar
-    RoundData maximumOf1 = out1.getMaximumData();
-    RoundData maximumOf2 = out2.getMaximumData();
+    RoundData maximumOf1 = reduced1.getMaximumData();
+    RoundData maximumOf2 = reduced2.getMaximumData();
 
     const double maxDmgDealt = std::max(maximumOf1.damageDealt, maximumOf2.damageDealt);
     const double maxDmgReceived = std::max(maximumOf1.damageReceived, maximumOf2.damageReceived);
@@ -100,7 +102,21 @@ void Result::normalizeRounds(const CombatRound* l1, const CombatRound* l2, Comba
     printf("MaxKills: %d\n", maxKills);
 
     // Normalizando
+    for (LogMap::const_iterator it = reduced1.getLog().begin(); it != reduced1.getLog().end(); ++it)
+    {
+        army0[DMG_DEALT].addDot(it->first, it->second.damageDealt/maxDmgDealt);
+        army0[DMG_TAKEN].addDot(it->first, it->second.damageReceived/maxDmgDealt);
+        army0[KILLS].addDot(it->first, it->second.kills/maxDmgDealt);
+        army0[DEATHS].addDot(it->first, it->second.deaths/maxDmgDealt);
+    }
 
+    for (LogMap::const_iterator it = reduced2.getLog().begin(); it != reduced2.getLog().end(); ++it)
+    {
+        army1[DMG_DEALT].addDot(it->first, it->second.damageDealt/maxDmgDealt);
+        army1[DMG_TAKEN].addDot(it->first, it->second.damageReceived/maxDmgDealt);
+        army1[KILLS].addDot(it->first, it->second.kills/maxDmgDealt);
+        army1[DEATHS].addDot(it->first, it->second.deaths/maxDmgDealt);
+    }
 }
 
 void Result::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keysym key, Uint8 button)
@@ -128,121 +144,22 @@ void Result::Logic()
 
 void Result::Render()
 {
-//	SDL_Renderer* renderer = Game::getGlobalGame()->getRenderer();
-//
-//	int i;
-//	int maxx=600,minx=200;
-//	int maxy=400,miny=200;
-//	double x, y, xnext, ynext;
-//	double maxStep=0, minStep=0, maxDmg=0;
-//	CombatRoundItem *min,*max;
-//    SDL_Rect rFrame;
-//    rFrame.x = minx;
-//    rFrame.y = maxy;
-//    rFrame.w = maxx-minx;
-//    rFrame.h = maxy-miny;
-//    int size,pass;
-//    double sX, sY, tX, tY;
-//
-//    Game::getGlobalGame()->setBackgroundColor(255, 255, 255);
-//    //imgBackground->DrawImage(renderer);
-//	drawGuiElements();
-//
-//    SDL_SetRenderDrawColor(renderer, 200,200,200, 0);
-//    SDL_RenderFillRect(renderer, &rFrame);
-//
-//    if (log1->getLog().size())
-//    {
-//    	maxStep = log1->getLog()[log1->getLog().size()-1]->getStep();
-//    	minStep = log1->getLog()[0]->getStep();
-//    	max = (*std::max_element(log1->getLog().begin(),log1->getLog().end(), CombatRoundItem::compareMaxDamage));
-//    	maxDmg = max->getRoundDamage();
-//    } else {
-//    	minStep = 99999;
-//    }
-//    if (log2->getLog().size())
-//    {
-//    	if ((log2->getLog()[log2->getLog().size()-1]->getStep() < maxStep))
-//    	{
-//    		maxStep = log2->getLog()[log2->getLog().size()-1]->getStep();
-//    	}
-//    	minStep = (log2->getLog()[0]->getStep() < minStep)?log2->getLog()[0]->getStep():minStep;
-//    	max = (*std::max_element(log1->getLog().begin(),log1->getLog().end(), CombatRoundItem::compareMaxDamage));
-//    	int auxmaxDmg =  max->getRoundDamage();
-//    	if (auxmaxDmg > maxDmg)
-//    		maxDmg = auxmaxDmg;
-//    }
-//
-//    sX = (rFrame.w)/(maxStep- minStep);
-//    printf ("%lf\n",sX);
-//    sY = (-rFrame.h)/(maxDmg);
-//
-//    tX = rFrame.x;
-//    tY = rFrame.y +rFrame.h;
-//    size = log1->getLog().size();
-//    if (size > 0)
-//    {
-//        min = log1->getLog()[0];
-//        max = log1->getLog()[size-1];
-//
-//        SDL_SetRenderDrawColor(renderer, 255,0,0, 0);
-//        i =0;
-//        pass = min->getStep();
-//        x = tX;
-//        y = tY;
-//        xnext = tX;
-//        ynext = tY;
-//        do
-//        {
-//			if ((pass+1) == log1->getLog()[i]->getStep())
-//			{
-//				xnext = (pass+1)*sX + tX;
-//				ynext = (log1->getLog()[i]->getRoundDamage()*sY) + tY;
-//				i++;
-//			}
-//			else
-//			{
-//				xnext = (pass+1)*sX + tX;
-//				ynext = tY;
-//			}
-//            SDL_RenderDrawLine(renderer, x, y , xnext, ynext);
-//			x = xnext;
-//			y = ynext;
-//			pass = pass +1;
-//        } while ((i<size-1) && (pass < max->getStep()));
-//    }
-//    size = log2->getLog().size();
-//    if (size > 0)
-//    {
-//        min = log2->getLog()[0];
-//        max = log2->getLog()[size-1];
-//
-//        SDL_SetRenderDrawColor(renderer, 0,0,255, 0);
-//        i =0;
-//        pass = min->getStep();
-//        x = tX;
-//		y = tY;
-//		xnext = tX;
-//		ynext = tY;
-//        do
-//        {
-//			if ((pass+1) == log2->getLog()[i]->getStep())
-//			{
-//				xnext = (pass+1)*sX + tX;
-//				ynext = (log2->getLog()[i]->getRoundDamage()*sY) + tY;
-//				i++;
-//			}
-//			else
-//			{
-//				xnext = (pass+1)*sX + tX;
-//				ynext = tY;
-//			}
-//			SDL_RenderDrawLine(renderer, x, y , xnext, ynext);
-//			x = xnext;
-//			y = ynext;
-//			pass = pass +1;
-//        } while ((i<size-1) && (pass < max->getStep()));
-//    }
+    SDL_Renderer* renderer = Game::getGlobalGame()->getRenderer();
+
+    Game::getGlobalGame()->setBackgroundColor(0, 0, 0);
+
+    SDL_SetRenderDrawColor( renderer, 255, 0, 0, 255 );
+    army0[DMG_DEALT].drawGraph(renderer);
+
+    SDL_SetRenderDrawColor( renderer, 255, 255, 0, 255 );
+    army0[DMG_TAKEN].drawGraph(renderer);
+
+    SDL_SetRenderDrawColor( renderer, 0, 255, 0, 255 );
+    army0[KILLS].drawGraph(renderer);
+
+    SDL_SetRenderDrawColor( renderer, 0, 0, 255, 255 );
+    army0[DEATHS].drawGraph(renderer);
+
 }
 
 void Result::Clean()
