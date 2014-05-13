@@ -18,7 +18,7 @@ class Objective
         int fight(Army *a, Army *b, int *steps);
 
         //calcula o fitness de duas estrategias previamente selecionadas
-        void evaluate(Army *a, Army *b, double *fitA, double *fitB);
+        int evaluate(Army *a, Army *b, double *fitA, double *fitB);
 
 
 };
