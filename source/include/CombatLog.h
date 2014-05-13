@@ -60,6 +60,8 @@ class CombatRound
 		void addLog(const RoundData& data);
 		void addLog(int time, const RoundData& data);
 
+		void setLog(int time, const RoundData& data);
+
 		void print() const;
 
 		void nextStep();

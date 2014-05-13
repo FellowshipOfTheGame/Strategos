@@ -25,16 +25,19 @@ class Graph
         {
             const int offX = 62;
             const int offY = 600;
+            const int xscale = 8;
             const int yscale = 500;
 
-            for (std::map<int, double>::const_iterator it = data.begin(); it != data.end(); )
-            {
-                auto next = it++;
+            SDL_SetRenderDrawColor( renderer, color.r, color.g, color.b, color.a );
 
-                if (next != data.end())
-                    SDL_RenderDrawLine( renderer, offX + it->first, offY - it->second*yscale, offX + next->first, offY - next->second*yscale );
-                else
-                    break;
+            std::map<int, double>::const_iterator itNow = data.begin();
+            std::map<int, double>::const_iterator itNext = data.begin();
+            while ( ++itNext != data.end() )
+            {
+                SDL_RenderDrawLine( renderer, offX + itNow->first*xscale, offY - itNow->second*yscale,
+                                              offX + itNext->first*xscale, offY - itNext->second*yscale );
+
+                itNow = itNext;
             }
         }
 
@@ -42,8 +45,19 @@ class Graph
             data[x] = fx;
         }
 
+        void setColor( Uint8 r, Uint8 g, Uint8 b, Uint8 a )
+        {
+            color.r = r;
+            color.g = g;
+            color.b = b;
+            color.a = a;
+        }
+
     private:
         std::map<int, double> data;
+
+        double maxValue;
+        SDL_Color color;
 };
 
 class Result : public StateMachine
@@ -59,6 +73,9 @@ class Result : public StateMachine
         Graph army1[4];
 
         void normalizeRounds(const CombatRound* l1, const CombatRound* l2);
+
+        void reduzir(const CombatRound* original, CombatRound& reduced, int steps, int timeMax);
+        int tratar(CombatRound& graph, int total_ships);
 
     public:
         Result(STATE previous);

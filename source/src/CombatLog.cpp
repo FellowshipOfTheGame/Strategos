@@ -66,6 +66,11 @@ void CombatRound::addLog(int time, const RoundData& data)
     }
 }
 
+void CombatRound::setLog(int time, const RoundData& data)
+{
+    log[time] = data;
+}
+
 void CombatRound::print() const
 {
 	printf ("imprimindo combat round\n \t");

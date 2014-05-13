@@ -7,6 +7,8 @@
 
 #include "SDL2_gfx/SDL2_gfxPrimitives.h"
 
+const double graphSteps = 100;
+
 Result::Result(STATE previous) :
 	StateMachine(previous, RESULTS, RESULTS)
 {
@@ -25,26 +27,60 @@ Result::Result(STATE previous) :
 	original_log1 = Game::getGlobalGame()->getCombatLog(0);
 	original_log2 = Game::getGlobalGame()->getCombatLog(1);
 
+	// Gerar log somado de todas as unidades
 	original_log1->calculateGeneralLog();
 	original_log2->calculateGeneralLog();
 
 	normalizeRounds(original_log1->getGeneralLog(), original_log1->getGeneralLog());
 
-//	log1->getGeneralLog().print();
-//	log2->getGeneralLog().print();
+    // Cores dos graficos
+    army0[DMG_DEALT].setColor( 255, 0, 0, 128 );    // Red
+    army0[DMG_TAKEN].setColor( 255, 255, 0, 128 );  // Yellow
+    army0[KILLS].setColor( 0, 255, 0, 128 );        // Green
+    army0[DEATHS].setColor( 0, 0, 255, 128 );       // Blue
 
-//	printf("army 1 %d dano %d\n",Game::getGlobalGame()->getCombatLog(0)->getLogSize(),Game::getGlobalGame()->getCombatLog(0)->getTotalDamageTaken());
-//	printf("army 2 %d dano %d\n",Game::getGlobalGame()->getCombatLog(1)->getLogSize(), Game::getGlobalGame()->getCombatLog(0)->getTotalDamageTaken());
-
-	printf("compondo logs \n");
-
-//	log1->print();
-//	log2->print();
+    army1[DMG_DEALT].setColor( 255, 0, 0, 128 );
+    army1[DMG_TAKEN].setColor( 255, 255, 0, 128 );
+    army1[KILLS].setColor( 0, 255, 0, 128 );
+    army1[DEATHS].setColor( 0, 0, 255, 128 );
 }
 
 Result::~Result()
 {
 	delete btn_Next;
+}
+
+void Result::reduzir(const CombatRound* original, CombatRound& reduced, int steps, int timeMax)
+{
+    double ss = (double)steps/(double)timeMax;
+
+    for (LogMap::const_iterator it = original->getLog().begin(); it != original->getLog().end(); ++it)
+    {
+        int time = it->first * ss;
+        reduced.addLog( time, it->second );
+    }
+}
+
+// Tratar Kills e Deaths
+int Result::tratar(CombatRound& graph, int total_ships)
+{
+    int sumKills = 0;
+    for (LogMap::const_iterator it = graph.getLog().begin(); it != graph.getLog().end(); ++it)
+    {
+        RoundData modified(it->second);
+        int deaths = modified.deaths;
+        int kills = modified.kills;
+
+        modified.deaths = total_ships - deaths;
+        total_ships -= deaths;
+
+        modified.kills += sumKills;
+        sumKills += kills;
+
+        graph.setLog( it->first, modified );
+    }
+
+    return sumKills;
 }
 
 void Result::normalizeRounds(const CombatRound* l1, const CombatRound* l2)
@@ -68,24 +104,18 @@ void Result::normalizeRounds(const CombatRound* l1, const CombatRound* l2)
 
     printf("Normal range: %d, %d\n", timeMin, timeMax);
 
-    const double graphWidth = 900;
-    const double graphHeight = 400;
+    const int TotalShips1 = Game::getGlobalGame()->getArmy1()->getTotalShips();
+    const int TotalShips2 = Game::getGlobalGame()->getArmy2()->getTotalShips();
 
-    // Criar o mapa novo com no maximo graphWidth tempos para L1
+    // Criar o mapa novo com no maximo GraphSteps para L1
     CombatRound reduced1;
-    for (LogMap::const_iterator it = l1->getLog().begin(); it != l1->getLog().end(); ++it)
-    {
-        int time = it->first*(double)graphWidth/(double)timeMax;
-        reduced1.addLog( time, it->second );
-    }
+    reduzir( l1, reduced1, graphSteps, timeMax );
+    tratar(reduced1, TotalShips1);
 
-    // Criar o mapa novo com no maximo graphWidth tempos para L2
+    // Criar o mapa novo com no maximo GraphSteps para L2
     CombatRound reduced2;
-    for (LogMap::const_iterator it = l2->getLog().begin(); it != l2->getLog().end(); ++it)
-    {
-        int time = it->first*(double)graphWidth/(double)timeMax;
-        reduced2.addLog( time, it->second );
-    }
+    reduzir( l2, reduced2, graphSteps, timeMax );
+    tratar(reduced2, TotalShips2);
 
     // Contar maximos para normalizar
     RoundData maximumOf1 = reduced1.getMaximumData();
@@ -93,29 +123,31 @@ void Result::normalizeRounds(const CombatRound* l1, const CombatRound* l2)
 
     const double maxDmgDealt = std::max(maximumOf1.damageDealt, maximumOf2.damageDealt);
     const double maxDmgReceived = std::max(maximumOf1.damageReceived, maximumOf2.damageReceived);
-    const int maxDeaths = std::max(maximumOf1.deaths, maximumOf2.deaths);
-    const int maxKills = std::max(maximumOf1.kills, maximumOf2.kills);
+    const double maxDamage = std::max(maxDmgDealt, maxDmgReceived);
+
+    const double maxShips = std::max(TotalShips1, TotalShips2);
+//    const double maxKills = std::max(maximumOf1.kills, maximumOf2.kills);
 
     printf("MaxDmgDealt: %.2lf\n", maxDmgDealt);
     printf("MaxDmgReceived: %.2lf\n", maxDmgReceived);
-    printf("MaxDeaths: %d\n", maxDeaths);
-    printf("MaxKills: %d\n", maxKills);
+    printf("MaxShips: %.1lf\n", maxShips);
+//    printf("MaxKills: %.1lf\n", maxKills);
 
     // Normalizando
     for (LogMap::const_iterator it = reduced1.getLog().begin(); it != reduced1.getLog().end(); ++it)
     {
-        army0[DMG_DEALT].addDot(it->first, it->second.damageDealt/maxDmgDealt);
-        army0[DMG_TAKEN].addDot(it->first, it->second.damageReceived/maxDmgDealt);
-        army0[KILLS].addDot(it->first, it->second.kills/maxDmgDealt);
-        army0[DEATHS].addDot(it->first, it->second.deaths/maxDmgDealt);
+        army0[DMG_DEALT].addDot(it->first, it->second.damageDealt/maxDamage);
+        army0[DMG_TAKEN].addDot(it->first, it->second.damageReceived/maxDamage);
+        army0[KILLS].addDot(it->first, it->second.kills/maxShips);
+        army0[DEATHS].addDot(it->first, it->second.deaths/maxShips);
     }
 
     for (LogMap::const_iterator it = reduced2.getLog().begin(); it != reduced2.getLog().end(); ++it)
     {
-        army1[DMG_DEALT].addDot(it->first, it->second.damageDealt/maxDmgDealt);
-        army1[DMG_TAKEN].addDot(it->first, it->second.damageReceived/maxDmgDealt);
-        army1[KILLS].addDot(it->first, it->second.kills/maxDmgDealt);
-        army1[DEATHS].addDot(it->first, it->second.deaths/maxDmgDealt);
+        army1[DMG_DEALT].addDot(it->first, it->second.damageDealt/maxDamage);
+        army1[DMG_TAKEN].addDot(it->first, it->second.damageReceived/maxDamage);
+        army1[KILLS].addDot(it->first, it->second.kills/maxShips);
+        army1[DEATHS].addDot(it->first, it->second.deaths/maxShips);
     }
 }
 
@@ -148,16 +180,11 @@ void Result::Render()
 
     Game::getGlobalGame()->setBackgroundColor(0, 0, 0);
 
-    SDL_SetRenderDrawColor( renderer, 255, 0, 0, 255 );
+    SDL_SetRenderDrawBlendMode( renderer, SDL_BlendMode::SDL_BLENDMODE_BLEND );
+
     army0[DMG_DEALT].drawGraph(renderer);
-
-    SDL_SetRenderDrawColor( renderer, 255, 255, 0, 255 );
     army0[DMG_TAKEN].drawGraph(renderer);
-
-    SDL_SetRenderDrawColor( renderer, 0, 255, 0, 255 );
     army0[KILLS].drawGraph(renderer);
-
-    SDL_SetRenderDrawColor( renderer, 0, 0, 255, 255 );
     army0[DEATHS].drawGraph(renderer);
 
 }
