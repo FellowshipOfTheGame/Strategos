@@ -113,7 +113,7 @@ void Result::normalizeRounds(const CombatRound* l1, const CombatRound* l2)
         timeMax = l2->getLastLoggedTime();
     }
 
-    printf("Normal range: %d, %d\n", timeMin, timeMax);
+    printf("Normal range: %d, %d - Step size: %.2lf\n", timeMin, timeMax, timeMax/(double)graphSteps);
 
     const int TotalShips1 = Game::getGlobalGame()->getArmy1()->getTotalShips();
     const int TotalShips2 = Game::getGlobalGame()->getArmy2()->getTotalShips();
@@ -209,10 +209,10 @@ void Result::Render()
                                      graphX + i*(graphW/graphSteps), graphY-graphH-10);
     }
 
-    army0[DMG_DEALT].drawGraph(renderer);
-    army0[DMG_TAKEN].drawGraph(renderer);
-    army0[KILLS].drawGraph(renderer);
-    army0[DEATHS].drawGraph(renderer);
+    army0[DMG_DEALT].drawGraph(renderer, graphW/graphSteps);
+    army0[DMG_TAKEN].drawGraph(renderer, graphW/graphSteps);
+    army0[KILLS].drawGraph(renderer, graphW/graphSteps);
+    army0[DEATHS].drawGraph(renderer, graphW/graphSteps);
 
     drawGuiElements();
 }

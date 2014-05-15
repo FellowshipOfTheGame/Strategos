@@ -12,7 +12,7 @@ class Graph
 
         void setPosition(int X, int Y);
 
-        void drawGraph(SDL_Renderer *renderer);
+        void drawGraph(SDL_Renderer *renderer, double xscale);
 
         void addDot(int x, double fx);
         void setColor( Uint8 r, Uint8 g, Uint8 b, Uint8 a );

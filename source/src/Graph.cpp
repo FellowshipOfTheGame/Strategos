@@ -14,9 +14,8 @@ void Graph::setPosition(int X, int Y)
     y = Y;
 }
 
-void Graph::drawGraph(SDL_Renderer *renderer)
+void Graph::drawGraph(SDL_Renderer *renderer, double xscale)
 {
-    const int xscale = 8;
     const int yscale = 500;
 
     SDL_SetRenderDrawColor( renderer, color.r, color.g, color.b, color.a );
