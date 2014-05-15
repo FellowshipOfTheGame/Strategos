@@ -23,12 +23,24 @@ enum GRAPHS{
 
 class Result : public StateMachine
 {
+    public:
+        Result(STATE previous);
+        ~Result();
+
+        void onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keysym key, Uint8 button);
+        void Logic();
+        void Render();
+        void Clean();
+
     private:
         Image *imgBackground;
         Button *btn_Next;
 
         Label *alive,*dead;
         CombatLog *original_log1, *original_log2;
+
+        int graphSteps;
+        int graphX, graphY, graphW, graphH;
 
         Graph army0[4];
         Graph army1[4];
@@ -38,13 +50,5 @@ class Result : public StateMachine
         void reduzir(const CombatRound* original, CombatRound& reduced, int steps, int timeMax);
         int tratar(CombatRound& graph, int total_ships);
 
-    public:
-        Result(STATE previous);
-        ~Result();
-
-        void onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keysym key, Uint8 button);
-        void Logic();
-        void Render();
-        void Clean();
 };
 #endif /* RESULT_H_ */

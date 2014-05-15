@@ -4,8 +4,6 @@
 #include "Game.h"
 #include "CombatLog.h"
 
-const double graphSteps = 100;
-
 Result::Result(STATE previous) :
 	StateMachine(previous, RESULTS, RESULTS)
 {
@@ -29,6 +27,12 @@ Result::Result(STATE previous) :
 	original_log1->calculateGeneralLog();
 	original_log2->calculateGeneralLog();
 
+	graphSteps = 100;
+	graphW = 800;
+	graphH = 500;
+	graphX = 112;   // (windowW-graphW)/2
+	graphY = 600;
+
 	normalizeRounds(original_log1->getGeneralLog(), original_log1->getGeneralLog());
 
     // Cores dos graficos
@@ -41,6 +45,12 @@ Result::Result(STATE previous) :
     army1[DMG_TAKEN].setColor( 255, 255, 0, 128 );
     army1[KILLS].setColor( 0, 255, 0, 128 );
     army1[DEATHS].setColor( 0, 0, 255, 128 );
+
+    army0[DMG_DEALT].setPosition(graphX, graphY);      army1[DMG_DEALT].setPosition(graphX, graphY);
+    army0[DMG_TAKEN].setPosition(graphX, graphY);      army1[DMG_TAKEN].setPosition(graphX, graphY);
+    army0[KILLS].setPosition(    graphX, graphY);      army1[KILLS].setPosition(    graphX, graphY);
+    army0[DEATHS].setPosition(   graphX, graphY);      army1[DEATHS].setPosition(   graphX, graphY);
+
 }
 
 Result::~Result()
@@ -62,6 +72,9 @@ void Result::reduzir(const CombatRound* original, CombatRound& reduced, int step
 // Tratar Kills e Deaths
 int Result::tratar(CombatRound& graph, int total_ships)
 {
+    // Garantir a existencia do ponto 0
+    graph.addLog(0, RoundData());
+
     int sumKills = 0;
     for (LogMap::const_iterator it = graph.getLog().begin(); it != graph.getLog().end(); ++it)
     {
@@ -179,6 +192,22 @@ void Result::Render()
     Game::getGlobalGame()->setBackgroundColor(0, 0, 0);
 
     SDL_SetRenderDrawBlendMode( renderer, SDL_BlendMode::SDL_BLENDMODE_BLEND );
+
+    // Fazer estrutura do grafico
+    SDL_SetRenderDrawColor( renderer, 255, 255, 255, 255 );
+
+    // eixo X
+    SDL_RenderDrawLine(renderer, graphX-10, graphY   , graphX+graphW+10, graphY);
+    // eixo y
+    SDL_RenderDrawLine(renderer, graphX   , graphY+10, graphX       , graphY-graphH-10);
+
+    // Linhas guia
+    SDL_SetRenderDrawColor( renderer, 64, 64, 64, 128 );
+    for (int i = 0; i < graphSteps; ++i)
+    {
+        SDL_RenderDrawLine(renderer, graphX + i*(graphW/graphSteps), graphY+10,
+                                     graphX + i*(graphW/graphSteps), graphY-graphH-10);
+    }
 
     army0[DMG_DEALT].drawGraph(renderer);
     army0[DMG_TAKEN].drawGraph(renderer);
