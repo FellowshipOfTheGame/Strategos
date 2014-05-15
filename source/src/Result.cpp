@@ -209,10 +209,10 @@ void Result::Render()
                                      graphX + i*(graphW/graphSteps), graphY-graphH-10);
     }
 
-    army0[DMG_DEALT].drawGraph(renderer, graphW/graphSteps);
-    army0[DMG_TAKEN].drawGraph(renderer, graphW/graphSteps);
-    army0[KILLS].drawGraph(renderer, graphW/graphSteps);
-    army0[DEATHS].drawGraph(renderer, graphW/graphSteps);
+    army0[DMG_DEALT].drawGraph(renderer, graphW/graphSteps, graphH);
+    army0[DMG_TAKEN].drawGraph(renderer, graphW/graphSteps, graphH);
+    army0[KILLS].drawGraph(renderer, graphW/graphSteps, graphH);
+    army0[DEATHS].drawGraph(renderer, graphW/graphSteps, graphH);
 
     drawGuiElements();
 }

@@ -14,10 +14,8 @@ void Graph::setPosition(int X, int Y)
     y = Y;
 }
 
-void Graph::drawGraph(SDL_Renderer *renderer, double xscale)
+void Graph::drawGraph(SDL_Renderer *renderer, double xscale, double yscale)
 {
-    const int yscale = 500;
-
     SDL_SetRenderDrawColor( renderer, color.r, color.g, color.b, color.a );
 
     std::map<int, double>::const_iterator itNow = data.begin();
@@ -35,8 +33,8 @@ void Graph::drawGraph(SDL_Renderer *renderer, double xscale)
         itNow = itNext;
     }
 
-    circleRGBA( renderer, x + itNow->first*xscale, y - itNow->second*yscale,
-                        2, color.r, color.g, color.b, color.a );
+//    circleRGBA( renderer, x + itNow->first*xscale, y - itNow->second*yscale,
+//                        2, color.r, color.g, color.b, color.a );
 
 }
 
