@@ -7,57 +7,18 @@
 
 #ifndef RESULT_H_
 #define RESULT_H_
+
 #include "StateMachine.h"
 #include "GuiElements.h"
 #include "CombatLog.h"
+
+#include "Graph.h"
 
 enum GRAPHS{
     DMG_DEALT,
     DMG_TAKEN,
     KILLS,
     DEATHS,
-};
-
-class Graph
-{
-    public:
-        void drawGraph(SDL_Renderer *renderer)
-        {
-            const int offX = 62;
-            const int offY = 600;
-            const int xscale = 8;
-            const int yscale = 500;
-
-            SDL_SetRenderDrawColor( renderer, color.r, color.g, color.b, color.a );
-
-            std::map<int, double>::const_iterator itNow = data.begin();
-            std::map<int, double>::const_iterator itNext = data.begin();
-            while ( ++itNext != data.end() )
-            {
-                SDL_RenderDrawLine( renderer, offX + itNow->first*xscale, offY - itNow->second*yscale,
-                                              offX + itNext->first*xscale, offY - itNext->second*yscale );
-
-                itNow = itNext;
-            }
-        }
-
-        void addDot(int x, double fx){
-            data[x] = fx;
-        }
-
-        void setColor( Uint8 r, Uint8 g, Uint8 b, Uint8 a )
-        {
-            color.r = r;
-            color.g = g;
-            color.b = b;
-            color.a = a;
-        }
-
-    private:
-        std::map<int, double> data;
-
-        double maxValue;
-        SDL_Color color;
 };
 
 class Result : public StateMachine

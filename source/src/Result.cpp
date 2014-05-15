@@ -2,10 +2,7 @@
 
 #include "Global.h"
 #include "Game.h"
-#include "Image.h"
 #include "CombatLog.h"
-
-#include "SDL2_gfx/SDL2_gfxPrimitives.h"
 
 const double graphSteps = 100;
 
@@ -16,6 +13,7 @@ Result::Result(STATE previous) :
 	int scrHeight = Game::getGlobalGame()->getHeight();
 	Resource *resource = Game::getGlobalGame()->getResourceMNGR();
 	resource->AddImage("assets/base.gfx", "display-bg");
+
 	//imagens de fundo
 	imgBackground = resource->GetImage("display-bg");
 
@@ -136,18 +134,18 @@ void Result::normalizeRounds(const CombatRound* l1, const CombatRound* l2)
     // Normalizando
     for (LogMap::const_iterator it = reduced1.getLog().begin(); it != reduced1.getLog().end(); ++it)
     {
-        army0[DMG_DEALT].addDot(it->first, it->second.damageDealt/maxDamage);
-        army0[DMG_TAKEN].addDot(it->first, it->second.damageReceived/maxDamage);
-        army0[KILLS].addDot(it->first, it->second.kills/maxShips);
-        army0[DEATHS].addDot(it->first, it->second.deaths/maxShips);
+        army0[DMG_DEALT].addDot(it->first,  it->second.damageDealt/maxDamage);
+        army0[DMG_TAKEN].addDot(it->first,  it->second.damageReceived/maxDamage);
+        army0[KILLS].addDot(it->first,      it->second.kills/maxShips);
+        army0[DEATHS].addDot(it->first,     it->second.deaths/maxShips);
     }
 
     for (LogMap::const_iterator it = reduced2.getLog().begin(); it != reduced2.getLog().end(); ++it)
     {
-        army1[DMG_DEALT].addDot(it->first, it->second.damageDealt/maxDamage);
-        army1[DMG_TAKEN].addDot(it->first, it->second.damageReceived/maxDamage);
-        army1[KILLS].addDot(it->first, it->second.kills/maxShips);
-        army1[DEATHS].addDot(it->first, it->second.deaths/maxShips);
+        army1[DMG_DEALT].addDot(it->first,  it->second.damageDealt/maxDamage);
+        army1[DMG_TAKEN].addDot(it->first,  it->second.damageReceived/maxDamage);
+        army1[KILLS].addDot(it->first,      it->second.kills/maxShips);
+        army1[DEATHS].addDot(it->first,     it->second.deaths/maxShips);
     }
 }
 
@@ -187,6 +185,7 @@ void Result::Render()
     army0[KILLS].drawGraph(renderer);
     army0[DEATHS].drawGraph(renderer);
 
+    drawGuiElements();
 }
 
 void Result::Clean()
