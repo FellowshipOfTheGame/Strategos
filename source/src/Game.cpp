@@ -84,6 +84,25 @@ void Game::update()
 	run = view->update();
 }
 
+SDL_Texture* Game::getRendererFrameBuffer(){
+    return view->getRendererFrameBuffer();
+}
+
+int Game::getWidth() const
+{
+    return view->getWidth();
+}
+
+int Game::getHeight() const
+{
+    return view->getHeight();
+}
+
+int Game::getScreenBPP() const
+{
+    return view->getBPP();
+}
+
 Resource *Game::getResourceMNGR()
 {
 	return &resources;
@@ -154,6 +173,19 @@ void Game::loadDictionaries()
 	printf("== Loaded %u dictionaries ==\n", dict.size());
 }
 
+void Game::generateSprites(const Dictionary *d){
+    for (unsigned int i = 0; i < dict.size(); ++i)
+        if (dict[i] == d){
+            dict[i]->generateSprites();
+            return;
+        }
+}
+
+void Game::setBackgroundColor(Uint8 r, Uint8 g, Uint8 b)
+{
+    view->setBackgroundColor(r, g, b);
+}
+
 Army* Game::getArmy1() const
 {
 	return armySim1;
@@ -173,6 +205,17 @@ void Game::setArmy1(const std::string& str)
 
 void Game::setArmy1(Army *a)
 {
+    if (a == nullptr)
+    {
+        delete armySim1;
+        delete log1;
+
+        armySim1 = nullptr;
+        log1 = nullptr;
+
+        return;
+    }
+
 	if (armySim1 != nullptr)
 		delete armySim1;
 	armySim1 = a;
@@ -203,6 +246,17 @@ void Game::setArmy2(const std::string& str)
 
 void Game::setArmy2(Army *a)
 {
+    if (a == nullptr)
+    {
+        delete armySim2;
+        delete log2;
+
+        armySim2 = nullptr;
+        log2 = nullptr;
+
+        return;
+    }
+
 	if (armySim2 != nullptr)
 		delete armySim2;
 	armySim2 = a;

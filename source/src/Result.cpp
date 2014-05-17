@@ -55,6 +55,9 @@ Result::Result(STATE previous) :
 
 Result::~Result()
 {
+    Game::getGlobalGame()->setArmy1(nullptr);
+    Game::getGlobalGame()->setArmy2(nullptr);
+
 	delete btn_Next;
 }
 

@@ -165,6 +165,7 @@
 		</Unit>
 		<Unit filename="source/src/CombatData.cpp" />
 		<Unit filename="source/src/CombatLog.cpp" />
+		<Unit filename="source/src/Coordinates.cpp" />
 		<Unit filename="source/src/Create_Army.cpp">
 			<Option virtualFolder="Telas/" />
 		</Unit>

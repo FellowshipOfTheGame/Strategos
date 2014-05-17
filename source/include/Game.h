@@ -6,7 +6,7 @@
  *	do jogador com o exercito selecionado pelo Algoritmo Genetico,
  *  com a visualizacao, isto eh, os elementos graficos e a SDL (@see View.h).
  *
- *	Last update: 06/07/2012
+ *	Last update: 17/05/2014
  */
 
 #ifndef _GAME_H_
@@ -23,25 +23,7 @@
 
 class Game
 {
-	private:
-	    static Game *globalGame;
-
-		std::fstream cfgFile;
-		Resource resources;
-		View *view;
-		std::vector<Dictionary*> dict;
-		Army *editingArmy;
-		Army *armySim1, *armySim2;
-		CombatLog *log1, *log2;
-		bool run;
-		int globalSeed;
-        Algorithm *algorithm[3];
-
-		void loadDictionaries();
-
-		Game();
-
-	public:
+    public:
 		~Game();
 		static Game* getGlobalGame(){
 		    if (globalGame)
@@ -53,42 +35,18 @@ class Game
 		void setRunning(bool state);
 		void update();
 
-		SDL_Texture* getRendererFrameBuffer(){
-			return view->getRendererFrameBuffer();
-		}
-
-		int getWidth() const
-		{
-			return view->getWidth();
-		}
-
-		int getHeight() const
-		{
-			return view->getHeight();
-		}
-
-        int getScreenBPP() const
-        {
-            return view->getBPP();
-        }
+		SDL_Texture* getRendererFrameBuffer();
+		int getWidth() const;
+		int getHeight() const;
+        int getScreenBPP() const;
 
 		Resource *getResourceMNGR();
 		Dictionary *getDictionary(int id);
 		Dictionary *getDictionary(const std::string& name) const;
 		int getNDictionary() const;
 
-        void generateSprites(const Dictionary *d){
-            for (unsigned int i = 0; i < dict.size(); ++i)
-                if (dict[i] == d){
-                    dict[i]->generateSprites();
-                    return;
-                }
-        }
-
-		void setBackgroundColor(Uint8 r, Uint8 g, Uint8 b)
-		{
-			view->setBackgroundColor(r, g, b);
-		}
+        void generateSprites(const Dictionary *d);
+		void setBackgroundColor(Uint8 r, Uint8 g, Uint8 b);
 
 		//Por enquanto vou colocar aqui
 		unsigned long createNewGID();
@@ -110,6 +68,27 @@ class Game
 		CombatLog* getCombatLog(int i);
 
 		SDL_Renderer *getRenderer();
+
+	private:
+	    static Game *globalGame;
+
+		std::fstream cfgFile;
+		Resource resources;
+		View *view;
+		std::vector<Dictionary*> dict;
+
+		Army *editingArmy;
+		Army *armySim1, *armySim2;
+		CombatLog *log1, *log2;
+
+		bool run;
+		int globalSeed;
+        Algorithm *algorithm[3];
+
+        ///
+		Game();
+
+		void loadDictionaries();
 };
 
 #endif
