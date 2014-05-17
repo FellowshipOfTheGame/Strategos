@@ -13,10 +13,11 @@ using namespace std;
 /// Armies iguais = Todas as ships serao as mesmas
 /// quando uma morre, ambas morrem. ERRO ERRO
 
-World::World(Army *army1, Army *army2)
+World::World(Army *army1, Army *army2, CombatLog *log1, CombatLog *log2)
     :   combatData(army1->nUnits(), army2->nUnits()),
-        tvdForArmy1(combatData, army2->getUnits(), army1->getUnits()),
-        tvdForArmy2(combatData, army1->getUnits(), army2->getUnits())
+        tvdForArmy1(combatData, army2->getUnits(), army1->getUnits(), army1Log),
+        tvdForArmy2(combatData, army1->getUnits(), army2->getUnits(), army2Log),
+        army1Log( log1 ), army2Log( log2 )
 {
     totalSteps = 0;
 
@@ -31,29 +32,20 @@ World::World(Army *army1, Army *army2)
     armies.push_back(army1);
 	armies.push_back(army2);
 
-	combatLog.push_back(nullptr);
-	combatLog.push_back(nullptr);
+//	combatLog.push_back(nullptr);
+//	combatLog.push_back(nullptr);
 //	printf("%d VS %d ", army1->nUnits(), army2->nUnits());
 
-	army1->restore(0);
-	army2->restore(1);
+	army1->restore(0, army1Log);
+	army2->restore(1, army2Log);
 
 	// Setar posicao de cada exercito
-    this->setCombatLog(0);
-	this->setCombatLog(1);
 
 //    printf("World Ready!\n");
 }
 
 World::~World()
 {
-	std::vector<CombatLog*>::iterator iter = combatLog.begin();
-	while (iter != combatLog.end())
-	{
-		if ((*iter) != NULL)
-			delete (*iter);
-		iter++;
-	}
 //    printNActions();
 //    print_MaxActions();
 //    printf("Steps: %d\n", totalSteps);
@@ -104,8 +96,12 @@ int World::simulateStep()
    // printf ("\t\t Update 2 \n");
     int N1 = armies[1]->update(combatData.randomengine);
 
-    makeLog(armies[0], this->getCombatLog(0));
-    makeLog(armies[1], this->getCombatLog(1));
+    if (army1Log)
+        army1Log->nextStep();
+    if (army2Log)
+        army2Log->nextStep();
+//    makeLog(armies[0], this->getCombatLog(0));
+//    makeLog(armies[1], this->getCombatLog(1));
 
     if (N0 == 0 && N1 == 0)
     {
@@ -122,42 +118,6 @@ int World::simulateStep()
 //        printf("Sobrando: %d, %d\n", N0, N1);
 
     return _SIM_CONTINUE_;
-}
-
-void World::makeLog(Army *army, CombatLog *log)
-{
-	for (unsigned int n = 0; n < army->nUnits(); n++){
-        Unit *unit = army->getUnitAtIndex(n);
-        for (unsigned int j = 0; j < unit->getUnitInfo()->squadSize; j++){
-            Ship *ship = unit->getShip(j);
-            if (ship->logUpdate()==1)
-            {
-                log->addLog(n,j);
-            }
-        }
-	}
-}
-
-CombatLog* World::getCombatLog(int i)
-{
-	return combatLog[i];
-}
-
-//TODO possivelmente pode ser removido
-CombatRound* World::getCombatRound(int i)
-{
-	if (i==0){
-        return armies[0]->unifyCombatRound();
-       } else{
-	return armies[1]->unifyCombatRound();}
-}
-
-void World::setCombatLog(int i)
-{
-	CombatLog *x =combatLog[i];
-	if (x!=nullptr)
-		delete x;
-	combatLog[i] = new CombatLog();
 }
 
 void World::printLoadedArmy()

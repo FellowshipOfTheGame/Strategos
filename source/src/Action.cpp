@@ -175,7 +175,7 @@ Action* AttackAction::act()
     {
         complete = 1;
         //printf("Tiro \"perdido\" no espaco!\n");
-        return 0;
+        return nullptr;
     }
 
     float dist = coord.distance(target->getPosition());
@@ -183,7 +183,10 @@ Action* AttackAction::act()
     {
         complete = 1;
 
-        if ( target->takeDamage(source->getBaseStats().damage) )
+        bool letal = target->takeDamage(source->getBaseStats().damage);
+        source->dealDamage( source->getBaseStats().damage, letal );
+
+        if ( letal )
             return new ExplosionAction(coord, targetInfo->explosionGFX);
         else
             return new DamageAction(coord);
@@ -202,7 +205,7 @@ Action* AttackAction::act()
     if (frame > shootEffect->getNumberFrames())
         frame = 0;
 
-    return 0;
+    return nullptr;
 }
 
 bool AttackAction::completed()
@@ -251,8 +254,10 @@ Action* KamikazeAction::act()
     double dist = source->getPosition().distance(target->getPosition());
     if ( dist < 15.0 )
     {
+    	double damage = source->getBaseStats().damage * distance/2.0;
+        bool letal = target->takeDamage( damage );
+        source->dealDamage( damage, letal );
     	source->kill();
-        target->takeDamage(source->getBaseStats().damage * distance/2);
 
         complete = 1;
     }

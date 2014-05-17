@@ -7,26 +7,48 @@
 
 #ifndef RESULT_H_
 #define RESULT_H_
+
 #include "StateMachine.h"
 #include "GuiElements.h"
 #include "CombatLog.h"
 
+#include "Graph.h"
+
+enum GRAPHS{
+    DMG_DEALT,
+    DMG_TAKEN,
+    KILLS,
+    DEATHS,
+};
+
 class Result : public StateMachine
 {
-private:
-    Image *imgBackground;
-    Button *btn_Next;
+    public:
+        Result(STATE previous);
+        ~Result();
 
-    Label *alive,*dead;
-    CombatRound *log1, *log2;
+        void onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keysym key, Uint8 button);
+        void Logic();
+        void Render();
+        void Clean();
 
-public:
-    Result(STATE previous);
-    ~Result();
+    private:
+        Image *imgBackground;
+        Button *btn_Next;
 
-    void onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keysym key, Uint8 button);
-    void Logic();
-    void Render();
-    void Clean();
+        Label *alive,*dead;
+        CombatLog *original_log1, *original_log2;
+
+        int graphSteps;
+        int graphX, graphY, graphW, graphH;
+
+        Graph army0[4];
+        Graph army1[4];
+
+        void normalizeRounds(const CombatRound* l1, const CombatRound* l2);
+
+        void reduzir(const CombatRound* original, CombatRound& reduced, int steps, int timeMax);
+        int tratar(CombatRound& graph, int total_ships);
+
 };
 #endif /* RESULT_H_ */

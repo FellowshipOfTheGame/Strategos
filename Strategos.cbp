@@ -16,6 +16,7 @@
 				<Compiler>
 					<Add option="-g" />
 					<Add directory="source/include" />
+					<Add directory="include" />
 				</Compiler>
 			</Target>
 			<Target title="Release">
@@ -27,6 +28,7 @@
 				<Compiler>
 					<Add option="-O3" />
 					<Add directory="source/include" />
+					<Add directory="include" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -99,6 +101,7 @@
 			<Option virtualFolder="Genetico/" />
 		</Unit>
 		<Unit filename="source/include/Global.h" />
+		<Unit filename="source/include/Graph.h" />
 		<Unit filename="source/include/GuiElements.h">
 			<Option virtualFolder="Gui/" />
 		</Unit>
@@ -174,6 +177,7 @@
 		<Unit filename="source/src/GeneticAlgorithm.cpp">
 			<Option virtualFolder="Genetico/" />
 		</Unit>
+		<Unit filename="source/src/Graph.cpp" />
 		<Unit filename="source/src/GuiElements.cpp">
 			<Option virtualFolder="Gui/" />
 		</Unit>

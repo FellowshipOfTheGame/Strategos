@@ -22,8 +22,8 @@ void print_MaxActions()
 }
 
 Unit::Unit(unsigned int ID, const DictKey *info, Coordinates position)
-    : bluePrintCoord(position), mySquadInfo(info), id(ID),
-    target(nullptr), baseCoord(position), averageCoord(position),
+    : bluePrintCoord(position), mySquadInfo(info), id(ID), team(0), myLog(nullptr),
+        target(nullptr), baseCoord(position), averageCoord(position),
         basicTacticMoveRandom( TacticInfo(nullptr), TacticTrigger(0, 0, TRIGGER_LOGIC_OR) ),
         basicTacticAttackNearest( TacticInfo(nullptr), TacticTrigger(0, 0, TRIGGER_LOGIC_OR) ),
         basicTacticRetreat( TacticInfo(nullptr), TacticTrigger(0, 0, TRIGGER_LOGIC_OR) )
@@ -32,7 +32,8 @@ Unit::Unit(unsigned int ID, const DictKey *info, Coordinates position)
 }
 
 Unit::Unit(const Unit* copy)
-    :   bluePrintCoord(copy->bluePrintCoord), mySquadInfo(copy->mySquadInfo), id(copy->id),
+    :   bluePrintCoord(copy->bluePrintCoord), mySquadInfo(copy->mySquadInfo),
+        id(copy->id), team(0), myLog(nullptr),
         target(nullptr), baseCoord(bluePrintCoord), averageCoord(bluePrintCoord),
         basicTacticMoveRandom( copy->basicTacticMoveRandom ),
         basicTacticAttackNearest( copy->basicTacticAttackNearest ),
@@ -60,7 +61,7 @@ Unit::~Unit()
         delete *it;
 }
 
-void Unit::restoreUnit(int teamID, const Coordinates atBaseP)
+void Unit::restoreUnit(int teamID, const Coordinates atBaseP, CombatLog *log)
 {
     for (unsigned int i = 0; i < ships.size(); ++i)
         delete ships[i];
@@ -73,6 +74,11 @@ void Unit::restoreUnit(int teamID, const Coordinates atBaseP)
     baseCoord = atBaseP;
     averageCoord = atBaseP;
 
+    if (log)
+        myLog = log->getLogForUnit(id);
+    else
+        myLog = nullptr;
+
     double circleRadius = 12.0 * (mySquadInfo->squadSize-1);
     float dAngle = 6.283185306 / mySquadInfo->squadSize;
 	for (unsigned int i = 0; i < mySquadInfo->squadSize; i++)
@@ -80,7 +86,7 @@ void Unit::restoreUnit(int teamID, const Coordinates atBaseP)
 		Coordinates coordships(atBaseP);
 		coordships.x += circleRadius * cos(i * dAngle);
 		coordships.y += -circleRadius * sin(i * dAngle);
-		Ship *nship = new Ship(mySquadInfo->stats, coordships);
+		Ship *nship = new Ship(mySquadInfo->stats, coordships, myLog);
 
 		ships.push_back(nship);
 	}
@@ -88,6 +94,7 @@ void Unit::restoreUnit(int teamID, const Coordinates atBaseP)
 	shipsAlive = mySquadInfo->squadSize;
 	target = nullptr;
 	team = teamID;
+
 }
 
 int Unit::getTeam() const
@@ -95,9 +102,9 @@ int Unit::getTeam() const
     return team;
 }
 
-void Unit::restoreUnit(int teamID)
+void Unit::restoreUnit(int teamID, CombatLog *log)
 {
-    restoreUnit(teamID, bluePrintCoord);
+    restoreUnit(teamID, bluePrintCoord, log);
 }
 
 void Unit::addTactic(Tactic *tactic)
@@ -144,7 +151,7 @@ Tactic* Unit::getTacticAt(unsigned int pos)
     return tactics[pos];
 }
 
-unsigned int Unit::getTacticSize(){
+unsigned int Unit::getTacticSize() const{
 	return tactics.size();
 }
 
@@ -457,18 +464,5 @@ void Unit::render()
         circleRGBA(renderer, averageCoord.x, averageCoord.y, 64, 255,0,0, 240);
     else
         circleRGBA(renderer, averageCoord.x, averageCoord.y, 64, 0,0,255, 240);
-}
-
-CombatRound* Unit::unifyCombatRound()
-{
-	printf ("unificando unit %d\n", this->id);
-	CombatRound* _new;
-	_new = new CombatRound();
-	 for (unsigned int i = 0; i < ships.size(); ++i)
-	 {
-		 _new = _new->ConcatCombatRound(ships[i]->getDmgperround());
-		 _new->print();
-	 }
-	return _new;
 }
 

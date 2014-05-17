@@ -25,8 +25,6 @@ class World
 {
     private:
         std::vector<Army*> armies;
-        void makeLog(Army *army, CombatLog *log);
-        std::vector<CombatLog *>   combatLog;
 
         CombatData combatData;
         TacticValidationData tvdForArmy1;
@@ -40,8 +38,11 @@ class World
         // Gera vetor de Actions para cada Army
         void calcActions();
 
+        CombatLog* army1Log;
+        CombatLog* army2Log;
+
     public:
-        World(Army *army1, Army *army2); //TODO: Criar um construtor com parametro que diga se é jogo, ou ag
+        World(Army *army1, Army *army2, CombatLog *log1, CombatLog *log2);
         ~World();
 
         // Simula um "Frame"
@@ -51,11 +52,6 @@ class World
         Army *loadArmy(std::string path);
         void printLoadedArmy();
         Army* getArmy(int id);
-
-        // Combat Log
-        CombatLog* getCombatLog(int i);
-		CombatRound* getCombatRound(int i);
-		void setCombatLog(int i);
 
         // Desenha o combate no renderer principal
         void render();

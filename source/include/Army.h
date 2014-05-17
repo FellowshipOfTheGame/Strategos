@@ -77,7 +77,7 @@ class Army
 
         // Resetar Army como o time X
         // Altera o lado das naves
-        void restore(int asTeam);
+        void restore(int asTeam, CombatLog *log=nullptr);
 
         // Adiciona um Unit para o Army
         void addUnit(Unit *unit);
@@ -106,8 +106,6 @@ class Army
         void printUnits() const;
 
         void render();
-
-        CombatRound* unifyCombatRound();
 
         /// Fitness
         void setFitness(double ft);
