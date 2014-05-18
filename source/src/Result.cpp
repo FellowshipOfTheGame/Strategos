@@ -16,7 +16,7 @@ Result::Result(STATE previous) :
 	imgBackground = resource->GetImage("display-bg");
 
 	//botoes
-	btn_Next = new Button(scrWidth * 0.85, scrHeight * 0.05, 150, 24, resource->GetImage("menu-bt"), "BT02");
+	btn_Next = new Button(scrWidth * 0.85, scrHeight * 0.05, 150, 24, resource->GetImage("menu-bt"));
 	btn_Next->setText(resource->GetFont("jostix-14"), "Menu", ColorRGB8::White, ColorRGB8::White);
 	addGuiElement(btn_Next);
 

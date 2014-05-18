@@ -77,7 +77,7 @@ bool ExplosionAction::completed()
 void ExplosionAction::render()
 {
     // Explosion
-    img->DrawImage(position.x, position.y, timer, Game::getGlobalGame()->getRenderer());
+    img->DrawImage(Game::getGlobalGame()->getRenderer(), position.x, position.y, timer);
 //    filledCircleRGBA( Game::getGlobalGame()->getRenderer(), position.x - camOX, position.y - camOY, 28/(timer/2+1), 128+rand()%128, rand()%128, rand()%128, 150+rand()%55 );
 //    filledCircleRGBA( Game::getGlobalGame()->getRenderer(), position.x - camOX, position.y - camOY, (14+rand()%16)/(timer/2+1), 128+rand()%128, rand()%128, rand()%128, 150+rand()%55 );
 }
@@ -232,7 +232,7 @@ void AttackAction::render( )
 //    circleRGBA( Game::getGlobalGame()->getScreenSurface(), coord.x - cOX, coord.y - cOY, 1, 128+rand()%128, rand()%128, rand()%128, 200+rand()%55 );
 
     // Normal
-    shootEffect->DrawImage((int) (coord.x ), (int) (coord.y ), frame, ( (direction+M_PI) * 180.0) /M_PI, Game::getGlobalGame()->getRenderer());
+    shootEffect->DrawImage(Game::getGlobalGame()->getRenderer(), (int)coord.x, (int)coord.y, frame, ( (direction+M_PI) * 180.0) /M_PI);
 }
 
 KamikazeAction::KamikazeAction(Ship *Source, Ship *Target, Image *imgShoot)

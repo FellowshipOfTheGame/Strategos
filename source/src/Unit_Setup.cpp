@@ -50,19 +50,19 @@ Unit_Setup::Unit_Setup(STATE previous) :
 	addGuiElement(lbl_Geral);
 
 	//botoes
-	btn_Next = new Button(scrWidth * 0.85, scrHeight * 0.05, 150, 24, resource->GetImage("menu-bt"), "BT02");
+	btn_Next = new Button(scrWidth * 0.85, scrHeight * 0.05, 150, 24, resource->GetImage("menu-bt"));
 	btn_Next->setText(resource->GetFont("jostix-14"), "PLAY", ColorRGB8::White, ColorRGB8::White);
 	addGuiElement(btn_Next);
 
-	btn_Back = new Button(scrWidth * 0.05, scrHeight * 0.05, 150, 24, resource->GetImage("menu-bt"), "BT03");
+	btn_Back = new Button(scrWidth * 0.05, scrHeight * 0.05, 150, 24, resource->GetImage("menu-bt"));
 	btn_Back->setText(resource->GetFont("jostix-14"), "BACK", ColorRGB8::White, ColorRGB8::White);
 	addGuiElement(btn_Back);
 
-	btn_Del = new Button(scrWidth * 0.05, scrHeight * 0.9, 150, 24, resource->GetImage("menu-bt"), "BT03");
+	btn_Del = new Button(scrWidth * 0.05, scrHeight * 0.9, 150, 24, resource->GetImage("menu-bt"));
 	btn_Del->setText(resource->GetFont("jostix-14"), "DELETE", ColorRGB8::White, ColorRGB8::White);
 	addGuiElement(btn_Del);
 
-	btn_Move = new Button(scrWidth * 0.2, scrHeight * 0.9, 150, 24, resource->GetImage("menu-bt"), "BT03");
+	btn_Move = new Button(scrWidth * 0.2, scrHeight * 0.9, 150, 24, resource->GetImage("menu-bt"));
 	btn_Move->setText(resource->GetFont("jostix-14"), "MOVE", ColorRGB8::White, ColorRGB8::White);
 	addGuiElement(btn_Move);
 
@@ -337,10 +337,10 @@ void Unit_Setup::Render()
 	list->draw();
 	if (squad_focus)
 	{
-		squad_selec->DrawImage(
+		squad_selec->DrawImage(renderer,
 		        squad_focus->getAvgX() + blueprint->getX() - Game::getGlobalGame()->getResourceMNGR()->GetImage("squadfocus-bg")->getFrameWidth() / 2,
 		        squad_focus->getAvgY() + blueprint->getY()
-		                - Game::getGlobalGame()->getResourceMNGR()->GetImage("squadfocus-bg")->getFrameHeight() / 2, renderer);
+		                - Game::getGlobalGame()->getResourceMNGR()->GetImage("squadfocus-bg")->getFrameHeight() / 2);
 	}
 	// TODO: Fix coordinates to draw on screen
 	Game::getGlobalGame()->getEditingArmy()->render();
@@ -348,7 +348,7 @@ void Unit_Setup::Render()
 	if (put_squad)
 	{
 		SDL_GetMouseState(&mouseX, &mouseY);
-		Game::getGlobalGame()->getResourceMNGR()->GetImage("human-ships")->DrawImage(mouseX, mouseY, squad_type, renderer);
+		Game::getGlobalGame()->getResourceMNGR()->GetImage("human-ships")->DrawImage(renderer, mouseX, mouseY, squad_type);
 	}
 	for (unsigned int i = 0; i < squad_number.size(); i++)
 	{

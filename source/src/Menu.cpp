@@ -32,15 +32,15 @@ Menu::Menu(STATE previous) : StateMachine(previous, MENU, MENU)
 
 	imgBackground = resource->GetImage("bg_menu");
 
-	btPlay = new Button(scrWidth*0.75, scrHeight*0.2, 150, 24, resource->GetImage("menu-bt"), "BT01");
+	btPlay = new Button(scrWidth*0.75, scrHeight*0.2, 150, 24, resource->GetImage("menu-bt"));
 	btPlay->setText(resource->GetFont("jostix-14"), "PLAY", ColorRGB8::White, ColorRGB8::White);
 	addGuiElement(btPlay);
 
-	btCreate = new Button(scrWidth*0.75, scrHeight*0.3, 150, 24, resource->GetImage("menu-bt"), "BT01");
+	btCreate = new Button(scrWidth*0.75, scrHeight*0.3, 150, 24, resource->GetImage("menu-bt"));
 	btCreate->setText(resource->GetFont("jostix-14"), "CREATE ARMY", ColorRGB8::White, ColorRGB8::White);
 	addGuiElement(btCreate);
 
-	btExit = new Button(scrWidth*0.75, scrHeight*0.4, 148, 52, resource->GetImage("exit-bt"), "BT00");
+	btExit = new Button(scrWidth*0.75, scrHeight*0.4, 148, 52, resource->GetImage("exit-bt"));
 	addGuiElement(btExit);
 
 	fntEthnocentric = resource->GetFont("jostix-14");

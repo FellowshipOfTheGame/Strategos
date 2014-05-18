@@ -397,7 +397,7 @@ void Unit::render()
             Image *img = mySquadInfo->shipsGFX[frame];
 
             if (img){
-                img->DrawImage(ship->getX() - (img->getFrameWidth() / 2), ship->getY() - (img->getFrameHeight() / 2), renderer);
+                img->DrawImage(renderer, ship->getX() - (img->getFrameWidth() / 2), ship->getY() - (img->getFrameHeight() / 2));
             }
 
             SDL_Rect rLife;

@@ -102,11 +102,11 @@ class Button : public cGuiElement
         SDL_Color forecolor;
         SDL_Color backcolor;
 
-        Image *back;
+        const Image *back;
         Font *font;
 
     public:
-        Button(int x, int y, int width, int height, Image *back, std::string GID);
+        Button(int x, int y, int width, int height, const Image *back);
         virtual ~Button();
 
         virtual void update();
