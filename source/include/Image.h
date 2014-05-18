@@ -38,7 +38,7 @@ class Image
         /**
          *
          */
-        SDL_Texture* getSDLTexture();
+        SDL_Texture* getSDLTexture() const;
 
         /**
         *   @param frame Numero do frame para ser cortado

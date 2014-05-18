@@ -18,7 +18,7 @@
 class Create_Army : public StateMachine
 {
 private:
-    Image *imgBackground;
+    const Image *imgBackground;
     Button *btn_Back, *btn_Next, *btn_Load;
 
     Label *lbl_ArmyName, *lbl_GenName, *lbl_Descr, *lbl_Title;

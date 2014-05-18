@@ -43,7 +43,7 @@ Image::~Image()
 	SDL_DestroyTexture(picture);
 }
 
-SDL_Texture* Image::getSDLTexture()
+SDL_Texture* Image::getSDLTexture() const
 {
     return picture;
 }

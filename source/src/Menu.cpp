@@ -17,7 +17,7 @@ Menu::Menu(STATE previous) : StateMachine(previous, MENU, MENU)
 	int scrWidth = globalGame->getWidth();
 	int scrHeight = globalGame->getHeight();
 	Font *fntEthnocentric;
-	Image *imgTextField;
+	const Image *imgTextField;
 
 	Resource *resource = globalGame->getResourceMNGR();
 	resource->AddImage("assets/ui.gfx", "bg_menu");

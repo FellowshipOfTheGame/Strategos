@@ -19,9 +19,9 @@
 class Unit_Setup : public StateMachine
 {
 private:
-    Image *imgBackground;
+    const Image *imgBackground;
+    const Image *squad_selec;
     ImageBox *blueprint;
-    Image *squad_selec;
     Button *btn_Back;
     Button *btn_Next;
     Button *btn_Del;

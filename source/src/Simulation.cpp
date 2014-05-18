@@ -283,7 +283,7 @@ void Simulation::Render()
     }
 }
 
-void Simulation::drawBG(Image* img, double x, double y, double factor, SDL_Renderer *renderer)
+void Simulation::drawBG(const Image* img, double x, double y, double factor, SDL_Renderer *renderer)
 {
     img->DrawImage(renderer, x*factor-512, y*factor-512);
 }

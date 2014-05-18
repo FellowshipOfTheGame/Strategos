@@ -148,7 +148,7 @@ void Button::setText(Font *font, const char *str, SDL_Color forecolor, SDL_Color
 
 /****************************** BOX ******************************/
 
-Box::Box(int x, int y, int width, int height, Image *background, Image *border, std::string GID)
+Box::Box(int x, int y, int width, int height, const Image *background, const Image *border, std::string GID)
 {
 	this->x = x;
 	this->y = y;
@@ -218,7 +218,7 @@ INPUT_EVENT Box::input(SDL_Event &event)
 }
 /****************************** BOX ******************************/
 
-ImageBox::ImageBox(int x, int y, int width, int height, Image *background, int frame, Image *border, std::string GID) :
+ImageBox::ImageBox(int x, int y, int width, int height, const Image *background, int frame, const Image *border, std::string GID) :
 		Box(x, y, width, height, background, border, GID)
 {
 	this->frame = frame;
@@ -268,7 +268,7 @@ INPUT_EVENT ImageBox::input(SDL_Event &event)
 
 /****************************** TEXT_FIELD ******************************/
 
-TextField::TextField(int x, int y, int width, int height, Image *border, SDL_Color background, std::string GID)
+TextField::TextField(int x, int y, int width, int height, const Image *border, SDL_Color background, std::string GID)
     : imgText(0)
 {
 	this->x = x;
@@ -412,7 +412,7 @@ void TextField::setFont(Font *font)
 
 /****************************** COMBO_BOX ******************************/
 
-ComboBox::ComboBox(int x, int y, int width, int height, Image *border, SDL_Color fontColor, SDL_Color fontShadow, std::string GID)
+ComboBox::ComboBox(int x, int y, int width, int height, const Image *border, SDL_Color fontColor, SDL_Color fontShadow, std::string GID)
 {
 	//list = new std::vector<std::string>(1);
 	this->font = nullptr;
@@ -658,7 +658,7 @@ void Label::setText(std::string str)
 
 /****************************** STATUS_BOX ******************************/
 //necessita que dictionary esteja funcionando
-StatusBox::StatusBox(int x, int y, Image *imgBack, Image *imgBorder, std::string GID)
+StatusBox::StatusBox(int x, int y, const Image *imgBack, const Image *imgBorder, std::string GID)
 {
 	width = 170;
 	height = 150;

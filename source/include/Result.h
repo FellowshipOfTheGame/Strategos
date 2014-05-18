@@ -33,7 +33,7 @@ class Result : public StateMachine
         void Clean();
 
     private:
-        Image *imgBackground;
+        const Image *imgBackground;
         Button *btn_Next;
 
         Label *alive,*dead;

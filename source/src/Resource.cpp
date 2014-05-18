@@ -225,7 +225,7 @@ void Resource::LoadFont(std::fstream &file, const std::string& key)
 	fonts.insert(std::pair<std::string, Font*>(key, new Font(TTF_OpenFont(path.c_str(), ptSize), ptSize)));
 }
 
-Image* Resource::GetImage(const std::string& key)
+const Image* Resource::GetImage(const std::string& key)
 {
 	std::map<std::string, Image*>::iterator iter;
 

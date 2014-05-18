@@ -119,10 +119,11 @@ class Button : public cGuiElement
 class Box : public cGuiElement
 {
 protected:
-	Image *border;
-	Image *background;
+	const Image *border;
+	const Image *background;
+
 public:
-	Box(int x, int y, int width, int height, Image *background, Image *border, std::string GID);
+	Box(int x, int y, int width, int height, const Image *background, const Image *border, std::string GID);
 	virtual ~Box();
 
 	virtual void update();
@@ -134,8 +135,9 @@ class ImageBox : public Box
 {
 private:
 	int frame;
+
 public:
-	ImageBox(int x, int y, int width, int height, Image *background, int frame, Image *border, std::string GID);
+	ImageBox(int x, int y, int width, int height, const Image *background, int frame, const Image *border, std::string GID);
 	virtual ~ImageBox();
 
 	virtual void update();
@@ -152,11 +154,11 @@ private:
 	bool caps;
 
 	Font *font;
-	Image *border;
+	const Image *border;
 	SDL_Color background;
 
 public:
-	TextField(int x, int y, int width, int height, Image *border, SDL_Color background, std::string GID);
+	TextField(int x, int y, int width, int height, const Image *border, SDL_Color background, std::string GID);
 	virtual ~TextField();
 
 	virtual void update();
@@ -177,7 +179,7 @@ private:
 	int selected;
 	bool drop, opened;
 
-	Image *border;
+	const Image *border;
 	Font *font;
 	int cell_height;
 	SDL_Color color;
@@ -185,7 +187,7 @@ private:
 	unsigned int lenght;
 
 public:
-	ComboBox(int x, int y, int width, int height, Image *border, SDL_Color fontColor, SDL_Color fontShadow,std::string GID);
+	ComboBox(int x, int y, int width, int height, const Image *border, SDL_Color fontColor, SDL_Color fontShadow,std::string GID);
 	//ComboBox(int x, int y, int width, int height, Image *border, string GID);
 	virtual ~ComboBox();
 
@@ -228,7 +230,7 @@ class StatusBox : public cGuiElement
 {
 private:
 	Box *bxBounds;
-	Image *background;
+	const Image *background;
 
 	Label *lbName;
 	Label *lbHP;
@@ -244,7 +246,7 @@ private:
 	std::string GID;
 
 public:
-	StatusBox(int x, int y, Image *imgBack, Image *imgBorder, std::string GID);
+	StatusBox(int x, int y, const Image *imgBack, const Image *imgBorder, std::string GID);
 	virtual ~StatusBox();
 
 	virtual void update(){}
