@@ -255,7 +255,6 @@ void Simulation::Render()
     drawBG(background[2], bgOffsetX, bgOffsetY, -0.2, renderer);
     drawBG(background[3], bgOffsetX, bgOffsetY, -0.28, renderer);
 
-    //Just TESTING
     SDL_SetRenderTarget(renderer, renderCombat);
         // Limpar textura
         SDL_SetTextureBlendMode(renderCombat, SDL_BLENDMODE_BLEND);
