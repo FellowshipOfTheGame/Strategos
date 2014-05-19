@@ -23,8 +23,8 @@ static std::mutex printMutex;
 static std::mutex populationMutex;
 #define printTH(x...){ printMutex.lock(); printf(x); printMutex.unlock(); }
 
-const double mutation_chance = 0.3;
-const int num_geracoes = 2;
+const double mutation_chance = 50;
+const int num_geracoes = 50;
 
 
 #define INDIVIDUOS_GERACAO 16
@@ -123,8 +123,8 @@ void NFGeneticAlgorithm::PDFS(int start, int end, int *winner){
     Army *child1, *child2;
     if(end - start > 2){
         this->crossover->crossOver(armyA,armyB, child1, child2);
-        this->mutation->mutate(child1);
-        this->mutation->mutate(child2);
+        if(rand()%100 < mutation_chance) this->mutation->mutate(child1);
+        if(rand()%100 < mutation_chance) this->mutation->mutate(child2);
         populationMutex.lock();
         children.push_back(child1);
         children.push_back(child2);
@@ -133,12 +133,13 @@ void NFGeneticAlgorithm::PDFS(int start, int end, int *winner){
     int ret = this->objective->evaluate(armyA, armyB, &fitA, &fitB);
     delete armyA;
     delete armyB;
-    *winner = (ret == 1) ? win1 : win2;
+    *winner = (ret == 0) ? win1 : win2;
 
 }
 
 void NFGeneticAlgorithm::run()
 {
+    int lastElite = -1;
     srand(time(nullptr));
     for (unsigned int i = 0; i < num_geracoes; i++)
     {
@@ -182,8 +183,8 @@ Army* NFGeneticAlgorithm::higherFitnessArmy()
 {
     printf("Selecting higherFitnessArmy\n");
 
-    std::string name = "GA/"+std::to_string(armyType)+"/"+(*individuos.rbegin())->getName();
+    std::string name = "GA/"+std::to_string(armyType)+"/"+individuos.back()->getName();
     printf("Selected: %s\n", name.c_str());
 
-    return Army::loadArmy(name);
+    return Army::clone(individuos.back());
 }
