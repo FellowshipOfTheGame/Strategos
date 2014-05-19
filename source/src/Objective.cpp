@@ -111,7 +111,7 @@ int Objective::fight(Army *a, Army *b, int *steps)
         ret = world->simulateStep();
     }
     delete world;
-    return *steps;
+    return ret;
 }
 int Objective::evaluate(Army *a, Army *b, double *fitA, double *fitB){
     int steps;
@@ -133,5 +133,6 @@ int Objective::evaluate(Army *a, Army *b, double *fitA, double *fitB){
 
     *fitA = this->calculateFitness(a, steps) + moreFitA;
     *fitB = this->calculateFitness(b, steps) + moreFitB;
+
     return (ret == _SIM_ARMY1_WIN_) ? 1 : 0;
 }
