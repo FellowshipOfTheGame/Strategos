@@ -281,8 +281,10 @@ void GeneticAlgorithm::crossOver(std::vector<Army*>& selected)
         unsigned int other = rand()%selected.size();
         while ( other == i )
             other = rand()%selected.size();
-
-        this->crossover->crossOver(selected[i], selected[other], indCross);
+        Army *child1, *child2;
+        this->crossover->crossOver(selected[i], selected[other], child1, child2);
+        indCross.push_back(child1);
+        indCross.push_back(child2);
     }
 
 
