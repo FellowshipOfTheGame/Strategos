@@ -1,6 +1,6 @@
 #include "Graph.h"
 
-#include "SDL2_gfxPrimitives.h"
+#include "SDL2_gfx/SDL2_gfxPrimitives.h"
 
 Graph::Graph()
     : x(0), y(0)
