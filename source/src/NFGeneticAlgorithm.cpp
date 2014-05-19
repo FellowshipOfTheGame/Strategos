@@ -27,7 +27,7 @@ const double mutation_chance = 0.3;
 const int num_geracoes = 2;
 
 
-#define INDIVIDUOS_GERACAO 8
+#define INDIVIDUOS_GERACAO 16
 
 
 NFGeneticAlgorithm::NFGeneticAlgorithm(int _armyType)
@@ -134,7 +134,7 @@ void NFGeneticAlgorithm::PDFS(int start, int end, int *winner){
     delete armyA;
     delete armyB;
     *winner = (ret == 1) ? win1 : win2;
-    
+
 }
 
 void NFGeneticAlgorithm::run()
@@ -182,7 +182,7 @@ Army* NFGeneticAlgorithm::higherFitnessArmy()
 {
     printf("Selecting higherFitnessArmy\n");
 
-    std::string name = "GA/"+std::to_string(armyType)+"/"+individuos[0]->getName();
+    std::string name = "GA/"+std::to_string(armyType)+"/"+(*individuos.rbegin())->getName();
     printf("Selected: %s\n", name.c_str());
 
     return Army::loadArmy(name);
