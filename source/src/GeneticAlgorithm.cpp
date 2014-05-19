@@ -26,6 +26,9 @@ const double mutation_chance = 0.3;
 const int add_random_armies = 2;
 const int num_geracoes = 50;
 
+#define INDIVIDUOS_GERACAO  30
+#define SELECT_FROM_POP 2
+
 
 GeneticAlgorithm::GeneticAlgorithm(int _armyType)
     : Algorithm(_armyType)

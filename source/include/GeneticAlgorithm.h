@@ -16,10 +16,6 @@
 #include <MutationManager.h>
 #include <Objective.h>
 
-#define INDIVIDUOS_GERACAO  30
-#define SELECT_FROM_POP 2
-#define GOLD_AMOUNT 350
-
 struct PairAF
 {
     Army *ind;

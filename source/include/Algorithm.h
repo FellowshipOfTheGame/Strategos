@@ -2,6 +2,8 @@
 #define ALGORITHM_H
 #include "Army.h"
 
+#define GOLD_AMOUNT 350
+
 // Classe base para Algoritmo Genetico
 
 class Algorithm
