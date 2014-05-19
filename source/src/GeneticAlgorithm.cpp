@@ -24,7 +24,7 @@ static std::mutex printMutex;
 
 const double mutation_chance = 0.3;
 const int add_random_armies = 2;
-const int num_geracoes = 50;
+const int num_geracoes = 5;
 
 #define INDIVIDUOS_GERACAO  30
 #define SELECT_FROM_POP 2
@@ -241,6 +241,7 @@ void GeneticAlgorithm::threadSimulate( unsigned int from, unsigned int n )
 #endif
             double _fitA, _fitB;
             this->objective->evaluate(armyAclone, armyBclone, &_fitA, &_fitB);
+
             delete armyBclone;
 
             fitA += _fitA;

@@ -13,8 +13,6 @@
 
 #include "Resource.h"
 
-#define SPACIAL_UNIT 32.0
-
 #define _ROTATION_FRAMES_ 36
 
 class DictKey

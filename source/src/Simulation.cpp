@@ -11,12 +11,14 @@ Simulation::Simulation(STATE previous)
     : StateMachine(previous, GAMEPLAY, GAMEPLAY),
         simulationSpeed(0)
 {
+    Game* game = Game::getGlobalGame();
+
     printf("Starting Simulation...\n");
     gameRunning = true;
     simulationSTATE = _SIM_CONTINUE_;
-    Resource *resource = Game::getGlobalGame()->getResourceMNGR();
-    int screenWidth = Game::getGlobalGame()->getWidth();
-    int screenHeight = Game::getGlobalGame()->getHeight();
+    Resource *resource = game->getResourceMNGR();
+    int screenWidth = game->getWidth();
+    int screenHeight = game->getHeight();
 
     resource->AddImage("assets/base.gfx", "simulation-bg-Far");
     resource->AddImage("assets/base.gfx", "simulation-bg-Mid");
@@ -34,19 +36,20 @@ Simulation::Simulation(STATE previous)
     SDL_SetTextureBlendMode(background[2]->getSDLTexture(), SDL_BLENDMODE_ADD);
     SDL_SetTextureBlendMode(background[3]->getSDLTexture(), SDL_BLENDMODE_ADD);
 
-    if (!Game::getGlobalGame()->getArmy1()){
+    if (!game->getArmy1()){
     	printf ("primeiro ponteiro nulo\n");
     	exit(-5);
-    }else if (!Game::getGlobalGame()->getArmy2()){
+    }else if (!game->getArmy2()){
         printf ("segundo ponteiro nulo\n");
     	exit(-5);
     }else{
     	printf ("ambos nao nulos");
     }
     //simulationWorld = new World("rbrararb", "rarbrbra");
-    Game::getGlobalGame()->generateSprites(Game::getGlobalGame()->getArmy1()->getDictionary());
-    Game::getGlobalGame()->generateSprites(Game::getGlobalGame()->getArmy2()->getDictionary());
-    simulationWorld = new World(Game::getGlobalGame()->getArmy1(), Game::getGlobalGame()->getArmy2());
+    Game::getGlobalGame()->generateSprites(game->getArmy1()->getDictionary());
+    Game::getGlobalGame()->generateSprites(game->getArmy2()->getDictionary());
+
+    simulationWorld = new World(game->getArmy1(), game->getArmy2(), game->getCombatLog(0), game->getCombatLog(1) );
 
     camera = new Camera(0, 0, screenWidth, screenHeight, screenWidth*2, screenHeight*1.5f);
     bgOffsetX = bgOffsetY = 0;
@@ -220,13 +223,19 @@ void Simulation::Logic()
             gameRunning = false;
             printf("Enter to see the results!\n");
             printf ("\t\tarmy 0\n");
-            CombatLog *log = simulationWorld->getCombatLog(0);
-            log->setRegister(simulationWorld->getArmy(0)->unifyCombatRound());
-            Game::getGlobalGame()->setCombatLog(0, log);
+//            Game::getGlobalGame()->setCombatLog(0, simulationWorld->getCombatLog(0));
             printf ("\t\tarmy 1\n");
-            log = simulationWorld->getCombatLog(1);
-			log->setRegister(simulationWorld->getArmy(1)->unifyCombatRound());
-            Game::getGlobalGame()->setCombatLog(1, log);
+//            Game::getGlobalGame()->setCombatLog(1, simulationWorld->getCombatLog(1));
+
+//            CombatLog* log1 = Game::getGlobalGame()->getCombatLog(0);
+//            if (log1)
+//            {
+//                printf("Log for Army 1 %p\n", log1);
+//                for (int i = 0; i < Game::getGlobalGame()->getArmy1()->nUnits(); ++i){
+//                    printf("UNIT: %d %p\n", i, log1->getLogForUnit(i));
+//                    log1->getLogForUnit(i)->print();
+//                }
+//            }
          }
     }
  }
@@ -246,7 +255,6 @@ void Simulation::Render()
     drawBG(background[2], bgOffsetX, bgOffsetY, -0.2, renderer);
     drawBG(background[3], bgOffsetX, bgOffsetY, -0.28, renderer);
 
-    //Just TESTING
     SDL_SetRenderTarget(renderer, renderCombat);
         // Limpar textura
         SDL_SetTextureBlendMode(renderCombat, SDL_BLENDMODE_BLEND);
@@ -274,9 +282,9 @@ void Simulation::Render()
     }
 }
 
-void Simulation::drawBG(Image* img, double x, double y, double factor, SDL_Renderer *renderer)
+void Simulation::drawBG(const Image* img, double x, double y, double factor, SDL_Renderer *renderer)
 {
-    img->DrawImage(x*factor-512, y*factor-512, renderer);
+    img->DrawImage(renderer, x*factor-512, y*factor-512);
 }
 
 void Simulation::Clean()

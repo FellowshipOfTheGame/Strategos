@@ -3,13 +3,14 @@
 
 class Unit;
 class CombatData;
+class CombatLog;
 
 #include <vector>
 
 struct TacticValidationData
 {
-    TacticValidationData(CombatData& cd, const std::vector<Unit*>& enemyU, const std::vector<Unit*>& alliedU)
-        : combatData(cd), enemyUnits(enemyU), alliedUnits(alliedU), validatingUnit(0)
+    TacticValidationData(CombatData& cd, const std::vector<Unit*>& enemyU, const std::vector<Unit*>& alliedU, CombatLog* log)
+        : combatData(cd), enemyUnits(enemyU), alliedUnits(alliedU), validatingUnit(0), armyLog(log)
     {
     }
 
@@ -18,6 +19,8 @@ struct TacticValidationData
     const std::vector<Unit*>& alliedUnits;
 
     Unit* validatingUnit;
+
+    CombatLog *armyLog;
 };
 
 #endif // TACTIC_VALIDATION_DATA_

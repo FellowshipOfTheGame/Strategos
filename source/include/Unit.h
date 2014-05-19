@@ -36,6 +36,7 @@ class Unit
         // Team Data
         unsigned int id;   // TODO: O que exatamente eh id? Posicao na Army? Apenas um numero id usado para taticas?
         int team;  // Time 0 ou 1, durante a batalha.
+        CombatRound* myLog;
 
         // Dynamic Combat Data
         int shipsAlive;
@@ -73,7 +74,7 @@ class Unit
         void setTacticAt(Tactic *tactic, int pos);
 
         /// Retorna o numero de taticas dentro da unit
-        unsigned int getTacticSize();
+        unsigned int getTacticSize() const;
 
         /// Nao checa se pos eh um indice valido. Ver o maximo com getTacticSize
         Tactic* getTacticAt(unsigned int pos);
@@ -96,10 +97,10 @@ class Unit
 
         /// Recria todas as naves da unidade
         /// Altera a posicao base
-        void restoreUnit(int teamID, const Coordinates atBaseP);
+        void restoreUnit(int teamID, const Coordinates atBaseP, CombatLog *log = nullptr);
 
         /// Reseta as naves na posicao da BluePrint
-        void restoreUnit(int teamID);
+        void restoreUnit(int teamID, CombatLog *log = nullptr);
 
         /// Retorna o numero de naves vivas
         ///
@@ -170,8 +171,6 @@ class Unit
 
         /// Desenha a unidade considerando a posicao da camera
         void render();
-
-        CombatRound* unifyCombatRound();
 };
 
 #endif

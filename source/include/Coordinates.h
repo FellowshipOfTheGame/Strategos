@@ -5,60 +5,27 @@
 
 class Coordinates
 {
-public:
+    public:
+        float x;
+        float y;
 
-    float x;
-    float y;
+        Coordinates();
+        Coordinates(float a, float b);
+        Coordinates(const Coordinates *c);
 
-    Coordinates()
-    {
-        x = y = 0;
-    }
+    // Como se somasse um vetor (a, b) à coordenada atual
+        Coordinates operator +(const Coordinates& coord) const;
 
-    Coordinates(float a, float b)
-    {
-        x = a;
-        y = b;
-    }
+        Coordinates operator -(const Coordinates& coord) const;
 
-    Coordinates(Coordinates *c)
-    {
-        x = c->x;
-        y = c->y;
-    }
+        void operator +=(const Coordinates& coord);
 
-// Como se somasse um vetor (a, b) à coordenada atual
-    Coordinates operator +(const Coordinates& coord) const
-    {
-        return Coordinates(x+coord.x, y+coord.y);
-    }
+        float distance(const Coordinates& c) const;
 
-    Coordinates operator -(const Coordinates& coord) const
-    {
-        return Coordinates(x-coord.x, y-coord.y);
-    }
+        // tx, ty = target x, y
+        float distance(int tx, int ty) const;
 
-    void operator +=(const Coordinates& coord)
-    {
-        x += coord.x;
-        y += coord.y;
-    }
-
-    float distance(const Coordinates& c) const
-    {
-        return (int)sqrt( pow((double)(x - c.x),2) + pow((double)(y - c.y),2) );
-    }
-
-    // tx, ty = target x, y
-    float distance(int tx, int ty) const
-    {
-        return (int)sqrt( pow((double)(x - tx),2) + pow((double)(y - ty),2) );
-    }
-
-    float angleTo(const Coordinates &other) const
-    {
-        return atan2(y - other.y, other.x - x);
-    }
+        float angleTo(const Coordinates &other) const;
 };
 
 #endif

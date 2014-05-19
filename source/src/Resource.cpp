@@ -108,7 +108,6 @@ Image* Resource::LoadImage(std::fstream &file, const std::string& key)
 	std::string tag = " ";
 	std::string path = "\0";
 	int nLines, nCols, clipWidth, clipHeight, margin, padding, centerX=0, centerY=0;
-    int baseFrames = 1;
 	int success = 0;
 
 
@@ -135,10 +134,6 @@ Image* Resource::LoadImage(std::fstream &file, const std::string& key)
             file >> centerX;
             file >> centerY;
 		}
-        else if(tag.compare("clip:") == 0)
-        {
-            file >> baseFrames;
-        }
 	}
 
 	if(success != 2)
@@ -149,7 +144,6 @@ Image* Resource::LoadImage(std::fstream &file, const std::string& key)
 
     SDL_Rect *rect = Image::createClip(nLines, nCols, clipWidth, clipHeight, margin, padding);
     Image *newImage = new Image(loadImageToMemory(path), nLines*nCols, rect, centerX, centerY);
-    newImage->setBaseFrame(baseFrames);
     //newImage->setFrameWidth(clipWidth-(margin+padding));
 
 	images.insert(std::pair<std::string, Image*>(key, newImage));
@@ -231,7 +225,7 @@ void Resource::LoadFont(std::fstream &file, const std::string& key)
 	fonts.insert(std::pair<std::string, Font*>(key, new Font(TTF_OpenFont(path.c_str(), ptSize), ptSize)));
 }
 
-Image* Resource::GetImage(const std::string& key)
+const Image* Resource::GetImage(const std::string& key)
 {
 	std::map<std::string, Image*>::iterator iter;
 

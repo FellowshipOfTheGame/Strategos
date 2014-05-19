@@ -50,19 +50,19 @@ Unit_Setup::Unit_Setup(STATE previous) :
 	addGuiElement(lbl_Geral);
 
 	//botoes
-	btn_Next = new Button(scrWidth * 0.85, scrHeight * 0.05, 150, 24, resource->GetImage("menu-bt"), "BT02");
+	btn_Next = new Button(scrWidth * 0.85, scrHeight * 0.05, 150, 24, resource->GetImage("menu-bt"));
 	btn_Next->setText(resource->GetFont("jostix-14"), "PLAY", ColorRGB8::White, ColorRGB8::White);
 	addGuiElement(btn_Next);
 
-	btn_Back = new Button(scrWidth * 0.05, scrHeight * 0.05, 150, 24, resource->GetImage("menu-bt"), "BT03");
+	btn_Back = new Button(scrWidth * 0.05, scrHeight * 0.05, 150, 24, resource->GetImage("menu-bt"));
 	btn_Back->setText(resource->GetFont("jostix-14"), "BACK", ColorRGB8::White, ColorRGB8::White);
 	addGuiElement(btn_Back);
 
-	btn_Del = new Button(scrWidth * 0.05, scrHeight * 0.9, 150, 24, resource->GetImage("menu-bt"), "BT03");
+	btn_Del = new Button(scrWidth * 0.05, scrHeight * 0.9, 150, 24, resource->GetImage("menu-bt"));
 	btn_Del->setText(resource->GetFont("jostix-14"), "DELETE", ColorRGB8::White, ColorRGB8::White);
 	addGuiElement(btn_Del);
 
-	btn_Move = new Button(scrWidth * 0.2, scrHeight * 0.9, 150, 24, resource->GetImage("menu-bt"), "BT03");
+	btn_Move = new Button(scrWidth * 0.2, scrHeight * 0.9, 150, 24, resource->GetImage("menu-bt"));
 	btn_Move->setText(resource->GetFont("jostix-14"), "MOVE", ColorRGB8::White, ColorRGB8::White);
 	addGuiElement(btn_Move);
 
@@ -97,6 +97,15 @@ Unit_Setup::Unit_Setup(STATE previous) :
 	squad_type = 0;
 	//	img1 =
 	list->setVisible(false);
+
+	renderCombat = SDL_CreateTexture(Game::getGlobalGame()->getRenderer(), SDL_PIXELFORMAT_RGBA8888,
+                        SDL_TEXTUREACCESS_TARGET, TEAM_AREA_WIDTH, TEAM_AREA_HEIGHT);
+
+    if(renderCombat == nullptr)
+    {
+        printf("SDL_CreateTexture failed: %s\n", SDL_GetError());
+        exit(-9);
+    }
 }
 
 Unit_Setup::~Unit_Setup()
@@ -126,6 +135,7 @@ Unit_Setup::~Unit_Setup()
 void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keysym key, Uint8 button)
 {
 	int mouseX, mouseY;
+	SDL_GetMouseState(&mouseX, &mouseY);
 	unsigned int i;
 
 	TacticInfo info(0);
@@ -237,79 +247,66 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
 				break;
 		}
 	}
-	else if ((element == blueprint) && (put_squad))
+	else if ((element == blueprint) && (put_squad)) // Adicionar uma unidade
 	{
-		switch (action)
-		{
-			case MOUSE_RELEASED_EVENT:
+        if (action == MOUSE_RELEASED_EVENT)
+        {
+            char str[5];
+            if (!move_squad)
+            {
+                Army *editingArmy = Game::getGlobalGame()->getEditingArmy();
 
-				char str[5];
-				SDL_GetMouseState(&mouseX, &mouseY);
-				if ((put_squad) && (!move_squad))
-				{
-				    Army *editingArmy = Game::getGlobalGame()->getEditingArmy();
+                editingArmy->createUnit(squad_type, new Coordinates(mouseX - blueprint->getX(), mouseY - blueprint->getY()));
 
-                    editingArmy->createUnit(squad_type, new Coordinates(mouseX - blueprint->getX(), mouseY - blueprint->getY()));
+                squad_focus = editingArmy->getUnitAtIndex(editingArmy->nUnits() - 1);
+                put_squad = false;
+                squad_type = 0;
+                sprintf(str, "%d\n", editingArmy->nUnits());
+                squad_number.push_back(
+                        new Label(str, Game::getGlobalGame()->getResourceMNGR()->GetFont("jostix-14"),
+                                  ColorRGB8::Green, ColorRGB8::White, "LB02"));
+                squad_number[(squad_number.size() - 1)]->setPosition(squad_focus->getAvgX() + blueprint->getX(),
+                                                                     squad_focus->getAvgY() + blueprint->getY());
+                list->setSquad(squad_focus);
+            }
+            else
+            {
+                Coordinates c(mouseX, mouseY);
+                squad_focus->moveTo(c);
 
-                    squad_focus = editingArmy->getUnitAtIndex(editingArmy->nUnits() - 1);
-                    put_squad = false;
-                    squad_type = 0;
-                    sprintf(str, "%d\n", editingArmy->nUnits());
-                    squad_number.push_back(
-                            new Label(str, Game::getGlobalGame()->getResourceMNGR()->GetFont("jostix-14"),
-                                      ColorRGB8::Green, ColorRGB8::White, "LB02"));
-                    squad_number[(squad_number.size() - 1)]->setPosition(squad_focus->getAvgX() + blueprint->getX(),
-                                                                         squad_focus->getAvgY() + blueprint->getY());
-                    list->setSquad(squad_focus);
-				}
-				else
-				{
-					if (move_squad && put_squad)
-					{
-						Coordinates c;
-						c.x = mouseX;
-						c.y = mouseY;
-						squad_focus->moveTo(c);
-
-						put_squad = !put_squad;
-						move_squad = !move_squad;
-					}
-				}
-				break;
-			default:
-				break;
-		}
+                put_squad = !put_squad;
+                move_squad = !move_squad;
+            }
+        }
 	}
 	else
 	{
-		switch (action)
-		{
-			case MOUSE_RELEASED_EVENT:
-				for (i = 0; i < Game::getGlobalGame()->getEditingArmy()->nUnits(); i++)
-				{
-					if (Game::getGlobalGame()->getEditingArmy()->getUnitByID(i)->hover(blueprint->getX(), blueprint->getY()))
-					{
-						if (squad_focus == Game::getGlobalGame()->getEditingArmy()->getUnitByID(i))
-						{
-							squad_focus = nullptr;
-							list->setVisible(false);
-						}
-						else
-						{
-							squad_focus = Game::getGlobalGame()->getEditingArmy()->getUnitByID(i);
-							list->setVisible(true);
-							if (move_squad)
-							{
-								put_squad = true;
-							}
-						}
-						list->setSquad(squad_focus);
-						break;
-					}
-				}
-				break;
-			default:
-				break;
+        if (action == MOUSE_RELEASED_EVENT)
+        {
+            Army* editingArmy = Game::getGlobalGame()->getEditingArmy();
+            for (i = 0; i < editingArmy->nUnits(); i++)
+            {
+                Unit* unit = editingArmy->getUnitByID(i);
+                if (unit->hover(mouseX-blueprint->getX(), mouseY-blueprint->getY()))
+                {
+                    if (squad_focus == unit)
+                    {
+                        squad_focus = nullptr;
+                        list->setVisible(false);
+                    }
+                    else
+                    {
+                        squad_focus = unit;
+                        list->setVisible(true);
+                        if (move_squad)
+                        {
+                            put_squad = true;
+                        }
+                    }
+                    list->setSquad(squad_focus);
+                    break;
+                }
+            }
 		}
 	}
 }
@@ -327,29 +324,52 @@ void Unit_Setup::Logic()
 
 void Unit_Setup::Render()
 {
-//	int scrWidth = Game::getGlobalGame()->getWidth();
-//	int scrHeight = Game::getGlobalGame()->getHeight();
 	int mouseX, mouseY;
-	Game::getGlobalGame()->setBackgroundColor(255, 0, 0);
 	SDL_Renderer* renderer = Game::getGlobalGame()->getRenderer();
+
+
+	Game::getGlobalGame()->setBackgroundColor(255, 0, 0);
+
 	imgBackground->DrawImage(renderer);
 	drawGuiElements();
+
 	list->draw();
+
 	if (squad_focus)
 	{
-		squad_selec->DrawImage(
+		squad_selec->DrawImage(renderer,
 		        squad_focus->getAvgX() + blueprint->getX() - Game::getGlobalGame()->getResourceMNGR()->GetImage("squadfocus-bg")->getFrameWidth() / 2,
-		        squad_focus->getAvgY() + blueprint->getY()
-		                - Game::getGlobalGame()->getResourceMNGR()->GetImage("squadfocus-bg")->getFrameHeight() / 2, renderer);
+		        squad_focus->getAvgY() + blueprint->getY() - Game::getGlobalGame()->getResourceMNGR()->GetImage("squadfocus-bg")->getFrameHeight() / 2);
 	}
-	// TODO: Fix coordinates to draw on screen
-	Game::getGlobalGame()->getEditingArmy()->render();
-//	Game::getGlobalGame()->getEditingArmy()->render(-blueprint->getX(), -blueprint->getY());
+
+	// Desenhar army na tela
+    SDL_SetRenderTarget(renderer, renderCombat);
+        // Limpar textura
+        SDL_SetTextureBlendMode(renderCombat, SDL_BLENDMODE_BLEND);
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+        SDL_RenderClear(renderer);
+
+        SDL_SetRenderDrawBlendMode(renderer, SDL_BlendMode::SDL_BLENDMODE_NONE);
+        SDL_SetTextureBlendMode(renderCombat, SDL_BLENDMODE_BLEND);
+
+        Game::getGlobalGame()->getEditingArmy()->render();
+    SDL_SetRenderTarget(renderer, 0);
+
+    // Renderizar na posicao do blueprint
+    SDL_Rect rect;
+    rect.x = blueprint->getX();  rect.w = TEAM_AREA_WIDTH;
+    rect.y = blueprint->getY();  rect.h = TEAM_AREA_HEIGHT;
+
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BlendMode::SDL_BLENDMODE_NONE);
+    SDL_RenderCopy( renderer, renderCombat, 0, &rect);
+
 	if (put_squad)
 	{
 		SDL_GetMouseState(&mouseX, &mouseY);
-		Game::getGlobalGame()->getResourceMNGR()->GetImage("human-ships")->DrawImage(mouseX, mouseY, squad_type, renderer);
+		Game::getGlobalGame()->getResourceMNGR()->GetImage("human-ships")->DrawImage(renderer, mouseX, mouseY, squad_type);
 	}
+
 	for (unsigned int i = 0; i < squad_number.size(); i++)
 	{
 		squad_number[i]->setPosition(Game::getGlobalGame()->getEditingArmy()->getUnitByID(i)->getAvgX() + blueprint->getX(),

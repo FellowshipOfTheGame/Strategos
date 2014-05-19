@@ -1,12 +1,11 @@
-// 2011-05-04; Lin
-
 #ifndef _SHIP_H_
 #define _SHIP_H_
 
+#define SPACIAL_UNIT 32.0
+
+#include "CombatLog.h"
 #include "Coordinates.h"
 #include "RandomEngine.h"
-
-class CombatRound;
 
 struct shipBaseStats
 {
@@ -58,7 +57,7 @@ class Ship
 {
     private:
         int owner;
-        int deathTime, status;
+        int status;
         float currentDirection;
 
         // Atributos iniciados no construtor
@@ -68,9 +67,10 @@ class Ship
         // coord = posicao atual
         Coordinates coord, unitPos, targetPos;
 
-        CombatRound *dmgperround;
+        CombatRound* myLog;
+
     public:
-        Ship(const shipBaseStats &initialStats, Coordinates Coord);
+        Ship(const shipBaseStats &initialStats, const Coordinates& Coord, CombatRound* log=nullptr);
         ~Ship();
 
         int update(RandomEngine& randE);
@@ -80,6 +80,9 @@ class Ship
 
         /// \return: Retorna se o dano foi letal
         bool takeDamage(double damage);
+
+        ///
+        bool dealDamage(double damage, bool wasLetal);
 
         // Seleciona a posicao "alvo" para a nave ir em direcao
         void moveTo(const Coordinates& c);
@@ -96,9 +99,6 @@ class Ship
         int getY() const;
         const Coordinates& getPosition() const;
         const Coordinates& getTargetPos() const;
-        int logUpdate();
-
-        CombatRound* getDmgperround();
 };
 
 #endif

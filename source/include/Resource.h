@@ -41,7 +41,7 @@ class Resource
         void AddFont(const char *filepath, const std::string& key);
         void LoadFont(std::fstream &file, const std::string& key);
 
-        Image* GetImage(const std::string& key);
+        const Image* GetImage(const std::string& key);
         Font* GetFont(const std::string& key);
 
         // Retorna uma lista com o nome dos arquivos

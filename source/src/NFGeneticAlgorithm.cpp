@@ -24,7 +24,7 @@ static std::mutex populationMutex;
 #define printTH(x...){ printMutex.lock(); printf(x); printMutex.unlock(); }
 
 const double mutation_chance = 0.3;
-const int num_geracoes = 50;
+const int num_geracoes = 2;
 
 
 #define INDIVIDUOS_GERACAO 8

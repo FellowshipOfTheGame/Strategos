@@ -77,7 +77,7 @@ bool ExplosionAction::completed()
 void ExplosionAction::render()
 {
     // Explosion
-    img->DrawImage(position.x, position.y, timer, Game::getGlobalGame()->getRenderer());
+    img->DrawImage(Game::getGlobalGame()->getRenderer(), position.x, position.y, timer);
 //    filledCircleRGBA( Game::getGlobalGame()->getRenderer(), position.x - camOX, position.y - camOY, 28/(timer/2+1), 128+rand()%128, rand()%128, rand()%128, 150+rand()%55 );
 //    filledCircleRGBA( Game::getGlobalGame()->getRenderer(), position.x - camOX, position.y - camOY, (14+rand()%16)/(timer/2+1), 128+rand()%128, rand()%128, rand()%128, 150+rand()%55 );
 }
@@ -175,7 +175,7 @@ Action* AttackAction::act()
     {
         complete = 1;
         //printf("Tiro \"perdido\" no espaco!\n");
-        return 0;
+        return nullptr;
     }
 
     float dist = coord.distance(target->getPosition());
@@ -183,7 +183,10 @@ Action* AttackAction::act()
     {
         complete = 1;
 
-        if ( target->takeDamage(source->getBaseStats().damage) )
+        bool letal = target->takeDamage(source->getBaseStats().damage);
+        source->dealDamage( source->getBaseStats().damage, letal );
+
+        if ( letal )
             return new ExplosionAction(coord, targetInfo->explosionGFX);
         else
             return new DamageAction(coord);
@@ -202,7 +205,7 @@ Action* AttackAction::act()
     if (frame > shootEffect->getNumberFrames())
         frame = 0;
 
-    return 0;
+    return nullptr;
 }
 
 bool AttackAction::completed()
@@ -229,7 +232,7 @@ void AttackAction::render( )
 //    circleRGBA( Game::getGlobalGame()->getScreenSurface(), coord.x - cOX, coord.y - cOY, 1, 128+rand()%128, rand()%128, rand()%128, 200+rand()%55 );
 
     // Normal
-    shootEffect->DrawImage((int) (coord.x ), (int) (coord.y ), frame, ( (direction+M_PI) * 180.0) /M_PI, Game::getGlobalGame()->getRenderer());
+    shootEffect->DrawImage(Game::getGlobalGame()->getRenderer(), (int)coord.x, (int)coord.y, frame, ( (direction+M_PI) * 180.0) /M_PI);
 }
 
 KamikazeAction::KamikazeAction(Ship *Source, Ship *Target, Image *imgShoot)
@@ -251,8 +254,10 @@ Action* KamikazeAction::act()
     double dist = source->getPosition().distance(target->getPosition());
     if ( dist < 15.0 )
     {
+    	double damage = source->getBaseStats().damage * distance/2.0;
+        bool letal = target->takeDamage( damage );
+        source->dealDamage( damage, letal );
     	source->kill();
-        target->takeDamage(source->getBaseStats().damage * distance/2);
 
         complete = 1;
     }

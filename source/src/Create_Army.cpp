@@ -32,15 +32,15 @@ Create_Army::Create_Army(STATE previous) :
 	//imagens de fundo
 	imgBackground = resource->GetImage("bg_create_army");
 
-	btn_Next = new Button(scrWidth * 0.85, scrHeight * 0.05, 150, 24, resource->GetImage("menu-bt"), "BT02");
+	btn_Next = new Button(scrWidth * 0.85, scrHeight * 0.05, 150, 24, resource->GetImage("menu-bt"));
 	btn_Next->setText(resource->GetFont("jostix-14"), "Unit Setup", ColorRGB8::White, ColorRGB8::White);
 	addGuiElement(btn_Next);
 
-	btn_Back = new Button(scrWidth * 0.05, scrHeight * 0.05, 150, 24, resource->GetImage("menu-bt"), "BT03");
+	btn_Back = new Button(scrWidth * 0.05, scrHeight * 0.05, 150, 24, resource->GetImage("menu-bt"));
 	btn_Back->setText(resource->GetFont("jostix-14"), "BACK", ColorRGB8::White, ColorRGB8::White);
 	addGuiElement(btn_Back);
 
-	btn_Load = new Button(scrWidth * 0.2, scrHeight * 0.4+100, 150, 24, resource->GetImage("menu-bt"), "BT03");
+	btn_Load = new Button(scrWidth * 0.2, scrHeight * 0.4+100, 150, 24, resource->GetImage("menu-bt"));
 	btn_Load->setText(resource->GetFont("jostix-14"), "Load", ColorRGB8::White, ColorRGB8::White);
 	addGuiElement(btn_Load);
 

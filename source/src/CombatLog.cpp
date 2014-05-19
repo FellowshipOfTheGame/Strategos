@@ -1,216 +1,131 @@
 #include "CombatLog.h"
-CombatRoundItem::CombatRoundItem(int s, double d)
+
+CombatLog::CombatLog(int nUnits)
+    : unitLog(nUnits)
 {
-	step=s;
-	roundDamage = d;
 }
 
-CombatRoundItem::CombatRoundItem(int s)
+CombatRound* CombatLog::getLogForUnit(int unitID)
 {
-	step=s;
-	roundDamage = 0;
+    return &unitLog[unitID];
 }
 
-CombatRoundItem::CombatRoundItem(CombatRoundItem* origin)
+void CombatLog::nextStep()
 {
-	step=origin->getStep();
-	roundDamage = origin->getRoundDamage();
+    for (int i = 0; i < unitLog.size(); ++i)
+        unitLog[i].nextStep();
 }
 
-int CombatRoundItem::getRoundDamage() const
+void CombatLog::calculateGeneralLog()
 {
-	return roundDamage;
+    for (int i = 0; i < unitLog.size(); ++i)
+    {
+        const LogMap& unit_log = unitLog[i].getLog();
+        LogMap::const_iterator it = unit_log.begin();
+
+        while (it != unit_log.end())
+        {
+            generalLog.addLog( it->first, it->second );
+            ++it;
+        }
+    }
 }
 
-void CombatRoundItem::addRoundDamage(int roundDamage)
+const CombatRound* CombatLog::getGeneralLog() const
 {
-	this->roundDamage += roundDamage;
+    return &generalLog;
 }
-
-int CombatRoundItem::getStep()
-{
-	return step;
-}
-
-CombatRoundItem* CombatRoundItem::clone()
-{
-	return new CombatRoundItem(this);
-}
-
-bool CombatRoundItem::operator < (CombatRoundItem* origin) const
-{
-   return (step < origin->getStep());
-}
-
-bool CombatRoundItem::operator == ( CombatRoundItem* origin) const
-{
-   return (step == origin->getStep());
-}
-
-bool CombatRoundItem::compareMinor(CombatRoundItem *i, CombatRoundItem *j)
-{
-	return (i->getStep() < j->getStep());
-}
-
-bool CombatRoundItem::compareEqual(CombatRoundItem *i, CombatRoundItem *j)
-{
-	return (i->getStep() == j->getStep());
-}
-
-bool CombatRoundItem::compareMaxDamage(CombatRoundItem *i, CombatRoundItem *j)
-{
-	return (i->getRoundDamage() < j->getRoundDamage());
-}
-
 
 /*****************************************************************************/
 
 CombatRound::CombatRound()
+    : current_step(0)
 {
-}
-
-CombatRound::CombatRound(std::vector<CombatRoundItem*>& origin)
-{
-	std::vector<CombatRoundItem*>::iterator iter = origin.begin();
-
-	while (iter != origin.end())
-	{
-	    CombatRoundItem *temp = ((*iter)->clone());
-		log.push_back( temp );
-		iter++;
-	}
-	std::sort(log.begin(), log.end(),CombatRoundItem::compareMinor);
-
 }
 
 CombatRound::~CombatRound()
 {
-	std::vector<CombatRoundItem*>::const_iterator iter = log.begin();
-
-	while (iter != log.end())
-	{
-		delete (*iter);
-		iter++;
-	}
-	log.clear();
 }
 
-const std::vector<CombatRoundItem*>& CombatRound::getLog() const
+const LogMap& CombatRound::getLog() const
 {
 	return log;
 }
 
-void CombatRound::addLog(CombatRoundItem *round)
+void CombatRound::addLog(const RoundData& data)
 {
-	if (log.size()<1)
-	{
-		log.push_back(round->clone());
-		return;
-	}
-
-	std::sort(log.begin(), log.end(),CombatRoundItem::compareMinor);
-	std::vector<CombatRoundItem*>::const_iterator iter = log.begin();
-
-	while (iter != log.end())
-	{
-		if (CombatRoundItem::compareEqual(round,(*iter)))
-		{
-			(*iter)->addRoundDamage(round->getRoundDamage());
-			return;
-		}
-		iter++;
-	}
-	log.push_back(round->clone());
-
-
+    addLog(current_step, data);
 }
 
-CombatRound* CombatRound::ConcatCombatRound(CombatRound* cb)
+void CombatRound::addLog(int time, const RoundData& data)
 {
-	CombatRound* _new = new CombatRound(log);
-
-	std::vector<CombatRoundItem*>::const_iterator iter = cb->getLog().begin();
-
-	while (iter != cb->getLog().end())
-	{
-		_new->addLog((*iter));
-		iter++;
-	}
-
-	return _new;
+    if ( log.find(time) != log.end() ){
+        log[time] += data;
+    }else{
+        log[time] = data;
+    }
 }
 
-void CombatRound::print()
+void CombatRound::setLog(int time, const RoundData& data)
+{
+    log[time] = data;
+}
+
+void CombatRound::print() const
 {
 	printf ("imprimindo combat round\n \t");
-	std::vector<CombatRoundItem*>::iterator iter = log.begin();
+	LogMap::const_iterator iter = log.begin();
+	printf("LoggedTimes: %d\n", log.size());
 	while (iter != log.end())
 	{
-		printf ("[%d, %d] ",(*iter)->getStep(),(*iter)->getRoundDamage());
-		iter++;
+		printf ("[%d, %.1lf, %.1lf, %d, %d] ", iter->first, iter->second.damageReceived,
+                                    iter->second.damageDealt, iter->second.deaths, iter->second.kills);
+		++iter;
 	}
 	printf ("\n");
 }
 
+void CombatRound::nextStep()
+{
+    ++current_step;
+}
+
+int CombatRound::getLastLoggedTime() const
+{
+    if (log.empty())
+        return 0;
+
+    return log.rbegin()->first;
+}
+
+int CombatRound::getFirstLoggedTime() const
+{
+    if (log.empty())
+        return 0;
+
+    return log.begin()->first;
+}
+
+RoundData CombatRound::getMaximumData() const
+{
+    RoundData maxData;
+
+    for (LogMap::const_iterator it = log.begin(); it != log.end(); ++it)
+    {
+        const RoundData& chkdata = it->second;
+
+        // Guardar maximos
+        if (chkdata.damageDealt > maxData.damageDealt)
+            maxData.damageDealt = chkdata.damageDealt;
+        if (chkdata.damageReceived > maxData.damageReceived)
+            maxData.damageReceived = chkdata.damageReceived;
+        if (chkdata.deaths > maxData.deaths)
+            maxData.deaths = chkdata.deaths;
+        if (chkdata.kills > maxData.kills)
+            maxData.kills = chkdata.kills;
+    }
+
+    return maxData;
+}
+
 /*****************************************************************************/
-
-CombatLogItem::CombatLogItem(int squad, int ship)
-{
-	this->squadNum=squad;
-	this->shipNum = ship;
-}
-
-CombatLogItem::~CombatLogItem()
-{
-}
-/*****************************************************************************/
-
-CombatLog::CombatLog()
-{
-	this->damageDealt=0;
-	this->damageTaken=0;
-	this->combatRegister = new CombatRound();
-}
-
-CombatLog::~CombatLog()
-{
-	std::vector<CombatLogItem*>::iterator iter = combatline.begin();
-	while (iter != combatline.end())
-	{
-		delete (*iter);
-		iter++;
-	}
-	this->combatline.clear();
-}
-
-void CombatLog::addLog(int squad, int ship)
-{
-	this->combatline.push_back(new CombatLogItem(squad,ship));
-}
-
-std::vector<CombatLogItem*> CombatLog::getLog()
-{
-	return this->combatline;
-}
-
-
-void CombatLog::setRegister(CombatRound *cb)
-{
-	CombatRound *_new;
-	_new = this->combatRegister->ConcatCombatRound(cb);
-	delete this->combatRegister;
-	this->combatRegister = _new;
-
-	const std::vector<CombatRoundItem*>& log = this->combatRegister->getLog();
-	std::vector<CombatRoundItem*>::const_iterator iter = log.begin();
-
-	while (iter != log.end())
-	{
-		this->damageTaken += (*iter)->getRoundDamage();
-		iter++;
-	}
-}
-CombatRound* CombatLog::getRegister()
-{
-	return this->combatRegister;
-}

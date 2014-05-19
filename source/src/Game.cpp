@@ -16,7 +16,7 @@
 Game* Game::globalGame = 0;
 
 Game::Game()
-    : armySim1(0), armySim2(0)
+    : armySim1(nullptr), armySim2(nullptr), log1(nullptr), log2(nullptr)
 {
 	int screenWidth = 1024, screenHeight = 768, screenBPP = 0;
     globalGame = this;
@@ -37,21 +37,15 @@ Game::Game()
 	algorithm[0] = new NFGeneticAlgorithm(0);
 	algorithm[1] = new NFGeneticAlgorithm(1);
 	algorithm[2] = new NFGeneticAlgorithm(2);
-	combatLog.push_back(nullptr);
-	combatLog.push_back(nullptr);
 
 	srand((unsigned int) time(nullptr));
 	loadDictionaries();
 
-    // TODO: Alterar para 3 na versao final
-    // 1 apenas para agilizar debugs
-
     printf("Starting GA\n");
     clock_t time = clock();
-    for (int i = 0; i < 1; ++i)
+    for (int i = 0; i < 1; ++i) // TODO: Alterar para 3 na versao final 1 apenas para agilizar debugs
     {
         algorithm[i]->initialize();
-        for (int j = 0; j < 1; ++j)
         algorithm[i]->run();
     }
     printf("GA time: %lfs\n", (clock()-time) / (double)CLOCKS_PER_SEC);
@@ -74,14 +68,6 @@ Game::~Game()
 
 	globalGame = 0;
 
-	std::vector<CombatLog*>::iterator iter = combatLog.begin();
-	while (iter != combatLog.end())
-	{
-		if ((*iter) != NULL)
-			delete (*iter);
-		iter++;
-	}
-
 	delete view;
 }
 
@@ -98,6 +84,25 @@ void Game::setRunning(bool state)
 void Game::update()
 {
 	run = view->update();
+}
+
+SDL_Texture* Game::getRendererFrameBuffer(){
+    return view->getRendererFrameBuffer();
+}
+
+int Game::getWidth() const
+{
+    return view->getWidth();
+}
+
+int Game::getHeight() const
+{
+    return view->getHeight();
+}
+
+int Game::getScreenBPP() const
+{
+    return view->getBPP();
 }
 
 Resource *Game::getResourceMNGR()
@@ -170,6 +175,19 @@ void Game::loadDictionaries()
 	printf("== Loaded %u dictionaries ==\n", dict.size());
 }
 
+void Game::generateSprites(const Dictionary *d){
+    for (unsigned int i = 0; i < dict.size(); ++i)
+        if (dict[i] == d){
+            dict[i]->generateSprites();
+            return;
+        }
+}
+
+void Game::setBackgroundColor(Uint8 r, Uint8 g, Uint8 b)
+{
+    view->setBackgroundColor(r, g, b);
+}
+
 Army* Game::getArmy1() const
 {
 	return armySim1;
@@ -180,13 +198,35 @@ void Game::setArmy1(const std::string& str)
 	if (armySim1 != nullptr)
 		delete armySim1;
 	armySim1 = Army::loadArmy(str);
+
+	if (log1)
+        delete log1;
+
+    log1 = new CombatLog(armySim1->nUnits());
 }
 
 void Game::setArmy1(Army *a)
 {
+    if (a == nullptr)
+    {
+        delete armySim1;
+        delete log1;
+
+        armySim1 = nullptr;
+        log1 = nullptr;
+
+        return;
+    }
+
 	if (armySim1 != nullptr)
 		delete armySim1;
 	armySim1 = a;
+
+
+	if (log1)
+        delete log1;
+
+    log1 = new CombatLog(armySim1->nUnits());
 }
 
 Army* Game::getArmy2() const
@@ -199,13 +239,34 @@ void Game::setArmy2(const std::string& str)
 	if (armySim2 != nullptr)
 		delete armySim2;
 	armySim2  = Army::loadArmy(str);
+
+	if (log2)
+        delete log2;
+
+    log2 = new CombatLog(armySim2->nUnits());
 }
 
 void Game::setArmy2(Army *a)
 {
+    if (a == nullptr)
+    {
+        delete armySim2;
+        delete log2;
+
+        armySim2 = nullptr;
+        log2 = nullptr;
+
+        return;
+    }
+
 	if (armySim2 != nullptr)
 		delete armySim2;
 	armySim2 = a;
+
+	if (log2)
+        delete log2;
+
+    log2 = new CombatLog(armySim2->nUnits());
 }
 
 Algorithm** Game::getAlgorithm()
@@ -215,21 +276,8 @@ Algorithm** Game::getAlgorithm()
 
 CombatLog* Game::getCombatLog(int i)
 {
-	return combatLog[i];
-}
+    if (i == 0)
+        return log1;
 
-void Game::setCombatLog(int i)
-{
-	CombatLog *x =combatLog[i];
-	if (x!=nullptr)
-		delete x;
-	combatLog[i] = new CombatLog();
-}
-
-void Game::setCombatLog(int i, CombatLog *cmbLog)
-{
-	CombatLog *x =combatLog[i];
-	if (x!=nullptr)
-		delete x;
-	combatLog[i] = cmbLog;
+	return log2;
 }

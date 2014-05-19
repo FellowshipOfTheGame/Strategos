@@ -12,6 +12,7 @@ class Font
     public:
         Font(TTF_Font *font_, int ptsize);
         ~Font();
+
         void CleanText();
         int getPtSize();
         void setShadow(bool t);

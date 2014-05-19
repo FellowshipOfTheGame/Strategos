@@ -7,59 +7,54 @@
 #include <SDL.h>
 #include <SDL_image.h>
 
-//Retorna um vetor de SDL_Rect
-
 class Image
 {
-public:
-    Image(SDL_Texture *image, int frames, SDL_Rect *rect, int cX, int cY);
-    ~Image();
+    public:
+        /**
+        *   @param source Imagem inicial para gerar o vetor
+        *   @param angle Angulo maximo - normalmente 360 graus
+        *   @param frames Numero de frames para gerar, mais frames geram animacao mais suave
+        *   @return Retorna um vetor contendo todos os frames da imagem source rotacionada
+        */
+        static Image** generateRotatedImage(Image *source, float angle, int frames);
 
-    static void DrawImage(int x, int y, SDL_Texture *source, SDL_Renderer *destination, SDL_Rect *clip);
-    void DrawImage(SDL_Renderer *destination);
-    void DrawImage(int x, int y, SDL_Renderer *destination);
-    void DrawImage(int x, int y, int frame, SDL_Renderer *destination);
-    void DrawImage(int x, int y, int frame, double rotation, SDL_Renderer *destination);
-    bool Hover(int x, int y); //Checa se o mouse estaria em cima da imagem se ela estiver na posicao X,Y
+        // Retorna um vetor de SDL_Rect
+        static SDL_Rect *createClip(int lines, int collumns, int clipWidth, int clipHeight, int margin, int padding);
 
-    int getNumberFrames();
-    void setBaseFrame(int nFrames);
-    int getBaseFrames();
+        // Desenha uma imagem
+        static void DrawImage(SDL_Renderer *destination, SDL_Texture *source, SDL_Rect *clip, int x, int y);
 
-    int getFrameWidth();
-    int getFrameHeight();
 
-    static SDL_Rect *createClip(int lines, int collumns, int clipWidth, int clipHeight, int margin, int padding);
+        Image(SDL_Texture *image, int frames, SDL_Rect *rect, int cX, int cY);
+        ~Image();
+        void DrawImage(SDL_Renderer *destination) const;
+        void DrawImage(SDL_Renderer *destination, int x, int y, int frame=0) const;
+        void DrawImage(SDL_Renderer *destination, int x, int y, int frame, double rotation) const;
 
-    /**
-     *
-     */
-    SDL_Texture* getSDLTexture();
+        int getNumberFrames() const;
+        int getFrameWidth() const;
+        int getFrameHeight() const;
 
-    /**
-    *   @param source Imagem inicial para gerar o vetor
-    *   @param angle Angulo maximo - normalmente 360 graus
-    *   @param frames Numero de frames para gerar, mais frames geram animacao mais suave
-    *   @return Retorna um vetor contendo todos os frames da imagem source rotacionada
-    */
-    static Image** generateRotatedImage(Image *source, float angle, int frames);
+        /**
+         *
+         */
+        SDL_Texture* getSDLTexture() const;
 
-    /**
-    *   @param frame Numero do frame para ser cortado
-    *   @return Retorna um novo Image que possui o frame cortado
-    */
-    Image* cutFrame(int frame);
+        /**
+        *   @param frame Numero do frame para ser cortado
+        *   @return Retorna um novo Image que possui o frame cortado
+        */
+        Image* cutFrame(int frame);
 
-    void printCut(int frame);
+        void printCut(int frame);
 
-private:
-    SDL_Texture *picture;
-//    int frame;
-    int frameWidth, frameHeight;
-    int baseFrame;
-    int nframes;
-    int centerX, centerY;
-    SDL_Rect *cut;
+    private:
+        SDL_Texture *picture;
+        int frameWidth, frameHeight;
+        int baseFrame;
+        int nframes;
+        int centerX, centerY;
+        SDL_Rect *cut;
 
 };
 
