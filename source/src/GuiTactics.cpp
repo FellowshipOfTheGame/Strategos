@@ -521,19 +521,19 @@ INPUT_EVENT TacticRM::input(SDL_Event &event)
 void TacticList::initialize()
 {
 	Resource *resource = Game::getGlobalGame()->getResourceMNGR();
-	btn_up = new Button(this->x, this->y, 200, 20, resource->GetImage("menu-bt"), "BT02");
+	btn_up = new Button(this->x, this->y, 200, 20, resource->GetImage("menu-bt"));
 	btn_up->setText(resource->GetFont("jostix-14"), "A", ColorRGB8::White, ColorRGB8::White);
 
-	btn_down = new Button(this->x, 5 + this->y + 200, 200, 20, resource->GetImage("menu-bt"), "BT02");
+	btn_down = new Button(this->x, 5 + this->y + 200, 200, 20, resource->GetImage("menu-bt"));
 	btn_down->setText(resource->GetFont("jostix-14"), "V", ColorRGB8::White, ColorRGB8::White);
 
-	btn_plus = new Button(this->x, 5 + btn_down->getY() + btn_down->getHeight(), 100, 20, resource->GetImage("menu-bt"), "BT02");
+	btn_plus = new Button(this->x, 5 + btn_down->getY() + btn_down->getHeight(), 100, 20, resource->GetImage("menu-bt"));
 	btn_plus->setText(resource->GetFont("jostix-14"), "+", ColorRGB8::White, ColorRGB8::White);
 
-	btn_minus = new Button(this->x + 101, 5 + btn_down->getY() + btn_down->getHeight(), 100, 20, resource->GetImage("menu-bt"), "BT02");
+	btn_minus = new Button(this->x + 101, 5 + btn_down->getY() + btn_down->getHeight(), 100, 20, resource->GetImage("menu-bt"));
 	btn_minus->setText(resource->GetFont("jostix-14"), "-", ColorRGB8::White, ColorRGB8::White);
 
-	btn_show = new Button(this->x - 40, this->y, 40, 100, resource->GetImage("menu-bt"), "BT02");
+	btn_show = new Button(this->x - 40, this->y, 40, 100, resource->GetImage("menu-bt"));
 	btn_show->setText(resource->GetFont("jostix-14"), "Hidden", ColorRGB8::White, ColorRGB8::White);
 	top = 0;
 	selected = nullptr;

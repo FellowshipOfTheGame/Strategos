@@ -255,7 +255,6 @@ void Simulation::Render()
     drawBG(background[2], bgOffsetX, bgOffsetY, -0.2, renderer);
     drawBG(background[3], bgOffsetX, bgOffsetY, -0.28, renderer);
 
-    //Just TESTING
     SDL_SetRenderTarget(renderer, renderCombat);
         // Limpar textura
         SDL_SetTextureBlendMode(renderCombat, SDL_BLENDMODE_BLEND);
@@ -283,9 +282,9 @@ void Simulation::Render()
     }
 }
 
-void Simulation::drawBG(Image* img, double x, double y, double factor, SDL_Renderer *renderer)
+void Simulation::drawBG(const Image* img, double x, double y, double factor, SDL_Renderer *renderer)
 {
-    img->DrawImage(x*factor-512, y*factor-512, renderer);
+    img->DrawImage(renderer, x*factor-512, y*factor-512);
 }
 
 void Simulation::Clean()

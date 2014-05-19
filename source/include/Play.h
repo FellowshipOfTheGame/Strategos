@@ -17,7 +17,7 @@
 class Play : public StateMachine
 {
 private:
-    Image *imgBackground;
+    const Image *imgBackground;
     Label *lbTitle;
     Button *btSimulate;
     ComboBox *cbSelect1;

@@ -397,7 +397,7 @@ void Unit::render()
             Image *img = mySquadInfo->shipsGFX[frame];
 
             if (img){
-                img->DrawImage(ship->getX() - (img->getFrameWidth() / 2), ship->getY() - (img->getFrameHeight() / 2), renderer);
+                img->DrawImage(renderer, ship->getX() - (img->getFrameWidth() / 2), ship->getY() - (img->getFrameHeight() / 2));
             }
 
             SDL_Rect rLife;
@@ -432,30 +432,30 @@ void Unit::render()
             SDL_RenderDrawLine(renderer, ship->getPosition().x, ship->getPosition().y,
                                ship->getTargetPos().x, ship->getTargetPos().y );
 
-            // Debug
-            SDL_Rect a;
-            a.x = ship->getPosition().x;
-            a.y = ship->getPosition().y;
-            a.w = 5;
-            a.h = 5;
-            if (ship->getMoving() == move_not_moving){
-                SDL_SetRenderDrawColor(renderer, 255, 0,0 ,255);
-            }else if (ship->getMoving() == move_action){
-                SDL_SetRenderDrawColor(renderer, 0, 255, 0 ,255);
-            }else{
-                SDL_SetRenderDrawColor(renderer, 0, 0,255 ,255);
-            }
-            SDL_RenderFillRect(renderer, &a );
-
-            if (ship->getStats().isKamikasing)
-            {
-                a.x -=5;
-                a.y -=5;
-                a.w += 10;
-                a.h += 10;
-                SDL_SetRenderDrawColor(renderer, 0, 255,255 ,255);
-                SDL_RenderFillRect(renderer, &a );
-            }
+//            // Debug
+//            SDL_Rect a;
+//            a.x = ship->getPosition().x;
+//            a.y = ship->getPosition().y;
+//            a.w = 5;
+//            a.h = 5;
+//            if (ship->getMoving() == move_not_moving){
+//                SDL_SetRenderDrawColor(renderer, 255, 0,0 ,255);
+//            }else if (ship->getMoving() == move_action){
+//                SDL_SetRenderDrawColor(renderer, 0, 255, 0 ,255);
+//            }else{
+//                SDL_SetRenderDrawColor(renderer, 0, 0,255 ,255);
+//            }
+//            SDL_RenderFillRect(renderer, &a );
+//
+//            if (ship->getStats().isKamikasing)
+//            {
+//                a.x -=5;
+//                a.y -=5;
+//                a.w += 10;
+//                a.h += 10;
+//                SDL_SetRenderDrawColor(renderer, 0, 255,255 ,255);
+//                SDL_RenderFillRect(renderer, &a );
+//            }
         }
     }
 

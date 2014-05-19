@@ -10,8 +10,10 @@
 
 /****************************** BUTTON ******************************/
 //a principio ta pronto
-Button::Button(int x, int y, int width, int height, Image *back, std::string GID)
+Button::Button(int x, int y, int width, int height, const Image *back)
 {
+    assert(back != nullptr);
+
     stringImg = 0;
 	this->font = nullptr;
 	this->text = nullptr;
@@ -22,15 +24,8 @@ Button::Button(int x, int y, int width, int height, Image *back, std::string GID
 
 	this->curFrame = 0;
 
-	if (back != nullptr)
-	{
-		this->back = back;
-		this->nFrames = back->getNumberFrames();
-	}
-	else
-	{
-		printf("WARNING: Could not find background for button %s\n", GID.c_str());
-	}
+    this->back = back;
+    this->nFrames = back->getNumberFrames();
 
 	this->enabled = true;
 	this->active = true;
@@ -46,7 +41,7 @@ void Button::update()
 {
 	if (hover())
 	{
-		curFrame = back->getBaseFrames() * IMG_BUTTON_MOUSE_OVER;
+		curFrame = IMG_BUTTON_MOUSE_OVER;
 	}
 }
 
@@ -59,26 +54,26 @@ void Button::update()
 void Button::draw()
 {
 	int lim = 0;
-	int middle = back->getBaseFrames() / 2;
+	int middle = 0; //back->getBaseFrames() / 2;
 	int frameWidth = back->getFrameWidth();
 	int frameHeight = back->getFrameHeight();
 	int posX = x, posY = y;
-	int baseFrames = back->getBaseFrames();
+	int baseFrames = 1; // back->getBaseFrames();
 	int bkpCurFrame = curFrame;
 
 	//Draw the first half of the button pattern
 	lim = middle;
 	while (lim--)
 	{
-		back->DrawImage(posX, posY, curFrame++, (Game::getGlobalGame()->getRenderer()));
+		back->DrawImage(Game::getGlobalGame()->getRenderer(), posX, posY, curFrame++);
 		posX += frameWidth;
 	}
 
 	//Replicate the middle until the desired width is achieved
 	lim = (width - 2 * (middle * frameWidth)) / frameWidth;
 	for (int i = 0; i < lim; i++)
-                        {
-		back->DrawImage(posX, posY, curFrame, Game::getGlobalGame()->getRenderer());
+    {
+		back->DrawImage(Game::getGlobalGame()->getRenderer(), posX, posY, curFrame);
 		posX += frameWidth;
 	}
 
@@ -90,7 +85,7 @@ void Button::draw()
 
 		while (lim--)
 		{
-			back->DrawImage(posX, posY, curFrame++, Game::getGlobalGame()->getRenderer());
+			back->DrawImage(Game::getGlobalGame()->getRenderer(), posX, posY, curFrame++);
 			posX += frameWidth;
 		}
 	}
@@ -101,7 +96,7 @@ void Button::draw()
 		posX = x + width / 2 - (strlen(text) * font->getPtSize()) / 2;
 		posY += frameHeight / 4;
 
-        stringImg->DrawImage(posX, posY, Game::getGlobalGame()->getRenderer() );
+        stringImg->DrawImage(Game::getGlobalGame()->getRenderer(), posX, posY );
 //		font->DrawText(posX, posY, text, forecolor, backcolor, Game::getGlobalGame()->getRenderer());
 	}
 
@@ -115,7 +110,7 @@ INPUT_EVENT Button::input(SDL_Event &event)
 		case SDL_MOUSEBUTTONDOWN:
 			if (hover(event.button.x, event.button.y))
 			{
-				curFrame = back->getBaseFrames() * IMG_BUTTON_PRESSED;
+				curFrame = IMG_BUTTON_PRESSED;
 				printf("PRESSED!!!!!!!!!!!!!!!!!!!!!\n");
 				return MOUSE_PRESSED_EVENT;
 			}
@@ -124,13 +119,13 @@ INPUT_EVENT Button::input(SDL_Event &event)
 		case SDL_MOUSEBUTTONUP:
 			if (hover(event.button.x, event.button.y))
 			{
-				curFrame = back->getBaseFrames() * IMG_BUTTON_MOUSE_OVER;
+				curFrame = IMG_BUTTON_MOUSE_OVER;
 				return MOUSE_RELEASED_EVENT;
 			}
 			break;
 
 		default:
-			curFrame = back->getBaseFrames() * IMG_BUTTON_NORMAL;
+			curFrame = IMG_BUTTON_NORMAL;
 			break;
 	}
 
@@ -153,7 +148,7 @@ void Button::setText(Font *font, const char *str, SDL_Color forecolor, SDL_Color
 
 /****************************** BOX ******************************/
 
-Box::Box(int x, int y, int width, int height, Image *background, Image *border, std::string GID)
+Box::Box(int x, int y, int width, int height, const Image *background, const Image *border, std::string GID)
 {
 	this->x = x;
 	this->y = y;
@@ -197,11 +192,11 @@ void Box::draw()
 	/*Desenha o fundo*/
 	if (border != nullptr)
 	{
-		border->DrawImage(x, y, render);
+		border->DrawImage(render, x, y);
 	}
 	if (background != nullptr)
 	{
-		background->DrawImage(x, y, render);
+		background->DrawImage(render, x, y);
 	}
 }
 
@@ -223,7 +218,7 @@ INPUT_EVENT Box::input(SDL_Event &event)
 }
 /****************************** BOX ******************************/
 
-ImageBox::ImageBox(int x, int y, int width, int height, Image *background, int frame, Image *border, std::string GID) :
+ImageBox::ImageBox(int x, int y, int width, int height, const Image *background, int frame, const Image *border, std::string GID) :
 		Box(x, y, width, height, background, border, GID)
 {
 	this->frame = frame;
@@ -246,11 +241,11 @@ void ImageBox::draw()
 	/*Desenha o fundo*/
 	if (border != nullptr)
 	{
-		border->DrawImage(x, y, render);
+		border->DrawImage(render, x, y);
 	}
 	if (background != nullptr)
 	{
-		background->DrawImage(x, y, frame, render);
+		background->DrawImage(render, x, y, frame);
 	}
 }
 
@@ -273,7 +268,7 @@ INPUT_EVENT ImageBox::input(SDL_Event &event)
 
 /****************************** TEXT_FIELD ******************************/
 
-TextField::TextField(int x, int y, int width, int height, Image *border, SDL_Color background, std::string GID)
+TextField::TextField(int x, int y, int width, int height, const Image *border, SDL_Color background, std::string GID)
     : imgText(0)
 {
 	this->x = x;
@@ -312,7 +307,7 @@ void TextField::draw()
     //	SDL_FillRect(renderer, &back, SDL_MapRGB(scrSurface->format, 0, 0, 255));
 
     if (imgText)
-        imgText->DrawImage(x+5, y, renderer);
+        imgText->DrawImage(renderer, x+5, y);
 }
 void TextField::setText(std::string str)
 {
@@ -417,7 +412,7 @@ void TextField::setFont(Font *font)
 
 /****************************** COMBO_BOX ******************************/
 
-ComboBox::ComboBox(int x, int y, int width, int height, Image *border, SDL_Color fontColor, SDL_Color fontShadow, std::string GID)
+ComboBox::ComboBox(int x, int y, int width, int height, const Image *border, SDL_Color fontColor, SDL_Color fontShadow, std::string GID)
 {
 	//list = new std::vector<std::string>(1);
 	this->font = nullptr;
@@ -521,9 +516,9 @@ void ComboBox::draw()
 			// Renderizar fundo
 			if (border != nullptr){
                 for (i = 0; i < list.size()+1; i++){
-                    border->DrawImage(x, y + cell_height*i, 0, renderer);
+                    border->DrawImage(renderer, x, y + cell_height*i, 0);
                     for (j = 0; j < lenght; j++){
-                        border->DrawImage(x +font->getPtSize() *(j+1), y +cell_height*i, 1, renderer);
+                        border->DrawImage(renderer, x +font->getPtSize() *(j+1), y +cell_height*i, 1);
                     }
                 }
 			}
@@ -538,7 +533,7 @@ void ComboBox::draw()
 
             // Renderizar textos
 			for (i = 0; i < list.size(); i++){
-				listImg[i]->DrawImage(x, y + ((cell_height) * (i+1)), renderer);
+				listImg[i]->DrawImage(renderer, x, y + ((cell_height) * (i+1)));
 			}
 		}
 		else
@@ -546,12 +541,12 @@ void ComboBox::draw()
 			this->height = cell_height;
 			if (border != nullptr)
 			{
-				border->DrawImage(x, y - 3, 0, renderer);
+				border->DrawImage(renderer, x, y - 3, 0);
 				for (i = 0; i < lenght; i++){
-					border->DrawImage(x + font->getPtSize() + (font->getPtSize() * i), y - 3, 1, renderer);
+					border->DrawImage(renderer, x + font->getPtSize() + (font->getPtSize() * i), y - 3, 1);
 				}
 				// Seta
-				border->DrawImage(x + font->getPtSize() + (font->getPtSize()*i), y - 3, 2, renderer);
+				border->DrawImage(renderer, x + font->getPtSize() + (font->getPtSize()*i), y - 3, 2);
 			}else{
                 SDL_Rect rect;
                 rect.x = x;
@@ -563,7 +558,7 @@ void ComboBox::draw()
 		}
 
 		if (selected >= 0)
-            listImg[selected]->DrawImage(x, y, renderer);
+            listImg[selected]->DrawImage(renderer, x, y);
 	}
 }
 
@@ -647,8 +642,8 @@ Label::~Label()
 
 void Label::draw()
 {
-    imgTextShadow->DrawImage(x+2, y+2, Game::getGlobalGame()->getRenderer());
-    imgText->DrawImage(x, y, Game::getGlobalGame()->getRenderer());
+    imgTextShadow->DrawImage(Game::getGlobalGame()->getRenderer(), x+2, y+2);
+    imgText->DrawImage(Game::getGlobalGame()->getRenderer(), x, y);
 }
 
 INPUT_EVENT Label::input(SDL_Event &event)
@@ -663,7 +658,7 @@ void Label::setText(std::string str)
 
 /****************************** STATUS_BOX ******************************/
 //necessita que dictionary esteja funcionando
-StatusBox::StatusBox(int x, int y, Image *imgBack, Image *imgBorder, std::string GID)
+StatusBox::StatusBox(int x, int y, const Image *imgBack, const Image *imgBorder, std::string GID)
 {
 	width = 170;
 	height = 150;

@@ -33,7 +33,7 @@ Play::Play(STATE previous) :
 	lbTitle->setPosition(350, 20);
 	addGuiElement(lbTitle);
 
-	btSimulate = new Button(scrWidth * 0.44, scrHeight * 0.85, 150, 24, resource->GetImage("menu-bt"), "BTTemp108");
+	btSimulate = new Button(scrWidth * 0.44, scrHeight * 0.85, 150, 24, resource->GetImage("menu-bt"));
 	btSimulate->setText(fntEthnocentric, "SIMULATE", ColorRGB8::White, ColorRGB8::Black);
 	addGuiElement(btSimulate);
 
@@ -186,7 +186,7 @@ void Play::Render()
 {
 	SDL_Renderer *renderer = Game::getGlobalGame()->getRenderer();
 
-	imgBackground->DrawImage(0, 0, renderer);
+	imgBackground->DrawImage(renderer, 0, 0);
 
 	drawGuiElements();
 }

@@ -43,12 +43,12 @@ Image::~Image()
 	SDL_DestroyTexture(picture);
 }
 
-SDL_Texture* Image::getSDLTexture()
+SDL_Texture* Image::getSDLTexture() const
 {
     return picture;
 }
 
-void Image::DrawImage(int x, int y, SDL_Texture *source, SDL_Renderer *destination, SDL_Rect *clip)
+void Image::DrawImage(SDL_Renderer *destination, SDL_Texture *source, SDL_Rect *clip, int x, int y)
 {
 	SDL_Rect offset={(Sint16)x, (Sint16)y};
 
@@ -57,7 +57,7 @@ void Image::DrawImage(int x, int y, SDL_Texture *source, SDL_Renderer *destinati
 	SDL_RenderCopy(destination, source, clip, &offset);
 }
 
-void Image::DrawImage(SDL_Renderer *destination)
+void Image::DrawImage(SDL_Renderer *destination) const
 {
 	SDL_Rect offset={-centerX, -centerY, cut[0].w, cut[0].h};
 
@@ -66,19 +66,7 @@ void Image::DrawImage(SDL_Renderer *destination)
 	SDL_RenderCopy(destination, picture, &cut[0], &offset);
 }
 
-void Image::DrawImage(int x, int y, SDL_Renderer *destination)
-{
-	SDL_Rect offset;
-	offset.x = x-centerX;
-	offset.y = y-centerY;
-	offset.w = cut[0].w;
-	offset.h = cut[0].h;
-
-//	SDL_BlitSurface(picture, &cut[0], destination, &offset);
-	SDL_RenderCopy(destination, picture, &cut[0], &offset);
-}
-
-void Image::DrawImage(int x, int y, int frame, SDL_Renderer *destination)
+void Image::DrawImage(SDL_Renderer *destination, int x, int y, int frame) const
 {
     SDL_Rect offset;
 	offset.x = x-centerX;
@@ -90,7 +78,7 @@ void Image::DrawImage(int x, int y, int frame, SDL_Renderer *destination)
 	SDL_RenderCopy(destination, picture, &cut[frame], &offset);
 }
 
-void Image::DrawImage(int x, int y, int frame, double rotation, SDL_Renderer *destination)
+void Image::DrawImage(SDL_Renderer *destination, int x, int y, int frame, double rotation) const
 {
 	SDL_Rect offset;
 	offset.x = x-centerX;
@@ -106,51 +94,17 @@ void Image::DrawImage(int x, int y, int frame, double rotation, SDL_Renderer *de
 	SDL_RenderCopyEx(destination, picture, &cut[frame], &offset, rotation, &point, SDL_FLIP_NONE);
 }
 
-bool Image::Hover(int x, int y)
-{
-	int mouseX, mouseY;
-
-	SDL_GetMouseState(&mouseX, &mouseY);
-
-	if (mouseX < x)
-        return false;
-
-    if (mouseY < y)
-        return false;
-
-    if (mouseX > x + cut[0].w)
-        return false;
-
-    if (mouseY > y + cut[0].h)
-        return false;
-
-	//if( (mouseX > x && mouseX < x + cut[frame].w) && (mouseY > y && mouseY < y + cut[frame].h))
-    //{return true;}
-
-	return true;
-}
-
-int Image::getNumberFrames()
+int Image::getNumberFrames() const
 {
     return nframes;
 }
 
-void Image::setBaseFrame(int nFrames)
-{
-    this->baseFrame = nFrames;
-}
-
-int Image::getBaseFrames()
-{
-    return baseFrame;
-}
-
-int Image::getFrameWidth()
+int Image::getFrameWidth() const
 {
     return frameWidth;
 }
 
-int Image::getFrameHeight()
+int Image::getFrameHeight() const
 {
     return frameHeight;
 }
