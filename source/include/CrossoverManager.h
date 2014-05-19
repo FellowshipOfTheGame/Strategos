@@ -6,8 +6,7 @@
 class CrossoverManager
 {
 	public:
-		/// Efetua o crossover entre dois individuos colocando 2 filhos no vetor ind
-		void crossOver(const Army *parent1, const Army *parent2, std::vector<Army*>& ind);
+		void crossOver(const Army *parent1, const Army *parent2, Army *&child1, Army *&child2);
 
 		CrossoverManager();
 		virtual ~CrossoverManager();

@@ -9,10 +9,10 @@ CrossoverManager::~CrossoverManager()
 	
 }
 
-void CrossoverManager::crossOver(const Army *parent1, const Army *parent2, std::vector<Army*>& ind)
+void CrossoverManager::crossOver(const Army *parent1, const Army *parent2, Army *&child1, Army *&child2)
 {
-		Army* child1 = new Army(parent1->getName(), parent1->getDictionary());
-    Army* child2 = new Army(parent2->getName(), parent2->getDictionary());
+	child1 = new Army(parent1->getName(), parent1->getDictionary());
+    child2 = new Army(parent2->getName(), parent2->getDictionary());
 
     unsigned int i;
     for (i = 0; i < parent1->nUnits() && i < parent2->nUnits(); ++i )
@@ -38,8 +38,4 @@ void CrossoverManager::crossOver(const Army *parent1, const Army *parent2, std::
     for (; i < parent2->nUnits(); ++i){
         child2->addUnit( new Unit( parent2->getUnitAtIndex(i) ) );
     }
-
-    //Save the new armies
-    ind.push_back(child1);
-    ind.push_back(child2);	
 }
