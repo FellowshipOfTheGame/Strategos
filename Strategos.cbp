@@ -17,6 +17,9 @@
 					<Add option="-g" />
 					<Add directory="source/include" />
 				</Compiler>
+				<Linker>
+					<Add option="-g" />
+				</Linker>
 			</Target>
 			<Target title="Release">
 				<Option output="bin/Release/Strategos" prefix_auto="1" extension_auto="1" />
@@ -115,6 +118,7 @@
 		<Unit filename="source/include/MutationManager.h">
 			<Option virtualFolder="Genetico/" />
 		</Unit>
+		<Unit filename="source/include/NFGeneticAlgorithm.h" />
 		<Unit filename="source/include/Objective.h">
 			<Option virtualFolder="Genetico/" />
 		</Unit>
@@ -190,6 +194,7 @@
 		<Unit filename="source/src/MutationManager.cpp">
 			<Option virtualFolder="Genetico/" />
 		</Unit>
+		<Unit filename="source/src/NFGeneticAlgorithm.cpp" />
 		<Unit filename="source/src/Objective.cpp">
 			<Option virtualFolder="Genetico/" />
 		</Unit>
