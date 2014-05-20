@@ -22,13 +22,6 @@ class Menu : public StateMachine
         Button *btPlay;
         Button *btCreate;
 
-        ComboBox *cbComboBox;
-        StatusBox *sbStatus;
-        Box *bxBox;
-        TextField *tfTextField;
-        Label *lbLabel;
-
-
     public:
         Menu(STATE previous);
         ~Menu();

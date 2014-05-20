@@ -32,15 +32,15 @@ Create_Army::Create_Army(STATE previous) :
 	//imagens de fundo
 	imgBackground = resource->GetImage("bg_create_army");
 
-	btn_Next = new Button(scrWidth * 0.85, scrHeight * 0.05, 150, 24, resource->GetImage("menu-bt"));
+	btn_Next = new Button(520, 660, 150, 24, resource->GetImage("menu-bt"));
 	btn_Next->setText(resource->GetFont("jostix-14"), "Unit Setup", ColorRGB8::White, ColorRGB8::White);
 	addGuiElement(btn_Next);
 
-	btn_Back = new Button(scrWidth * 0.05, scrHeight * 0.05, 150, 24, resource->GetImage("menu-bt"));
+	btn_Back = new Button(130, 660, 150, 24, resource->GetImage("menu-bt"));
 	btn_Back->setText(resource->GetFont("jostix-14"), "BACK", ColorRGB8::White, ColorRGB8::White);
 	addGuiElement(btn_Back);
 
-	btn_Load = new Button(scrWidth * 0.2, scrHeight * 0.4+100, 150, 24, resource->GetImage("menu-bt"));
+	btn_Load = new Button(90, 420, 150, 24, resource->GetImage("menu-bt"));
 	btn_Load->setText(resource->GetFont("jostix-14"), "Load", ColorRGB8::White, ColorRGB8::White);
 	addGuiElement(btn_Load);
 
@@ -48,27 +48,17 @@ Create_Army::Create_Army(STATE previous) :
 	lbl_Title->setPosition(scrWidth * 0.45, scrHeight * 0.05);
 	addGuiElement(lbl_Title);
 
-	lbl_GenName = new Label("General Name", resource->GetFont("jostix-14"), ColorRGB8::Green, ColorRGB8::White, "LB02");
-	lbl_GenName->setPosition(scrWidth * 0.2, scrHeight * 0.2);
-	addGuiElement(lbl_GenName);
-
-	txt_GenName = new TextField(scrWidth * 0.4, scrHeight * 0.2, 190, 17, Game::getGlobalGame()->getResourceMNGR()->GetImage("textfield-text"),
-	        ColorRGB8::White, "TF02");
-	txt_GenName->setFont(Game::getGlobalGame()->getResourceMNGR()->GetFont("jostix-14"));
-	txt_GenName->setText("");
-	addGuiElement(txt_GenName);
-
 	lbl_ArmyName = new Label("Army Name", resource->GetFont("jostix-14"), ColorRGB8::Green, ColorRGB8::White, "LB02");
-	lbl_ArmyName->setPosition(scrWidth * 0.2, scrHeight * 0.3);
+	lbl_ArmyName->setPosition(360, 120);
 	addGuiElement(lbl_ArmyName);
 
-	txt_ArmyName = new TextField(scrWidth * 0.4, scrHeight * 0.3, 190, 17, Game::getGlobalGame()->getResourceMNGR()->GetImage("textfield-text"),
-	        ColorRGB8::White, "TF02");
+	txt_ArmyName = new TextField(510, 120, 190, 17, Game::getGlobalGame()->getResourceMNGR()->GetImage("textfield-text"),
+	        ColorRGB8::Green, "TF02");
 	txt_ArmyName->setFont(Game::getGlobalGame()->getResourceMNGR()->GetFont("jostix-14"));
 	txt_ArmyName->setText("");
 	addGuiElement(txt_ArmyName);
 
-	cmb_species = new ComboBox(scrWidth * 0.4, scrHeight * 0.4, 150, 17, Game::getGlobalGame()->getResourceMNGR()->GetImage("combo-cmb"),
+	cmb_species = new ComboBox(92, 360, 150, 17, Game::getGlobalGame()->getResourceMNGR()->GetImage("combo-cmb"),
 	        ColorRGB8::Green, ColorRGB8::White, "CB01");
 
     cmb_species->setFont(fntEthnocentric);
@@ -82,7 +72,7 @@ Create_Army::Create_Army(STATE previous) :
     // Default: Dict 0
 	dct = Game::getGlobalGame()->getDictionary(0);
 	lbl_Descr = new Label("Description", resource->GetFont("jostix-14"), ColorRGB8::Green, ColorRGB8::White, "LB02");
-	lbl_Descr->setPosition(scrWidth * 0.15, scrHeight * 0.6);
+	lbl_Descr->setPosition(360, 170);
 	lbl_Descr->setText(dct->description);
 	addGuiElement(lbl_Descr);
 
@@ -129,11 +119,9 @@ Create_Army::~Create_Army()
 	delete btn_Load;
 
 	delete txt_ArmyName;
-	delete txt_GenName;
 
 	delete lbl_ArmyName;
 	delete lbl_Title;
-	delete lbl_GenName;
 
 	delete bx1;
 	delete bx2;
@@ -247,7 +235,7 @@ void Create_Army::Render()
 	int scrWidth = Game::getGlobalGame()->getWidth();
 	int scrHeight = Game::getGlobalGame()->getHeight();
 
-	Game::getGlobalGame()->setBackgroundColor(255, 0, 0);
+	Game::getGlobalGame()->setBackgroundColor(0, 0, 0);
 	SDL_Renderer* renderer = Game::getGlobalGame()->getRenderer();
 
 	imgBackground->DrawImage(renderer);

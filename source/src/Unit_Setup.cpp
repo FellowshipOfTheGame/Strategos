@@ -50,35 +50,41 @@ Unit_Setup::Unit_Setup(STATE previous) :
 	addGuiElement(lbl_Geral);
 
 	//botoes
-	btn_Next = new Button(scrWidth * 0.85, scrHeight * 0.05, 150, 24, resource->GetImage("menu-bt"));
+	btn_Next = new Button(scrWidth * 0.85, scrHeight * 0.9, 150, 24, resource->GetImage("menu-bt"));
 	btn_Next->setText(resource->GetFont("jostix-14"), "PLAY", ColorRGB8::White, ColorRGB8::White);
 	addGuiElement(btn_Next);
 
-	btn_Back = new Button(scrWidth * 0.05, scrHeight * 0.05, 150, 24, resource->GetImage("menu-bt"));
+	btn_Back = new Button(scrWidth * 0.05, scrHeight * 0.9, 150, 24, resource->GetImage("menu-bt"));
 	btn_Back->setText(resource->GetFont("jostix-14"), "BACK", ColorRGB8::White, ColorRGB8::White);
 	addGuiElement(btn_Back);
 
-	btn_Del = new Button(scrWidth * 0.05, scrHeight * 0.9, 150, 24, resource->GetImage("menu-bt"));
+	btn_Del = new Button(scrWidth * 0.5, scrHeight * 0.1, 150, 24, resource->GetImage("menu-bt"));
 	btn_Del->setText(resource->GetFont("jostix-14"), "DELETE", ColorRGB8::White, ColorRGB8::White);
 	addGuiElement(btn_Del);
 
-	btn_Move = new Button(scrWidth * 0.2, scrHeight * 0.9, 150, 24, resource->GetImage("menu-bt"));
+	btn_Move = new Button(scrWidth * 0.6, scrHeight * 0.1, 150, 24, resource->GetImage("menu-bt"));
 	btn_Move->setText(resource->GetFont("jostix-14"), "MOVE", ColorRGB8::White, ColorRGB8::White);
 	addGuiElement(btn_Move);
 
 	//Box de naves
-	bx1 = new ImageBox(scrWidth * 0.3, scrHeight * 0.1, 50, 50, resource->GetImage("human-ships"), 0, nullptr, "BX1");
+	bx1 = new ImageBox(scrWidth * 0.1, scrHeight * 0.1, 50, 50, resource->GetImage("human-ships"), 0, nullptr, "BX1");
 	addGuiElement(bx1);
-	bx2 = new ImageBox(scrWidth * 0.4, scrHeight * 0.1, 50, 50, resource->GetImage("human-ships"), 1, nullptr, "BX1");
+	bx2 = new ImageBox(scrWidth * 0.2, scrHeight * 0.1, 50, 50, resource->GetImage("human-ships"), 1, nullptr, "BX1");
 	addGuiElement(bx2);
-	bx3 = new ImageBox(scrWidth * 0.5, scrHeight * 0.1, 50, 50, resource->GetImage("human-ships"), 2, nullptr, "BX1");
+	bx3 = new ImageBox(scrWidth * 0.3, scrHeight * 0.1, 50, 50, resource->GetImage("human-ships"), 2, nullptr, "BX1");
 	addGuiElement(bx3);
-	bx4 = new ImageBox(scrWidth * 0.6, scrHeight * 0.1, 50, 50, resource->GetImage("human-ships"), 3, nullptr, "BX1");
+	bx4 = new ImageBox(scrWidth * 0.4, scrHeight * 0.1, 50, 50, resource->GetImage("human-ships"), 3, nullptr, "BX1");
 	addGuiElement(bx4);
 	// adicionando box com as imagens das naves
 	dct = Game::getGlobalGame()->getDictionary(0);
 	char str[5];
 	printf("Army Squads: %d\n", Game::getGlobalGame()->getEditingArmy()->nUnits());
+	if (Game::getGlobalGame()->getEditingArmy()->nUnits() < 1)
+	{
+		Army *editingArmy = Game::getGlobalGame()->getEditingArmy();
+
+		editingArmy->createUnit(0, new Coordinates(50 , 50));
+	}
 	for (unsigned int i = 0; i < Game::getGlobalGame()->getEditingArmy()->nUnits(); i++)
 	{
 		sprintf(str, "%d\n", i);
@@ -123,12 +129,6 @@ Unit_Setup::~Unit_Setup()
 	delete bx3;
 	delete bx4;
 
-	/*delete tct_1;
-	 delete tct_2;
-	 delete tct_3;
-	 delete tct_4;
-	 delete tct_5;*/
-
 	delete blueprint;
 }
 
@@ -169,7 +169,7 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
 		switch (action)
 		{
 			case MOUSE_RELEASED_EVENT:
-				if (!put_squad)
+				if (!put_squad && squad_focus->getType() != 0)
 				{
 					Game::getGlobalGame()->getEditingArmy()->removeUnit(squad_focus->getID());
 					squad_focus = nullptr;
@@ -200,8 +200,8 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
 		switch (action)
 		{
 			case MOUSE_RELEASED_EVENT:
-				put_squad = !put_squad;
-				squad_type = 0;
+				//put_squad = !put_squad;
+				//squad_type = 0;
 				break;
 
 			default:
@@ -254,12 +254,13 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
             char str[5];
             if (!move_squad)
             {
+            	if (squad_type != 0)
+            	{
                 Army *editingArmy = Game::getGlobalGame()->getEditingArmy();
 
                 editingArmy->createUnit(squad_type, new Coordinates(mouseX - blueprint->getX(), mouseY - blueprint->getY()));
 
                 squad_focus = editingArmy->getUnitAtIndex(editingArmy->nUnits() - 1);
-                put_squad = false;
                 squad_type = 0;
                 sprintf(str, "%d\n", editingArmy->nUnits());
                 squad_number.push_back(
@@ -268,6 +269,8 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
                 squad_number[(squad_number.size() - 1)]->setPosition(squad_focus->getAvgX() + blueprint->getX(),
                                                                      squad_focus->getAvgY() + blueprint->getY());
                 list->setSquad(squad_focus);
+            	}
+            	put_squad = false;
             }
             else
             {

@@ -315,7 +315,7 @@ void TextField::setText(std::string str)
 
     delete imgText;
 	if (text.size() > 0)
-        imgText = new Image(font->renderText(Game::getGlobalGame()->getRenderer(), text.c_str(), ColorRGB8::White), 1, nullptr, 0, 0);
+        imgText = new Image(font->renderText(Game::getGlobalGame()->getRenderer(), text.c_str(), this->background), 1, nullptr, 0, 0);
     else
         imgText = 0;
 
@@ -355,7 +355,7 @@ void TextField::enterLetter(char letter)
 
 	delete imgText;
 	if (text.size() > 0)
-        imgText = new Image(font->renderText(Game::getGlobalGame()->getRenderer(), text.c_str(), ColorRGB8::White), 1, nullptr, 0, 0);
+        imgText = new Image(font->renderText(Game::getGlobalGame()->getRenderer(), text.c_str(), this->background), 1, nullptr, 0, 0);
     else
         imgText = 0;
 }
@@ -405,7 +405,7 @@ void TextField::setFont(Font *font)
 
 	delete imgText;
 	if (text.size() > 0)
-        imgText = new Image(font->renderText(Game::getGlobalGame()->getRenderer(), text.c_str(), ColorRGB8::White), 1, nullptr, 0, 0);
+        imgText = new Image(font->renderText(Game::getGlobalGame()->getRenderer(), text.c_str(), this->background), 1, nullptr, 0, 0);
     else
         imgText = 0;
 }
