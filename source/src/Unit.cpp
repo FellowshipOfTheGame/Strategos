@@ -432,7 +432,7 @@ void Unit::render()
             SDL_RenderDrawLine(renderer, ship->getPosition().x, ship->getPosition().y,
                                ship->getTargetPos().x, ship->getTargetPos().y );
 
-//            // Debug
+            // Debug
             SDL_Rect a;
             a.x = ship->getPosition().x;
             a.y = ship->getPosition().y;

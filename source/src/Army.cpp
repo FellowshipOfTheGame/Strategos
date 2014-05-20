@@ -527,6 +527,7 @@ void Army::render()
 //    }
 }
 
+
 void Army::setFitness(double ft)
 {
 	fitness = ft;
