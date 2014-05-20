@@ -79,6 +79,12 @@ Unit_Setup::Unit_Setup(STATE previous) :
 	dct = Game::getGlobalGame()->getDictionary(0);
 	char str[5];
 	printf("Army Squads: %d\n", Game::getGlobalGame()->getEditingArmy()->nUnits());
+	if (Game::getGlobalGame()->getEditingArmy()->nUnits() < 1)
+	{
+		Army *editingArmy = Game::getGlobalGame()->getEditingArmy();
+
+		editingArmy->createUnit(0, new Coordinates(50 , 50);
+	}
 	for (unsigned int i = 0; i < Game::getGlobalGame()->getEditingArmy()->nUnits(); i++)
 	{
 		sprintf(str, "%d\n", i);
@@ -123,12 +129,6 @@ Unit_Setup::~Unit_Setup()
 	delete bx3;
 	delete bx4;
 
-	/*delete tct_1;
-	 delete tct_2;
-	 delete tct_3;
-	 delete tct_4;
-	 delete tct_5;*/
-
 	delete blueprint;
 }
 
@@ -169,7 +169,7 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
 		switch (action)
 		{
 			case MOUSE_RELEASED_EVENT:
-				if (!put_squad)
+				if (!put_squad && squad_focus->getType() != 0)
 				{
 					Game::getGlobalGame()->getEditingArmy()->removeUnit(squad_focus->getID());
 					squad_focus = nullptr;
@@ -200,8 +200,8 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
 		switch (action)
 		{
 			case MOUSE_RELEASED_EVENT:
-				put_squad = !put_squad;
-				squad_type = 0;
+				//put_squad = !put_squad;
+				//squad_type = 0;
 				break;
 
 			default:
@@ -254,12 +254,13 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
             char str[5];
             if (!move_squad)
             {
+            	if (squad_type != 0)
+            	{
                 Army *editingArmy = Game::getGlobalGame()->getEditingArmy();
 
                 editingArmy->createUnit(squad_type, new Coordinates(mouseX - blueprint->getX(), mouseY - blueprint->getY()));
 
                 squad_focus = editingArmy->getUnitAtIndex(editingArmy->nUnits() - 1);
-                put_squad = false;
                 squad_type = 0;
                 sprintf(str, "%d\n", editingArmy->nUnits());
                 squad_number.push_back(
@@ -268,6 +269,8 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
                 squad_number[(squad_number.size() - 1)]->setPosition(squad_focus->getAvgX() + blueprint->getX(),
                                                                      squad_focus->getAvgY() + blueprint->getY());
                 list->setSquad(squad_focus);
+            	}
+            	put_squad = false;
             }
             else
             {
