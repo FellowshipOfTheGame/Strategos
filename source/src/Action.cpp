@@ -264,7 +264,6 @@ Action* KamikazeAction::act()
     else
     {
         distance += 1;
-        source->getStats().currentSpeed = std::min(dist, std::max(source->getBaseStats().speed*5, 10.0));
         source->moveTo(target->getPosition());
     }
 

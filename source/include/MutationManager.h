@@ -1,8 +1,8 @@
 #ifndef _MUTATION_MANAGER_
 #define _MUTATION_MANAGER_
 
-#include <Army.h>
-#include <Tactic.h>
+#include "Army.h"
+#include "Tactic.h"
 
 
 class MutationManager
@@ -16,7 +16,7 @@ class MutationManager
 		virtual ~MutationManager();
 
 		void mutate(Army *ind);
-		
+
 };
 
 #endif

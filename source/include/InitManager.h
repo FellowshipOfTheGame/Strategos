@@ -1,7 +1,7 @@
 #ifndef _INIT_MANAGER_
 #define _INIT_MANAGER_
 
-#include <Army.h>
+#include "Army.h"
 
 class InitManager
 {

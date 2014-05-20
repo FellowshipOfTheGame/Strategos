@@ -400,8 +400,6 @@ Retreat::Retreat(const TacticInfo& Info, const TacticTrigger& trigger) :
 
 int Retreat::validateTactic(std::list<Action*> &newActions, TacticValidationData& tvd)
 {
-	Coordinates motherAvrg;
-
 	Unit *motherShipUnit = nullptr;
 	for (unsigned int i = 0; i < tvd.alliedUnits.size(); ++i)
 	{
@@ -415,21 +413,30 @@ int Retreat::validateTactic(std::list<Action*> &newActions, TacticValidationData
 	if (motherShipUnit->getNShipsAlive() == 0)
         return 0;
 
-	if (tvd.validatingUnit->getAveragePos().distance(motherShipUnit->getAveragePos()) > tvd.validatingUnit->getSquadBaseStats().range)
+    Coordinates motherAvrg = motherShipUnit->getAveragePos();
+	if (tvd.validatingUnit->getAveragePos().distance(motherAvrg) > tvd.validatingUnit->getSquadBaseStats().range)
 	{
-	    motherAvrg = motherShipUnit->getAveragePos();
-        motherAvrg.x += tvd.combatData.randomengine.nextInt() % 300 - tvd.combatData.randomengine.nextInt() % 300;
-        motherAvrg.y += tvd.combatData.randomengine.nextInt() % 300 - tvd.combatData.randomengine.nextInt() % 300;
+        motherAvrg.x += (tvd.combatData.randomengine.nextInt()%300) - 150;
+        motherAvrg.y += (tvd.combatData.randomengine.nextInt()%300) - 150;
 
-		for (unsigned int i = 0; i < tvd.validatingUnit->nShips(); i++)
-		{
-			Ship *iShip = tvd.validatingUnit->getShip(i);
-			if (iShip->isAlive() && iShip->getStats().isMoving != move_action)
-			{
-                Coordinates rndCoord((tvd.combatData.randomengine.nextInt() % 128) - (tvd.combatData.randomengine.nextInt() % 128), (tvd.combatData.randomengine.nextInt() % 128) - (tvd.combatData.randomengine.nextInt() % 128));
-                newActions.push_back(new MoveAction(iShip, motherAvrg + rndCoord));
-			}
-		}
+        // Se alguma nave estiver se movendo, esperar
+        for (unsigned int i = 0; i < tvd.validatingUnit->nShips(); ++i)
+        {
+            if (!tvd.validatingUnit->getShip(i)->isAlive()) continue;
+
+            if (tvd.validatingUnit->getShip(i)->getStats().isMoving == move_action)
+                return 0;
+        }
+
+        // Manda todas as naves recuarem
+        for (unsigned int i = 0; i < tvd.validatingUnit->nShips(); ++i)
+        {
+            if (!tvd.validatingUnit->getShip(i)->isAlive()) continue;
+
+            Coordinates rndCoord((tvd.combatData.randomengine.nextInt()%64) - 32,
+                                 (tvd.combatData.randomengine.nextInt()%64) - 32 );
+            newActions.push_back(new MoveAction(tvd.validatingUnit->getShip(i), motherAvrg + rndCoord));
+        }
 	}
 
 	return 1;
@@ -466,20 +473,29 @@ int MoveRandomly::validateTactic(std::list<Action*> &newActions, TacticValidatio
 		return 0;
 	}
 
+    // Se alguma nave estiver se movendo, esperar
+	for (unsigned int i = 0; i < tvd.validatingUnit->nShips(); ++i)
+	{
+	    if (!tvd.validatingUnit->getShip(i)->isAlive()) continue;
+
+	    if (tvd.validatingUnit->getShip(i)->getStats().isMoving == move_action)
+            return 0;
+	}
+
 	Coordinates coordBase = tvd.validatingUnit->getAveragePos();
-	coordBase.x += tvd.combatData.randomengine.nextInt() % 200 - tvd.combatData.randomengine.nextInt() % 200;
-	coordBase.y += tvd.combatData.randomengine.nextInt() % 200 - tvd.combatData.randomengine.nextInt() % 200;
+	coordBase.x += (tvd.combatData.randomengine.nextInt()%300) - 150;
+	coordBase.y += (tvd.combatData.randomengine.nextInt()%300) - 150;
 
 	for (unsigned int i = 0; i < tvd.validatingUnit->nShips(); ++i)
 	{
-	    if (tvd.validatingUnit->getShip(i)->getStats().isMoving != move_action)
-        {
-            Coordinates rndCoord((tvd.combatData.randomengine.nextInt()%64) - (tvd.combatData.randomengine.nextInt()%64), (tvd.combatData.randomengine.nextInt()%64) - (tvd.combatData.randomengine.nextInt()%64));
-            newActions.push_back(new MoveAction(tvd.validatingUnit->getShip(i), coordBase + rndCoord));
-	    }
+	    if (!tvd.validatingUnit->getShip(i)->isAlive()) continue;
+
+        Coordinates rndCoord((tvd.combatData.randomengine.nextInt()%64) - 32,
+                             (tvd.combatData.randomengine.nextInt()%64) - 32 );
+        newActions.push_back(new MoveAction(tvd.validatingUnit->getShip(i), coordBase + rndCoord));
 	}
 
-	cooldown = (tvd.combatData.randomengine.nextInt() % 90) + 30;
+	cooldown = (tvd.combatData.randomengine.nextUInt() % 90) + 30;
 
 	return 1;
 }

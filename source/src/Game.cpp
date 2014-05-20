@@ -9,6 +9,9 @@
 #include "Game.h"
 #include "CombatLog.h"
 
+#include "GeneticAlgorithm.h"
+#include "NFGeneticAlgorithm.h"
+
 
 Game* Game::globalGame = 0;
 
@@ -31,10 +34,9 @@ Game::Game()
 	run = true;
 	editingArmy = nullptr;
 
-    // Criar um GA para cada tipo de Army
-	algorithm[0] = new GeneticAlgorithm(0);
-	algorithm[1] = new GeneticAlgorithm(1);
-	algorithm[2] = new GeneticAlgorithm(2);
+	algorithm[0] = new NFGeneticAlgorithm(0);
+	algorithm[1] = new NFGeneticAlgorithm(1);
+	algorithm[2] = new NFGeneticAlgorithm(2);
 
 	srand((unsigned int) time(nullptr));
 	loadDictionaries();

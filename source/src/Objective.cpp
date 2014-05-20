@@ -1,9 +1,10 @@
-#include <Objective.h>
-#include <Unit.h>
+#include "Objective.h"
 
 #include <set>
-#include <Game.h>
-#include <World.h>
+
+#include "Unit.h"
+#include "Game.h"
+#include "World.h"
 
 // Limita a qtd de gold que a Army pode ter
 // Remove unidades aleatorias - NAO GARANTE CONSISTENCIA das taticas
@@ -111,9 +112,9 @@ int Objective::fight(Army *a, Army *b, int *steps)
         ret = world->simulateStep();
     }
     delete world;
-    return *steps;
+    return ret;
 }
-void Objective::evaluate(Army *a, Army *b, double *fitA, double *fitB){
+int Objective::evaluate(Army *a, Army *b, double *fitA, double *fitB){
     int steps;
     int ret = this->fight(a, b,&steps);
 
@@ -133,4 +134,6 @@ void Objective::evaluate(Army *a, Army *b, double *fitA, double *fitB){
 
     *fitA = this->calculateFitness(a, steps) + moreFitA;
     *fitB = this->calculateFitness(b, steps) + moreFitB;
+
+    return (ret == _SIM_ARMY1_WIN_) ? 1 : 0;
 }

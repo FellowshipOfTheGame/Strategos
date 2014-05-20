@@ -56,18 +56,37 @@ int Ship::update(RandomEngine& randE)
 
     // So dar uma nova coordenada quando 'terminar' o movimento atual
     // Evitar que as naves fiquem totalmente paradas
-    if (stats.isMoving == move_not_moving)
+
+    double distance = coord.distance(targetPos);
+
+    std::normal_distribution<double> distribution(0, 16.0);
+//    printf("Random: %lf\n", distribution(randE.randE) );
+//    printf("Random: %d\n", int(abs(randE.nextInt())%((int)SPACIAL_UNIT*2)-SPACIAL_UNIT) );
+    if (stats.isMoving == move_not_moving || distance <= 0.8*SPACIAL_UNIT)
     {
-        targetPos.x = unitPos.x+ randE.nextInt()%int(2*SPACIAL_UNIT)-randE.nextInt()%int(2*SPACIAL_UNIT);
-        targetPos.y = unitPos.y+ randE.nextInt()%int(2*SPACIAL_UNIT)-randE.nextInt()%int(2*SPACIAL_UNIT);
+        targetPos.x = unitPos.x + distribution(randE.randE);
+        targetPos.y = unitPos.y + distribution(randE.randE);
         stats.isMoving = move_flying;
+
+        distance = coord.distance(targetPos);
+    }
+
+    if (stats.isMoving == move_flying)
+    {
+        stats.currentSpeed = baseStats.speed/2.0;
+    }
+    else if (stats.isKamikasing)
+    {
+        stats.currentSpeed = std::min(baseStats.speed*4.0, 11.0);
+    }
+    else
+    {
+        stats.currentSpeed = baseStats.speed;
     }
 
     const float destDir = coord.angleTo(targetPos);
     const float angularVelocity = 5.0 * M_PI/180.0; // rad/frame
     const int sign = directionTo( currentDirection, destDir );
-
-    double distance = coord.distance(targetPos);
 
     if (distance > 0.8*SPACIAL_UNIT)
     {

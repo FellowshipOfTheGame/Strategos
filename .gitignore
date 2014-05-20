@@ -14,3 +14,4 @@ Strategos.cscope_file_list
 /Debug
 /.settings
 bin/Release/strategos
+*.fuse_hidden*

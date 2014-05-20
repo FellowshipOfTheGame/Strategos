@@ -18,38 +18,41 @@
 
 class Unit_Setup : public StateMachine
 {
-private:
-    const Image *imgBackground;
-    const Image *squad_selec;
-    ImageBox *blueprint;
-    Button *btn_Back;
-    Button *btn_Next;
-    Button *btn_Del;
-    Button *btn_Move;
-    Unit *squad_focus;
+    public:
+        Unit_Setup(STATE previous);
+        ~Unit_Setup();
 
-    TacticList *list;
+        void onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keysym key, Uint8 button);
+        void Logic();
+        void Render();
+        void Clean();
 
-    Label *lbl_Geral;
+    private:
+        const Image *imgBackground;
+        const Image *squad_selec;
+        ImageBox *blueprint;
+        Button *btn_Back;
+        Button *btn_Next;
+        Button *btn_Del;
+        Button *btn_Move;
+        Unit *squad_focus;
 
-    SDL_Texture* renderCombat;
+        TacticList *list;
 
-    //TacticSet *tct_1,*tct_2,*tct_3,*tct_4,*tct_5;
-    ImageBox *bx1,*bx2,*bx3,*bx4;
+        Label *lbl_Geral;
 
-    Dictionary *dct;
-    std::vector<Label*> squad_number;
+        SDL_Texture* renderCombat;
 
-    bool put_squad, move_squad;
-    int squad_type;
-public:
-    Unit_Setup(STATE previous);
-    ~Unit_Setup();
+        //TacticSet *tct_1,*tct_2,*tct_3,*tct_4,*tct_5;
+        ImageBox *bx1,*bx2,*bx3,*bx4;
 
-    void onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keysym key, Uint8 button);
-    void Logic();
-    void Render();
-    void Clean();
+        Dictionary *dct;
+        std::vector<Label*> squad_number;
+
+        bool put_squad, move_squad;
+        int squad_type;
+
+        RandomEngine rnd;
 };
 
 #endif
