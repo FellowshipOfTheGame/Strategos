@@ -13,7 +13,7 @@ struct shipBaseStats
     {
     }
 
-    double maxHP;
+    float maxHP;
 	double damage;
 	int maxAtkCD;   // Cooldown de ataque
 	double range;
@@ -40,7 +40,7 @@ struct shipCurrentStats
         currentSpeed = base.speed;
     }
 
-    double currentHP;
+    float currentHP;
 	int currentAtkCD;   // Cooldown de ataque
 	int curKamikazeCD;
 	double currentShield;
@@ -89,7 +89,7 @@ class Ship
 
         float getDirection() const;
 
-        double getHP() const;
+        float getHP() const;
         void kill();
 
         const shipBaseStats &getBaseStats() const;

@@ -106,12 +106,12 @@ int Ship::update(RandomEngine& randE)
 
 bool Ship::isAlive() const
 {
-    return (stats.currentHP > 0);
+    return (stats.currentHP > 0.0f);
 }
 
 void Ship::kill()
 {
-    if (stats.currentHP <= 0) return;
+    if (stats.currentHP <= 0.0f) return;
 
 	stats.currentHP = -1;
 
@@ -148,11 +148,11 @@ bool Ship::takeDamage(double damage)
     stats.currentHP -= damage;
 
     if (myLog){
-        rd.deaths = (stats.currentHP <= 0);
+        rd.deaths = (stats.currentHP <= 0.0f);
         myLog->addLog(rd);
     }
 
-    return (stats.currentHP <= 0);
+    return (stats.currentHP <= 0.0f);
 }
 
 void Ship::dealDamage(double damage, bool wasLetal)
@@ -171,7 +171,7 @@ void Ship::moveTo(const Coordinates& c)
     stats.isMoving = move_action;
 }
 
-double Ship::getHP() const{
+float Ship::getHP() const{
     return stats.currentHP;
 }
 

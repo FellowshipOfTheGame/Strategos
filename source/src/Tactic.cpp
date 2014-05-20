@@ -115,7 +115,6 @@ int AttackWeakestEnemy::validateTactic(std::list<Action*> &newActions, TacticVal
 
 	int Ret = 0;
 	float minHP = 100;
-	int sumHP;
 
 	if (tvd.validatingUnit->getNShipsAlive() == 0)
 		return 0;
@@ -132,17 +131,11 @@ int AttackWeakestEnemy::validateTactic(std::list<Action*> &newActions, TacticVal
         if (dist < tvd.validatingUnit->getSquadBaseStats().range)
         {
             // Verificar HP desta unidade
-            sumHP = 0;
-
-            // TODO: Colocar isso na Unit
-            for (unsigned int j = 0; j < tvd.enemyUnits[i]->nShips(); ++j){
-                sumHP += tvd.enemyUnits[i]->getShip(j)->getHP();
-            }
-
-            int maxHP = tvd.enemyUnits[i]->getUnitInfo()->squadSize * tvd.enemyUnits[i]->getUnitInfo()->stats.maxHP;
+            float sumHP = tvd.enemyUnits[i]->getHPsum();
+            float maxHP = tvd.enemyUnits[i]->getUnitInfo()->squadSize * tvd.enemyUnits[i]->getUnitInfo()->stats.maxHP;
 
             // Considerar apenas o inteiro
-            int percent = (sumHP / maxHP) * 100;
+            int percent = (sumHP/(float)maxHP) * 100;
             if (percent < minHP)
             {
                 minHP = percent;
@@ -183,10 +176,6 @@ AttackCollab::AttackCollab(const TacticInfo& Info, const TacticTrigger& trigger)
 
 int AttackCollab::validateTactic(std::list<Action*> &newActions, TacticValidationData& tvd)
 {
-    // TODO: Algumas unidades chegam aqui com aliados invalidos! arrumar!
-	if (info.allyUnit == nullptr)
-        return 0;
-
 	tvd.validatingUnit->setTarget( nullptr );
 
 	const Unit *allyUnit = info.allyUnit;

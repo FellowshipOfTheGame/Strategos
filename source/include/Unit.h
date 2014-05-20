@@ -40,6 +40,7 @@ class Unit
 
         // Dynamic Combat Data
         int shipsAlive;
+        float shipsHP;
         Unit* target;
         Coordinates baseCoord, averageCoord;
         std::vector<Ship*> ships;
@@ -94,6 +95,9 @@ class Unit
         /// Nao checa se gid eh um valor valido.
         Ship* getShip(unsigned long gid) const;
         unsigned long nShips() const;
+
+        // Retorna o HP somado de todas as naves
+        float getHPsum() const;
 
         /// Recria todas as naves da unidade
         /// Altera a posicao base

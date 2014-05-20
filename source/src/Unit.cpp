@@ -230,6 +230,11 @@ unsigned long Unit::nShips() const
     return mySquadInfo->squadSize;
 }
 
+float Unit::getHPsum() const
+{
+    return shipsHP;
+}
+
 void Unit::updateActions()
 {
 	for (std::list<Action*>::iterator it = shipsActions.begin(); it != shipsActions.end(); ++it)
@@ -253,6 +258,7 @@ int Unit::update(RandomEngine& randE)
 {
     // Atualizar numero de naves vivas e posicao media
     shipsAlive = 0;
+    shipsHP = 0.0;
     Coordinates totalPos(0, 0);
 	for (unsigned int i = 0; i < ships.size(); i++)
 	{
@@ -260,6 +266,7 @@ int Unit::update(RandomEngine& randE)
 		{
 			ships[i]->update(randE);
 			totalPos += ships[i]->getPosition();
+			shipsHP += ships[i]->getHP();
 			++shipsAlive;
 //            printf("-> HP: %lf, (%d, %d)\n", ships[i]->getHP(), ships[i]->getX(), ships[i]->getY());
 		}

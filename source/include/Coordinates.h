@@ -13,12 +13,15 @@ class Coordinates
         Coordinates(float a, float b);
         Coordinates(const Coordinates *c);
 
-    // Como se somasse um vetor (a, b) à coordenada atual
+        // Soma um vetor (a, b) a coordenada
         Coordinates operator +(const Coordinates& coord) const;
 
         Coordinates operator -(const Coordinates& coord) const;
 
         void operator +=(const Coordinates& coord);
+
+        // Distancia ao quadrado [Nao efetua sqrt]
+        float distance2(const Coordinates& c) const;
 
         float distance(const Coordinates& c) const;
 
