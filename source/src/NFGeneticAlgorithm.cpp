@@ -17,10 +17,10 @@ static std::mutex populationMutex;
 #define printTH(x...){ printMutex.lock(); printf(x); printMutex.unlock(); }
 
 const double mutation_chance = 50;
-const int num_geracoes = 60;
+const int num_geracoes = 2;
 
 
-#define INDIVIDUOS_GERACAO 16
+#define INDIVIDUOS_GERACAO 2
 
 
 NFGeneticAlgorithm::NFGeneticAlgorithm(int _armyType)
@@ -97,26 +97,29 @@ void NFGeneticAlgorithm::PDFS(int start, int end, int *winner)
     PDFS(mid+1, end, &win2);
     t.join();
 
-    double fitA, fitB;
     this->individuos[win1]->Lock();
-    Army *armyA = Army::clone(this->individuos[win1]);
+        Army *armyA = Army::clone(this->individuos[win1]);
     this->individuos[win1]->Unlock();
+
     this->individuos[win2]->Lock();
-    Army *armyB = Army::clone(this->individuos[win2]);
+        Army *armyB = Army::clone(this->individuos[win2]);
     this->individuos[win2]->Unlock();
 
     Army *child1, *child2;
-    if(end - start > 2){
+    if(end - start > 2)
+    {
         this->crossover->crossOver(armyA,armyB, child1, child2);
         if(rand()%100 < mutation_chance) this->mutation->mutate(child1);
         if(rand()%100 < mutation_chance) this->mutation->mutate(child2);
         populationMutex.lock();
-        children.push_back(child1);
-        children.push_back(child2);
+            children.push_back(child1);
+            children.push_back(child2);
         populationMutex.unlock();
     }
 
+    double fitA, fitB;
     int ret = this->objective->evaluate(armyA, armyB, &fitA, &fitB);
+
     delete armyA;
     delete armyB;
 

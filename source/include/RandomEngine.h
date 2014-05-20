@@ -5,12 +5,16 @@
 
 class RandomEngine
 {
-    std::mt19937 randE;
 
     public:
-        RandomEngine(unsigned seed);
+        std::mt19937 randE;
 
-        int nextInt();
+
+        RandomEngine(unsigned seed);
+        virtual ~RandomEngine();
+
+        virtual int nextInt();
+        virtual unsigned int nextUInt();
 };
 
 #endif

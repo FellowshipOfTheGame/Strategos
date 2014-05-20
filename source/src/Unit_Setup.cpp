@@ -16,7 +16,7 @@
 //TODO arrumar blueprint
 //TODO adicionar botao para mover unidades
 Unit_Setup::Unit_Setup(STATE previous) :
-		StateMachine(previous, UNIT_SETUP, UNIT_SETUP)
+		StateMachine(previous, UNIT_SETUP, UNIT_SETUP), rnd(1337)
 {
 	int scrWidth = Game::getGlobalGame()->getWidth();
 	int scrHeight = Game::getGlobalGame()->getHeight();
@@ -317,8 +317,7 @@ void Unit_Setup::Logic()
 	//verifica se um componente foi modificado
 	updateGuiElements();
 
-	//faz as naves se moverem
-	RandomEngine rnd(0);
+    // mover as naves
 	Game::getGlobalGame()->getEditingArmy()->update(rnd);
 }
 

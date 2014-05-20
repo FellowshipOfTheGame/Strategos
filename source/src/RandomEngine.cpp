@@ -5,7 +5,17 @@ RandomEngine::RandomEngine(unsigned seed)
 {
 }
 
+RandomEngine::~RandomEngine()
+{
+
+}
+
 int RandomEngine::nextInt()
 {
     return (int) randE();
+}
+
+unsigned int RandomEngine::nextUInt()
+{
+    return randE();
 }
