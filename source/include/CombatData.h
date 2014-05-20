@@ -1,8 +1,8 @@
 #ifndef COMBATDATA_H
 #define COMBATDATA_H
 
-#include <Unit.h>
-#include <Ship.h>
+#include "Unit.h"
+#include "Ship.h"
 
 class CombatData
 {

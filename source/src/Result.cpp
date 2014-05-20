@@ -4,6 +4,8 @@
 #include "Game.h"
 #include "CombatLog.h"
 
+#include <limits.h>
+
 Result::Result(STATE previous) :
 	StateMachine(previous, RESULTS, RESULTS)
 {

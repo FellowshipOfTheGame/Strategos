@@ -7,18 +7,12 @@
 #ifndef _GENETIC_ALGORITHM_
 #define _GENETIC_ALGORITHM_
 
-#include <stdio.h>
-
-#include <Algorithm.h>
-#include <Army.h>
-#include <InitManager.h>
-#include <CrossoverManager.h>
-#include <MutationManager.h>
-#include <Objective.h>
-
-#define INDIVIDUOS_GERACAO  8
-#define SELECT_FROM_POP 2
-#define GOLD_AMOUNT 350
+#include "Algorithm.h"
+#include "Army.h"
+#include "InitManager.h"
+#include "CrossoverManager.h"
+#include "MutationManager.h"
+#include "Objective.h"
 
 struct PairAF
 {
@@ -35,12 +29,12 @@ class GeneticAlgorithm : public Algorithm
     public:
         GeneticAlgorithm(int _armyType);
         ~GeneticAlgorithm();
+
         void run() override;
 
         void selection();
         void randomArmies(int size);
         void normalizeFitness(std::vector<PairAF> *pairs);
-        
 
         static bool highToLow(PairAF p1, PairAF p2)
         {
@@ -49,8 +43,8 @@ class GeneticAlgorithm : public Algorithm
 
     protected:
         virtual void addInitialArmy(Army *army);
+
     private:
-        
         std::vector<Army*> individuos;
 
         int allowedThreads;

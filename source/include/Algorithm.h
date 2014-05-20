@@ -1,6 +1,9 @@
 #ifndef ALGORITHM_H
 #define ALGORITHM_H
+
 #include "Army.h"
+
+#define GOLD_AMOUNT 350
 
 // Classe base para Algoritmo Genetico
 
@@ -9,10 +12,12 @@ class Algorithm
     private:
     	void createNeededDirectory();
         std::string directory;
+
     protected:
     	virtual void addInitialArmy(Army *army) = 0;
         void saveArmy(Army *army, int armyNumber);
         int armyType;
+
     public:
         Algorithm(int _armyType);
         virtual ~Algorithm();

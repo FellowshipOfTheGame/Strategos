@@ -4,9 +4,6 @@
 //
 //
 
-#include <sstream>
-#include <set>
-
 #include <thread>
 
 #include "GeneticAlgorithm.h"
@@ -14,7 +11,6 @@
 #include "Global.h"
 #include "Game.h"
 #include "World.h"
-
 
 
 //#define _DEBUG_
@@ -25,6 +21,9 @@ static std::mutex printMutex;
 const double mutation_chance = 0.3;
 const int add_random_armies = 2;
 const int num_geracoes = 5;
+
+#define INDIVIDUOS_GERACAO  30
+#define SELECT_FROM_POP 2
 
 
 GeneticAlgorithm::GeneticAlgorithm(int _armyType)
@@ -55,18 +54,8 @@ void GeneticAlgorithm::randomArmies(int size)
 {
     if (size <= 0) return;
 
-    std::ostringstream stream;
     std::string armyName;
 
-    //TODO: Atualizar os precos, etc.
-    //Apenas para teste usando base:
-    // - 100 illenium disponivel
-    // - Mothership ja inclusa
-    // - Scout Type: $10
-    // - Balanced Type: $20
-    // - Tanker Type: $30
-
-    // Criar o maximo de naves possivel pois a quantidade de illenium gasta ainda nao esta entrando no fitness
     for(int i = 1; i <= size; i++)
     {
 #ifdef _DEBUG_
@@ -143,8 +132,6 @@ void GeneticAlgorithm::run()
         selected.clear();
     }
 
-    char buffer[8];
-
     //Save the strongest armies
 #ifdef _DEBUG_
     printf("Salvando Individuos... %d\n", individuos.size());
@@ -204,7 +191,7 @@ void GeneticAlgorithm::selectFromPop(unsigned int n, std::vector<Army*>& selecte
 void GeneticAlgorithm::threadSimulate( unsigned int from, unsigned int n )
 {
     printMutex.lock();
-    std::cout << "Thread Start: " << std::this_thread::get_id() ;
+    std::cout << "Thread Start: " << std::this_thread::get_id();
     printf(" - %d %d!\n", from, n);
     printMutex.unlock();
 
@@ -282,8 +269,10 @@ void GeneticAlgorithm::crossOver(std::vector<Army*>& selected)
         unsigned int other = rand()%selected.size();
         while ( other == i )
             other = rand()%selected.size();
-
-        this->crossover->crossOver(selected[i], selected[other], indCross);
+        Army *child1, *child2;
+        this->crossover->crossOver(selected[i], selected[other], child1, child2);
+        indCross.push_back(child1);
+        indCross.push_back(child2);
     }
 
 

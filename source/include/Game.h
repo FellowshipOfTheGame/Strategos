@@ -16,7 +16,7 @@
 
 #include "Resource.h"
 #include "Dictionary.h"
-#include "GeneticAlgorithm.h"
+#include "Algorithm.h"
 #include "CombatLog.h"
 
 #define CONFIG_FILE  "setup.cfg"
