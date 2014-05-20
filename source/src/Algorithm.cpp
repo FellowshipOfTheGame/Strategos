@@ -86,13 +86,16 @@ void createDir(const std::string& dir)
         printf("Failed to create dir. Error: %d\n", errno);
     }
 }
+
 void Algorithm::saveArmy(Army *army, int armyNumber)
 {
     char buffer[8];
     sprintf(buffer, "r%d", armyNumber+1);
+
     army->setArmyName(buffer);
     Army::saveArmy(army, directory.c_str());
+
 #ifdef _DEBUG_
-    printf("army[%d]\n", armyNumber+1);
+    printf("saving army[%d] as %s\n", armyNumber+1, buffer);
 #endif
 }

@@ -12,13 +12,13 @@ CombatRound* CombatLog::getLogForUnit(int unitID)
 
 void CombatLog::nextStep()
 {
-    for (int i = 0; i < unitLog.size(); ++i)
+    for (unsigned int i = 0; i < unitLog.size(); ++i)
         unitLog[i].nextStep();
 }
 
 void CombatLog::calculateGeneralLog()
 {
-    for (int i = 0; i < unitLog.size(); ++i)
+    for (unsigned int i = 0; i < unitLog.size(); ++i)
     {
         const LogMap& unit_log = unitLog[i].getLog();
         LogMap::const_iterator it = unit_log.begin();

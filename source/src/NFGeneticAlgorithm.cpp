@@ -4,17 +4,11 @@
 //
 //
 
-#include <sstream>
 #include <set>
-
 #include <thread>
 
 #include "NFGeneticAlgorithm.h"
-
-#include "Global.h"
-#include "Game.h"
 #include "World.h"
-
 
 //#define _DEBUG_
 
@@ -56,7 +50,6 @@ void NFGeneticAlgorithm::randomArmies(int size)
 {
     if (size <= 0) return;
 
-    std::ostringstream stream;
     std::string armyName;
 
     for(int i = 1; i <= size; i++)

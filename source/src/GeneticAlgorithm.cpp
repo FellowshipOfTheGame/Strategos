@@ -4,9 +4,6 @@
 //
 //
 
-#include <sstream>
-#include <set>
-
 #include <thread>
 
 #include "GeneticAlgorithm.h"
@@ -57,7 +54,6 @@ void GeneticAlgorithm::randomArmies(int size)
 {
     if (size <= 0) return;
 
-    std::ostringstream stream;
     std::string armyName;
 
     for(int i = 1; i <= size; i++)

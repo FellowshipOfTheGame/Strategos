@@ -1,5 +1,6 @@
 #ifndef ALGORITHM_H
 #define ALGORITHM_H
+
 #include "Army.h"
 
 #define GOLD_AMOUNT 350

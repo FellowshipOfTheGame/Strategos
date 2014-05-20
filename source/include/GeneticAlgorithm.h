@@ -7,14 +7,12 @@
 #ifndef _GENETIC_ALGORITHM_
 #define _GENETIC_ALGORITHM_
 
-#include <stdio.h>
-
-#include <Algorithm.h>
-#include <Army.h>
-#include <InitManager.h>
-#include <CrossoverManager.h>
-#include <MutationManager.h>
-#include <Objective.h>
+#include "Algorithm.h"
+#include "Army.h"
+#include "InitManager.h"
+#include "CrossoverManager.h"
+#include "MutationManager.h"
+#include "Objective.h"
 
 struct PairAF
 {
@@ -47,7 +45,6 @@ class GeneticAlgorithm : public Algorithm
         virtual void addInitialArmy(Army *army);
 
     private:
-
         std::vector<Army*> individuos;
 
         int allowedThreads;

@@ -7,14 +7,12 @@
 #ifndef _NFGENETIC_ALGORITHM_
 #define _NFGENETIC_ALGORITHM_
 
-#include <stdio.h>
-
-#include <Algorithm.h>
-#include <Army.h>
-#include <InitManager.h>
-#include <CrossoverManager.h>
-#include <MutationManager.h>
-#include <Objective.h>
+#include "Algorithm.h"
+#include "Army.h"
+#include "InitManager.h"
+#include "CrossoverManager.h"
+#include "MutationManager.h"
+#include "Objective.h"
 
 class NFGeneticAlgorithm : public Algorithm
 {

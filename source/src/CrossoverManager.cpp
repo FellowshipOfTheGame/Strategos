@@ -1,4 +1,4 @@
-#include <CrossoverManager.h>
+#include "CrossoverManager.h"
 
 CrossoverManager::CrossoverManager()
 {
@@ -6,7 +6,7 @@ CrossoverManager::CrossoverManager()
 }
 CrossoverManager::~CrossoverManager()
 {
-	
+
 }
 
 void CrossoverManager::crossOver(const Army *parent1, const Army *parent2, Army *&child1, Army *&child2)

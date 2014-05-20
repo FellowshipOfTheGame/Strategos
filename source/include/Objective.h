@@ -1,12 +1,12 @@
 #ifndef _OBJECTIVE_
 #define _OBJECTIVE_
 
-#include <Army.h>
+#include "Army.h"
 
 class Objective
 {
 	private:
-		
+
 	public:
 		//metodos de reparo
 		void rectifyUnit(Army *ind);

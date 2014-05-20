@@ -1,9 +1,10 @@
-#include <Objective.h>
-#include <Unit.h>
+#include "Objective.h"
 
 #include <set>
-#include <Game.h>
-#include <World.h>
+
+#include "Unit.h"
+#include "Game.h"
+#include "World.h"
 
 // Limita a qtd de gold que a Army pode ter
 // Remove unidades aleatorias - NAO GARANTE CONSISTENCIA das taticas
