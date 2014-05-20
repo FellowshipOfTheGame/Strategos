@@ -11,10 +11,12 @@ class Algorithm
     private:
     	void createNeededDirectory();
         std::string directory;
+
     protected:
     	virtual void addInitialArmy(Army *army) = 0;
         void saveArmy(Army *army, int armyNumber);
         int armyType;
+
     public:
         Algorithm(int _armyType);
         virtual ~Algorithm();

@@ -31,12 +31,12 @@ class GeneticAlgorithm : public Algorithm
     public:
         GeneticAlgorithm(int _armyType);
         ~GeneticAlgorithm();
+
         void run() override;
 
         void selection();
         void randomArmies(int size);
         void normalizeFitness(std::vector<PairAF> *pairs);
-        
 
         static bool highToLow(PairAF p1, PairAF p2)
         {
@@ -45,8 +45,9 @@ class GeneticAlgorithm : public Algorithm
 
     protected:
         virtual void addInitialArmy(Army *army);
+
     private:
-        
+
         std::vector<Army*> individuos;
 
         int allowedThreads;

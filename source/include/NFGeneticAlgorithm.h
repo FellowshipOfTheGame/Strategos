@@ -28,13 +28,14 @@ class NFGeneticAlgorithm : public Algorithm
 
     protected:
         virtual void addInitialArmy(Army *army);
+
     private:
         std::vector<Army*> individuos;
         std::vector<Army*> children;
 
         void PDFS(int start, int end, int *winner);
 
-        void repair(std::vector<Army *> selected);
+        void repair(std::vector<Army *>& selected);
 
         virtual Army* higherFitnessArmy();
         virtual std::vector<Army*>& getSelectedArmies();
