@@ -17,10 +17,10 @@ static std::mutex populationMutex;
 #define printTH(x...){ printMutex.lock(); printf(x); printMutex.unlock(); }
 
 const double mutation_chance = 50;
-const int num_geracoes = 2;
+const int num_geracoes = 10;
 
 
-#define INDIVIDUOS_GERACAO 2
+#define INDIVIDUOS_GERACAO 32
 
 
 NFGeneticAlgorithm::NFGeneticAlgorithm(int _armyType)
@@ -86,16 +86,17 @@ void NFGeneticAlgorithm::repair(std::vector<Army *>& selected)
 void NFGeneticAlgorithm::PDFS(int start, int end, int *winner)
 {
     int mid = (start + end) / 2;
-    if(start == end) {
-        *winner = start;
-        return;
-    }
+    int win1 = start, win2 = mid+1;
+    std::thread t;
 
-    int win1, win2;
 //    PDFS(start, mid, &win1);
-    std::thread t = std::thread(&NFGeneticAlgorithm::PDFS, this, start, mid, &win1);
-    PDFS(mid+1, end, &win2);
-    t.join();
+    if (start != mid)
+        t = std::thread(&NFGeneticAlgorithm::PDFS, this, start, mid, &win1);
+    if (mid+1 != end)
+        PDFS(mid+1, end, &win2);
+
+    if (t.joinable())
+        t.join();
 
     this->individuos[win1]->Lock();
         Army *armyA = Army::clone(this->individuos[win1]);

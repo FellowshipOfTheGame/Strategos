@@ -13,7 +13,6 @@
 #include "Action.h"
 #include "World.h"
 #include "Unit.h"
-#include "Ship.h"
 
 #include "SDL2_gfx/SDL2_gfxPrimitives.h"
 
@@ -41,10 +40,6 @@ Action::Action()
 
 Action::~Action(){
 
-}
-
-bool Action::completed(){
-    return 1;
 }
 
 void Action::render(){
@@ -78,8 +73,6 @@ void ExplosionAction::render()
 {
     // Explosion
     img->DrawImage(Game::getGlobalGame()->getRenderer(), position.x, position.y, timer);
-//    filledCircleRGBA( Game::getGlobalGame()->getRenderer(), position.x - camOX, position.y - camOY, 28/(timer/2+1), 128+rand()%128, rand()%128, rand()%128, 150+rand()%55 );
-//    filledCircleRGBA( Game::getGlobalGame()->getRenderer(), position.x - camOX, position.y - camOY, (14+rand()%16)/(timer/2+1), 128+rand()%128, rand()%128, rand()%128, 150+rand()%55 );
 }
 
 

@@ -82,7 +82,7 @@ class Ship
         bool takeDamage(double damage);
 
         ///
-        bool dealDamage(double damage, bool wasLetal);
+        void dealDamage(double damage, bool wasLetal);
 
         // Seleciona a posicao "alvo" para a nave ir em direcao
         void moveTo(const Coordinates& c);

@@ -27,7 +27,7 @@ class Action
         bool complete;
 
         virtual Action* act() = 0;
-        virtual bool completed();
+        virtual bool completed()=0;
         virtual void render();
 };
 

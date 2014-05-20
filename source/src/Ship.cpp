@@ -6,6 +6,8 @@
 
 using namespace std;
 
+normal_distribution<double> normal_dist_ships(0, 16.0);
+
 int directionTo(float fromRad, float toRad)
 {
     float dir = (fromRad - toRad); // * 180.0/M_PI;
@@ -56,31 +58,22 @@ int Ship::update(RandomEngine& randE)
 
     // So dar uma nova coordenada quando 'terminar' o movimento atual
     // Evitar que as naves fiquem totalmente paradas
-
     double distance = coord.distance(targetPos);
-
-    std::normal_distribution<double> distribution(0, 16.0);
-//    printf("Random: %lf\n", distribution(randE.randE) );
-//    printf("Random: %d\n", int(abs(randE.nextInt())%((int)SPACIAL_UNIT*2)-SPACIAL_UNIT) );
     if (stats.isMoving == move_not_moving || distance <= 0.8*SPACIAL_UNIT)
     {
-        targetPos.x = unitPos.x + distribution(randE.randE);
-        targetPos.y = unitPos.y + distribution(randE.randE);
+        targetPos.x = unitPos.x + normal_dist_ships(randE.randE);
+        targetPos.y = unitPos.y + normal_dist_ships(randE.randE);
         stats.isMoving = move_flying;
 
         distance = coord.distance(targetPos);
     }
 
-    if (stats.isMoving == move_flying)
-    {
+    // Arrumar velocidade
+    if (stats.isMoving == move_flying){
         stats.currentSpeed = baseStats.speed/2.0;
-    }
-    else if (stats.isKamikasing)
-    {
+    }else if (stats.isKamikasing){
         stats.currentSpeed = std::min(baseStats.speed*4.0, 11.0);
-    }
-    else
-    {
+    }else{
         stats.currentSpeed = baseStats.speed;
     }
 
@@ -90,10 +83,6 @@ int Ship::update(RandomEngine& randE)
 
     if (distance > 0.8*SPACIAL_UNIT)
     {
-        // Mover diretamente para o alvo
-//        coord.x -= ((coord.x-targetPos.x)/distance)*stats.currentSpeed;
-//        coord.y -= ((coord.y-targetPos.y)/distance)*stats.currentSpeed;
-
         float angledif = fabs(currentDirection - destDir);
         if (angledif > M_PI)
             angledif = 2.0*M_PI - angledif;
@@ -166,7 +155,7 @@ bool Ship::takeDamage(double damage)
     return (stats.currentHP <= 0);
 }
 
-bool Ship::dealDamage(double damage, bool wasLetal)
+void Ship::dealDamage(double damage, bool wasLetal)
 {
     if (myLog)
     {
