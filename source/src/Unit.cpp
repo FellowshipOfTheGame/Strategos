@@ -92,6 +92,7 @@ void Unit::restoreUnit(int teamID, const Coordinates atBaseP, CombatLog *log)
 	}
 
 	shipsAlive = mySquadInfo->squadSize;
+	shipsHP = mySquadInfo->squadSize*mySquadInfo->stats.maxHP;
 	target = nullptr;
 	team = teamID;
 
