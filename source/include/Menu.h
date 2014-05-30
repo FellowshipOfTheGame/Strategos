@@ -18,6 +18,7 @@ class Menu : public StateMachine
 {
     private:
         const Image *imgBackground;
+        const Image *imgStrategos;
         Button *btExit;
         Button *btPlay;
         Button *btCreate;

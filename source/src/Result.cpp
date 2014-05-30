@@ -12,10 +12,16 @@ Result::Result(STATE previous) :
 	int scrWidth = Game::getGlobalGame()->getWidth();
 	int scrHeight = Game::getGlobalGame()->getHeight();
 	Resource *resource = Game::getGlobalGame()->getResourceMNGR();
-	resource->AddImage("assets/base.gfx", "display-bg");
 
 	//imagens de fundo
-	imgBackground = resource->GetImage("display-bg");
+	if (Game::getGlobalGame()->winner){
+        resource->AddImage("assets/ui.gfx", "bg-win");
+        imgBackground = resource->GetImage("bg-win");
+    }
+    else{
+        resource->AddImage("assets/ui.gfx", "bg-lose");
+        imgBackground = resource->GetImage("bg-lose");
+    }
 
 	//botoes
 	btn_Next = new Button(scrWidth * 0.85, scrHeight * 0.05, 150, 24, resource->GetImage("menu-bt"));
@@ -209,6 +215,8 @@ void Result::Render()
     SDL_Renderer* renderer = Game::getGlobalGame()->getRenderer();
 
     Game::getGlobalGame()->setBackgroundColor(0, 0, 0);
+
+    imgBackground->DrawImage(renderer);
 
     SDL_SetRenderDrawBlendMode( renderer, SDL_BlendMode::SDL_BLENDMODE_BLEND );
 

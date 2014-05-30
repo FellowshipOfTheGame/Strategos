@@ -26,7 +26,7 @@
 				<Option output="bin/Release/Strategos" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="bin/Release/" />
 				<Option object_output="obj/Release/" />
-				<Option type="1" />
+				<Option type="0" />
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O3" />
@@ -35,6 +35,23 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
+				</Linker>
+			</Target>
+			<Target title="Profiler">
+				<Option output="bin/Release/StrategosDebug" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin/Release" />
+				<Option object_output="obj/Profiler/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-pg" />
+					<Add option="-g" />
+					<Add directory="source/include" />
+					<Add directory="include" />
+				</Compiler>
+				<Linker>
+					<Add option="-pg -lgmon" />
+					<Add option="-g" />
 				</Linker>
 			</Target>
 		</Build>
@@ -235,6 +252,9 @@
 			<Option virtualFolder="Simulacao/" />
 		</Unit>
 		<Unit filename="source/src/main.cpp" />
+		<Unit filename="source/strategos.rc">
+			<Option compilerVar="WINDRES" />
+		</Unit>
 		<Extensions>
 			<code_completion />
 			<envvars />

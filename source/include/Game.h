@@ -69,6 +69,9 @@ class Game
 
 		SDL_Renderer *getRenderer();
 
+
+		bool winner;
+
 	private:
 	    static Game *globalGame;
 

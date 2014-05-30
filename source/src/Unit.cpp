@@ -437,7 +437,7 @@ void Unit::render()
             }
 
             // Target line
-            SDL_SetRenderDrawColor(renderer, 228,228,228, 110);
+            SDL_SetRenderDrawColor(renderer, 255,255,255, 90);
             SDL_RenderDrawLine(renderer, ship->getPosition().x, ship->getPosition().y,
                                ship->getTargetPos().x, ship->getTargetPos().y );
 
