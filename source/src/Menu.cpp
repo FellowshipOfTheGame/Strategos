@@ -21,7 +21,7 @@ Menu::Menu(STATE previous) : StateMachine(previous, MENU, MENU)
 
 	Resource *resource = globalGame->getResourceMNGR();
 	resource->AddImage("assets/ui.gfx", "bg_menu");
-	resource->AddImage("assets/ui.gfx", "bg_strategos");
+//	resource->AddImage("assets/ui.gfx", "bg_strategos");
 
 	resource->AddImage("assets/ui.gfx", "menu-bt");
 	resource->AddImage("assets/ui.gfx", "exit-bt");
@@ -30,7 +30,7 @@ Menu::Menu(STATE previous) : StateMachine(previous, MENU, MENU)
 	resource->AddFont("assets/fonts.gfx", "jostix-14");
 
 	imgBackground = resource->GetImage("bg_menu");
-	imgStrategos = resource->GetImage("bg_strategos");
+//	imgStrategos = resource->GetImage("bg_strategos");
 
 	btPlay = new Button(60, 645, 150, 24, resource->GetImage("menu-bt"));
 	btPlay->setText(resource->GetFont("jostix-14"), "PLAY", ColorRGB8::White, ColorRGB8::White);
