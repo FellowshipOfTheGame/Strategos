@@ -22,6 +22,20 @@ Result::Result(STATE previous) :
 	btn_Next->setText(resource->GetFont("jostix-14"), "Menu", ColorRGB8::White, ColorRGB8::White);
 	addGuiElement(btn_Next);
 
+	// Legendas
+	legendaDD = new Label("Army Damage Dealt", resource->GetFont("jostix-14"), ColorRGB8::Red, ColorRGB8::Black, "ldd" );
+	legendaDR = new Label("Army Damage Received", resource->GetFont("jostix-14"), ColorRGB8::Yellow, ColorRGB8::Black, "ldd" );
+	legendaK = new Label("Army Kills", resource->GetFont("jostix-14"), ColorRGB8::Green, ColorRGB8::Black, "ldd" );
+	legendaD = new Label("Army Deaths", resource->GetFont("jostix-14"), ColorRGB8::Blue, ColorRGB8::Black, "ldd" );
+	legendaDD->setPosition(50, 620);
+	legendaDR->setPosition(50, 620+16);
+	legendaK->setPosition(50, 620+32);
+	legendaD->setPosition(50, 620+48);
+	addGuiElement(legendaDD);
+	addGuiElement(legendaDR);
+	addGuiElement(legendaK);
+	addGuiElement(legendaD);
+
 	original_log1 = Game::getGlobalGame()->getCombatLog(0);
 	original_log2 = Game::getGlobalGame()->getCombatLog(1);
 

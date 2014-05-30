@@ -35,6 +35,7 @@ class Result : public StateMachine
     private:
         const Image *imgBackground;
         Button *btn_Next;
+        Label* legendaDD, *legendaDR, *legendaK, *legendaD;
 
         Label *alive,*dead;
         CombatLog *original_log1, *original_log2;

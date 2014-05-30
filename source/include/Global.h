@@ -27,7 +27,7 @@ namespace ColorRGB8
     const SDL_Color Olive = {128, 128, 0};
     const SDL_Color Green = {0, 255, 0};
     const SDL_Color Blue = {0, 0, 255};
-    const SDL_Color Yellow = {0, 255, 255};
+    const SDL_Color Yellow = {255, 255, 0};
 }
 
 // Usado para comparar cores nas fontes
