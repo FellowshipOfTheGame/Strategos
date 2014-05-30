@@ -11,7 +11,7 @@ private:
     int height;
     int mapWidth;
     int mapHeight;
-    
+
 public:
     Camera(float x_, float y_, int width_, int height_, int mapWidth_, int mapHeight_)
     {
@@ -24,27 +24,27 @@ public:
     }
     ~Camera()
     {
-        
+
     }
-    
+
     void update()
     {
         if(x < 0)
             x = 0;
         if(x + width > mapWidth)
             x = mapWidth - width;
-        
+
         if(y < 0)
             y = 0;
         if(y + height > mapHeight)
             y = mapHeight - height;
     }
-    
+
     void moveH(float deltaX)
     {
         x += deltaX;
     }
-    
+
     void moveV(float deltaY)
     {
         y += deltaY;

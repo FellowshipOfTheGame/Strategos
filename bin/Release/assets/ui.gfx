@@ -41,41 +41,30 @@ center: 0 0
 
 key: bg_create_army
 file: assets/menu/create_army.png
-clip: 1 1 1024 720 0 0
-center: 0 0
-!
-
-key: bg_create_army2
-file: assets/menu/create_army_2.png
-clip: 1 1 1024 720 0 0
+clip: 1 1 1024 768 0 0
 center: 0 0
 !
 
 key: bg_menu
 file: assets/menu/menu.png
-clip: 1 1 1024 720 0 0
+clip: 1 1 1024 768 0 0
 center: 0 0
 !
 
 key: bg_play
 file: assets/menu/play.png
-clip: 1 1 1024 720 0 0
+clip: 1 1 1024 768 0 0
 center: 0 0
 !
 
-key: bg_unit_setup_1
+key: bg_unit_setup
 file: assets/menu/unit_setup_1.png
-clip: 1 1 1024 720 0 0
+clip: 1 1 1024 768 0 0
 center: 0 0
 !
 
-key: bg_unit_setup_2
-file: assets/menu/unit_setup_2.png
-clip: 1 1 1024 720 0 0
-center: 0 0
-!
 key: bg_engaging
 file: assets/menu/engaging.png
-clip: 1 1 1024 720 0 0
+clip: 1 1 1024 768 0 0
 center: 0 0
 !

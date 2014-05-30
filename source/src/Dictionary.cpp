@@ -114,7 +114,7 @@ int Dictionary::loadDictionary(const char *inputFile, Resource &resource)
                 if (reading == 1)
                 description += chr;
             }
-            printf("Description:\n%s\n---------\n", description.c_str());
+//            printf("Description:\n%s\n---------\n", description.c_str());
         }
         else if (tag == "SQUADS"){
             break;
@@ -128,7 +128,7 @@ int Dictionary::loadDictionary(const char *inputFile, Resource &resource)
         key->type = nTypes;
         if (key){
             keys.push_back(key);
-            printf("Adicionado squad %u\n", keys.size());
+//            printf("Adicionado squad %u\n", keys.size());
         }
 
         ++nTypes;

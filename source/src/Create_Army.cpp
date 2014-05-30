@@ -44,11 +44,11 @@ Create_Army::Create_Army(STATE previous) :
 	btn_Load->setText(resource->GetFont("jostix-14"), "Load", ColorRGB8::White, ColorRGB8::White);
 	addGuiElement(btn_Load);
 
-	lbl_Title = new Label("Create Army", resource->GetFont("jostix-14"), ColorRGB8::Green, ColorRGB8::White, "LB02");
+	lbl_Title = new Label("Create Army", resource->GetFont("jostix-14"), ColorRGB8::Green, ColorRGB8::Black, "LB02");
 	lbl_Title->setPosition(scrWidth * 0.45, scrHeight * 0.05);
 	addGuiElement(lbl_Title);
 
-	lbl_ArmyName = new Label("Army Name", resource->GetFont("jostix-14"), ColorRGB8::Green, ColorRGB8::White, "LB02");
+	lbl_ArmyName = new Label("Army Name", resource->GetFont("jostix-14"), ColorRGB8::Green, ColorRGB8::Black, "LB02");
 	lbl_ArmyName->setPosition(360, 120);
 	addGuiElement(lbl_ArmyName);
 
@@ -59,7 +59,7 @@ Create_Army::Create_Army(STATE previous) :
 	addGuiElement(txt_ArmyName);
 
 	cmb_species = new ComboBox(92, 360, 150, 17, Game::getGlobalGame()->getResourceMNGR()->GetImage("combo-cmb"),
-	        ColorRGB8::Green, ColorRGB8::White, "CB01");
+	        ColorRGB8::Green, ColorRGB8::Black, "CB01");
 
     cmb_species->setFont(fntEthnocentric);
     for (int i = 0; i < Game::getGlobalGame()->getNDictionary(); ++i)
@@ -71,7 +71,7 @@ Create_Army::Create_Army(STATE previous) :
 
     // Default: Dict 0
 	dct = Game::getGlobalGame()->getDictionary(0);
-	lbl_Descr = new Label("Description", resource->GetFont("jostix-14"), ColorRGB8::Green, ColorRGB8::White, "LB02");
+	lbl_Descr = new Label("Description", resource->GetFont("jostix-14"), ColorRGB8::Green, ColorRGB8::Black, "LB02");
 	lbl_Descr->setPosition(360, 170);
 	lbl_Descr->setText(dct->description);
 	addGuiElement(lbl_Descr);
@@ -92,7 +92,7 @@ Create_Army::Create_Army(STATE previous) :
 	addGuiElement(bx4);
 
 	cmb_armys = new ComboBox(scrWidth * 0.4, scrHeight * 0.4+100, 150, 17, Game::getGlobalGame()->getResourceMNGR()->GetImage("combo-cmb"),
-	        ColorRGB8::Green, ColorRGB8::White, "CB01");
+	        ColorRGB8::Green, ColorRGB8::Black, "CB01");
 	cmb_armys->setFont(fntEthnocentric);
 	addGuiElement(cmb_armys);
 	std::vector<std::string> datFiles;

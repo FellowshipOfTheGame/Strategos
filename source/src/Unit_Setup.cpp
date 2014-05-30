@@ -25,7 +25,7 @@ Unit_Setup::Unit_Setup(STATE previous) :
 	Game::getGlobalGame()->generateSprites(Game::getGlobalGame()->getEditingArmy()->getDictionary());
 
 	Resource *resource = Game::getGlobalGame()->getResourceMNGR();
-	resource->AddImage("assets/ui.gfx", "bg_unit_setup_1");
+	resource->AddImage("assets/ui.gfx", "bg_unit_setup");
 
 	resource->AddImage("assets/base.gfx", "blueprint1-bg");
 	resource->AddImage("assets/base.gfx", "squadfocus-bg");
@@ -38,7 +38,7 @@ Unit_Setup::Unit_Setup(STATE previous) :
 
 	resource->AddFont("assets/fonts.gfx", "jostix-14");
 	//imagens de fundo
-	imgBackground = resource->GetImage("bg_unit_setup_1");
+	imgBackground = resource->GetImage("bg_unit_setup");
 	squad_selec = resource->GetImage("squadfocus-bg");
 	blueprint = new ImageBox(scrWidth * 0.05, scrHeight * 0.15, resource->GetImage("blueprint1-bg")->getFrameWidth(),
 	        resource->GetImage("blueprint1-bg")->getFrameHeight(), resource->GetImage("blueprint1-bg"), 0, nullptr, "BX1");

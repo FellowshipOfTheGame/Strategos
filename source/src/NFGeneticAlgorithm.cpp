@@ -19,8 +19,7 @@ static std::mutex populationMutex;
 const double mutation_chance = 50;
 const int num_geracoes = 10;
 
-
-#define INDIVIDUOS_GERACAO 32
+#define INDIVIDUOS_GERACAO 8
 
 
 NFGeneticAlgorithm::NFGeneticAlgorithm(int _armyType)

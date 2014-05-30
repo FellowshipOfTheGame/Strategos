@@ -642,7 +642,7 @@ Label::~Label()
 
 void Label::draw()
 {
-    imgTextShadow->DrawImage(Game::getGlobalGame()->getRenderer(), x+2, y+2);
+    imgTextShadow->DrawImage(Game::getGlobalGame()->getRenderer(), x+1, y+1);
     imgText->DrawImage(Game::getGlobalGame()->getRenderer(), x, y);
 }
 
