@@ -57,12 +57,6 @@ clip: 1 1 960 186 0 0
 center: 0 0
 !
 
-key: bg_play
-file: assets/menu/play.png
-clip: 1 1 1024 768 0 0
-center: 0 0
-!
-
 key: bg_unit_setup
 file: assets/menu/unit_setup_1.png
 clip: 1 1 1024 768 0 0

@@ -7,11 +7,6 @@ file: assets/menu/menu-background.png
 clip: 1 1 1024 768 0 0
 center: 0 0
 !
-key: display-bg
-file: assets/menu/display.png
-clip: 1 1 960 540 0 0
-center: 0 0
-!
 
 key: simulation-bg-Far
 file: assets/images/FarStars.png
