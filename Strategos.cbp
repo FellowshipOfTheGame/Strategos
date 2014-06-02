@@ -63,8 +63,6 @@
 			<Add option="-Wunreachable-code" />
 			<Add option="-std=c++11" />
 			<Add option="-Wall" />
-			<Add option="-D_WINDOWS_" />
-			<Add option="-DWIN32" />
 			<Add directory="source/SDL2_gfx" />
 			<Add directory="source/include" />
 			<Add directory="source" />
@@ -73,6 +71,7 @@
 			<Add directory="$(SDL_TTF_HOME)/include/SDL2" />
 		</Compiler>
 		<Linker>
+			<Add option="-lopengl32" />
 			<Add library="mingw32" />
 			<Add library="SDL2main" />
 			<Add library="SDL2" />

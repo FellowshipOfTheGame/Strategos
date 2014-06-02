@@ -13,37 +13,42 @@
 #ifndef _VIEW_H_
 #define _VIEW_H_
 
+#include <stdio.h>
+#include <stdlib.h>
+
 #include <SDL.h>
-#include <SDL_image.h>
-#include <SDL_ttf.h>
 
 #include "StateMachine.h"
 
 class View
 {
-    private:
-        SDL_Window *window;
-        SDL_Renderer *renderer;
-        StateMachine *gameState;
-
-        int bpp;
-        Uint32 flag;
-
-        SDL_Rect screenArea;
-
     public:
         View();
         ~View();
 
         int createWindow(int width, int height, int bpp, Uint32 flags);
         void setBackgroundColor(Uint8 r, Uint8 g, Uint8 b);
-        bool update();
 
         SDL_Texture* getRendererFrameBuffer();
         SDL_Renderer* getRenderer();
         int getWidth() {return screenArea.w;}
         int getHeight() {return screenArea.h;}
         int getBPP() {return bpp;}
+
+        void DrawStart();
+        void DrawEnd();
+
+    private:
+        SDL_Window *window;
+        SDL_Renderer *renderer;
+
+        int bpp;
+        Uint32 flag;
+
+        SDL_Rect screenArea;
+
+        void initOpenGL();
+
 };
 
 #endif

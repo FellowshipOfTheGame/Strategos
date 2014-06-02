@@ -33,7 +33,7 @@ class Game
 
 		bool isRunning();
 		void setRunning(bool state);
-		void update();
+		bool update();
 
 		SDL_Texture* getRendererFrameBuffer();
 		int getWidth() const;
@@ -83,6 +83,8 @@ class Game
 		Army *editingArmy;
 		Army *armySim1, *armySim2;
 		CombatLog *log1, *log2;
+
+		StateMachine *gameState;
 
 		bool run;
 		int globalSeed;

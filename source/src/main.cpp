@@ -8,22 +8,21 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-    printf ("criando game\n");
+    printf ("Iniciando...\n");
 
 	Game* game = Game::getGlobalGame();
 
 	printf ("while\n");
-	while(game->isRunning())
+
+	while( game->update() )
 	{
-		//printf ("update\n");
-		game->update();
 	}
 
-	printf("QUIT");
+	printf("Exiting..");
 
 	delete game;
 
-	printf("QUIT2");
+	printf(".");
 
 	//system("PAUSE");
 	return EXIT_SUCCESS;

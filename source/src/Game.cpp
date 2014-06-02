@@ -12,11 +12,19 @@
 #include "GeneticAlgorithm.h"
 #include "NFGeneticAlgorithm.h"
 
+// Telas
+#include "Menu.h"
+#include "Create_Army.h"
+#include "Unit_Setup.h"
+#include "Options.h"
+#include "Simulation.h"
+#include "Play.h"
+#include "Result.h"
 
 Game* Game::globalGame = 0;
 
 Game::Game()
-    : armySim1(nullptr), armySim2(nullptr), log1(nullptr), log2(nullptr)
+    : armySim1(nullptr), armySim2(nullptr), log1(nullptr), log2(nullptr), gameState(nullptr)
 {
 	int screenWidth = 1024, screenHeight = 768, screenBPP = 0;
     globalGame = this;
@@ -53,6 +61,8 @@ Game::Game()
 
 Game::~Game()
 {
+    delete gameState;
+
 	if (editingArmy != nullptr)
 		delete editingArmy;
 
@@ -67,8 +77,6 @@ Game::~Game()
 	delete algorithm[2];
 
 	globalGame = 0;
-
-	delete view;
 }
 
 bool Game::isRunning()
@@ -81,9 +89,103 @@ void Game::setRunning(bool state)
 	this->run = state;
 }
 
-void Game::update()
+bool Game::update()
 {
-	run = view->update();
+    if (gameState == 0)
+        gameState = new Menu(EXIT);
+	//printf("STATE: %i, %i, %i\n", gameState->getPrevious(), gameState->getCurrent(), gameState->getNext());
+
+	/** Carrega as configuracoes do novo estado */
+	if (gameState->getCurrent() != gameState->getNext())
+	{
+		printf("Changing State...\n");
+		gameState->setPrevious(gameState->getCurrent());
+		gameState->setCurrent(gameState->getNext());
+
+		//Como vamos criar um novo gameState, liberamos o anterior.
+		StateMachine *tmpState = gameState;
+
+		switch (gameState->getCurrent())
+		{
+			case NONE:
+				printf("NONE\n");
+				break;
+			case MENU:
+				gameState = new Menu(gameState->getPrevious());
+				printf("MENU\n");
+				break;
+			case CREATE_ARMY:
+				gameState = new Create_Army(gameState->getPrevious());
+				printf("CREATE_ARMY\n");
+				break;
+
+			case UNIT_SETUP:
+				gameState = new Unit_Setup(gameState->getPrevious());
+				printf("UNIT_SETUP\n");
+				break;
+
+			case OPTIONS:
+				gameState = new Options(gameState->getPrevious());
+				printf("OPTIONS\n");
+				break;
+
+			case GAMEPLAY:
+				gameState = new Play(gameState->getPrevious());
+				printf("GAMEPLAY\n");
+				break;
+
+			case SIMULATE:
+				gameState = new Simulation(gameState->getPrevious());
+				printf("SIMULATE\n");
+				break;
+
+			case RESULTS:
+				gameState = new Result(gameState->getPrevious());
+				printf("RESULTS\n");
+				break;
+
+			case EXIT:
+				return false;
+				break;
+
+			default:
+				printf("Game State %i NOT HANDLED!\n", gameState->getCurrent());
+				return false;
+				break;
+		}
+
+		delete tmpState;
+	}
+	/*Inicia um novo ciclo de contagem de Ticks*/
+	//if(!fps->paused)
+	//	fps->StartCycle();
+
+	/** Updates State*/
+	//gameState->setPrevious(gameState->getCurrent());
+	/** Captura a entrada de eventos
+	 * Calcula a logica*/
+	gameState->Input();
+	gameState->Logic();
+
+    // clear the screen
+
+    view->DrawStart();
+
+	/** Desenha o resultado na tela*/
+	gameState->Render();
+
+	view->DrawEnd();
+
+
+    SDL_Delay(16);
+
+	/*Segura alguns quadros ate que um certo intervalo de tempo tenha se completado*/
+	//if(fps->GetTicks() < 1000/FRAMES_PER_SECOND)
+	//	SDL_Delay( (1000/FRAMES_PER_SECOND) - fps->GetTicks());
+	/** Updates State*/
+	//gameState->setPrevious(gameState->getCurrent());
+	//gameState->setCurrent(gameState->getNext());
+	return true;
 }
 
 SDL_Texture* Game::getRendererFrameBuffer(){

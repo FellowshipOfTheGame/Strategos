@@ -4,27 +4,23 @@
  */
 
 #include "View.h"
-#include "Menu.h"
-#include "Create_Army.h"
-#include "Unit_Setup.h"
-#include "Options.h"
-#include "Simulation.h"
-#include "Play.h"
-#include "Result.h"
 #include "Global.h"
+
+#include <SDL_ttf.h>
+#include <SDL_opengl.h>
+
 
 View::View()
 {
 	//Inicia a maquina de estados do jogo
-	gameState = 0;
 	window = 0;
 	renderer = 0;
 }
 
 View::~View()
 {
-	delete gameState;
     SDL_DestroyRenderer(renderer);
+
     SDL_DestroyWindow(window);
 
     TTF_Quit();
@@ -47,8 +43,8 @@ SDL_Texture* View::getRendererFrameBuffer(){
 int View::createWindow(int width, int height, int bpp, Uint32 flags)
 {
     this->bpp = bpp;
-
-	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
+//	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0)
 	{
 		fprintf(stderr, "Couldn't initialize SDL - %s\n", SDL_GetError());
 		return -1;
@@ -60,13 +56,10 @@ int View::createWindow(int width, int height, int bpp, Uint32 flags)
 		return -1;
 	}
 
-	window = SDL_CreateWindow("Strategos - SDL2",
-                          SDL_WINDOWPOS_UNDEFINED,
-                          SDL_WINDOWPOS_UNDEFINED,
-                          width, height,
-                          0); // SDL_WINDOW_OPENGL
+    SDL_CreateWindowAndRenderer(1024, 768, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE, &window, &renderer);
+    SDL_SetWindowTitle(window, "Strategos - SDL2");
 
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    initOpenGL();
 
 	screenArea.x = 0;
 	screenArea.y = 0;
@@ -82,101 +75,41 @@ int View::createWindow(int width, int height, int bpp, Uint32 flags)
 	return 0;
 }
 
-bool View::update()
+void View::initOpenGL()
 {
-    if (gameState == 0)
-        gameState = new Menu(EXIT);
-	//printf("STATE: %i, %i, %i\n", gameState->getPrevious(), gameState->getCurrent(), gameState->getNext());
+    glEnable( GL_TEXTURE_2D );
 
-	/** Carrega as configuracoes do novo estado */
-	if (gameState->getCurrent() != gameState->getNext())
-	{
-		printf("Changing State...\n");
-		gameState->setPrevious(gameState->getCurrent());
-		gameState->setCurrent(gameState->getNext());
+    glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
 
-		//Como vamos criar um novo gameState, liberamos o anterior.
-		StateMachine *tmpState = gameState;
+    glViewport( 0, 0, 640, 480 );
 
-		switch (gameState->getCurrent())
-		{
-			case NONE:
-				printf("NONE\n");
-				break;
-			case MENU:
-				gameState = new Menu(gameState->getPrevious());
-				printf("MENU\n");
-				break;
-			case CREATE_ARMY:
-				gameState = new Create_Army(gameState->getPrevious());
-				printf("CREATE_ARMY\n");
-				break;
+    glClear( GL_COLOR_BUFFER_BIT );
 
-			case UNIT_SETUP:
-				gameState = new Unit_Setup(gameState->getPrevious());
-				printf("UNIT_SETUP\n");
-				break;
+    glMatrixMode( GL_PROJECTION );
+    glLoadIdentity();
 
-			case OPTIONS:
-				gameState = new Options(gameState->getPrevious());
-				printf("OPTIONS\n");
-				break;
+    glOrtho(0.0f, 640, 480, 0.0f, -1.0f, 1.0f);
 
-			case GAMEPLAY:
-				gameState = new Play(gameState->getPrevious());
-				printf("GAMEPLAY\n");
-				break;
+    glMatrixMode( GL_MODELVIEW );
+    glLoadIdentity();
+}
 
-			case SIMULATE:
-				gameState = new Simulation(gameState->getPrevious());
-				printf("SIMULATE\n");
-				break;
+int Display_SetViewport( int width, int height )
+{
+    /* Setup our viewport. */
+    glViewport( 0, 0, ( GLsizei )width, ( GLsizei )height );
 
-			case RESULTS:
-				gameState = new Result(gameState->getPrevious());
-				printf("RESULTS\n");
-				break;
+    /* change to the projection matrix and set our viewing volume. */
+    glMatrixMode( GL_PROJECTION );
+    glLoadIdentity( );
 
-			case EXIT:
-				return false;
-				break;
+    /* Make sure we're chaning the model view and not the projection */
+    glMatrixMode( GL_MODELVIEW );
 
-			default:
-				printf("Game State %i NOT HANDLED!\n", gameState->getCurrent());
-				return false;
-				break;
-		}
+    /* Reset The View */
+    glLoadIdentity( );
 
-		delete tmpState;
-	}
-	/*Inicia um novo ciclo de contagem de Ticks*/
-	//if(!fps->paused)
-	//	fps->StartCycle();
-
-	/** Updates State*/
-	//gameState->setPrevious(gameState->getCurrent());
-	/** Captura a entrada de eventos
-	 * Calcula a logica*/
-	gameState->Input();
-	gameState->Logic();
-
-    // clear the screen
-    SDL_RenderClear(renderer);
-
-	/** Desenha o resultado na tela*/
-	gameState->Render();
-
-    SDL_RenderPresent(renderer);
-
-    SDL_Delay(16);
-
-	/*Segura alguns quadros ate que um certo intervalo de tempo tenha se completado*/
-	//if(fps->GetTicks() < 1000/FRAMES_PER_SECOND)
-	//	SDL_Delay( (1000/FRAMES_PER_SECOND) - fps->GetTicks());
-	/** Updates State*/
-	//gameState->setPrevious(gameState->getCurrent());
-	//gameState->setCurrent(gameState->getNext());
-	return true;
+    return 1;
 }
 
 void View::setBackgroundColor(Uint8 r, Uint8 g, Uint8 b)
@@ -184,4 +117,14 @@ void View::setBackgroundColor(Uint8 r, Uint8 g, Uint8 b)
     SDL_SetRenderDrawColor(renderer, r, g, b, 255);
     SDL_RenderFillRect(renderer, nullptr);
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+}
+
+void View::DrawStart()
+{
+    SDL_RenderClear(renderer);
+}
+
+void View::DrawEnd()
+{
+    SDL_RenderPresent(renderer);
 }
