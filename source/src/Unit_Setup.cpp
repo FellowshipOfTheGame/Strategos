@@ -12,6 +12,8 @@
 
 #include "Image.h"
 
+#include <SDL_opengl.h>
+
 //#include "GuiTactics.cpp"
 //TODO arrumar blueprint
 //TODO adicionar botao para mover unidades
@@ -312,8 +314,7 @@ void Unit_Setup::Render()
 	int mouseX, mouseY;
 	SDL_Renderer* renderer = Game::getGlobalGame()->getRenderer();
 
-
-	Game::getGlobalGame()->setBackgroundColor(255, 0, 0);
+	glClearColor( 1.0f, 0.0f, 0.0f, 0.0f );
 
 	imgBackground->DrawImage(renderer);
 	drawGuiElements();

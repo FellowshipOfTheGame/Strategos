@@ -13,12 +13,7 @@
 #ifndef _VIEW_H_
 #define _VIEW_H_
 
-#include <stdio.h>
-#include <stdlib.h>
-
 #include <SDL.h>
-
-#include "StateMachine.h"
 
 class View
 {
@@ -26,8 +21,12 @@ class View
         View();
         ~View();
 
+        /**
+         * Cria uma janela e a armazena na superficie screen(SDL_Surface*)
+         * Inicializa os componentes basicos da SDL e das bibliotecas
+         * adicionais utilizadas: SDL_ttf
+         */
         int createWindow(int width, int height, int bpp, Uint32 flags);
-        void setBackgroundColor(Uint8 r, Uint8 g, Uint8 b);
 
         SDL_Texture* getRendererFrameBuffer();
         SDL_Renderer* getRenderer();
@@ -35,12 +34,15 @@ class View
         int getHeight() {return screenArea.h;}
         int getBPP() {return bpp;}
 
+        void SetViewport( int width, int height );
+
         void DrawStart();
         void DrawEnd();
 
     private:
         SDL_Window *window;
         SDL_Renderer *renderer;
+        SDL_GLContext glcontext;
 
         int bpp;
         Uint32 flag;

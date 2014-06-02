@@ -11,6 +11,8 @@
 
 #include "Game.h"
 
+#include <SDL_opengl.h>
+
 Menu::Menu(STATE previous) : StateMachine(previous, MENU, MENU)
 {
     Game* globalGame = Game::getGlobalGame();
@@ -100,7 +102,7 @@ void Menu::Logic()
 
 void Menu::Render()
 {
-	Game::getGlobalGame()->setBackgroundColor(255, 0, 0);
+	glClearColor( 1.0f, 0.0f, 0.0f, 1.0f );
 
 	imgBackground->DrawImage(Game::getGlobalGame()->getRenderer());
 //	imgStrategos->DrawImage( Game::getGlobalGame()->getRenderer(), 32, 48 );

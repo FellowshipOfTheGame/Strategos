@@ -13,6 +13,7 @@
 #define _GAME_H_
 
 #include "View.h"
+#include "StateMachine.h"
 
 #include "Resource.h"
 #include "Dictionary.h"
@@ -46,7 +47,6 @@ class Game
 		int getNDictionary() const;
 
         void generateSprites(const Dictionary *d);
-		void setBackgroundColor(Uint8 r, Uint8 g, Uint8 b);
 
 		//Por enquanto vou colocar aqui
 		unsigned long createNewGID();

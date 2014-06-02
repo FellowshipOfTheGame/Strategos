@@ -6,6 +6,8 @@
 
 #include <limits.h>
 
+#include <SDL_opengl.h>
+
 Result::Result(STATE previous) :
 	StateMachine(previous, RESULTS, RESULTS)
 {
@@ -214,7 +216,7 @@ void Result::Render()
 {
     SDL_Renderer* renderer = Game::getGlobalGame()->getRenderer();
 
-    Game::getGlobalGame()->setBackgroundColor(0, 0, 0);
+    glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
 
     imgBackground->DrawImage(renderer);
 

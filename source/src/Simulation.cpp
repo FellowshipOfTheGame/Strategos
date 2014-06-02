@@ -5,7 +5,9 @@
 #include "Global.h"
 #include "Game.h"
 
+#include <SDL_opengl.h>
 #include <SDL2_gfx/SDL2_gfxPrimitives.h>
+
 
 Simulation::Simulation(STATE previous)
     : StateMachine(previous, GAMEPLAY, GAMEPLAY),
@@ -247,7 +249,7 @@ void Simulation::Render()
 {
     SDL_Renderer *renderer = Game::getGlobalGame()->getRenderer();
 
-    Game::getGlobalGame()->setBackgroundColor(0, 0, 0);
+    glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
 
     // Render do Fundo
 //    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_ADD);

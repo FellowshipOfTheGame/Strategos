@@ -10,6 +10,8 @@
 #include "Create_Army.h"
 #include "Image.h"
 
+#include <SDL_opengl.h>
+
 Create_Army::Create_Army(STATE previous) :
 		StateMachine(previous, CREATE_ARMY, CREATE_ARMY)
 {
@@ -235,7 +237,7 @@ void Create_Army::Render()
 	int scrWidth = Game::getGlobalGame()->getWidth();
 	int scrHeight = Game::getGlobalGame()->getHeight();
 
-	Game::getGlobalGame()->setBackgroundColor(0, 0, 0);
+	glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
 	SDL_Renderer* renderer = Game::getGlobalGame()->getRenderer();
 
 	imgBackground->DrawImage(renderer);

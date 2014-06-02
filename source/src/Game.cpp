@@ -285,11 +285,6 @@ void Game::generateSprites(const Dictionary *d){
         }
 }
 
-void Game::setBackgroundColor(Uint8 r, Uint8 g, Uint8 b)
-{
-    view->setBackgroundColor(r, g, b);
-}
-
 Army* Game::getArmy1() const
 {
 	return armySim1;

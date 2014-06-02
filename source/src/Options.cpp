@@ -8,6 +8,8 @@
 #include "Global.h"
 #include "Game.h"
 
+#include <SDL_opengl.h>
+
 Options::Options(STATE previous) : StateMachine(previous, OPTIONS, OPTIONS)
 {
 
@@ -31,7 +33,7 @@ void Options::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keysym 
 
 void Options::Render()
 {
-	Game::getGlobalGame()->setBackgroundColor(0, 0, 255);
+	glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
 }
 
 void Options::Clean()

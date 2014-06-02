@@ -3,6 +3,8 @@
  *
  */
 
+ #include <stdio.h>
+
 #include "View.h"
 #include "Global.h"
 
@@ -19,6 +21,7 @@ View::View()
 
 View::~View()
 {
+    SDL_GL_DeleteContext(glcontext);
     SDL_DestroyRenderer(renderer);
 
     SDL_DestroyWindow(window);
@@ -35,14 +38,14 @@ SDL_Texture* View::getRendererFrameBuffer(){
     return 0;
 }
 
-/**
- * Cria uma janela e a armazena na superficie screen(SDL_Surface*)
- * Inicializa os componentes basicos da SDL e das bibliotecas
- * adicionais utilizadas: SDL_ttf
- */
 int View::createWindow(int width, int height, int bpp, Uint32 flags)
 {
+    screenArea.x = 0;
+	screenArea.y = 0;
+	screenArea.w = width;
+	screenArea.h = height;
     this->bpp = bpp;
+
 //	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0)
 	{
@@ -56,15 +59,35 @@ int View::createWindow(int width, int height, int bpp, Uint32 flags)
 		return -1;
 	}
 
-    SDL_CreateWindowAndRenderer(1024, 768, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE, &window, &renderer);
-    SDL_SetWindowTitle(window, "Strategos - SDL2");
+	SDL_Window *window = SDL_CreateWindow( "Strategos - SDL2",
+                                       SDL_WINDOWPOS_UNDEFINED,
+                                       SDL_WINDOWPOS_UNDEFINED,
+                                       width, height,
+                                    SDL_WINDOW_OPENGL|SDL_WINDOW_RESIZABLE );
+
+    // Criar contexto
+    glcontext = SDL_GL_CreateContext(window);
+
+    int oglIdx = -1;
+    int nRD = SDL_GetNumRenderDrivers();
+    for(int i=0; i<nRD; i++)
+    {
+        SDL_RendererInfo info;
+        if(!SDL_GetRenderDriverInfo(i, &info))
+        {
+            printf("DRIVER: %s\n", info.name);
+            if(!strcmp(info.name, "opengl"))
+            {
+                oglIdx = i;
+            }
+        }
+    }
+
+    renderer = SDL_CreateRenderer(window, oglIdx, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    SDL_GL_SetSwapInterval(1);
 
     initOpenGL();
-
-	screenArea.x = 0;
-	screenArea.y = 0;
-	screenArea.w = width;
-	screenArea.h = height;
 
 	if (window == nullptr)
 	{
@@ -81,47 +104,38 @@ void View::initOpenGL()
 
     glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
 
-    glViewport( 0, 0, 640, 480 );
+    glViewport( 0, 0, screenArea.w, screenArea.h );
 
     glClear( GL_COLOR_BUFFER_BIT );
 
-    glMatrixMode( GL_PROJECTION );
+    glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-
-    glOrtho(0.0f, 640, 480, 0.0f, -1.0f, 1.0f);
+    glOrtho(0.0f, screenArea.w, screenArea.h, 0.0f, 0.0f, 1.0f);
 
     glMatrixMode( GL_MODELVIEW );
     glLoadIdentity();
 }
 
-int Display_SetViewport( int width, int height )
+void View::SetViewport( int width, int height )
 {
-    /* Setup our viewport. */
+    // Atualizar view port
     glViewport( 0, 0, ( GLsizei )width, ( GLsizei )height );
 
-    /* change to the projection matrix and set our viewing volume. */
+    // Resetar matrizes de projecao
     glMatrixMode( GL_PROJECTION );
-    glLoadIdentity( );
+    glLoadIdentity();
 
-    /* Make sure we're chaning the model view and not the projection */
+    // Voltar para model view
     glMatrixMode( GL_MODELVIEW );
 
-    /* Reset The View */
-    glLoadIdentity( );
-
-    return 1;
-}
-
-void View::setBackgroundColor(Uint8 r, Uint8 g, Uint8 b)
-{
-    SDL_SetRenderDrawColor(renderer, r, g, b, 255);
-    SDL_RenderFillRect(renderer, nullptr);
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    // Resetar matriz model view
+    glLoadIdentity();
 }
 
 void View::DrawStart()
 {
-    SDL_RenderClear(renderer);
+    glColor3f(1.0f,1.0f,1.0f);
+    glClear( GL_COLOR_BUFFER_BIT );
 }
 
 void View::DrawEnd()
