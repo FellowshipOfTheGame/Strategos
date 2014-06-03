@@ -41,8 +41,6 @@ class Unit_Setup : public StateMachine
 
         Label *lbl_Geral;
 
-        SDL_Texture* renderCombat;
-
         //TacticSet *tct_1,*tct_2,*tct_3,*tct_4,*tct_5;
         ImageBox *bx1,*bx2,*bx3,*bx4;
 

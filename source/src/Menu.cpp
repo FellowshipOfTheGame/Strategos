@@ -104,8 +104,17 @@ void Menu::Render()
 {
 	glClearColor( 1.0f, 0.0f, 0.0f, 1.0f );
 
+//	static float rot = 0;
+//	rot = rot>180? rot+1 : 0;
+//	glColor3f(sin(rot/16), sin(rot/12)+cos(rot/12), cos(rot/11));
+
+//	glPushMatrix();
+//	glTranslatef(1024/2, 768/2, 0);
+//	glRotatef(rot, 0.0, 0.0, 1.0);
+//	glTranslatef(-1024/2, -768/2, 0);
 	imgBackground->DrawImage(Game::getGlobalGame()->getRenderer());
-//	imgStrategos->DrawImage( Game::getGlobalGame()->getRenderer(), 32, 48 );
+//	glTranslatef(1024, 768, 0);
+//	glPopMatrix();
 
 	drawGuiElements();
 }

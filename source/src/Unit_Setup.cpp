@@ -14,9 +14,7 @@
 
 #include <SDL_opengl.h>
 
-//#include "GuiTactics.cpp"
 //TODO arrumar blueprint
-//TODO adicionar botao para mover unidades
 Unit_Setup::Unit_Setup(STATE previous) :
 		StateMachine(previous, UNIT_SETUP, UNIT_SETUP), rnd(1337)
 {
@@ -89,7 +87,7 @@ Unit_Setup::Unit_Setup(STATE previous) :
 	}
 	for (unsigned int i = 0; i < Game::getGlobalGame()->getEditingArmy()->nUnits(); i++)
 	{
-		sprintf(str, "%d\n", i);
+		sprintf(str, "%d", i);
 		squad_number.push_back(new Label(str, fntEthnocentric, ColorRGB8::Green, ColorRGB8::White, "LB02"));
 		squad_number[i]->setPosition(Game::getGlobalGame()->getEditingArmy()->getUnitByID(i)->getAvgX() + blueprint->getX(),
 		        Game::getGlobalGame()->getEditingArmy()->getUnitByID(i)->getAvgY() + blueprint->getY());
@@ -105,15 +103,6 @@ Unit_Setup::Unit_Setup(STATE previous) :
 	squad_type = 0;
 	//	img1 =
 	list->setVisible(false);
-
-	renderCombat = SDL_CreateTexture(Game::getGlobalGame()->getRenderer(), SDL_PIXELFORMAT_RGBA8888,
-                        SDL_TEXTUREACCESS_TARGET, TEAM_AREA_WIDTH, TEAM_AREA_HEIGHT);
-
-    if(renderCombat == nullptr)
-    {
-        printf("SDL_CreateTexture failed: %s\n", SDL_GetError());
-        exit(-9);
-    }
 }
 
 Unit_Setup::~Unit_Setup()
@@ -147,7 +136,10 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
 		{
 			case MOUSE_RELEASED_EVENT:
 				setNext(CREATE_ARMY);
-				return;
+				break;
+
+			default:
+				break;
 		}
 	}
 	else if (element == btn_Next)
@@ -157,7 +149,10 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
 			case MOUSE_RELEASED_EVENT:
 				Army::saveArmy(Game::getGlobalGame()->getEditingArmy());
 				setNext(MENU);
-				return;
+				break;
+
+			default:
+				break;
 		}
 	}
 	else if (element == btn_Del)
@@ -170,7 +165,10 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
 					Game::getGlobalGame()->getEditingArmy()->removeUnit(squad_focus->getID());
 					squad_focus = nullptr;
 				}
-				return;
+				break;
+
+			default:
+				break;
 		}
 	}
 	else if (element == btn_Move)
@@ -182,7 +180,10 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
 					{
 						move_squad = true;
 					}
-					return;
+					break;
+
+				default:
+					break;
 			}
 		}
 	else if ((element == bx1) && (!move_squad))
@@ -192,7 +193,10 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
 			case MOUSE_RELEASED_EVENT:
 				//put_squad = !put_squad;
 				//squad_type = 0;
-				return;
+				break;
+
+			default:
+				break;
 		}
 	}
 	else if ((element == bx2)&& (!move_squad))
@@ -202,7 +206,10 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
 			case MOUSE_RELEASED_EVENT:
 				put_squad = !put_squad;
 				squad_type = 1;
-				return;
+				break;
+
+			default:
+				break;
 		}
 	}
 	else if ((element == bx3)&& (!move_squad))
@@ -212,7 +219,10 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
 			case MOUSE_RELEASED_EVENT:
 				put_squad = !put_squad;
 				squad_type = 2;
-				return;
+				break;
+
+			default:
+				break;
 		}
 	}
 	else if ((element == bx4)&& (!move_squad))
@@ -222,7 +232,10 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
 			case MOUSE_RELEASED_EVENT:
 				put_squad = !put_squad;
 				squad_type = 3;
-				return;
+				break;
+
+			default:
+				break;
 		}
 	}
 	else if ((element == blueprint) && (put_squad)) // Adicionar uma unidade
@@ -246,9 +259,7 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
                                       ColorRGB8::Green, ColorRGB8::White, "LB02"));
                     squad_number[(squad_number.size() - 1)]->setPosition(squad_focus->getAvgX() + blueprint->getX(),
                                                                          squad_focus->getAvgY() + blueprint->getY());
-                    printf ("1 - begin\n");
                     list->setSquad(squad_focus);
-                    printf ("1 - end\n");
             	}
             	put_squad = false;
             }
@@ -260,7 +271,6 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
                 put_squad = !put_squad;
                 move_squad = !move_squad;
             }
-            return;
         }
 	}
 	else
@@ -287,10 +297,8 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
                             put_squad = true;
                         }
                     }
-                    printf ("2 - begin\n");
-				   list->setSquad(squad_focus);
-				   printf ("2 - end\n");
-                   return;
+                    list->setSquad(squad_focus);
+                    break;
                 }
             }
 		}
@@ -305,8 +313,6 @@ void Unit_Setup::Logic()
 
     // mover as naves
 	Game::getGlobalGame()->getEditingArmy()->update(rnd);
-
-
 }
 
 void Unit_Setup::Render()
@@ -318,7 +324,7 @@ void Unit_Setup::Render()
 
 	imgBackground->DrawImage(renderer);
 	drawGuiElements();
-	list->update();
+
 	list->draw();
 
 	if (squad_focus)
@@ -329,26 +335,11 @@ void Unit_Setup::Render()
 	}
 
 	// Desenhar army na tela
-    SDL_SetRenderTarget(renderer, renderCombat);
-        // Limpar textura
-        SDL_SetTextureBlendMode(renderCombat, SDL_BLENDMODE_BLEND);
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
-        SDL_RenderClear(renderer);
-
-        SDL_SetRenderDrawBlendMode(renderer, SDL_BlendMode::SDL_BLENDMODE_NONE);
-        SDL_SetTextureBlendMode(renderCombat, SDL_BLENDMODE_BLEND);
+    glPushMatrix();
+        glTranslatef(blueprint->getX(), blueprint->getY(), 0);
 
         Game::getGlobalGame()->getEditingArmy()->render();
-    SDL_SetRenderTarget(renderer, 0);
-
-    // Renderizar na posicao do blueprint
-    SDL_Rect rect;
-    rect.x = blueprint->getX();  rect.w = TEAM_AREA_WIDTH;
-    rect.y = blueprint->getY();  rect.h = TEAM_AREA_HEIGHT;
-
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    SDL_SetRenderDrawBlendMode(renderer, SDL_BlendMode::SDL_BLENDMODE_NONE);
-    SDL_RenderCopy( renderer, renderCombat, 0, &rect);
+    glPopMatrix();
 
 	if (put_squad)
 	{
