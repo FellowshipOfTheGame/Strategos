@@ -23,7 +23,6 @@ Trigger* Trigger::copy(const Trigger *source)
     return t_copy;
 }
 
-
 TacticTrigger::TacticTrigger(Trigger* A, Trigger* B, int oper)
     : tA(A), tB(B), operation(oper)
 {
@@ -69,6 +68,35 @@ TacticTrigger::~TacticTrigger()
     delete tB;
 }
 
+Trigger* TacticTrigger::getTriggerA()
+{
+	return tA;
+}
+
+Trigger* TacticTrigger::getTriggerB()
+{
+    return tB;
+}
+
+void TacticTrigger::setTriggerA(Trigger* t)
+{
+	if (tA)
+        delete tA;
+
+	tA = t;
+}
+
+void TacticTrigger::setTriggerB(Trigger* t)
+{
+	if (tB)
+        delete tB;
+
+    tB = t;
+}
+
+//////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+
 Trigger_Always::Trigger_Always() : Trigger(TRIGGER_ALWAYS)
 {
     value = 0;
@@ -85,8 +113,11 @@ bool Trigger_Always::testTrigger(Unit *unit)
     return 1;
 }
 
-//WHAT IS HAPPENING HERE? O.o
-Trigger_Life::Trigger_Life(int lifeTrigger, int trigOP) : Trigger(TRIGGER_LIFE)
+//////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+
+Trigger_Life::Trigger_Life(int lifeTrigger, int trigOP)
+    : Trigger(TRIGGER_LIFE)
 {
     value = lifeTrigger;
     relOperator = trigOP;
@@ -123,31 +154,4 @@ bool Trigger_Life::testTrigger(Unit *unit)
 
     return 0;
 }
-
-Trigger* TacticTrigger::getTriggerA()
-{
-	return tA;
-}
-
-Trigger* TacticTrigger::getTriggerB()
-{
-    return tB;
-}
-
-void TacticTrigger::setTriggerA(Trigger* t)
-{
-	if (tA)
-        delete tA;
-
-	tA = t;
-}
-
-void TacticTrigger::setTriggerB(Trigger* t)
-{
-	if (tB)
-        delete tB;
-
-    tB = t;
-}
-
 

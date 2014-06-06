@@ -4,6 +4,7 @@ CrossoverManager::CrossoverManager()
 {
 
 }
+
 CrossoverManager::~CrossoverManager()
 {
 

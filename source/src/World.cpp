@@ -32,14 +32,11 @@ World::World(Army *army1, Army *army2, CombatLog *log1, CombatLog *log2)
     armies.push_back(army1);
 	armies.push_back(army2);
 
-//	combatLog.push_back(nullptr);
-//	combatLog.push_back(nullptr);
 //	printf("%d VS %d ", army1->nUnits(), army2->nUnits());
 
+	// Setar posicao de cada exercito
 	army1->restore(0, army1Log);
 	army2->restore(1, army2Log);
-
-	// Setar posicao de cada exercito
 
 //    printf("World Ready!\n");
 }
@@ -100,8 +97,6 @@ int World::simulateStep()
         army1Log->nextStep();
     if (army2Log)
         army2Log->nextStep();
-//    makeLog(armies[0], this->getCombatLog(0));
-//    makeLog(armies[1], this->getCombatLog(1));
 
     if (N0 == 0 && N1 == 0)
     {

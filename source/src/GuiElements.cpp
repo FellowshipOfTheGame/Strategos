@@ -334,7 +334,7 @@ void TextField::setCaps(bool caps)
 {
 	this->caps = caps;
 }
-//TODO verificar o pq trava ao apagar com backspace
+
 void TextField::enterLetter(char letter)
 {
 	if ((caps == true) && (letter >= 'a' && letter <= 'z'))
