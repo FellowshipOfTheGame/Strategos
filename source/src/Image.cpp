@@ -1,7 +1,6 @@
 
 #include "Image.h"
 
-#include "Global.h"
 #include "Game.h"
 
 bool compareColors(const SDL_Color color1, const SDL_Color color2)

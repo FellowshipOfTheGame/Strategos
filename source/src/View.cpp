@@ -3,11 +3,10 @@
  *
  */
 
- #include <stdio.h>
 
 #include "View.h"
-#include "Global.h"
 
+ #include <stdio.h>
 #include <SDL_ttf.h>
 #include <SDL_opengl.h>
 

@@ -7,7 +7,6 @@
 #include "Game.h"
 
 #include "Unit.h"
-#include "Ship.h"
 
 #include "SDL2_gfx/SDL2_gfxPrimitives.h"
 

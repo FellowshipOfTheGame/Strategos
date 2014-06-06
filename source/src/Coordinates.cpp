@@ -1,5 +1,7 @@
 #include "Coordinates.h"
 
+#include <cmath>
+
 Coordinates::Coordinates()
 {
     x = y = 0;

@@ -2,7 +2,6 @@
 
 #include <set>
 
-#include "Unit.h"
 #include "Game.h"
 #include "World.h"
 

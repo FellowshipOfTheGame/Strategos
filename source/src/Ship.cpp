@@ -1,7 +1,6 @@
 
 #include "Ship.h"
 
-#include "CombatLog.h"
 #include "Global.h"
 
 using namespace std;

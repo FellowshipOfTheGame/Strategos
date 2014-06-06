@@ -8,10 +8,6 @@
 
 #include "GeneticAlgorithm.h"
 
-#include "Global.h"
-#include "Game.h"
-#include "World.h"
-
 
 //#define _DEBUG_
 

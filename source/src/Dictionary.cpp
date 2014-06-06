@@ -7,7 +7,6 @@
 #include <stdlib.h>
 
 #include "Dictionary.h"
-#include "Global.h"
 
 using namespace std;
 using namespace std;
