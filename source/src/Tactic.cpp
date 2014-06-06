@@ -389,20 +389,12 @@ Retreat::Retreat(const TacticInfo& Info, const TacticTrigger& trigger) :
 
 int Retreat::validateTactic(std::list<Action*> &newActions, TacticValidationData& tvd)
 {
-	Unit *motherShipUnit = nullptr;
-	for (unsigned int i = 0; i < tvd.alliedUnits.size(); ++i)
-	{
-		if (tvd.alliedUnits[i]->getType() == 0)
-		{
-			motherShipUnit = tvd.alliedUnits[i];
-			break;
-		}
-	}
+	const Unit *allied = info.allyUnit;
 
-	if (motherShipUnit->getNShipsAlive() == 0)
+	if (allied->getNShipsAlive() == 0)
         return 0;
 
-    Coordinates motherAvrg = motherShipUnit->getAveragePos();
+    Coordinates motherAvrg = allied->getAveragePos();
 	if (tvd.validatingUnit->getAveragePos().distance(motherAvrg) > tvd.validatingUnit->getSquadBaseStats().range)
 	{
         motherAvrg.x += (tvd.combatData.randomengine.nextInt()%300) - 150;
@@ -438,10 +430,7 @@ std::string Retreat::printTactic()
 	str = Tactic::printTactic();
 
 	str.append(" ");
-	if (info.allyUnit == nullptr)
-        str.append(std::to_string(0)); // TODO: info.allyUnitID Not used for Retreat?
-	else
-        str.append(std::to_string(info.allyUnit->getID())); // TODO: info.allyUnitID Not used for Retreat?
+    str.append(std::to_string(info.allyUnit->getID()));
 
 	return str;
 }

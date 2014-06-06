@@ -104,7 +104,9 @@ Tactic* InitManager::generateRandomTactic( const Army* forArmy, int forUnitID )
             return new Kamikase(TacticInfo(nullptr), tacticTrig);
 
         case TACTIC_RETREAT:
-            return new Retreat(TacticInfo(nullptr), tacticTrig);
+            randValue = rand()%forArmy->nUnits();
+                while (randValue == forUnitID) randValue = rand()%forArmy->nUnits();
+            return new Retreat(TacticInfo(forArmy->getUnitAtIndex(randValue)), tacticTrig);
     }
 
     return nullptr;

@@ -55,10 +55,13 @@ Tactic* Army::loadTactic(std::ifstream& file, const TacticTrigger& tacticTrigger
             break;
 
         case TACTIC_RETREAT:{
-            int ignoredValue; // TODO: Remove this from Retreat?
-            file >> ignoredValue;
+            int idOnVec;
+            file >> idOnVec;
+
             tatica = new Retreat(TacticInfo(nullptr), tacticTrigger);
-            break;}
+            to_fix_ally.push_back( AllyIDTactic(tatica, idOnVec) );
+            break;
+        }
 
         case TACTIC_MOVE_RANDOM:
             tatica = new MoveRandomly(TacticInfo(nullptr), tacticTrigger);

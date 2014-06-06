@@ -25,8 +25,7 @@ Unit::Unit(unsigned int ID, const DictKey *info, Coordinates position)
     : bluePrintCoord(position), mySquadInfo(info), id(ID), team(0), myLog(nullptr),
         target(nullptr), baseCoord(position), averageCoord(position),
         basicTacticMoveRandom( TacticInfo(nullptr), TacticTrigger(0, 0, TRIGGER_LOGIC_OR) ),
-        basicTacticAttackNearest( TacticInfo(nullptr), TacticTrigger(0, 0, TRIGGER_LOGIC_OR) ),
-        basicTacticRetreat( TacticInfo(nullptr), TacticTrigger(0, 0, TRIGGER_LOGIC_OR) )
+        basicTacticAttackNearest( TacticInfo(nullptr), TacticTrigger(0, 0, TRIGGER_LOGIC_OR) )
 {
 	restoreUnit(0);
 }
@@ -36,8 +35,7 @@ Unit::Unit(const Unit* copy)
         id(copy->id), team(0), myLog(nullptr),
         target(nullptr), baseCoord(bluePrintCoord), averageCoord(bluePrintCoord),
         basicTacticMoveRandom( copy->basicTacticMoveRandom ),
-        basicTacticAttackNearest( copy->basicTacticAttackNearest ),
-        basicTacticRetreat( copy->basicTacticRetreat )
+        basicTacticAttackNearest( copy->basicTacticAttackNearest )
 {
     // Copiar todos os dados
     // Efetuar copia dos objetos dos ponteiros
@@ -364,8 +362,6 @@ void Unit::generateActions(TacticValidationData& tvd)
 	// Validar taticas basicas
 	basicTacticMoveRandom.validateTactic(shipsActions, tvd);
 	basicTacticAttackNearest.validateTactic(shipsActions, tvd);
-	if (this->mySquadInfo->type != 0)
-		basicTacticRetreat.validateTactic(shipsActions, tvd);
 }
 
 void Unit::moveTo(const Coordinates& c)

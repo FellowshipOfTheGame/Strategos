@@ -34,8 +34,8 @@ class Unit
         std::vector<Tactic*> tactics;
 
         // Team Data
-        unsigned int id;   // TODO: O que exatamente eh id? Posicao na Army? Apenas um numero id usado para taticas?
-        int team;  // Time 0 ou 1, durante a batalha.
+        unsigned int id;    //!> Posicao da unidade no vetor
+        int team;           //!> Time 0 ou 1, durante a batalha.
         CombatRound* myLog;
 
         // Dynamic Combat Data
@@ -49,7 +49,6 @@ class Unit
         // Taticas basicas
         MoveRandomly basicTacticMoveRandom;
         AttackNearestEnemy basicTacticAttackNearest;
-        Retreat basicTacticRetreat;
 
     public:
         Unit(const Unit* copy);

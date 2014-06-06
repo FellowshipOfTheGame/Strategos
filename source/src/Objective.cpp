@@ -48,7 +48,7 @@ void Objective::rectifyUnit(Army *ind)
 
             if(tactic->getType() == TACTIC_ATTACK_COLLAB
             || tactic->getType() == TACTIC_DEFENSE_COLAB
-            || tactic->getType() == TACTIC_RETREAT) // TODO: Retreat tem ally???
+            || tactic->getType() == TACTIC_RETREAT)
             {
                 // If allyUnit is out of range, AttackCollab or DefenseCollab with the Mothership
                 // or the reference does not belong to this army, give it a new ally
@@ -114,7 +114,9 @@ int Objective::fight(Army *a, Army *b, int *steps)
     delete world;
     return ret;
 }
-int Objective::evaluate(Army *a, Army *b, double *fitA, double *fitB){
+
+int Objective::evaluate(Army *a, Army *b, double *fitA, double *fitB)
+{
     int steps;
     int ret = this->fight(a, b,&steps);
 
