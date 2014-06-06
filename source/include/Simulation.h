@@ -30,9 +30,6 @@ class Simulation : public StateMachine
         Camera *camera;
         float bgOffsetX, bgOffsetY;
 
-        // Render
-        SDL_Texture* renderCombat;
-
         Unit* checkClickOn(const Army *army);
         void drawBG(const Image* img, double x, double y, double factor, SDL_Renderer *renderer);
 

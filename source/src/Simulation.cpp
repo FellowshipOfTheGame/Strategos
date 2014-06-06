@@ -56,15 +56,6 @@ Simulation::Simulation(STATE previous)
     camera = new Camera(0, 0, screenWidth, screenHeight, screenWidth*2, screenHeight*1.5f);
     bgOffsetX = bgOffsetY = 0;
 
-    renderCombat = SDL_CreateTexture(Game::getGlobalGame()->getRenderer(), SDL_PIXELFORMAT_RGBA8888,
-                        SDL_TEXTUREACCESS_TARGET, 2048, 2048);
-
-    if(renderCombat == nullptr)
-    {
-        printf("SDL_CreateTexture failed: %s\n", SDL_GetError());
-        exit(-9);
-    }
-
     selectedUnit = nullptr;
     printf("Simulation Ready!\n");
 }
@@ -260,26 +251,11 @@ void Simulation::Render()
     drawBG(background[2], bgOffsetX, bgOffsetY, -0.2, renderer);
     drawBG(background[3], bgOffsetX, bgOffsetY, -0.28, renderer);
 
-    SDL_SetRenderTarget(renderer, renderCombat);
-        // Limpar textura
-        SDL_SetTextureBlendMode(renderCombat, SDL_BLENDMODE_BLEND);
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
-        SDL_RenderClear(renderer);
-
-        SDL_SetRenderDrawBlendMode(renderer, SDL_BlendMode::SDL_BLENDMODE_NONE);
-        SDL_SetTextureBlendMode(renderCombat, SDL_BLENDMODE_BLEND);
-
+    // Renderizar combate
+    glPushMatrix();
+        glTranslatef(-camera->getX(), -camera->getY(), 0);
         simulationWorld->render();
-    SDL_SetRenderTarget(renderer, 0);
-
-    // Renderizar imagem de combate na tela
-    SDL_Rect rect;
-    rect.x = -camera->getX();  rect.w = 2048;
-    rect.y = -camera->getY();  rect.h = 2048;
-
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    SDL_SetRenderDrawBlendMode(renderer, SDL_BlendMode::SDL_BLENDMODE_NONE);
-    SDL_RenderCopy( renderer, renderCombat, 0, &rect);
+    glPopMatrix();
 
     if(selectedUnit)
     {
