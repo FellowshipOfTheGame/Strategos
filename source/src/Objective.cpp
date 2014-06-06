@@ -47,7 +47,7 @@ void Objective::rectifyUnit(Army *ind)
             Tactic *tactic = units[i]->getTacticAt(j);
 
             if(tactic->getType() == TACTIC_ATTACK_COLLAB
-            || tactic->getType() == TACTIC_DEFENSE_COLAB
+            || tactic->getType() == TACTIC_DEFENSE_COLLAB
             || tactic->getType() == TACTIC_RETREAT)
             {
                 // If allyUnit is out of range, AttackCollab or DefenseCollab with the Mothership

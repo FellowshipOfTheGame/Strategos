@@ -95,7 +95,7 @@ Tactic* InitManager::generateRandomTactic( const Army* forArmy, int forUnitID )
                 while (randValue == forUnitID) randValue = rand()%forArmy->nUnits();
             return new AttackCollab(TacticInfo(forArmy->getUnitAtIndex(randValue)), tacticTrig);
 
-        case TACTIC_DEFENSE_COLAB:
+        case TACTIC_DEFENSE_COLLAB:
             randValue = rand()%forArmy->nUnits();
                 while (randValue == forUnitID) randValue = rand()%forArmy->nUnits();
             return new DefenseCollab(TacticInfo(forArmy->getUnitAtIndex(randValue)), tacticTrig);

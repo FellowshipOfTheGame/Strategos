@@ -245,7 +245,7 @@ std::string AttackCollab::printTactic()
 
 // ---
 DefenseCollab::DefenseCollab(const TacticInfo& Info, const TacticTrigger& trigger) :
-		Tactic(Info, trigger, TACTIC_DEFENSE_COLAB)
+		Tactic(Info, trigger, TACTIC_DEFENSE_COLLAB)
 {
 
 }

@@ -40,7 +40,7 @@ Tactic* Army::loadTactic(std::ifstream& file, const TacticTrigger& tacticTrigger
             break;
         }
 
-        case TACTIC_DEFENSE_COLAB:{
+        case TACTIC_DEFENSE_COLLAB:{
             int idOnVec;
             file >> idOnVec;
 

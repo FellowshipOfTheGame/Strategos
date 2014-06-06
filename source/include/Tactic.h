@@ -26,7 +26,7 @@
 #define TACTIC_ATTACK_NEAREST_ENEMY 0
 #define TACTIC_ATTACK_WEAKEST_ENEMY 1
 #define TACTIC_ATTACK_COLLAB        2
-#define TACTIC_DEFENSE_COLAB        3
+#define TACTIC_DEFENSE_COLLAB       3
 #define TACTIC_KAMIKASE             4
 #define TACTIC_RETREAT              5
 #define TACTIC_NUMBER               6
