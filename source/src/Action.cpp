@@ -171,8 +171,8 @@ Action* AttackAction::act()
         return nullptr;
     }
 
-    float dist = coord.distance(target->getPosition());
-    if ( dist < 5.0f )
+    float dist = coord.distance2(target->getPosition());
+    if ( dist < SPACIAL_UNIT_2*0.3 )
     {
         complete = 1;
 
@@ -244,8 +244,8 @@ Action* KamikazeAction::act()
         return 0;
     }
 
-    float dist = source->getPosition().distance(target->getPosition());
-    if ( dist < 15.0 )
+    float dist = source->getPosition().distance2(target->getPosition());
+    if ( dist < SPACIAL_UNIT_2*0.4 )
     {
     	double damage = source->getBaseStats().damage * distance/2.0;
         bool letal = target->takeDamage( damage );

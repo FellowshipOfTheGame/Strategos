@@ -36,12 +36,12 @@ void Coordinates::operator +=(const Coordinates& coord)
 
 float Coordinates::distance(const Coordinates& c) const
 {
-    return sqrt( pow((float)(x - c.x),2) + pow((float)(y - c.y),2) );
+    return sqrt( pow(x - c.x, 2) + pow(y - c.y, 2) );
 }
 
 float Coordinates::distance2(const Coordinates& c) const
 {
-    return pow((float)(x - c.x),2) + pow((float)(y - c.y),2);
+    return pow(x - c.x, 2) + pow(y - c.y, 2);
 }
 
 // tx, ty = target x, y

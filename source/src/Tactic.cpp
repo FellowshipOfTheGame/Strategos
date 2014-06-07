@@ -280,7 +280,7 @@ int DefenseCollab::validateTactic(std::list<Action*> &newActions, TacticValidati
 		{
 			const Coordinates& shipPos = iShip->getPosition();
 			Ship *nearestShip = nullptr;
-			float dist_ = 999999;
+			float dist_ = 999999.0f;
 
             // Verificar ships inimigas
 			for (unsigned int u = 0; u < enemyUnit->nShips(); ++u)
@@ -288,7 +288,7 @@ int DefenseCollab::validateTactic(std::list<Action*> &newActions, TacticValidati
 				Ship *eShip = enemyUnit->getShip(u);
 				if (!eShip->isAlive()) continue;
 
-                float d = shipPos.distance(eShip->getPosition());
+                float d = shipPos.distance2(eShip->getPosition());
                 if (d < dist_)
                 {
                     nearestShip = eShip;
@@ -298,7 +298,7 @@ int DefenseCollab::validateTactic(std::list<Action*> &newActions, TacticValidati
 
             if (nearestShip == nullptr) continue;
 
-            if (iShip->getStats().currentAtkCD == 0 && dist_ < iShip->getBaseStats().range)
+            if (iShip->getStats().currentAtkCD == 0 && dist_ < iShip->getBaseStats().range2)
             {
                 iShip->getStats().currentAtkCD = iShip->getBaseStats().maxAtkCD;
                 newActions.push_back(new AttackAction(iShip, nearestShip, tvd.validatingUnit->getUnitInfo(), enemyUnit->getUnitInfo()));
@@ -395,7 +395,7 @@ int Retreat::validateTactic(std::list<Action*> &newActions, TacticValidationData
         return 0;
 
     Coordinates motherAvrg = allied->getAveragePos();
-	if (tvd.validatingUnit->getAveragePos().distance(motherAvrg) > tvd.validatingUnit->getSquadBaseStats().range)
+	if (tvd.validatingUnit->getAveragePos().distance2(motherAvrg) > tvd.validatingUnit->getSquadBaseStats().range2)
 	{
         motherAvrg.x += (tvd.combatData.randomengine.nextInt()%300) - 150;
         motherAvrg.y += (tvd.combatData.randomengine.nextInt()%300) - 150;
@@ -416,7 +416,7 @@ int Retreat::validateTactic(std::list<Action*> &newActions, TacticValidationData
 
             Coordinates rndCoord((tvd.combatData.randomengine.nextInt()%64) - 32,
                                  (tvd.combatData.randomengine.nextInt()%64) - 32 );
-            newActions.push_back(new MoveAction(tvd.validatingUnit->getShip(i), motherAvrg + rndCoord));
+            newActions.push_back(new MoveAction(tvd.validatingUnit->getShip(i), motherAvrg + rndCoord, false));
         }
 	}
 
@@ -470,7 +470,7 @@ int MoveRandomly::validateTactic(std::list<Action*> &newActions, TacticValidatio
 
         Coordinates rndCoord((tvd.combatData.randomengine.nextInt()%64) - 32,
                              (tvd.combatData.randomengine.nextInt()%64) - 32 );
-        newActions.push_back(new MoveAction(tvd.validatingUnit->getShip(i), coordBase + rndCoord));
+        newActions.push_back(new MoveAction(tvd.validatingUnit->getShip(i), coordBase + rndCoord, false));
 	}
 
 	cooldown = (tvd.combatData.randomengine.nextUInt() % 90) + 30;

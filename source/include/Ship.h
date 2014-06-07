@@ -2,6 +2,7 @@
 #define _SHIP_H_
 
 #define SPACIAL_UNIT 32.0
+#define SPACIAL_UNIT_2 (SPACIAL_UNIT*SPACIAL_UNIT)
 
 #include "CombatLog.h"
 #include "Coordinates.h"
@@ -20,6 +21,8 @@ struct shipBaseStats
 	double shield;
 	double dodge;
 	double speed;
+
+	double range2; //!> range ao quadrado.
 };
 
 enum SHIP_MOVE{

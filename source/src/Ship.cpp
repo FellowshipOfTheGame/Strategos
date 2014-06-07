@@ -58,14 +58,14 @@ int Ship::update(RandomEngine& randE)
 
     // So dar uma nova coordenada quando 'terminar' o movimento atual
     // Evitar que as naves fiquem totalmente paradas
-    float distance = coord.distance(targetPos);
-    if (stats.isMoving == move_not_moving || distance <= 0.8*SPACIAL_UNIT)
+    float distance = coord.distance2(targetPos);
+    if (stats.isMoving == move_not_moving || distance <= 0.8*SPACIAL_UNIT_2)
     {
         targetPos.x = unitPos.x + normal_dist_ships(randE.randE);
         targetPos.y = unitPos.y + normal_dist_ships(randE.randE);
         stats.isMoving = move_flying;
 
-        distance = coord.distance(targetPos);
+        distance = coord.distance2(targetPos);
     }
 
     // Arrumar velocidade
@@ -81,7 +81,7 @@ int Ship::update(RandomEngine& randE)
     const float angularVelocity = 5.0 * M_PI/180.0; // rad/frame
     const int sign = directionTo( currentDirection, destDir );
 
-    if (distance > 0.8*SPACIAL_UNIT)
+    if (distance > 0.8*SPACIAL_UNIT_2)
     {
         float angledif = fabs(currentDirection - destDir);
         if (angledif > M_PI)

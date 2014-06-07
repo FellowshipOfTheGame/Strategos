@@ -176,6 +176,7 @@ DictKey* Dictionary::readAttribute(fstream &input, Resource &resource)
         {
             input >> key->stats.range;
             key->stats.range *= SPACIAL_UNIT;
+            key->stats.range2 = key->stats.range*key->stats.range;
         }
         else if(tag.compare("shield:") == 0)
         {
