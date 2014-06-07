@@ -46,6 +46,7 @@
 				<Compiler>
 					<Add option="-pg" />
 					<Add option="-g" />
+					<Add option="-D_SINGLE_THREAD_" />
 					<Add directory="source/include" />
 					<Add directory="include" />
 				</Compiler>
