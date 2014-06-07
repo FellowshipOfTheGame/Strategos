@@ -58,7 +58,7 @@ int Ship::update(RandomEngine& randE)
 
     // So dar uma nova coordenada quando 'terminar' o movimento atual
     // Evitar que as naves fiquem totalmente paradas
-    double distance = coord.distance(targetPos);
+    float distance = coord.distance(targetPos);
     if (stats.isMoving == move_not_moving || distance <= 0.8*SPACIAL_UNIT)
     {
         targetPos.x = unitPos.x + normal_dist_ships(randE.randE);
