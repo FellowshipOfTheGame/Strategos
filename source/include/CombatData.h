@@ -26,9 +26,10 @@ class CombatData
 
         int miss, total;
 
-        // [team0][team1]
-        float** distancesUnit;
-        int nUnits1, nUnits2;
+        float* distancesUnitAtoB; //!> [unitA*nUnitsB + unitB]
+//        float* distancesUnitAtoA;
+//        float* distancesUnitBtoB;
+        const int nUnits1, nUnits2;
 };
 
 

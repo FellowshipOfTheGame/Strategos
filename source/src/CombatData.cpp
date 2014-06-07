@@ -3,23 +3,17 @@
 CombatData::CombatData(int nU1, int nU2)
     : randomengine(1337), nUnits1(nU1), nUnits2(nU2)
 {
-    distancesUnit = new float*[nU1];
+    distancesUnitAtoB = new float[nUnits1*nUnits2];
 
-    for (int i = 0; i < nU1; ++i){
-        distancesUnit[i] = new float[nU2];
-
-        for (int j = 0; j < nU2; ++j)
-            distancesUnit[i][j] = -1;
-    }
+    for (int j = 0; j < nUnits1*nUnits2; ++j)
+        distancesUnitAtoB[j] = -1;
 
     total = miss = 0;
 }
 
 CombatData::~CombatData()
 {
-    for (int i = 0; i < nUnits1; ++i)
-        delete[] distancesUnit[i];
-    delete[] distancesUnit;
+    delete[] distancesUnitAtoB;
 }
 
 float CombatData::getUnitDistance(const Unit* a, const Unit* b)
@@ -43,12 +37,12 @@ float CombatData::getUnitDistance(const Unit* a, const Unit* b)
     }
 
     ++total;
-    if ( distancesUnit[x][y] < 0 ){
+    if ( distancesUnitAtoB[x*nUnits2 + y] < 0 ){
         ++miss;
-        return (distancesUnit[x][y] = a->getAveragePos().distance(b->getAveragePos()));
+        return (distancesUnitAtoB[x*nUnits2 + y] = a->getAveragePos().distance(b->getAveragePos()));
     }
 
-    return distancesUnit[x][y];
+    return distancesUnitAtoB[x*nUnits2 + y];
 }
 
 //float CombatData::getShipDistance(const Ship* a, const Ship* b)
@@ -101,10 +95,6 @@ void CombatData::ClearDistances()
 {
 //    printf("Total: %d, Miss: %d, TaxSuc: %.3f\n", total, miss, 1.0-miss/(float)total);
 //    total = miss = 0;
-    for (int i = 0; i < nUnits1; ++i)
-    {
-//        for (int j = 0; j < nUnits2; ++j)
-//            distancesUnit[i][j] = -1;
-        memset( distancesUnit[i], -5, nUnits2*sizeof(float) );
-    }
+    for (int j = 0; j < nUnits1*nUnits2; ++j)
+        distancesUnitAtoB[j] = -1;
 }
