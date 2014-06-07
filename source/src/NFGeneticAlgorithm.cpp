@@ -17,7 +17,7 @@ static std::mutex populationMutex;
 #define printTH(x...){ printMutex.lock(); printf(x); printMutex.unlock(); }
 
 const double mutation_chance = 50;
-const int num_geracoes = 10;
+const int num_geracoes = 32;
 
 #define INDIVIDUOS_GERACAO 8
 
@@ -86,16 +86,23 @@ void NFGeneticAlgorithm::PDFS(int start, int end, int *winner)
 {
     int mid = (start + end) / 2;
     int win1 = start, win2 = mid+1;
-    std::thread t;
 
-//    PDFS(start, mid, &win1);
+#ifdef _SINGLE_THREAD_
+    if (start != mid)
+        PDFS(start, mid, &win1);
+#else
+    std::thread t;
     if (start != mid)
         t = std::thread(&NFGeneticAlgorithm::PDFS, this, start, mid, &win1);
+#endif // _SINGLE_THREAD_
+
     if (mid+1 != end)
         PDFS(mid+1, end, &win2);
 
+#ifndef _SINGLE_THREAD_
     if (t.joinable())
         t.join();
+#endif // _SINGLE_THREAD_
 
     this->individuos[win1]->Lock();
         Army *armyA = Army::clone(this->individuos[win1]);
