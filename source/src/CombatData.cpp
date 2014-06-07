@@ -3,10 +3,10 @@
 CombatData::CombatData(int nU1, int nU2)
     : randomengine(1337), nUnits1(nU1), nUnits2(nU2)
 {
-    distancesUnit = new double*[nU1];
+    distancesUnit = new float*[nU1];
 
     for (int i = 0; i < nU1; ++i){
-        distancesUnit[i] = new double[nU2];
+        distancesUnit[i] = new float[nU2];
 
         for (int j = 0; j < nU2; ++j)
             distancesUnit[i][j] = -1;
@@ -22,7 +22,7 @@ CombatData::~CombatData()
     delete[] distancesUnit;
 }
 
-double CombatData::getUnitDistance(const Unit* a, const Unit* b)
+float CombatData::getUnitDistance(const Unit* a, const Unit* b)
 {
     int x = a->getTeam();
     int y = b->getTeam();
@@ -51,7 +51,7 @@ double CombatData::getUnitDistance(const Unit* a, const Unit* b)
     return distancesUnit[x][y];
 }
 
-//double CombatData::getShipDistance(const Ship* a, const Ship* b)
+//float CombatData::getShipDistance(const Ship* a, const Ship* b)
 //{
 //    p_ships s(a, b);
 //
@@ -64,7 +64,7 @@ double CombatData::getUnitDistance(const Unit* a, const Unit* b)
 //
 //    if (it == shipDistance.end())
 //    {
-//        double d = a->getPosition().distance(b->getPosition());
+//        float d = a->getPosition().distance(b->getPosition());
 //        shipDistance[s] = d;
 //        return d;
 //    }
@@ -72,7 +72,7 @@ double CombatData::getUnitDistance(const Unit* a, const Unit* b)
 //    return it->second;
 //}
 
-Unit* CombatData::getNearestUnit(const Unit* from, const std::vector<Unit*>& to, double &outDist)
+Unit* CombatData::getNearestUnit(const Unit* from, const std::vector<Unit*>& to, float &outDist)
 {
     Unit *nearestUnit = nullptr;
     outDist = 999999;
@@ -81,7 +81,7 @@ Unit* CombatData::getNearestUnit(const Unit* from, const std::vector<Unit*>& to,
 	{
 	    if (to[i]->getNShipsAlive() == 0) continue;
 
-        double dist = getUnitDistance(from, to[i]);
+        float dist = getUnitDistance(from, to[i]);
         if (dist < outDist)
         {
             outDist = dist;
@@ -99,12 +99,12 @@ Unit* CombatData::getNearestUnit(const Unit* from, const std::vector<Unit*>& to,
 
 void CombatData::ClearDistances()
 {
-//    printf("Total: %d, Miss: %d, TaxSuc: %.3lf\n", total, miss, 1.0-miss/(double)total);
+//    printf("Total: %d, Miss: %d, TaxSuc: %.3f\n", total, miss, 1.0-miss/(float)total);
 //    total = miss = 0;
     for (int i = 0; i < nUnits1; ++i)
     {
 //        for (int j = 0; j < nUnits2; ++j)
 //            distancesUnit[i][j] = -1;
-        memset( distancesUnit[i], -5, nUnits2*sizeof(double) );
+        memset( distancesUnit[i], -5, nUnits2*sizeof(float) );
     }
 }

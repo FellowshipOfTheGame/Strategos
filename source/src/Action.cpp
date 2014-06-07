@@ -120,7 +120,7 @@ MoveAction::MoveAction(Ship *Source, const Coordinates& Coord, bool GetNear)
 
     if (getNearTo)
     {
-        double dist = Coord.distance(source->getPosition());
+        float dist = Coord.distance(source->getPosition());
 
         if (dist >= source->getBaseStats().range)
         {
@@ -244,7 +244,7 @@ Action* KamikazeAction::act()
         return 0;
     }
 
-    double dist = source->getPosition().distance(target->getPosition());
+    float dist = source->getPosition().distance(target->getPosition());
     if ( dist < 15.0 )
     {
     	double damage = source->getBaseStats().damage * distance/2.0;

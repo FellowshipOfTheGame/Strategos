@@ -66,7 +66,7 @@ int AttackNearestEnemy::validateTactic(std::list<Action*> &newActions, TacticVal
 	int Ret = 0;
 
     // Encontrar unidade mais proxima
-    double minDist;
+    float minDist;
 	Unit *nearestUnit = tvd.combatData.getNearestUnit(tvd.validatingUnit, tvd.enemyUnits, minDist);
 	if (nearestUnit == nullptr) return 0;
 
@@ -127,7 +127,7 @@ int AttackWeakestEnemy::validateTactic(std::list<Action*> &newActions, TacticVal
 	    // Evitar selecionar uma unidade sem naves vivas
 		if (tvd.enemyUnits[i]->getNShipsAlive() == 0) continue;
 
-        double dist = tvd.combatData.getUnitDistance(tvd.validatingUnit, tvd.enemyUnits[i]);
+        float dist = tvd.combatData.getUnitDistance(tvd.validatingUnit, tvd.enemyUnits[i]);
         if (dist < tvd.validatingUnit->getSquadBaseStats().range)
         {
             // Verificar HP desta unidade
@@ -189,8 +189,8 @@ int AttackCollab::validateTactic(std::list<Action*> &newActions, TacticValidatio
 
 	tvd.validatingUnit->setTarget( enemyUnit );
 
-    double dist = tvd.combatData.getUnitDistance(tvd.validatingUnit, enemyUnit);
-//    double dist = tvd.validatingUnit->getAveragePos().distance(enemyUnit->getAveragePos());
+    float dist = tvd.combatData.getUnitDistance(tvd.validatingUnit, enemyUnit);
+//    float dist = tvd.validatingUnit->getAveragePos().distance(enemyUnit->getAveragePos());
 
     // Atacar se estiver ao alcance
     if (dist < tvd.validatingUnit->getUnitInfo()->stats.range)
@@ -280,7 +280,7 @@ int DefenseCollab::validateTactic(std::list<Action*> &newActions, TacticValidati
 		{
 			const Coordinates& shipPos = iShip->getPosition();
 			Ship *nearestShip = nullptr;
-			double dist_ = 999999;
+			float dist_ = 999999;
 
             // Verificar ships inimigas
 			for (unsigned int u = 0; u < enemyUnit->nShips(); ++u)
@@ -288,7 +288,7 @@ int DefenseCollab::validateTactic(std::list<Action*> &newActions, TacticValidati
 				Ship *eShip = enemyUnit->getShip(u);
 				if (!eShip->isAlive()) continue;
 
-                double d = shipPos.distance(eShip->getPosition());
+                float d = shipPos.distance(eShip->getPosition());
                 if (d < dist_)
                 {
                     nearestShip = eShip;
@@ -350,7 +350,7 @@ int Kamikase::validateTactic(std::list<Action*> &newActions, TacticValidationDat
 	int Ret = 0;
 
     // Encontrar unidade mais proxima
-    double minDist;
+    float minDist;
 	Unit *nearestUnit = tvd.combatData.getNearestUnit(tvd.validatingUnit, tvd.enemyUnits, minDist);
 	if (nearestUnit == nullptr) return 0;
 

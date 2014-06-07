@@ -36,18 +36,18 @@ void Coordinates::operator +=(const Coordinates& coord)
 
 float Coordinates::distance(const Coordinates& c) const
 {
-    return sqrt( pow((double)(x - c.x),2) + pow((double)(y - c.y),2) );
+    return sqrt( pow((float)(x - c.x),2) + pow((float)(y - c.y),2) );
 }
 
 float Coordinates::distance2(const Coordinates& c) const
 {
-    return pow((double)(x - c.x),2) + pow((double)(y - c.y),2);
+    return pow((float)(x - c.x),2) + pow((float)(y - c.y),2);
 }
 
 // tx, ty = target x, y
 float Coordinates::distance(int tx, int ty) const
 {
-    return sqrt( pow((double)(x - tx),2) + pow((double)(y - ty),2) );
+    return sqrt( pow((float)(x - tx),2) + pow((float)(y - ty),2) );
 }
 
 float Coordinates::angleTo(const Coordinates &other) const
