@@ -58,41 +58,56 @@ int View::createWindow(int width, int height, int bpp, Uint32 flags)
 		return -1;
 	}
 
-	SDL_Window *window = SDL_CreateWindow( "Strategos - SDL2",
-                                       SDL_WINDOWPOS_UNDEFINED,
-                                       SDL_WINDOWPOS_UNDEFINED,
-                                       width, height,
-                                    SDL_WINDOW_OPENGL|SDL_WINDOW_RESIZABLE );
+	SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 2 );
+    SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 1 );
+
+    //Create window
+	window = SDL_CreateWindow( "Strategos - SDL2",
+                                        SDL_WINDOWPOS_UNDEFINED,
+                                        SDL_WINDOWPOS_UNDEFINED,
+                                        width, height,
+                                        SDL_WINDOW_OPENGL|SDL_WINDOW_RESIZABLE|SDL_WINDOW_SHOWN );
+
+    if (window == nullptr)
+    {
+		fprintf(stderr, "Couldn't create the window - %d x %d x %d - %d\n", width, height, bpp, flags);
+		return -1;
+	}
 
     // Criar contexto
     glcontext = SDL_GL_CreateContext(window);
 
-    int oglIdx = -1;
-    int nRD = SDL_GetNumRenderDrivers();
-    for(int i=0; i<nRD; i++)
+    if (glcontext == nullptr)
     {
-        SDL_RendererInfo info;
-        if(!SDL_GetRenderDriverInfo(i, &info))
-        {
-            printf("DRIVER: %s\n", info.name);
-            if(!strcmp(info.name, "opengl"))
-            {
-                oglIdx = i;
-            }
-        }
+        fprintf(stderr, "Couldn't initialize GL context - %s\n", SDL_GetError());
+		return -1;
     }
 
-    renderer = SDL_CreateRenderer(window, oglIdx, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+//    int oglIdx = -1;
+//    int nRD = SDL_GetNumRenderDrivers();
+//    for(int i=0; i<nRD; i++)
+//    {
+//        SDL_RendererInfo info;
+//        if(!SDL_GetRenderDriverInfo(i, &info))
+//        {
+//            printf("DRIVER: %s\n", info.name);
+//            if(!strcmp(info.name, "opengl"))
+//            {
+//                oglIdx = i;
+//            }
+//        }
+//    }
+
+    //Use Vsync
+    if( SDL_GL_SetSwapInterval( 1 ) < 0 )
+    {
+        printf( "Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError() );
+    }
+
+//    renderer = SDL_CreateRenderer(window, oglIdx, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-    SDL_GL_SetSwapInterval(1);
 
     initOpenGL();
-
-	if (window == nullptr)
-	{
-		fprintf(stderr, "Couldn't create the window - %d x %d x %d - %d\n", width, height, bpp, flags);
-		return -1;
-	}
 
 	return 0;
 }

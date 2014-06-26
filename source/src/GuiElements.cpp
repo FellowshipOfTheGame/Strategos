@@ -139,6 +139,8 @@ void Button::setText(Font *font, const char *str, SDL_Color forecolor, SDL_Color
 	SDL_Texture* t = font->renderText( Game::getGlobalGame()->getRenderer(), text, forecolor );
     if (t){
         stringImg = new Image(t, 1, nullptr, 0, 0);
+    }else{
+        printf("WARNING: Failed to create Button Texture\n");
     }
 
 	this->forecolor = forecolor;
