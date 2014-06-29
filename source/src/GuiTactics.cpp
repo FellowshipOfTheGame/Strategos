@@ -762,7 +762,7 @@ INPUT_EVENT TacticList::input(SDL_Event &event)
 		}
 		return e;
 	}
-	else if (btn_up->hover())
+	if (btn_up->hover())
 	{
 		switch (btn_up->input(event))
 		{
@@ -865,7 +865,10 @@ INPUT_EVENT TacticList::input(SDL_Event &event)
 						}
 						else
 						{
-							selected->setSelected(false);
+							if (selected != nullptr)
+							{
+								selected->setSelected(false);
+							}
 							selected = lista[i];
 							selected->setSelected(true);
 							tct_set->setTactic(squad->getTacticAt(i), squad->getID());

@@ -303,7 +303,7 @@ void Unit_Setup::Logic()
 
     // mover as naves
 	Game::getGlobalGame()->getEditingArmy()->update(rnd);
-	list->update();
+
 
 }
 
@@ -317,7 +317,7 @@ void Unit_Setup::Render()
 
 	imgBackground->DrawImage(renderer);
 	drawGuiElements();
-
+	list->update();
 	list->draw();
 
 	if (squad_focus)
@@ -361,7 +361,6 @@ void Unit_Setup::Render()
 				Game::getGlobalGame()->getEditingArmy()->getUnitByID(i)->getAvgY() + blueprint->getY());
 		squad_number[i]->draw();
 	}
-	list->update();
 	//list->draw();
 }
 
