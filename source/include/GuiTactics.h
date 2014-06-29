@@ -190,6 +190,7 @@ public:
 	ItemList();
 	void setType(int i);
 	~ItemList();
+	void setSelected(bool selected);
 	void draw();
 	INPUT_EVENT input(SDL_Event &event);
 };
@@ -210,6 +211,7 @@ public:
 	~TacticList();
 	bool hover();
 	void setSquad(Unit *squad);
+	void update();
 
 	void draw();
 	INPUT_EVENT input(SDL_Event &event);

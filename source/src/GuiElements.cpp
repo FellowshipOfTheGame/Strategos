@@ -638,7 +638,12 @@ Label::~Label()
 {
     delete imgText;
 }
-
+void Label::setColor(SDL_Color clor)
+{
+	delete this->imgText;
+	color = clor;
+	imgText = new Image( font->renderText(Game::getGlobalGame()->getRenderer(), text.c_str(), color), 1, nullptr, 0, 0 );
+}
 void Label::draw()
 {
     imgTextShadow->DrawImage(Game::getGlobalGame()->getRenderer(), x+1, y+1);

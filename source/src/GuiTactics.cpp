@@ -75,38 +75,37 @@ int TacticSet::getType()
 
 Tactic* TacticSet::getTactic()
 {
-	return Tactic::copy(tactic);
 
-//	Tactic *temp;
-//	TacticInfo info(tactic->getInfo().allyUnitID);
-//	switch (cmb_choiser->getSelectedIndex())
-//	{
-//		case 0:
-//			temp = new AttackNearestEnemy(tactic);
-//			break;
-//		case 1:
-//			temp = new AttackWeakestEnemy(info, TacticTrigger::copy(*tactic->getTacticTrigger()));
-//			break;
-//		case 2:
-//			temp = new AttackCollab(info, TacticTrigger::copy(*tactic->getTacticTrigger()));
-//			break;
-//		case 3:
-//			temp = new DefenseCollab(info, TacticTrigger::copy(*tactic->getTacticTrigger()));
-//			break;
-//		case 4:
-//			temp = new Kamikase(info, TacticTrigger::copy(*tactic->getTacticTrigger()));
-//			break;
-//		case 5:
-//			temp = new Retreat(info, TacticTrigger::copy(*tactic->getTacticTrigger()));
-//			break;
-//		case 6:
-//			temp = new MoveRandomly(info, TacticTrigger::copy(*tactic->getTacticTrigger()));
-//			break;
-//		default:
-//			temp = nullptr;
-//			break;
-//	}
-//	return temp;
+	Tactic *temp;
+	TacticInfo info(tactic->getInfo().allyUnit);
+	switch (cmb_choiser->getSelectedIndex())
+	{
+		case 0:
+			temp = Tactic::copy(tactic);//new AttackNearestEnemy(tactic);
+			break;
+		case 1:
+			temp = new AttackWeakestEnemy(info, tactic->getTacticTrigger());
+			break;
+		case 2:
+			temp = new AttackCollab(info, tactic->getTacticTrigger());
+			break;
+		case 3:
+			temp = new DefenseCollab(info, tactic->getTacticTrigger());
+			break;
+		case 4:
+			temp = new Kamikase(info, tactic->getTacticTrigger());
+			break;
+		case 5:
+			temp = new Retreat(info, tactic->getTacticTrigger());
+			break;
+		case 6:
+			temp = new MoveRandomly(info, tactic->getTacticTrigger());
+			break;
+		default:
+			temp = nullptr;
+			break;
+	}
+	return temp;
 }
 void TacticSet::setTactic(Tactic *t, int id)
 {
@@ -161,6 +160,7 @@ INPUT_EVENT TacticSet::input(SDL_Event &event)
 		e = cmb_choiser->input(event);
 		if (cmb_choiser->getSelectedIndex() != tactic->getType())
 		{
+			printf ("cliquei na opcao %d", cmb_choiser->getSelectedIndex());
 			Tactic *temp = getTactic();
 			delete tactic;
 			setTactic(temp, unit_id);
@@ -611,58 +611,119 @@ void TacticList::setSquad(Unit *squad)
 	selected = nullptr;
 	if (squad != this->squad)
 	{
+		this->squad = squad;
+		if (this->squad == nullptr)
+			return;
+
+		std::vector<ItemList*>::iterator iter = lista.begin();
 		printf("removendo taticas antigas\n");
 		//remove elementos da antiga squad
-		std::vector<ItemList*>::iterator iter = lista.begin();
+		iter = lista.begin();
 		while (iter != lista.end())
 		{
-			delete *iter;
+			delete (*iter);
 			iter = lista.erase(iter);
 		}
-		this->squad = squad;
+		printf ("recriando lista - begin\n");
 		//coloca Top no topo
 		top = 0;
 		//adiciona taticas da nova squad na lista
-		if (squad)
+
+		unsigned int i = 0;
+		int tp = -1;
+		while (i < squad->getTacticSize())
 		{
-			unsigned int i = 0;
-			int tp = -1;
-			while (i < squad->getTacticSize())
+			if (dynamic_cast<AttackNearestEnemy*>(squad->getTacticAt(i)) != nullptr)
 			{
-				if (dynamic_cast<AttackNearestEnemy*>(squad->getTacticAt(i)) != nullptr)
-				{
-					tp = 0;
-				}
-				else if (dynamic_cast<AttackWeakestEnemy*>(squad->getTacticAt(i)) != nullptr)
-				{
-					tp = 1;
-				}
-				else if (dynamic_cast<AttackCollab*>(squad->getTacticAt(i)) != nullptr)
-				{
-					tp = 2;
-				}
-				else if (dynamic_cast<DefenseCollab*>(squad->getTacticAt(i)) != nullptr)
-				{
-					tp = 3;
-				}
-				else if (dynamic_cast<Kamikase*>(squad->getTacticAt(i)) != nullptr)
-				{
-					tp = 4;
-				}
-				else if (dynamic_cast<Retreat*>(squad->getTacticAt(i)) != nullptr)
-				{
-					tp = 5;
-				}
-				else if (dynamic_cast<MoveRandomly*>(squad->getTacticAt(i)) != nullptr)
-				{
-					tp = 6;
-				}
-				printf("tatica tipo %d\n", tp);
-				lista.push_back(new ItemList(tp));
-				i++;
+				tp = 0;
 			}
+			else if (dynamic_cast<AttackWeakestEnemy*>(squad->getTacticAt(i)) != nullptr)
+			{
+				tp = 1;
+			}
+			else if (dynamic_cast<AttackCollab*>(squad->getTacticAt(i)) != nullptr)
+			{
+				tp = 2;
+			}
+			else if (dynamic_cast<DefenseCollab*>(squad->getTacticAt(i)) != nullptr)
+			{
+				tp = 3;
+			}
+			else if (dynamic_cast<Kamikase*>(squad->getTacticAt(i)) != nullptr)
+			{
+				tp = 4;
+			}
+			else if (dynamic_cast<Retreat*>(squad->getTacticAt(i)) != nullptr)
+			{
+				tp = 5;
+			}
+			else if (dynamic_cast<MoveRandomly*>(squad->getTacticAt(i)) != nullptr)
+			{
+				tp = 6;
+			}
+			printf("tatica tipo %d\n", tp);
+			lista.push_back(new ItemList(tp));
+			i++;
 		}
+
+		printf ("recriando lista - end\n");
 	}
+}
+
+void TacticList::update()
+{
+	if (this->squad == nullptr)
+		return;
+	if (this->selected == nullptr)
+		return;
+	printf ("update - begin\n");
+	//encontra o interador da opcao selecionada
+	std::vector<ItemList*>::iterator iter = lista.begin();
+	while (iter != lista.end())
+	{
+		if ((*iter) == selected)
+			break;
+		iter++;
+	}
+	//encontra o indice desta opcao
+	int index = distance(lista.begin(), iter);
+
+	//adiciona taticas da nova squad na lista
+	if (squad)
+	{
+		int tp = -1;
+
+		if (dynamic_cast<AttackNearestEnemy*>(squad->getTacticAt(index)) != nullptr)
+		{
+			tp = 0;
+		}
+		else if (dynamic_cast<AttackWeakestEnemy*>(squad->getTacticAt(index)) != nullptr)
+		{
+			tp = 1;
+		}
+		else if (dynamic_cast<AttackCollab*>(squad->getTacticAt(index)) != nullptr)
+		{
+			tp = 2;
+		}
+		else if (dynamic_cast<DefenseCollab*>(squad->getTacticAt(index)) != nullptr)
+		{
+			tp = 3;
+		}
+		else if (dynamic_cast<Kamikase*>(squad->getTacticAt(index)) != nullptr)
+		{
+			tp = 4;
+		}
+		else if (dynamic_cast<Retreat*>(squad->getTacticAt(index)) != nullptr)
+		{
+			tp = 5;
+		}
+		else if (dynamic_cast<MoveRandomly*>(squad->getTacticAt(index)) != nullptr)
+		{
+			tp = 6;
+		}
+		selected->setType(tp);
+	}
+	printf ("update - end\n");
 }
 
 bool TacticList::hover()
@@ -734,11 +795,8 @@ INPUT_EVENT TacticList::input(SDL_Event &event)
 		{
 
 			case MOUSE_RELEASED_EVENT:
-				printf("itemlitst\n");
 				lista.push_back(new ItemList());
-				printf("nova tactica\n");
 				squad->addTactic(new AttackNearestEnemy(info, TacticTrigger(new Trigger_Always(), new Trigger_Always(), 0)));
-				printf("\tselecionado\n");
 				//selected = *(lista.end());
 				return MOUSE_RELEASED_EVENT;
 
@@ -792,7 +850,6 @@ INPUT_EVENT TacticList::input(SDL_Event &event)
 		{
 			if (lista[i]->hover())
 			{
-				printf("cliquei em itemlist\n");
 				switch (event.type)
 				{
 					case SDL_MOUSEBUTTONUP:
@@ -802,12 +859,15 @@ INPUT_EVENT TacticList::input(SDL_Event &event)
 						}
 						if (selected == lista[i])
 						{
+							selected->setSelected(false);
 							selected = nullptr;
 							this->height -= tct_set->getHeight();
 						}
 						else
 						{
+							selected->setSelected(false);
 							selected = lista[i];
+							selected->setSelected(true);
 							tct_set->setTactic(squad->getTacticAt(i), squad->getID());
 						}
 						return MOUSE_RELEASED_EVENT;
@@ -885,6 +945,15 @@ ItemList::~ItemList()
 void ItemList::draw()
 {
 	this->Label::draw();
+}
+
+void ItemList::setSelected(bool selected)
+{
+    SDL_Color cor;
+    cor = ColorRGB8::Green;
+    if (selected)
+    	cor = ColorRGB8::Red;
+	this->setColor(cor);
 }
 
 INPUT_EVENT ItemList::input(SDL_Event &event)
