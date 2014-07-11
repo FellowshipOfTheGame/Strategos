@@ -195,14 +195,9 @@ Army* Game::getArmy1() const
 
 void Game::setArmy1(const std::string& str)
 {
-	if (armySim1 != nullptr)
-		delete armySim1;
-	armySim1 = Army::loadArmy(str);
+    Army *loaded = Army::loadArmy(str);
 
-	if (log1)
-        delete log1;
-
-    log1 = new CombatLog(armySim1->nUnits());
+    setArmy1(loaded);
 }
 
 void Game::setArmy1(Army *a)
@@ -222,7 +217,6 @@ void Game::setArmy1(Army *a)
 		delete armySim1;
 	armySim1 = a;
 
-
 	if (log1)
         delete log1;
 
@@ -236,14 +230,9 @@ Army* Game::getArmy2() const
 
 void Game::setArmy2(const std::string& str)
 {
-	if (armySim2 != nullptr)
-		delete armySim2;
-	armySim2  = Army::loadArmy(str);
+	Army *loaded = Army::loadArmy(str);
 
-	if (log2)
-        delete log2;
-
-    log2 = new CombatLog(armySim2->nUnits());
+	setArmy2( loaded );
 }
 
 void Game::setArmy2(Army *a)
