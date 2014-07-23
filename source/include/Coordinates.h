@@ -21,12 +21,24 @@ class Coordinates
         void operator +=(const Coordinates& coord);
 
         // Distancia ao quadrado [Nao efetua sqrt]
-        float distance2(const Coordinates& c) const;
+        inline float distance2(const Coordinates& c) const{
+            const float A = x - c.x;
+            const float B = y - c.y;
+            return A*A + B*B;
+        }
 
-        float distance(const Coordinates& c) const;
+        inline float distance(const Coordinates& c) const{
+            const float A = x - c.x;
+            const float B = y - c.y;
+            return sqrtf( A*A + B*B );
+        }
 
         // tx, ty = target x, y
-        float distance(int tx, int ty) const;
+        inline float distance(int tx, int ty) const{
+            const float A = x - tx;
+            const float B = y - ty;
+            return sqrtf( A*A + B*B );
+        }
 
         float angleTo(const Coordinates &other) const;
 };

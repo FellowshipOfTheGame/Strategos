@@ -34,22 +34,6 @@ void Coordinates::operator +=(const Coordinates& coord)
     y += coord.y;
 }
 
-float Coordinates::distance(const Coordinates& c) const
-{
-    return sqrt( pow(x - c.x, 2) + pow(y - c.y, 2) );
-}
-
-float Coordinates::distance2(const Coordinates& c) const
-{
-    return pow(x - c.x, 2) + pow(y - c.y, 2);
-}
-
-// tx, ty = target x, y
-float Coordinates::distance(int tx, int ty) const
-{
-    return sqrt( pow((float)(x - tx),2) + pow((float)(y - ty),2) );
-}
-
 float Coordinates::angleTo(const Coordinates &other) const
 {
     return atan2(y - other.y, other.x - x);
