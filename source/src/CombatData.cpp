@@ -39,7 +39,7 @@ float CombatData::getUnitDistance(const Unit* a, const Unit* b)
     ++total;
     if ( distancesUnitAtoB[x*nUnits2 + y] < 0 ){
         ++miss;
-        return (distancesUnitAtoB[x*nUnits2 + y] = a->getAveragePos().distance(b->getAveragePos()));
+        return (distancesUnitAtoB[x*nUnits2 + y] = a->getAveragePos().distance2(b->getAveragePos()));
     }
 
     return distancesUnitAtoB[x*nUnits2 + y];

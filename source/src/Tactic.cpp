@@ -72,7 +72,7 @@ int AttackNearestEnemy::validateTactic(std::list<Action*> &newActions, TacticVal
 
     tvd.validatingUnit->setTarget( nearestUnit );
 
-	if (minDist < tvd.validatingUnit->getSquadBaseStats().range)
+	if (minDist < tvd.validatingUnit->getSquadBaseStats().range2)
 	{
 		for (unsigned int i = 0; i < tvd.validatingUnit->nShips(); ++i)
 		{
@@ -128,7 +128,7 @@ int AttackWeakestEnemy::validateTactic(std::list<Action*> &newActions, TacticVal
 		if (tvd.enemyUnits[i]->getNShipsAlive() == 0) continue;
 
         float dist = tvd.combatData.getUnitDistance(tvd.validatingUnit, tvd.enemyUnits[i]);
-        if (dist < tvd.validatingUnit->getSquadBaseStats().range)
+        if (dist < tvd.validatingUnit->getSquadBaseStats().range2)
         {
             // Verificar HP desta unidade
             float sumHP = tvd.enemyUnits[i]->getHPsum();
@@ -193,7 +193,7 @@ int AttackCollab::validateTactic(std::list<Action*> &newActions, TacticValidatio
 //    float dist = tvd.validatingUnit->getAveragePos().distance(enemyUnit->getAveragePos());
 
     // Atacar se estiver ao alcance
-    if (dist < tvd.validatingUnit->getUnitInfo()->stats.range)
+    if (dist < tvd.validatingUnit->getUnitInfo()->stats.range2)
     {
         for (unsigned int i = 0; i < tvd.validatingUnit->nShips(); ++i)
 		{
@@ -356,7 +356,7 @@ int Kamikase::validateTactic(std::list<Action*> &newActions, TacticValidationDat
 
     tvd.validatingUnit->setTarget( nearestUnit );
 
-	if (minDist < tvd.validatingUnit->getSquadBaseStats().range)
+	if (minDist < tvd.validatingUnit->getSquadBaseStats().range2)
 	{
 		for (unsigned int i = 0; i < tvd.validatingUnit->nShips(); ++i)
 		{
