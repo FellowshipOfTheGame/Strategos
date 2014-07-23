@@ -20,16 +20,21 @@ static int _N_ACTIONS_ = 0;
 static int _N_ACTIONS_EXPLOSION_ = 0;
 static int _N_ACTIONS_DMG_ = 0;
 static int _N_ACTIONS_MOVE_ = 0;
+static int _N_ACTIONS_ATTACK_ = 0;
+static int _N_ACTIONS_KAMIKAZE_ = 0;
 
 void printNActions(){
-    printf("TOTAL Actions: %d\n", _N_ACTIONS_);
+    printf("\nTOTAL Actions: %d\n", _N_ACTIONS_);
     printf("TOTAL Explosions: %d\n", _N_ACTIONS_EXPLOSION_);
     printf("TOTAL Damage: %d\n", _N_ACTIONS_DMG_);
+    printf("TOTAL Attack: %d\n", _N_ACTIONS_ATTACK_);
+    printf("TOTAL Kamikaze: %d\n", _N_ACTIONS_KAMIKAZE_);
     printf("TOTAL Move: %d\n", _N_ACTIONS_MOVE_);
-    _N_ACTIONS_ = 0;
-    _N_ACTIONS_EXPLOSION_ = 0;
-    _N_ACTIONS_DMG_ = 0;
-    _N_ACTIONS_MOVE_ = 0;
+//    _N_ACTIONS_ = 0;
+//    _N_ACTIONS_EXPLOSION_ = 0;
+//    _N_ACTIONS_ATTACK_ = 0;
+//    _N_ACTIONS_DMG_ = 0;
+//    _N_ACTIONS_MOVE_ = 0;
 }
 
 Action::Action()
@@ -160,6 +165,7 @@ AttackAction::AttackAction(Ship *Source, Ship *Target, const DictKey *srcInfo, c
         source(Source), target(Target),
         coord(Source->getPosition()), shootEffect(srcInfo->shootGFX)
 {
+    ++_N_ACTIONS_ATTACK_;
 }
 
 Action* AttackAction::act()
@@ -232,6 +238,7 @@ KamikazeAction::KamikazeAction(Ship *Source, Ship *Target, Image *imgShoot)
     :   source(Source), target(Target), coord(Source->getPosition()),
         distance(0), explosionEffect(imgShoot)
 {
+    ++_N_ACTIONS_KAMIKAZE_;
 }
 
 Action* KamikazeAction::act()

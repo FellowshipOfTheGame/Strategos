@@ -4,7 +4,6 @@
 #include "Global.h"
 #include "Game.h"
 #include "GuiElements.h"
-#include "Ship.h"
 
 #include "SDL2_gfx/SDL2_gfxPrimitives.h"
 
