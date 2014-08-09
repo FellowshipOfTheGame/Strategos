@@ -11,6 +11,7 @@ class MutationManager
 		void mutate(Army *ind, int degree);
 		void mutateUnitType(Army* ind, int unitID, int newType);
 		void mutateTactic(Tactic *tactic, int degree);
+
 	public:
 		MutationManager();
 		virtual ~MutationManager();

@@ -42,7 +42,7 @@ class GeneticAlgorithm : public Algorithm
         }
 
     protected:
-        virtual void addInitialArmy(Army *army);
+        void addInitialArmy(Army *army) override;
 
     private:
         std::vector<Army*> individuos;
@@ -67,8 +67,8 @@ class GeneticAlgorithm : public Algorithm
 
         void repair(std::vector<Army *> selected);
 
-        virtual Army* higherFitnessArmy();
-        virtual std::vector<Army*>& getSelectedArmies();
+        Army* higherFitnessArmy() override;
+        std::vector<Army*>& getSelectedArmies() override;
 
         InitManager *init;
         CrossoverManager *crossover;

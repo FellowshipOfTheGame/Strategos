@@ -13,6 +13,7 @@ class InitManager
 
 		static Tactic* generateRandomTactic( const Army* forArmy, int forUnitID );
 		static Trigger* generateRandomTrigger();
+
 	private:
 		int armyType;
 };
