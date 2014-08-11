@@ -35,7 +35,7 @@ public:
     Create_Army(STATE previous);
     ~Create_Army();
 
-    void onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keysym key, Uint8 button);
+    void onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keysym key, Uint8 button) override;
     void Logic();
     void Render();
     void Clean();

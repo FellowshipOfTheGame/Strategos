@@ -41,12 +41,12 @@ class Simulation : public StateMachine
         Simulation(STATE previous);
         ~Simulation();
 
-        void onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keysym key, Uint8 button);
-        void onKeyDownEvent(SDL_Keysym key);
-        void onKeyUpEvent(SDL_Keysym key);
-        void onKeyHeldEvent(const Uint8 *keystate);
-        void onMouseDownEvent(Uint8 button);
-        void onMouseUpEvent(Uint8 button);
+        void onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keysym key, Uint8 button) override;
+        void onKeyDownEvent(SDL_Keysym key) override;
+        void onKeyUpEvent(SDL_Keysym key) override;
+        void onKeyHeldEvent(const Uint8 *keystate) override;
+        void onMouseDownEvent(Uint8 button) override;
+        void onMouseUpEvent(Uint8 button) override;
         void Logic();
         void Render();
         void Clean();

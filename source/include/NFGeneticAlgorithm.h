@@ -19,13 +19,14 @@ class NFGeneticAlgorithm : public Algorithm
     public:
         NFGeneticAlgorithm(int _armyType);
         ~NFGeneticAlgorithm();
+
         void run() override;
 
         void selection();
         void randomArmies(int size);
 
     protected:
-        virtual void addInitialArmy(Army *army);
+        void addInitialArmy(Army *army) override;
 
     private:
         std::vector<Army*> individuos;
@@ -35,8 +36,8 @@ class NFGeneticAlgorithm : public Algorithm
 
         void repair(std::vector<Army *>& selected);
 
-        virtual Army* higherFitnessArmy();
-        virtual std::vector<Army*>& getSelectedArmies();
+        Army* higherFitnessArmy() override;
+        std::vector<Army*>& getSelectedArmies() override;
 
         InitManager *init;
         CrossoverManager *crossover;

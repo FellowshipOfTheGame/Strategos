@@ -27,7 +27,7 @@ class Result : public StateMachine
         Result(STATE previous);
         ~Result();
 
-        void onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keysym key, Uint8 button);
+        void onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keysym key, Uint8 button) override;
         void Logic();
         void Render();
         void Clean();
