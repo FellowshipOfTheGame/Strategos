@@ -3,12 +3,6 @@
 #include "Unit.h"
 #include "InitManager.h"
 
-#define MUTATION_UNIT_TYPE      0
-#define MUTATION_UNIT_TACTIC    1
-#define MUTATION_UNIT_POSITION  2
-#define MUTATION_ADD_UNIT       3
-#define MUTATION_TOTAL          4
-
 // 4 tipos, 0 sendo a nave mae
 #define RANDOM_UNIT (rand()%3 +1)
 
@@ -23,10 +17,10 @@ MutationManager::~MutationManager()
 }
 
 void MutationManager::mutate(Army *ind){
-	mutate(ind, rand()%MUTATION_TOTAL);
+	mutate(ind, static_cast<ARMY_MUTATION_KIND>(rand()%ARMY_MUTATION_KIND::AMK_UNIT_TOTAL));
 }
 
-void MutationManager::mutate(Army *ind, int degree)
+void MutationManager::mutate(Army *ind, ARMY_MUTATION_KIND degree)
 {
 	int unitID = rand()%ind->nUnits();
     Unit *unit = ind->getUnitAtIndex(unitID);
@@ -38,21 +32,20 @@ void MutationManager::mutate(Army *ind, int degree)
 
     switch(degree)
     {
-        case MUTATION_UNIT_TYPE:{ //Mutate a unit type
+        case AMK_UNIT_TYPE:
             // Pode causar inconsistencia nas taticas [rectify no final dessa funcao arruma]
             mutateUnitType(ind, unitID, newType);
-        }
         break;
 
-        case MUTATION_UNIT_TACTIC: //Mutate a unit tactic
-            mutateTactic(tactic, rand()%4);
+        case AMK_UNIT_TACTIC:
+            mutateTactic(tactic, static_cast<TACTIC_MUTATION_KIND>(rand()%TMK_MUTATION_TOTAL) );
         break;
 
-        case MUTATION_UNIT_POSITION: //Mutate a unit position
+        case AMK_UNIT_POSITION:
             unit->setBluePrintCoord( Coordinates(rand()%TEAM_AREA_WIDTH, rand()%TEAM_AREA_HEIGHT ) );
         break;
 
-        case MUTATION_ADD_UNIT:
+        case AMK_UNIT_INSERT_NEW:
         {
             int ntactics = rand()%6+1;
             unit = ind->createUnit(RANDOM_UNIT, Coordinates(rand()%TEAM_AREA_WIDTH, rand()%TEAM_AREA_HEIGHT));
@@ -95,7 +88,7 @@ void MutationManager::mutateUnitType(Army* ind, int unitID, int newType)
 //  -> Trigger value
 //  -> Trigger relational operator
 //  -> Triggers logic operator
-void MutationManager::mutateTactic(Tactic *tactic, int degree)
+void MutationManager::mutateTactic(Tactic *tactic, TACTIC_MUTATION_KIND degree)
 {
     int newValue;
     int whichTrigger = rand()%2;
@@ -103,7 +96,7 @@ void MutationManager::mutateTactic(Tactic *tactic, int degree)
 
     switch (degree)
     {
-        case 0: //  -> Trigger type
+        case TMK_TRIGGER_TYPE:
         {
             if (whichTrigger == 0){
                 triggerValue = tactic->getTacticTrigger().getTriggerA()->getValue();
@@ -134,7 +127,7 @@ void MutationManager::mutateTactic(Tactic *tactic, int degree)
         }
         break;
 
-        case 1: //  -> Trigger value
+        case TMK_TRIGGER_VALUE:
             newValue = rand()%100+1;
 
             if(whichTrigger == 0)
@@ -143,7 +136,7 @@ void MutationManager::mutateTactic(Tactic *tactic, int degree)
                 tactic->getTacticTrigger().getTriggerB()->setValue(newValue);
         break;
 
-        case 2: //  -> Trigger relational operator
+        case TMK_TRIGGER_REL_OP:
             newValue = rand()%TRIGGER_OPERATION_TOTAL;
             if(whichTrigger == 0)
                 tactic->getTacticTrigger().getTriggerA()->setRelOperator(newValue);
@@ -151,7 +144,7 @@ void MutationManager::mutateTactic(Tactic *tactic, int degree)
                 tactic->getTacticTrigger().getTriggerB()->setRelOperator(newValue);
         break;
 
-        case 3: //  -> Triggers logic operator
+        case TMK_TRIGGER_LOGIC_OP:
             newValue = rand()%TRIGGER_LOGIC_TOTAL;
             tactic->getTacticTrigger().setLogicOperator(newValue);
         break;
