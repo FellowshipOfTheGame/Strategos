@@ -630,15 +630,21 @@ Label::Label(std::string Text, Font *font, SDL_Color color, SDL_Color shadow, st
 	this->shown = true;
 	this->active = true;
 
-	imgText = new Image( font->renderText(Game::getGlobalGame()->getRenderer(), text.c_str(), color), 1, nullptr, 0, 0 );
-	imgTextShadow = new Image( font->renderText(Game::getGlobalGame()->getRenderer(), text.c_str(), shadow), 1, nullptr, 0, 0 );
+	this->imgText = new Image( font->renderText(Game::getGlobalGame()->getRenderer(), text.c_str(), color), 1, nullptr, 0, 0 );
+	this->imgTextShadow = new Image( font->renderText(Game::getGlobalGame()->getRenderer(), text.c_str(), shadow), 1, nullptr, 0, 0 );
 }
 
 Label::~Label()
 {
     delete imgText;
 }
-
+void Label::setColor(SDL_Color clor)
+{
+	delete this->imgText;
+	this->color = clor;
+	imgText = new Image( font->renderText(Game::getGlobalGame()->getRenderer(), text.c_str(), color), 1, nullptr, 0, 0 );
+	this->imgTextShadow = new Image( font->renderText(Game::getGlobalGame()->getRenderer(), text.c_str(), shadow), 1, nullptr, 0, 0 );
+}
 void Label::draw()
 {
     imgTextShadow->DrawImage(Game::getGlobalGame()->getRenderer(), x+1, y+1);

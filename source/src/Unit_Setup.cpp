@@ -145,10 +145,7 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
 		{
 			case MOUSE_RELEASED_EVENT:
 				setNext(CREATE_ARMY);
-				break;
-
-			default:
-				break;
+				return;
 		}
 	}
 	else if (element == btn_Next)
@@ -158,10 +155,7 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
 			case MOUSE_RELEASED_EVENT:
 				Army::saveArmy(Game::getGlobalGame()->getEditingArmy());
 				setNext(MENU);
-				break;
-
-			default:
-				break;
+				return;
 		}
 	}
 	else if (element == btn_Del)
@@ -174,10 +168,7 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
 					Game::getGlobalGame()->getEditingArmy()->removeUnit(squad_focus->getID());
 					squad_focus = nullptr;
 				}
-				break;
-
-			default:
-				break;
+				return;
 		}
 	}
 	else if (element == btn_Move)
@@ -189,10 +180,7 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
 					{
 						move_squad = true;
 					}
-					break;
-
-				default:
-					break;
+					return;
 			}
 		}
 	else if ((element == bx1) && (!move_squad))
@@ -202,10 +190,7 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
 			case MOUSE_RELEASED_EVENT:
 				//put_squad = !put_squad;
 				//squad_type = 0;
-				break;
-
-			default:
-				break;
+				return;
 		}
 	}
 	else if ((element == bx2)&& (!move_squad))
@@ -215,10 +200,7 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
 			case MOUSE_RELEASED_EVENT:
 				put_squad = !put_squad;
 				squad_type = 1;
-				break;
-
-			default:
-				break;
+				return;
 		}
 	}
 	else if ((element == bx3)&& (!move_squad))
@@ -228,10 +210,7 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
 			case MOUSE_RELEASED_EVENT:
 				put_squad = !put_squad;
 				squad_type = 2;
-				break;
-
-			default:
-				break;
+				return;
 		}
 	}
 	else if ((element == bx4)&& (!move_squad))
@@ -241,10 +220,7 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
 			case MOUSE_RELEASED_EVENT:
 				put_squad = !put_squad;
 				squad_type = 3;
-				break;
-
-			default:
-				break;
+				return;
 		}
 	}
 	else if ((element == blueprint) && (put_squad)) // Adicionar uma unidade
@@ -256,19 +232,21 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
             {
             	if (squad_type != 0)
             	{
-                Army *editingArmy = Game::getGlobalGame()->getEditingArmy();
+                    Army *editingArmy = Game::getGlobalGame()->getEditingArmy();
 
-                editingArmy->createUnit(squad_type, new Coordinates(mouseX - blueprint->getX(), mouseY - blueprint->getY()));
+                    editingArmy->createUnit(squad_type, new Coordinates(mouseX - blueprint->getX(), mouseY - blueprint->getY()));
 
-                squad_focus = editingArmy->getUnitAtIndex(editingArmy->nUnits() - 1);
-                squad_type = 0;
-                sprintf(str, "%d\n", editingArmy->nUnits());
-                squad_number.push_back(
-                        new Label(str, Game::getGlobalGame()->getResourceMNGR()->GetFont("jostix-14"),
-                                  ColorRGB8::Green, ColorRGB8::White, "LB02"));
-                squad_number[(squad_number.size() - 1)]->setPosition(squad_focus->getAvgX() + blueprint->getX(),
-                                                                     squad_focus->getAvgY() + blueprint->getY());
-                list->setSquad(squad_focus);
+                    squad_focus = editingArmy->getUnitAtIndex(editingArmy->nUnits() - 1);
+                    squad_type = 0;
+                    sprintf(str, "%d", editingArmy->nUnits());
+                    squad_number.push_back(
+                            new Label(str, Game::getGlobalGame()->getResourceMNGR()->GetFont("jostix-14"),
+                                      ColorRGB8::Green, ColorRGB8::White, "LB02"));
+                    squad_number[(squad_number.size() - 1)]->setPosition(squad_focus->getAvgX() + blueprint->getX(),
+                                                                         squad_focus->getAvgY() + blueprint->getY());
+                    printf ("1 - begin\n");
+                    list->setSquad(squad_focus);
+                    printf ("1 - end\n");
             	}
             	put_squad = false;
             }
@@ -280,6 +258,7 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
                 put_squad = !put_squad;
                 move_squad = !move_squad;
             }
+            return;
         }
 	}
 	else
@@ -306,8 +285,10 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
                             put_squad = true;
                         }
                     }
-                    list->setSquad(squad_focus);
-                    break;
+                    printf ("2 - begin\n");
+				   list->setSquad(squad_focus);
+				   printf ("2 - end\n");
+                   return;
                 }
             }
 		}
@@ -322,6 +303,8 @@ void Unit_Setup::Logic()
 
     // mover as naves
 	Game::getGlobalGame()->getEditingArmy()->update(rnd);
+
+
 }
 
 void Unit_Setup::Render()
@@ -334,7 +317,7 @@ void Unit_Setup::Render()
 
 	imgBackground->DrawImage(renderer);
 	drawGuiElements();
-
+	list->update();
 	list->draw();
 
 	if (squad_focus)

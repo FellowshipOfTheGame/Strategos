@@ -111,7 +111,6 @@ public:
 
                 if (newEvent != NO_EVENT) // Nao ocorre evento quando recebe NO_EVENT (valor 0)
                 {
-                    printf("input()");
                     //Quando necessario chamamos a funcao que indica que um evento ocorreu
                     onInputEvent(guiElements[i], newEvent, event.key.keysym, event.button.button);
                 }

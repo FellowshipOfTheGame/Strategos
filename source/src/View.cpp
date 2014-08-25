@@ -47,6 +47,7 @@ SDL_Texture* View::getRendererFrameBuffer(){
 int View::createWindow(int width, int height, int bpp, Uint32 flags)
 {
     this->bpp = bpp;
+
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
 	{
 		fprintf(stderr, "Couldn't initialize SDL - %s\n", SDL_GetError());

@@ -221,6 +221,7 @@ class Label : public cGuiElement
 
         //virtual void update();
         virtual void draw();
+        void setColor(SDL_Color color);
         virtual INPUT_EVENT input(SDL_Event &event);
 
         void setText(std::string str);
