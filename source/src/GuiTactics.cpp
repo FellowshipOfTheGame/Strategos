@@ -393,7 +393,7 @@ TacticCD::TacticCD(int x, int y, int id, std::string GID) :
 
 	char str[5];
 	const std::vector<Unit*>& unt = Game::getGlobalGame()->getEditingArmy()->getUnits();
-	for (unsigned int i = 0; i < unt.size(); i++)
+	for (size_t i = 0; i < unt.size(); i++)
 	{
 		if (id != unt[i]->getID())
         {

@@ -15,10 +15,6 @@
 Play::Play(STATE previous) :
 		StateMachine(previous, GAMEPLAY, GAMEPLAY)
 {
-	int scrWidth = Game::getGlobalGame()->getWidth();
-	int scrHeight = Game::getGlobalGame()->getHeight();
-	Font *fntEthnocentric;
-
 	Resource *resource = Game::getGlobalGame()->getResourceMNGR();
 
 	resource->AddImage("assets/ui.gfx", "bg_engaging");
@@ -28,7 +24,7 @@ Play::Play(STATE previous) :
 
 	imgBackground = resource->GetImage("bg_engaging");
 
-	fntEthnocentric = resource->GetFont("jostix-14");
+	Font *fntEthnocentric = resource->GetFont("jostix-14");
 	lbTitle = new Label("Choose your Destiny!!", fntEthnocentric, ColorRGB8::Red, ColorRGB8::White, "LB_TITLE");
 	lbTitle->setPosition(350, 20);
 	addGuiElement(lbTitle);

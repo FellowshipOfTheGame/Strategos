@@ -146,6 +146,9 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
 			case MOUSE_RELEASED_EVENT:
 				setNext(CREATE_ARMY);
 				return;
+
+            default:
+                break;
 		}
 	}
 	else if (element == btn_Next)
@@ -156,6 +159,9 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
 				Army::saveArmy(Game::getGlobalGame()->getEditingArmy());
 				setNext(MENU);
 				return;
+
+            default:
+                break;
 		}
 	}
 	else if (element == btn_Del)
@@ -169,6 +175,9 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
 					squad_focus = nullptr;
 				}
 				return;
+
+            default:
+                break;
 		}
 	}
 	else if (element == btn_Move)
@@ -181,6 +190,9 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
 						move_squad = true;
 					}
 					return;
+
+                default:
+                break;
 			}
 		}
 	else if ((element == bx1) && (!move_squad))
@@ -191,6 +203,9 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
 				//put_squad = !put_squad;
 				//squad_type = 0;
 				return;
+
+            default:
+                break;
 		}
 	}
 	else if ((element == bx2)&& (!move_squad))
@@ -201,6 +216,9 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
 				put_squad = !put_squad;
 				squad_type = 1;
 				return;
+
+            default:
+                break;
 		}
 	}
 	else if ((element == bx3)&& (!move_squad))
@@ -211,6 +229,9 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
 				put_squad = !put_squad;
 				squad_type = 2;
 				return;
+
+            default:
+                break;
 		}
 	}
 	else if ((element == bx4)&& (!move_squad))
@@ -221,6 +242,9 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
 				put_squad = !put_squad;
 				squad_type = 3;
 				return;
+
+            default:
+                break;
 		}
 	}
 	else if ((element == blueprint) && (put_squad)) // Adicionar uma unidade
