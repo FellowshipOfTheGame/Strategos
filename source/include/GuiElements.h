@@ -22,73 +22,73 @@ typedef enum {
 
 class cGuiElement
 {
-protected:
-	int x;
-	int y;
-	int width;
-	int height;
-	bool shown;
-	bool enabled;
-	bool active;
-	std::string GID;     //GID = Global Identifier ... ID que identifica univocamente cada componente grafico instanciado
+    protected:
+        int x;
+        int y;
+        int width;
+        int height;
+        bool shown;
+        bool enabled;
+        bool active;
+        std::string GID;     //GID = Global Identifier ... ID que identifica univocamente cada componente grafico instanciado
 
-public:
-	cGuiElement()
-    {
-        height = width = 0;
-        x=y= 0;
-		shown = enabled = active = 1;
-    }
+    public:
+        cGuiElement()
+        {
+            height = width = 0;
+            x=y= 0;
+            shown = enabled = active = 1;
+        }
 
-    virtual ~cGuiElement(){}
+        virtual ~cGuiElement(){}
 
-	virtual void update(){}
-	virtual void draw(){}
+        virtual void update(){}
+        virtual void draw(){}
 
-	virtual bool hover(int mouseX, int mouseY)
-	{
-		if( (mouseX > x && mouseX < x+width) && (mouseY > y && mouseY < y+height) )
-		{
-			return true;
-		}
+        virtual bool hover(int mouseX, int mouseY)
+        {
+            if( (mouseX > x && mouseX < x+width) && (mouseY > y && mouseY < y+height) )
+            {
+                return true;
+            }
 
-		return false;
-	}
+            return false;
+        }
 
-    // TENTAR NAO UTILIZAR MAIS ESTE MODO!
-    virtual bool hover()
-	{
-		int mouseX, mouseY;
+        // TENTAR NAO UTILIZAR MAIS ESTE MODO!
+        virtual bool hover()
+        {
+            int mouseX, mouseY;
 
-		SDL_GetMouseState(&mouseX, &mouseY);
+            SDL_GetMouseState(&mouseX, &mouseY);
 
-		if( (mouseX > x && mouseX < x+width) && (mouseY > y && mouseY < y+height) )
-		{
-			return true;
-		}
+            if( (mouseX > x && mouseX < x+width) && (mouseY > y && mouseY < y+height) )
+            {
+                return true;
+            }
 
-		return false;
-	}
+            return false;
+        }
 
-	//SETTERS / GETTERS
-	virtual void setVisible(bool state) { shown = state; }
-	virtual bool isVisible() { return shown; }
-	virtual void setEnabled(bool state) { enabled = state; }
-	virtual bool isEnabled() { return enabled; }
-	virtual void setActive(bool state) { active = state; }
-	virtual bool isActive() { return active; }
-	virtual void setPosition(int x, int y)
-	{
-		this->x = x;
-		this->y = y;
-	}
-	virtual int getX() { return x; }
-	virtual int getY() { return y; }
-	virtual int getWidth() { return width; }
-	virtual int getHeight() { return height; }
+        //SETTERS / GETTERS
+        virtual void setVisible(bool state) { shown = state; }
+        virtual bool isVisible() { return shown; }
+        virtual void setEnabled(bool state) { enabled = state; }
+        virtual bool isEnabled() { return enabled; }
+        virtual void setActive(bool state) { active = state; }
+        virtual bool isActive() { return active; }
+        virtual void setPosition(int x, int y)
+        {
+            this->x = x;
+            this->y = y;
+        }
+        virtual int getX() { return x; }
+        virtual int getY() { return y; }
+        virtual int getWidth() { return width; }
+        virtual int getHeight() { return height; }
 
-	//Manipula eventos necessarios
-	virtual INPUT_EVENT input(SDL_Event &event){return NO_EVENT;}
+        //Manipula eventos necessarios
+        virtual INPUT_EVENT input(SDL_Event &event){return NO_EVENT;}
 };
 
 
@@ -118,90 +118,90 @@ class Button : public cGuiElement
 
 class Box : public cGuiElement
 {
-protected:
-	const Image *border;
-	const Image *background;
+    protected:
+        const Image *border;
+        const Image *background;
 
-public:
-	Box(int x, int y, int width, int height, const Image *background, const Image *border, std::string GID);
-	virtual ~Box();
+    public:
+        Box(int x, int y, int width, int height, const Image *background, const Image *border, std::string GID);
+        virtual ~Box();
 
-	virtual void update();
-	virtual void draw();
-	virtual INPUT_EVENT input(SDL_Event &event);
+        virtual void update();
+        virtual void draw();
+        virtual INPUT_EVENT input(SDL_Event &event);
 };
 
 class ImageBox : public Box
 {
-private:
-	int frame;
+    private:
+        int frame;
 
-public:
-	ImageBox(int x, int y, int width, int height, const Image *background, int frame, const Image *border, std::string GID);
-	virtual ~ImageBox();
+    public:
+        ImageBox(int x, int y, int width, int height, const Image *background, int frame, const Image *border, std::string GID);
+        virtual ~ImageBox();
 
-	virtual void update();
-	virtual void draw();
-	virtual INPUT_EVENT input(SDL_Event &event);
+        virtual void update();
+        virtual void draw();
+        virtual INPUT_EVENT input(SDL_Event &event);
 };
 
 class TextField : public cGuiElement
 {
-private:
-	std::string text;
-	Image* imgText;
-	unsigned int maxLength;
-	bool caps;
+    private:
+        std::string text;
+        Image* imgText;
+        unsigned int maxLength;
+        bool caps;
 
-	Font *font;
-	const Image *border;
-	SDL_Color background;
+        Font *font;
+        const Image *border;
+        SDL_Color background;
 
-public:
-	TextField(int x, int y, int width, int height, const Image *border, SDL_Color background, std::string GID);
-	virtual ~TextField();
+    public:
+        TextField(int x, int y, int width, int height, const Image *border, SDL_Color background, std::string GID);
+        virtual ~TextField();
 
-	virtual void update();
-	virtual void draw();
-	virtual INPUT_EVENT input(SDL_Event &event);
-	void setText(std::string str);
-	std::string getText();
-	void enterLetter(char letter);
-	void setFont(Font *font);
-	void setCaps(bool caps);
+        virtual void update();
+        virtual void draw();
+        virtual INPUT_EVENT input(SDL_Event &event);
+        void setText(std::string str);
+        std::string getText();
+        void enterLetter(char letter);
+        void setFont(Font *font);
+        void setCaps(bool caps);
 };
 
 class ComboBox : public cGuiElement
 {
-private:
-	std::vector<std::string> list;
-	std::vector<Image*> listImg;
-	int selected;
-	bool drop, opened;
+    private:
+        std::vector<std::string> list;
+        std::vector<Image*> listImg;
+        int selected;
+        bool drop, opened;
 
-	const Image *border;
-	Font *font;
-	int cell_height;
-	SDL_Color color;
-	SDL_Color shadow;
-	unsigned int lenght;
+        const Image *border;
+        Font *font;
+        int cell_height;
+        SDL_Color color;
+        SDL_Color shadow;
+        unsigned int lenght;
 
-public:
-	ComboBox(int x, int y, int width, int height, const Image *border, SDL_Color fontColor, SDL_Color fontShadow,std::string GID);
-	//ComboBox(int x, int y, int width, int height, Image *border, string GID);
-	virtual ~ComboBox();
+    public:
+        ComboBox(int x, int y, int width, int height, const Image *border, SDL_Color fontColor, SDL_Color fontShadow,std::string GID);
+        //ComboBox(int x, int y, int width, int height, Image *border, string GID);
+        virtual ~ComboBox();
 
-	virtual void update();
-	virtual void draw();
-	virtual INPUT_EVENT input(SDL_Event &event);
+        virtual void update();
+        virtual void draw();
+        virtual INPUT_EVENT input(SDL_Event &event);
 
-	void setFont(Font *font);
-	void addText(std::string str);
-	std::string getText();
-	void removeText(int n);
-	int getSelectedIndex();
-	void setSelectedIndex(int i);
-	void setSelected(std::string str);
+        void setFont(Font *font);
+        void addText(std::string str);
+        std::string getText();
+        void removeText(int n);
+        int getSelectedIndex();
+        void setSelectedIndex(int i);
+        void setSelected(std::string str);
 };
 
 class Label : public cGuiElement
@@ -229,31 +229,31 @@ class Label : public cGuiElement
 
 class StatusBox : public cGuiElement
 {
-private:
-	Box *bxBounds;
-	const Image *background;
+    private:
+        Box *bxBounds;
+        const Image *background;
 
-	Label *lbName;
-	Label *lbHP;
-	Label *lbDamage;
-	Label *lbSpeed;
-	Label *lbShield;
-	Label *lbDodge;
-	Label *lbRange;
-	Label *lbDescr;
+        Label *lbName;
+        Label *lbHP;
+        Label *lbDamage;
+        Label *lbSpeed;
+        Label *lbShield;
+        Label *lbDodge;
+        Label *lbRange;
+        Label *lbDescr;
 
-	//DictKey *key;
-	//vector<Label*> *lbDescr;
-	std::string GID;
+        //DictKey *key;
+        //vector<Label*> *lbDescr;
+        std::string GID;
 
-public:
-	StatusBox(int x, int y, const Image *imgBack, const Image *imgBorder, std::string GID);
-	virtual ~StatusBox();
+    public:
+        StatusBox(int x, int y, const Image *imgBack, const Image *imgBorder, std::string GID);
+        virtual ~StatusBox();
 
-	virtual void update(){}
-	void update(int x, int y, const DictKey *key);
-	virtual void draw();
-	virtual INPUT_EVENT input(SDL_Event &event);
+        virtual void update(){}
+        void update(int x, int y, const DictKey *key);
+        virtual void draw();
+        virtual INPUT_EVENT input(SDL_Event &event);
 };
 
 
