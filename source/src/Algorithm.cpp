@@ -1,9 +1,11 @@
 #include "Algorithm.h"
 
-#ifdef _UNIX_
+#if defined(_UNIX_) || defined(__APPLE_CC__)
     #include <sys/types.h>
     #include <sys/stat.h>
 #endif // _UNIX_
+
+
 
 #include <dirent.h>
 
@@ -75,7 +77,7 @@ void createDir(const std::string& dir)
 {
     int error = 0;
     printf("Creating dir: %s\n", dir.c_str());
-    #ifdef _UNIX_
+    #if defined(_UNIX_) || defined (__APPLE_CC__)
         error = mkdir(dir.c_str(), S_IRWXU | S_IRWXG | S_IRUSR | S_IWUSR | S_IROTH | S_IWOTH | S_IXOTH );
     #else
         error = mkdir(dir.c_str());
