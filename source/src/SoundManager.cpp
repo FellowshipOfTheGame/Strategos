@@ -1,4 +1,4 @@
-#include "SoundManager.hpp"
+#include "SoundManager.h"
 
 #include "Game.h"
 

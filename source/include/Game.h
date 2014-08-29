@@ -18,7 +18,7 @@
 #include "Dictionary.h"
 #include "Algorithm.h"
 #include "CombatLog.h"
-#include "SoundManager.hpp"
+#include "SoundManager.h"
 
 #define CONFIG_FILE  "setup.cfg"
 
