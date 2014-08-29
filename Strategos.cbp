@@ -71,6 +71,7 @@
 			<Add directory="$(SDL_HOME)/include/SDL2" />
 			<Add directory="$(SDL_IMAGE_HOME)/include/SDL2" />
 			<Add directory="$(SDL_TTF_HOME)/include/SDL2" />
+			<Add directory="$(SDL_MIXER_HOME)/include/SDL2" />
 		</Compiler>
 		<Linker>
 			<Add library="mingw32" />
@@ -78,6 +79,8 @@
 			<Add library="SDL2" />
 			<Add library="SDL2_TTF" />
 			<Add library="SDL2_IMAGE" />
+			<Add library="SDL2_MIXER" />
+			<Add directory="$(SDL_MIXER_HOME)/lib" />
 		</Linker>
 		<Unit filename="source/SDL2_gfx/SDL2_framerate.c">
 			<Option compilerVar="CC" />
@@ -160,6 +163,7 @@
 		<Unit filename="source/include/Simulation.h">
 			<Option virtualFolder="Telas/" />
 		</Unit>
+		<Unit filename="source/include/SoundManager.h" />
 		<Unit filename="source/include/StateMachine.h">
 			<Option virtualFolder="Telas/" />
 		</Unit>
@@ -238,6 +242,7 @@
 		<Unit filename="source/src/Simulation.cpp">
 			<Option virtualFolder="Telas/" />
 		</Unit>
+		<Unit filename="source/src/SoundManager.cpp" />
 		<Unit filename="source/src/Tactic.cpp">
 			<Option virtualFolder="Simulacao/" />
 		</Unit>
