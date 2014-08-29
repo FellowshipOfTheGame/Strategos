@@ -12,8 +12,8 @@
 
 #include <cmath>
 #include <iostream>
-#include <SDL/SDL.h>
-#include <SDL/SDL_mixer.h>
+#include <SDL.h>
+#include <SDL_mixer.h>
 
 #define DEFAULT_CHUNKSIZE 1024
 #define DEFAULT_FADEIN_TIME 100
