@@ -1,5 +1,6 @@
 
 #include <vector>
+#include <cassert>
 
 #include "Global.h"
 #include "Game.h"

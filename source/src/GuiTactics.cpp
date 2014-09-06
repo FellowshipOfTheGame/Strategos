@@ -136,12 +136,12 @@ void TacticSet::setTactic(Tactic *t, int id)
 	}
 	else if (dynamic_cast<Retreat*>(t))
 	{
-		cmb_choiser->setSelectedIndex(4);
+		cmb_choiser->setSelectedIndex(5);
 		convert_RT(id);
 	}
 	else if (dynamic_cast<MoveRandomly*>(t))
 	{
-		cmb_choiser->setSelectedIndex(5);
+		cmb_choiser->setSelectedIndex(6);
 		convert_RM();
 	}
 	else
