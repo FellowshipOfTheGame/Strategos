@@ -107,8 +107,8 @@ Army* Army::loadArmy(const string& armyname)
 	path.append(SAVE_EXT);
 	Dictionary *workingDict;
 	string tag, name, dictName;
-	int unitType, isPlayer;
-	float fitness;
+	int unitType = 0, isPlayer = 0;
+	float fitness = 0.0;
 
 	Coordinates position;
 
@@ -366,7 +366,7 @@ Unit *Army::createUnit(int unitType, Coordinates position)
         return nullptr;
 
 	const DictKey *unitInfo = dictionary->getInfoFor(unitType);
-	Unit *unit = new Unit(units.size(), unitInfo, position);
+	Unit *unit = new Unit((int)units.size(), unitInfo, position);
 
 	addUnit(unit);
 
@@ -442,7 +442,7 @@ vector<Unit*>* Army::getUnitsReference()
 
 unsigned int Army::nUnits() const
 {
-	return units.size();
+	return (unsigned int)units.size();
 }
 
 const std::string& Army::getName() const

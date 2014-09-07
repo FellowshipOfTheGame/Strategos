@@ -27,6 +27,8 @@ class World
         std::vector<Army*> armies;
 
         CombatData combatData;
+        CombatLog* army1Log;
+        CombatLog* army2Log;
         TacticValidationData tvdForArmy1;
         TacticValidationData tvdForArmy2;
 
@@ -37,9 +39,6 @@ class World
 
         // Gera vetor de Actions para cada Army
         void calcActions();
-
-        CombatLog* army1Log;
-        CombatLog* army2Log;
 
     public:
         World(Army *army1, Army *army2, CombatLog *log1, CombatLog *log2);

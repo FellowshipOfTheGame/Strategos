@@ -17,7 +17,7 @@ static std::mutex populationMutex;
 #define printTH(x...){ printMutex.lock(); printf(x); printMutex.unlock(); }
 
 const double mutation_chance = 50;
-const int num_geracoes = 32;
+const int num_geracoes = 16;
 
 #define INDIVIDUOS_GERACAO 8
 
@@ -135,14 +135,14 @@ void NFGeneticAlgorithm::PDFS(int start, int end, int *winner)
 
 void NFGeneticAlgorithm::run()
 {
-    int lastElite = -1;
-    srand(time(nullptr));
+    //int lastElite = -1; unused
+    srand((unsigned)time(nullptr));
 
     for (unsigned int i = 0; i < num_geracoes; i++)
     {
         printf("GENERATION %d\n", i);
         // Completar exercito para INDIVIDUOS_GERACAO
-        randomArmies( INDIVIDUOS_GERACAO - individuos.size());
+        randomArmies( INDIVIDUOS_GERACAO - (int)individuos.size());
         repair(individuos);
 
         int elite;

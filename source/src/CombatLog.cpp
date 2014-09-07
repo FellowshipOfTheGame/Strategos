@@ -75,7 +75,7 @@ void CombatRound::print() const
 {
 	printf ("imprimindo combat round\n \t");
 	LogMap::const_iterator iter = log.begin();
-	printf("LoggedTimes: %d\n", log.size());
+	printf("LoggedTimes: %lu\n", log.size());
 	while (iter != log.end())
 	{
 		printf ("[%d, %.1lf, %.1lf, %d, %d] ", iter->first, iter->second.damageReceived,

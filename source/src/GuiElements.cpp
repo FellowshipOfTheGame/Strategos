@@ -116,7 +116,7 @@ void Button::draw()
 	//Render the text on the ?Middle?
 	if (font != nullptr)
 	{
-		posX = x + width / 2 - (strlen(text) * font->getPtSize()) / 2;
+		posX = x + width / 2 - (int)(strlen(text) * font->getPtSize()) / 2;
 		posY += frameHeight / 4;
 
         stringImg->DrawImage(Game::getGlobalGame()->getRenderer(), posX, posY );
@@ -502,7 +502,7 @@ INPUT_EVENT ComboBox::input(SDL_Event &event)
 					{
 						selected--;
 					}
-					printf("selected %d %u %s\n", selected, list.size(), list[selected].c_str());
+					printf("selected %d %lu %s\n", selected, list.size(), list[selected].c_str());
 
 					this->height = cell_height;
 					opened = false;
@@ -510,7 +510,7 @@ INPUT_EVENT ComboBox::input(SDL_Event &event)
 				else
 				{
 					opened = true;
-					this->height = (cell_height) * (list.size()+1);
+					this->height = (cell_height) * (int)(list.size()+1);
 				}
 				//curFrame = back->getBaseFrames()*IMG_BUTTON_MOUSE_OVER;
 				return MOUSE_RELEASED_EVENT;
@@ -534,7 +534,7 @@ void ComboBox::draw()
 	{
 		if (hover() && opened)
 		{
-			this->height = ((cell_height) * (list.size() + 1));
+			this->height = ((cell_height) * (int)(list.size() + 1));
 
 			// Renderizar fundo
 			if (border != nullptr){
@@ -550,7 +550,7 @@ void ComboBox::draw()
                 rect.x = x;
                 rect.y = y;
                 rect.w = lenght*font->getPtSize();
-                rect.h = cell_height*(list.size()+1) + 1;
+                rect.h = cell_height * (int)(list.size()+1) + 1;
                 SDL_RenderFillRect(renderer, &rect);
             }
 
@@ -592,7 +592,7 @@ void ComboBox::update()
 void ComboBox::addText(std::string str)
 {
 	if (str.size() > lenght)
-		lenght = str.size() + 2;
+		lenght = (int)str.size() + 2;
 	this->list.push_back(str);
 
 	Image *t = new Image(font->renderText(Game::getGlobalGame()->getRenderer(), str.c_str(), color), 1, nullptr, 0, 0);
