@@ -18,6 +18,7 @@
 #include "Dictionary.h"
 #include "Algorithm.h"
 #include "CombatLog.h"
+#include "SoundManager.h"
 
 #define CONFIG_FILE  "setup.cfg"
 
@@ -74,6 +75,8 @@ class Game
 
 	private:
 	    static Game *globalGame;
+
+	    SoundManager *sndMngr;
 
 		std::fstream cfgFile;
 		Resource resources;
