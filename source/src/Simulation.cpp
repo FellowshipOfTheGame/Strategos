@@ -106,12 +106,14 @@ void Simulation::onKeyDownEvent(SDL_Keysym key)
         case SDLK_KP_PLUS:
         case SDLK_PLUS:
         case SDLK_PAGEUP:
+        case SDLK_RIGHTBRACKET:
             ++simulationSpeed;
         break;
 
         case SDLK_KP_MINUS:
         case SDLK_MINUS:
         case SDLK_PAGEDOWN:
+        case SDLK_LEFTBRACKET:
             if (simulationSpeed > 0)
                 --simulationSpeed;
         break;
