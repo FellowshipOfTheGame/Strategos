@@ -1,5 +1,7 @@
 #include <cassert>
-#include <SoundManager.hpp>
+
+#include "SoundManager.h"
+#include "Game.h"
 
 #define PI 3.14159265
 #define RELDIST(a, b) ( (a > b) ? (a - b) : (b - a) ) //Calcula a distancia em uma dimensão
@@ -11,7 +13,9 @@
 #define REMOVE
 #endif
 
-SoundManager::SoundManager(int frequency, Uint16 format, int superchannels, int chunksize) { 
+SoundManager* SoundManager::smg = nullptr;
+
+SoundManager::SoundManager(int frequency, Uint16 format, int superchannels, int chunksize) {
 	if ( SoundManager::smg == NULL ) {
 		init(frequency, format, superchannels, chunksize);
 		SoundManager::smg = this;
@@ -174,8 +178,8 @@ int SoundManager::getAngle(int xC, int yC, int x2, int y2){
 }
 
 int SoundManager::getDistance(int xL, int yL, int x2, int y2){
-    const SDL_VideoInfo *info = SDL_GetVideoInfo();
-    double maxAudibleDist = DISTANCE(info->current_w/2, info->current_h/2, info->current_h, info->current_w);
+    const Game* g = Game::getGlobalGame();
+    double maxAudibleDist = DISTANCE(g->getWidth()/2, g->getHeight()/2, g->getHeight(), g->getWidth());
     int distance = (int)(127.0 * DISTANCE(xL, yL, x2, y2)/maxAudibleDist);
 
     if ( distance < 1 )    distance = 1;
@@ -184,5 +188,3 @@ int SoundManager::getDistance(int xL, int yL, int x2, int y2){
 
     return distance;
 }
-
-SoundManager SoundManager::smg = NULL;

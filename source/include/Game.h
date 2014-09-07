@@ -76,8 +76,6 @@ class Game
 	private:
 	    static Game *globalGame;
 
-	    SoundManager *sndMngr;
-
 		std::fstream cfgFile;
 		Resource resources;
 		View *view;

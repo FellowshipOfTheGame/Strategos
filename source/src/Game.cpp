@@ -31,8 +31,6 @@ Game::Game()
 	view = new View();
 	view->createWindow(screenWidth, screenHeight, screenBPP, 0); // SDL_DOUBLEBUF | SDL_HWSURFACE
 
-	sndMngr = new SoundManager();
-
 	run = true;
 	editingArmy = nullptr;
 
@@ -70,7 +68,6 @@ Game::~Game()
 
 	globalGame = 0;
 
-	delete sndMngr;
 	delete view;
 }
 
