@@ -60,19 +60,26 @@ void Algorithm::createNeededDirectory()
     std::string dirpath = "assets/saves/";
 
     dir = opendir(dirpath.c_str());
-        if (!dir) createDir(dirpath);
-    closedir(dir);
+        if (!dir)
+            createDir(dirpath);
+        else
+            closedir(dir);
 
     dirpath += "GA/";
     dir = opendir(dirpath.c_str());
-        if (!dir) createDir(dirpath);
-    closedir(dir);
+        if (!dir)
+            createDir(dirpath);
+        else
+            closedir(dir);
 
     dirpath += std::to_string(armyType)+"/";
     dir = opendir(dirpath.c_str());
-        if (!dir) createDir(dirpath);
-    closedir(dir);
+        if (!dir)
+            createDir(dirpath);
+        else
+            closedir(dir);
 }
+
 void createDir(const std::string& dir)
 {
     int error = 0;
