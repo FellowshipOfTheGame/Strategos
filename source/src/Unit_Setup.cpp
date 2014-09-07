@@ -79,6 +79,7 @@ Unit_Setup::Unit_Setup(STATE previous) :
 	char str[5];
 
     Army *editingArmy = game->getEditingArmy();
+    editingArmy->setIsPlayer();
 	printf("Army Squads: %d\n", editingArmy->nUnits());
 	if (editingArmy->nUnits() < 1)
 	{

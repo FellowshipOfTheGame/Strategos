@@ -211,12 +211,18 @@ void Simulation::Logic()
             switch (simulationSTATE)
             {
                 case _SIM_ARMY0_WIN_:
-                    Game::getGlobalGame()->winner = Game::getGlobalGame()->getArmy1()->getIsPlayer() == 1;
+                    if (Game::getGlobalGame()->getArmy1()->getIsPlayer() == 1){
+                        Game::getGlobalGame()->updateAI();
+                        Game::getGlobalGame()->winner = 1;
+                    }
                     printf("Army 1 venceu\n");
                 break;
 
                 case _SIM_ARMY1_WIN_:
-                    Game::getGlobalGame()->winner = Game::getGlobalGame()->getArmy2()->getIsPlayer() == 1;
+                    if (Game::getGlobalGame()->getArmy2()->getIsPlayer() == 1){
+                        Game::getGlobalGame()->updateAI();
+                        Game::getGlobalGame()->winner = 1;
+                    }
                     printf("Army 2 venceu\n");
                 break;
 

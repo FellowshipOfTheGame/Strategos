@@ -48,7 +48,7 @@ Game::Game()
     for (int i = 0; i < 1; ++i) // TODO: Alterar para 3 na versao final 1 apenas para agilizar debugs
     {
         algorithm[i]->initialize();
-        algorithm[i]->run();
+        //algorithm[i]->run();
     }
     printf("GA time: %lfs\n", (clock()-time) / (double)CLOCKS_PER_SEC);
 }
@@ -271,4 +271,12 @@ CombatLog* Game::getCombatLog(int i)
         return log1;
 
 	return log2;
+}
+
+void Game::updateAI()
+{
+    for (int i = 0; i < 1; ++i) // TODO: Alterar para 3 na versao final 1 apenas para agilizar debugs
+    {
+        algorithm[i]->run();
+    }
 }

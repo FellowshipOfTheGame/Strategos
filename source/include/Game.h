@@ -66,6 +66,8 @@ class Game
 
         Algorithm **getAlgorithm();
 
+        void updateAI();
+
 		CombatLog* getCombatLog(int i);
 
 		SDL_Renderer *getRenderer();
