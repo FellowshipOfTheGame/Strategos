@@ -78,7 +78,7 @@ struct shipCurrentStats
 class Ship
 {
     private:
-        int owner;
+        //int owner;
         int status;
         float currentDirection;
 

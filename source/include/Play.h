@@ -23,12 +23,12 @@ private:
     ComboBox *cbSelect1;
     ComboBox *cbSelect2;
     ComboBox *cbPlayer1;
-    ComboBox *cbCPU1;
+    //ComboBox *cbCPU1;
     ComboBox *cbPlayer2;
-    ComboBox *cbCPU2;
+    //ComboBox *cbCPU2;
 
-    TextField *tfPlayer1;
-    TextField *tfPlayer2;
+    //TextField *tfPlayer1;
+    //TextField *tfPlayer2;
 
 public:
     Play(STATE previous);

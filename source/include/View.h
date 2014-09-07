@@ -27,7 +27,7 @@ class View
         StateMachine *gameState;
 
         int bpp;
-        Uint32 flag;
+        //Uint32 flag;
 
         SDL_Rect screenArea;
 

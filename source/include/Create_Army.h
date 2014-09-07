@@ -21,9 +21,12 @@ private:
     const Image *imgBackground;
     Button *btn_Back, *btn_Next, *btn_Load;
 
-    Label *lbl_ArmyName, *lbl_GenName, *lbl_Descr, *lbl_Title;
+    Label *lbl_ArmyName, *lbl_Descr, *lbl_Title;
+    //Label *lbl_GenName;
 
-    TextField *txt_ArmyName, *txt_GenName;
+    TextField *txt_ArmyName;
+    //TextField *txt_GenName;
+    
     ComboBox *cmb_species, *cmb_armys;
 
     StatusBox *st_box;

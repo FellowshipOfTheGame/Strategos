@@ -22,7 +22,7 @@ class Simulation : public StateMachine
         int simulationSpeed; // 0 = paused
 
         const Image *background[4];
-        Image *humanShips;
+        //Image *humanShips;
 
         World *simulationWorld;
         Unit *selectedUnit;

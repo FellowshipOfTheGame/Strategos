@@ -167,8 +167,7 @@ void MoveAction::render()
 }
 
 AttackAction::AttackAction(Ship *Source, Ship *Target)
-    : frame(0), source(Source), target(Target), shootEffect(nullptr),
-        coord(Source->getPosition())
+    : frame(0), shootEffect(nullptr), source(Source), target(Target), coord(Source->getPosition())
 {
     ++_N_ACTIONS_ATTACK_;
 

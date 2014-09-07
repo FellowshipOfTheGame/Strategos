@@ -22,7 +22,7 @@ int directionTo(float fromRad, float toRad)
 
 Ship::Ship(const shipBaseStats &initialStats, const Coordinates& Coord, CombatRound* log, const shipEffects* ship_effects)
     : baseStats(initialStats), stats(initialStats),
-      coord(Coord), unitPos(Coord), targetPos(Coord), myLog(log), shipeffects(ship_effects)
+      shipeffects(ship_effects), coord(Coord), unitPos(Coord), targetPos(Coord), myLog(log)
 {
     currentDirection = M_PI/2;
 

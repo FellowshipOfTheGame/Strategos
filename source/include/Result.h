@@ -37,7 +37,7 @@ class Result : public StateMachine
         Button *btn_Next;
         Label* legendaDD, *legendaDR, *legendaK, *legendaD;
 
-        Label *alive,*dead;
+        //Label *alive,*dead;
         CombatLog *original_log1, *original_log2;
 
         int graphSteps;

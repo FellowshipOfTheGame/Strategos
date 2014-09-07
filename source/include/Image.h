@@ -51,7 +51,7 @@ class Image
     private:
         SDL_Texture *picture;
         int frameWidth, frameHeight;
-        int baseFrame;
+        //int baseFrame;
         int nframes;
         int centerX, centerY;
         SDL_Rect *cut;
