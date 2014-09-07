@@ -44,6 +44,7 @@ class ExplosionAction : public Action
         int timer;
         Coordinates position;
         const shipEffects *gfxsfx;
+        int rot;
 };
 
 class DamageAction : public Action

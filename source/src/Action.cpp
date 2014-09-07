@@ -60,6 +60,8 @@ ExplosionAction::ExplosionAction(Coordinates pos, const shipEffects *gfx_sfx)
 
     if (gfxsfx)
         SoundManager::play(gfxsfx->explosionsSFX[rand()%4]);
+
+    rot = rand()%360;
 }
 
 Action* ExplosionAction::act()
@@ -81,7 +83,7 @@ bool ExplosionAction::completed()
 void ExplosionAction::render()
 {
     // Explosion
-    gfxsfx->explosionGFX->DrawImage(Game::getGlobalGame()->getRenderer(), position.x, position.y, timer);
+    gfxsfx->explosionGFX->DrawImage(Game::getGlobalGame()->getRenderer(), position.x, position.y, timer, rot );
 }
 
 
