@@ -684,7 +684,7 @@ INPUT_EVENT Label::input(SDL_Event &event)
 void Label::setText(std::string str)
 {
 	text.assign(str);
-	printf("%s\n", text.c_str());
+
 	delete this->imgText;
 	delete this->imgTextShadow;
 

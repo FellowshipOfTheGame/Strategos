@@ -658,7 +658,6 @@ void TacticList::setSquad(Unit *squad)
 			{
 				tp = 6;
 			}
-			printf("tatica tipo %d\n", tp);
 			lista.push_back(new ItemList(tp));
 			i++;
 		}
@@ -905,7 +904,6 @@ void ItemList::initialize()
 			this->setText("MOVE_RANDOM");
 			break;
 	}
-	this->draw();
 	this->height = 20;
 	this->width = 100;
 }
