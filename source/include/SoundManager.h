@@ -51,12 +51,14 @@ AUDIO_S16SYS (Padrão, equivale a MIX_DEFAULT_FORMAT)
 	private:
 		static SoundManager *smg;
 
-    public:
         SoundManager(int frequency = MIX_DEFAULT_FREQUENCY, Uint16 format = MIX_DEFAULT_FORMAT, int superchannels = MIX_DEFAULT_CHANNELS, int chunksize = DEFAULT_CHUNKSIZE);
         ~SoundManager();
 
-        void init(int frequency, Uint16 format, int superchannels, int chunksize);
+    public:
+        static void CreateSoundManager(int frequency = MIX_DEFAULT_FREQUENCY, Uint16 format = MIX_DEFAULT_FORMAT, int superchannels = MIX_DEFAULT_CHANNELS, int chunksize = DEFAULT_CHUNKSIZE);
+
         ///<Initializes SDL_Mixer, "superchannels": 1 for mono and 2 for stereo, chunksize: size occupied by chunks loaded in the memory.
+        void init(int frequency, Uint16 format, int superchannels, int chunksize);
         void terminate(); ///<Terminates the SoundManager.
 
         static int getFormat(int *calls, int *frequency, Uint16 *format, int *channels); ///<Fornece o formato de som atual do sistema.
@@ -103,7 +105,7 @@ AUDIO_S16SYS (Padrão, equivale a MIX_DEFAULT_FORMAT)
         //CANAIS FIM
 
         //CHUNK INICIO
-        static void load(Mix_Chunk *chunk, const char *filename);
+        static Mix_Chunk* loadChunk(const char *filename);
         static void free(Mix_Chunk *chunk);
 
         static int getVol(Mix_Chunk *chunk);
@@ -113,7 +115,7 @@ AUDIO_S16SYS (Padrão, equivale a MIX_DEFAULT_FORMAT)
         //MÚSICA INÍCIO
         static bool isPlaying();
 
-        static void load(Mix_Music *pointer, const char *filename);
+        static void loadMusic(Mix_Music *pointer, const char *filename);
         static void free(Mix_Music *pointer);
 
         static void play(Mix_Music *music, int nTimes = 0);

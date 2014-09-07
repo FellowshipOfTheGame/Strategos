@@ -34,6 +34,8 @@ Game::Game()
 	run = true;
 	editingArmy = nullptr;
 
+	SoundManager::CreateSoundManager();
+
 	algorithm[0] = new NFGeneticAlgorithm(0);
 	algorithm[1] = new NFGeneticAlgorithm(1);
 	algorithm[2] = new NFGeneticAlgorithm(2);

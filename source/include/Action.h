@@ -34,16 +34,16 @@ class Action
 class ExplosionAction : public Action
 {
     public:
-        ExplosionAction(Coordinates pos, Image *explosionImg);
+        ExplosionAction(Coordinates pos, const shipEffects *gfx_sfx);
 
         Action* act() override;
         bool completed() override;
         void render() override;
 
     private:
-        Image* img;
         int timer;
         Coordinates position;
+        const shipEffects *gfxsfx;
 };
 
 class DamageAction : public Action
@@ -81,11 +81,10 @@ class AttackAction : public Action
     private:
         double direction;
         int frame;
-        const DictKey *sourceInfo;
-        const DictKey *targetInfo;
+        Image *shootEffect;
 
     public:
-        AttackAction(Ship *Source, Ship *Target, const DictKey *sourceInfo, const DictKey *targetInfo);
+        AttackAction(Ship *Source, Ship *Target);
         ~AttackAction(){}
 
         Action* act() override;
@@ -94,8 +93,6 @@ class AttackAction : public Action
 
         Ship *source, *target;
         Coordinates coord;
-
-        Image *shootEffect;
 };
 
 class KamikazeAction : public Action

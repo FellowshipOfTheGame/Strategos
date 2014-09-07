@@ -255,6 +255,103 @@ Font* Resource::GetFont(const std::string& key)
 	return nullptr;
 }
 
+Mix_Chunk* Resource::AddSound(const char *path, const std::string& key)
+{
+    std::map<std::string, Mix_Chunk*>::iterator iter;
+	std::fstream file;
+
+    iter = chunks.find(key);
+
+	//If the image have not been allocated yet
+	if(iter == chunks.end())
+	{
+		//Load the file and select the chunks to be loaded
+		file.open(path, std::fstream::in);
+		std::string tag, content;
+
+		//Search for the correct key
+        //BUG: When the file has a blank line before EOF
+		while(!file.eof())
+		{
+			file >> tag;
+
+			if(tag.compare("key:") == 0)
+			{
+				file >> content;
+
+				//Did found the key: Load the image and return
+				if(content.compare(key) == 0)
+				{
+					return LoadSound(file, key);
+				}
+			}
+		}
+
+		file.close();
+	}
+	else
+    {
+		std::cout << "OUTPUT: Sound with key '" <<key <<"' from file '" <<path <<" was already found in resources" <<std::endl;
+		return iter->second;
+    }
+
+    std::cerr << "ERROR: Could not load sound with key '" <<key <<"' from file '" <<path <<std::endl;
+
+    return nullptr;
+}
+
+Mix_Chunk* Resource::GetSound(const std::string& key)
+{
+	std::map<std::string, Mix_Chunk*>::iterator iter;
+
+	iter = chunks.find(key);
+	if(iter != chunks.end())
+	{
+		std::cout <<"OUTPUT: Loaded sound with key '" <<iter->first <<"': " <<std::endl;
+
+		return iter->second;
+	}
+
+	return nullptr;
+}
+
+Mix_Chunk* Resource::LoadSound(std::fstream &file, const std::string& key)
+{
+    std::string tag = "\0";
+	std::string path = "\0";
+	int success = 0;
+	float volume;
+
+	while(tag.compare("!") != 0)
+	{
+		file >> tag;
+
+		if(tag.compare("file:") == 0)
+		{
+			file >> path;
+			success++;
+		}
+		else if(tag.compare("volume:") == 0)
+		{
+			file >> volume;
+			success++;
+		}
+	}
+
+	if(success != 2)
+	{
+		std::cerr << "ERROR: Could not load font completely" <<std::endl;
+		return nullptr;
+	}
+
+	Mix_Chunk* audio = SoundManager::loadChunk(path.c_str());
+	SoundManager::setVol(audio, MIX_MAX_VOLUME*volume);
+
+	chunks.insert(std::pair<std::string, Mix_Chunk*>(key, audio));
+
+	return audio;
+}
+
 void Resource::getListOfFiles(std::vector<std::string> &myVec, std::string insideDirectory, std::string extension)
 {
     DIR *dir;

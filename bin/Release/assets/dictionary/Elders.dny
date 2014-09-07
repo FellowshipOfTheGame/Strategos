@@ -14,7 +14,11 @@ speed: 0.2
 squad: 1
 gfxShoot: assets/Army.gfx human-shootSimple
 gfxExplode: assets/Army.gfx human-explode
-wavShoot: 
+sfxExplode1: assets/Audio.sfx explosion1
+sfxExplode2: assets/Audio.sfx explosion2
+sfxExplode3: assets/Audio.sfx explosion3
+sfxExplode4: assets/Audio.sfx explosion4
+sfxShoot: assets/Audio.sfx shoot1
 END_SHIP
 
 ship: AncientFighter
@@ -28,7 +32,11 @@ speed: 5
 squad: 7
 gfxShoot: assets/Army.gfx human-shootSimple
 gfxExplode: assets/Army.gfx human-explode
-wavShoot: 
+sfxExplode1: assets/Audio.sfx explosion1
+sfxExplode2: assets/Audio.sfx explosion2
+sfxExplode3: assets/Audio.sfx explosion3
+sfxExplode4: assets/Audio.sfx explosion4
+sfxShoot: assets/Audio.sfx shoot1
 END_SHIP
 
 ship: AncientCruiser
@@ -42,7 +50,11 @@ speed: 0.8
 squad: 3
 gfxShoot: assets/Army.gfx human-shootSimple
 gfxExplode: assets/Army.gfx human-explode
-wavShoot: 
+sfxExplode1: assets/Audio.sfx explosion1
+sfxExplode2: assets/Audio.sfx explosion2
+sfxExplode3: assets/Audio.sfx explosion3
+sfxExplode4: assets/Audio.sfx explosion4
+sfxShoot: assets/Audio.sfx shoot1
 END_SHIP
 
 ship: Ancient
@@ -56,5 +68,9 @@ speed: 2.5
 squad: 4
 gfxShoot: assets/Army.gfx human-shootSimple
 gfxExplode: assets/Army.gfx human-explode
-wavShoot: 
+sfxExplode1: assets/Audio.sfx explosion1
+sfxExplode2: assets/Audio.sfx explosion2
+sfxExplode3: assets/Audio.sfx explosion3
+sfxExplode4: assets/Audio.sfx explosion4
+sfxShoot: assets/Audio.sfx shoot1
 END_SHIP

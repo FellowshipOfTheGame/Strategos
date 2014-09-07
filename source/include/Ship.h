@@ -7,6 +7,25 @@
 #include "CombatLog.h"
 #include "Coordinates.h"
 #include "RandomEngine.h"
+#include "SoundManager.h"
+#include "Image.h"
+
+struct shipEffects
+{
+    shipEffects() :
+        shootGFX(0), explosionGFX(0), shipsGFX(0)
+        {
+            explosionsSFX[0] = explosionsSFX[1] = explosionsSFX[2] = explosionsSFX[3] = nullptr;
+            shootSFX = nullptr;
+        }
+
+    Image *shootGFX;
+    Image *explosionGFX;
+    Image **shipsGFX;
+
+    Mix_Chunk* explosionsSFX[4]; // 4 Variacoes de som
+    Mix_Chunk* shootSFX;
+};
 
 struct shipBaseStats
 {
@@ -66,6 +85,7 @@ class Ship
         // Atributos iniciados no construtor
         const shipBaseStats &baseStats;
         shipCurrentStats stats;
+        const shipEffects* shipeffects;
 
         // coord = posicao atual
         Coordinates coord, unitPos, targetPos;
@@ -73,7 +93,7 @@ class Ship
         CombatRound* myLog;
 
     public:
-        Ship(const shipBaseStats &initialStats, const Coordinates& Coord, CombatRound* log=nullptr);
+        Ship(const shipBaseStats &initialStats, const Coordinates& Coord, CombatRound* log=nullptr, const shipEffects* ship_effects=nullptr);
         ~Ship();
 
         int update(RandomEngine& randE);
@@ -97,6 +117,7 @@ class Ship
 
         const shipBaseStats &getBaseStats() const;
         shipCurrentStats &getStats();
+        const shipEffects* getEffects() const;
 
         int getX() const;
         int getY() const;

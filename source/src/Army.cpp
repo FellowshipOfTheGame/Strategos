@@ -525,7 +525,7 @@ void Army::render()
 //    {
 //        const DictKey *k = units[j]->getUnitInfo();
 //        for (int i = 0; i < 36; ++i){
-//          k->shipsGFX[i]->DrawImage(i*37, j*37, Game::getGlobalGame()->getRenderer());
+//          k->shipsGFX[i]->DrawImage(Game::getGlobalGame()->getRenderer(), i*37, j*37);
 //        }
 //    }
 }

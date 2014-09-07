@@ -85,7 +85,7 @@ int AttackNearestEnemy::validateTactic(std::list<Action*> &newActions, TacticVal
                     s = tvd.combatData.randomengine.nextInt() % nearestUnit->nShips();
 
                 iShip->getStats().currentAtkCD = iShip->getBaseStats().maxAtkCD;
-                newActions.push_back(new AttackAction(iShip, nearestUnit->getShip(s), tvd.validatingUnit->getUnitInfo(), nearestUnit->getUnitInfo()));
+                newActions.push_back(new AttackAction(iShip, nearestUnit->getShip(s)));
                 ++Ret;
 			}
 		}
@@ -160,7 +160,7 @@ int AttackWeakestEnemy::validateTactic(std::list<Action*> &newActions, TacticVal
             }
 
             iShip->getStats().currentAtkCD = iShip->getBaseStats().maxAtkCD;
-            newActions.push_back(new AttackAction(iShip, wekeastUnit->getShip(s), tvd.validatingUnit->getUnitInfo(), wekeastUnit->getUnitInfo()));
+            newActions.push_back(new AttackAction(iShip, wekeastUnit->getShip(s)));
             ++Ret;
         }
     }
@@ -207,7 +207,7 @@ int AttackCollab::validateTactic(std::list<Action*> &newActions, TacticValidatio
 				}
 
 				iShip->getStats().currentAtkCD = iShip->getBaseStats().maxAtkCD;
-                newActions.push_back(new AttackAction(iShip, enemyUnit->getShip(s), tvd.validatingUnit->getUnitInfo(), enemyUnit->getUnitInfo()));
+                newActions.push_back(new AttackAction(iShip, enemyUnit->getShip(s)));
 			}
 		}
     }
@@ -301,7 +301,7 @@ int DefenseCollab::validateTactic(std::list<Action*> &newActions, TacticValidati
             if (iShip->getStats().currentAtkCD == 0 && dist_ < iShip->getBaseStats().range2)
             {
                 iShip->getStats().currentAtkCD = iShip->getBaseStats().maxAtkCD;
-                newActions.push_back(new AttackAction(iShip, nearestShip, tvd.validatingUnit->getUnitInfo(), enemyUnit->getUnitInfo()));
+                newActions.push_back(new AttackAction(iShip, nearestShip));
                 ++Ret;
             }
             else if (iShip->getStats().isMoving != move_action) // Mover uma unidade espacial em direcao ao alvo

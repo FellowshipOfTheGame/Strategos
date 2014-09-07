@@ -20,9 +20,9 @@ int directionTo(float fromRad, float toRad)
     return 0;
 }
 
-Ship::Ship(const shipBaseStats &initialStats, const Coordinates& Coord, CombatRound* log)
+Ship::Ship(const shipBaseStats &initialStats, const Coordinates& Coord, CombatRound* log, const shipEffects* ship_effects)
     : baseStats(initialStats), stats(initialStats),
-      coord(Coord), unitPos(Coord), targetPos(Coord), myLog(log)
+      coord(Coord), unitPos(Coord), targetPos(Coord), myLog(log), shipeffects(ship_effects)
 {
     currentDirection = M_PI/2;
 
@@ -118,6 +118,9 @@ void Ship::kill()
 	if (myLog)
     {
         myLog->addLog( RoundData(0, 0, 1, 0) );
+
+        printf("PlaySound\n");
+        SoundManager::play(shipeffects->explosionsSFX[rand()%4]);
     }
 }
 
@@ -129,6 +132,11 @@ const shipBaseStats &Ship::getBaseStats() const
 shipCurrentStats &Ship::getStats()
 {
     return stats;
+}
+
+const shipEffects* Ship::getEffects() const
+{
+    return shipeffects;
 }
 
 bool Ship::takeDamage(double damage)

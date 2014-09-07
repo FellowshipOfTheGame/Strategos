@@ -10,6 +10,7 @@
 
 #include "Image.h"
 #include "Ship.h"
+#include "SoundManager.h"
 
 #include "Resource.h"
 
@@ -23,9 +24,7 @@ class DictKey
         unsigned int squadSize;
         int type;
 
-        Image *shootGFX;
-        Image *explosionGFX;
-        Image **shipsGFX;
+        shipEffects gfx_sfx;
 
         DictKey(const DictKey *copy)
         {
@@ -33,7 +32,7 @@ class DictKey
         }
 
         DictKey()
-            : squadSize(0), shootGFX(0), shipsGFX(0)
+            : squadSize(0)
         {
         }
 

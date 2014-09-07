@@ -1,0 +1,33 @@
+#Efeitos sonoros do jogo
+
+#FORMATO:
+#key:
+#file:
+#volume
+#!
+
+#EXPLOSIONS
+key: explosion1
+file: assets/audio/Explosion1.wav
+volume: 1.0
+!
+
+key: explosion2
+file: assets/audio/Explosion2.wav
+volume: 1.0
+!
+
+key: explosion3
+file: assets/audio/Explosion3.wav
+volume: 1.0
+!
+
+key: explosion4
+file: assets/audio/Explosion4.wav
+volume: 1.0
+!
+
+key: shoot1
+file: assets/audio/Laser1.wav
+volume: 0.01
+!

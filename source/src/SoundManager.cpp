@@ -15,11 +15,13 @@
 
 SoundManager* SoundManager::smg = nullptr;
 
+void SoundManager::CreateSoundManager(int frequency, Uint16 format, int superchannels, int chunksize)
+{
+    SoundManager::smg = new SoundManager(frequency, format, superchannels, chunksize);
+}
+
 SoundManager::SoundManager(int frequency, Uint16 format, int superchannels, int chunksize) {
-	if ( SoundManager::smg == NULL ) {
 		init(frequency, format, superchannels, chunksize);
-		SoundManager::smg = this;
-	}
 }
 SoundManager::~SoundManager(){ terminate(); }
 
@@ -107,9 +109,11 @@ void SoundManager::setReverseStereo(int channel, bool activated){
 //CANAIS FIM
 
 //CHUNK INICIO
-void SoundManager::load(Mix_Chunk *chunk, const char *filename){
-    chunk = Mix_LoadWAV(filename);
-    assert(chunk != NULL);
+Mix_Chunk* SoundManager::loadChunk(const char *filename){
+    Mix_Chunk* chunk = Mix_LoadWAV(filename);
+    //printf("Unable to load WAV file: %s\n", Mix_GetError());
+//    assert(chunk != NULL);
+    return chunk;
 }
 
 void SoundManager::free(Mix_Chunk *chunk){  Mix_FreeChunk(chunk); }
@@ -125,7 +129,7 @@ bool SoundManager::isPlaying(){
     return false;
 }
 
-void SoundManager::load(Mix_Music *pointer, const char *filename){
+void SoundManager::loadMusic(Mix_Music *pointer, const char *filename){
     pointer = Mix_LoadMUS(filename);
     assert( pointer != NULL );
 }

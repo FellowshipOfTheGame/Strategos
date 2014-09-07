@@ -14,7 +14,11 @@ speed: 0.4
 squad: 1
 gfxShoot: assets/Army.gfx human-shootSimple
 gfxExplode: assets/Army.gfx human-explode
-wavShoot: 
+sfxExplode1: assets/Audio.sfx explosion1
+sfxExplode2: assets/Audio.sfx explosion2
+sfxExplode3: assets/Audio.sfx explosion3
+sfxExplode4: assets/Audio.sfx explosion4
+sfxShoot: assets/Audio.sfx shoot1
 END_SHIP
 
 ship: Fighter
@@ -28,7 +32,11 @@ speed: 2.5
 squad: 5
 gfxShoot: assets/Army.gfx human-shootSimple
 gfxExplode: assets/Army.gfx human-explode
-wavShoot: 
+sfxExplode1: assets/Audio.sfx explosion1
+sfxExplode2: assets/Audio.sfx explosion2
+sfxExplode3: assets/Audio.sfx explosion3
+sfxExplode4: assets/Audio.sfx explosion4
+sfxShoot: assets/Audio.sfx shoot1
 END_SHIP
 
 ship: Bomber
@@ -42,7 +50,11 @@ speed: 1.0
 squad: 3
 gfxShoot: assets/Army.gfx human-shootSimple
 gfxExplode: assets/Army.gfx human-explode
-wavShoot: 
+sfxExplode1: assets/Audio.sfx explosion1
+sfxExplode2: assets/Audio.sfx explosion2
+sfxExplode3: assets/Audio.sfx explosion3
+sfxExplode4: assets/Audio.sfx explosion4
+sfxShoot: assets/Audio.sfx shoot1
 END_SHIP
 
 ship: Support
@@ -56,5 +68,9 @@ speed: 2.5
 squad: 4
 gfxShoot: assets/Army.gfx human-shootSimple
 gfxExplode: assets/Army.gfx human-explode
-wavShoot: 
+sfxExplode1: assets/Audio.sfx explosion1
+sfxExplode2: assets/Audio.sfx explosion2
+sfxExplode3: assets/Audio.sfx explosion3
+sfxExplode4: assets/Audio.sfx explosion4
+sfxShoot: assets/Audio.sfx shoot1
 END_SHIP

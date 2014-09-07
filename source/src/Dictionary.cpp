@@ -62,7 +62,7 @@ void Dictionary::generateSprites()
             shipsGFX[i] = Image::generateRotatedImage(cut, 360, _ROTATION_FRAMES_);
         }
 
-        keys[i]->shipsGFX = shipsGFX[i];
+        keys[i]->gfx_sfx.shipsGFX = shipsGFX[i];
     }
 
     printf("Sprites gerados!\n");
@@ -199,7 +199,7 @@ DictKey* Dictionary::readAttribute(fstream &input, Resource &resource)
             string keyImg;
             input >> tag;
             input >> keyImg;
-            key->shootGFX = resource.AddImage( tag.c_str(), keyImg );
+            key->gfx_sfx.shootGFX = resource.AddImage( tag.c_str(), keyImg );
 //            printf("Path: %s, Key: %s, %p\n", path.c_str(), keyImg.c_str(), key->shootGFX);
         }
         else if(tag.compare("gfxExplode:") == 0)
@@ -207,12 +207,43 @@ DictKey* Dictionary::readAttribute(fstream &input, Resource &resource)
             string keyImg;
             input >> tag;
             input >> keyImg;
-            key->explosionGFX = resource.AddImage( tag.c_str(), keyImg );
+            key->gfx_sfx.explosionGFX = resource.AddImage( tag.c_str(), keyImg );
 //            printf("Path: %s, Key: %s, %p\n", path.c_str(), keyImg.c_str(), key->shootGFX);
         }
-        else if(tag.compare("wavShoot:") == 0)
+        else if(tag.compare("sfxExplode1:") == 0)
         {
-
+            string keySfx;
+            input >> tag;
+            input >> keySfx;
+            key->gfx_sfx.explosionsSFX[0] = resource.AddSound( tag.c_str(), keySfx );
+        }
+        else if(tag.compare("sfxExplode2:") == 0)
+        {
+            string keySfx;
+            input >> tag;
+            input >> keySfx;
+            key->gfx_sfx.explosionsSFX[1] = resource.AddSound( tag.c_str(), keySfx );
+        }
+        else if(tag.compare("sfxExplode3:") == 0)
+        {
+            string keySfx;
+            input >> tag;
+            input >> keySfx;
+            key->gfx_sfx.explosionsSFX[2] = resource.AddSound( tag.c_str(), keySfx );
+        }
+        else if(tag.compare("sfxExplode4:") == 0)
+        {
+            string keySfx;
+            input >> tag;
+            input >> keySfx;
+            key->gfx_sfx.explosionsSFX[3] = resource.AddSound( tag.c_str(), keySfx );
+        }
+        else if(tag.compare("sfxShoot:") == 0)
+        {
+            string keySfx;
+            input >> tag;
+            input >> keySfx;
+            key->gfx_sfx.shootSFX = resource.AddSound( tag.c_str(), keySfx );
         }
         else if(tag.compare("END_SHIP") == 0)
         {

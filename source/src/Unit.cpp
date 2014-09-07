@@ -72,10 +72,15 @@ void Unit::restoreUnit(int teamID, const Coordinates atBaseP, CombatLog *log)
     baseCoord = atBaseP;
     averageCoord = atBaseP;
 
-    if (log)
+    const shipEffects *gfxsfx = &mySquadInfo->gfx_sfx;
+
+    if (log){
         myLog = log->getLogForUnit(id);
-    else
+    }
+    else{
         myLog = nullptr;
+        gfxsfx = nullptr;
+    }
 
     double circleRadius = 12.0 * (mySquadInfo->squadSize-1);
     float dAngle = 6.283185306 / mySquadInfo->squadSize;
@@ -84,7 +89,7 @@ void Unit::restoreUnit(int teamID, const Coordinates atBaseP, CombatLog *log)
 		Coordinates coordships(atBaseP);
 		coordships.x += circleRadius * cos(i * dAngle);
 		coordships.y += -circleRadius * sin(i * dAngle);
-		Ship *nship = new Ship(mySquadInfo->stats, coordships, myLog);
+		Ship *nship = new Ship(mySquadInfo->stats, coordships, myLog, gfxsfx);
 
 		ships.push_back(nship);
 	}
@@ -385,7 +390,7 @@ void Unit::render()
 
     SDL_Renderer* renderer = Game::getGlobalGame()->getRenderer();
 
-    if (!mySquadInfo->shipsGFX){
+    if (!mySquadInfo->gfx_sfx.shipsGFX){
 			printf("No img");
     }else{
         for (unsigned int j = 0; j < nShips(); j++)
@@ -398,7 +403,7 @@ void Unit::render()
             while (x < 0.0)     x += 360.0;
 
             int frame = ((int(x) % 360) / (360 / _ROTATION_FRAMES_)) % _ROTATION_FRAMES_;
-            Image *img = mySquadInfo->shipsGFX[frame];
+            Image *img = mySquadInfo->gfx_sfx.shipsGFX[frame];
 
             if (img){
                 img->DrawImage(renderer, ship->getX() - (img->getFrameWidth() / 2), ship->getY() - (img->getFrameHeight() / 2));

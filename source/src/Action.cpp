@@ -53,20 +53,24 @@ void Action::render(){
 
 ///
 
-ExplosionAction::ExplosionAction(Coordinates pos, Image *explosionImg)
-    : img(explosionImg), timer(0), position(pos)
+ExplosionAction::ExplosionAction(Coordinates pos, const shipEffects *gfx_sfx)
+    : timer(0), position(pos),  gfxsfx(gfx_sfx)
 {
     ++_N_ACTIONS_EXPLOSION_;
+
+    if (gfxsfx)
+        SoundManager::play(gfxsfx->explosionsSFX[rand()%4]);
 }
 
 Action* ExplosionAction::act()
 {
     ++timer;
 
-    if (timer >= img->getNumberFrames())
+    if (!gfxsfx || timer >= gfxsfx->explosionGFX->getNumberFrames()){
         complete = true;
+    }
 
-    return 0;
+    return nullptr;
 }
 
 bool ExplosionAction::completed()
@@ -77,7 +81,7 @@ bool ExplosionAction::completed()
 void ExplosionAction::render()
 {
     // Explosion
-    img->DrawImage(Game::getGlobalGame()->getRenderer(), position.x, position.y, timer);
+    gfxsfx->explosionGFX->DrawImage(Game::getGlobalGame()->getRenderer(), position.x, position.y, timer);
 }
 
 
@@ -160,12 +164,16 @@ void MoveAction::render()
 //                coord.x - cOX, coord.y - cOY, 255, 0, 0, 32);
 }
 
-AttackAction::AttackAction(Ship *Source, Ship *Target, const DictKey *srcInfo, const DictKey *trgetInfo)
-    : frame(0), sourceInfo(srcInfo), targetInfo(trgetInfo),
-        source(Source), target(Target),
-        coord(Source->getPosition()), shootEffect(srcInfo->shootGFX)
+AttackAction::AttackAction(Ship *Source, Ship *Target)
+    : frame(0), source(Source), target(Target), shootEffect(nullptr),
+        coord(Source->getPosition())
 {
     ++_N_ACTIONS_ATTACK_;
+
+    if (source->getEffects()){
+        shootEffect = source->getEffects()->shootGFX;
+        SoundManager::play(source->getEffects()->shootSFX, rand()%4);
+    }
 }
 
 Action* AttackAction::act()
@@ -186,7 +194,7 @@ Action* AttackAction::act()
         source->dealDamage( source->getBaseStats().damage, letal );
 
         if ( letal )
-            return new ExplosionAction(coord, targetInfo->explosionGFX);
+            return new ExplosionAction(coord, target->getEffects());
         else
             return new DamageAction(coord);
     }
@@ -200,9 +208,12 @@ Action* AttackAction::act()
         coord.y -= speed*sin(direction);
     }
 
-    ++frame;
-    if (frame > shootEffect->getNumberFrames())
-        frame = 0;
+    if (shootEffect)
+    {
+        ++frame;
+        if (frame > shootEffect->getNumberFrames())
+            frame = 0;
+    }
 
     return nullptr;
 }
