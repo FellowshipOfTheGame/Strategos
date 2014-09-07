@@ -665,6 +665,7 @@ Label::~Label()
 void Label::setColor(SDL_Color clor)
 {
 	delete this->imgText;
+	delete this->imgTextShadow;
 	this->color = clor;
 	imgText = new Image( font->renderText(Game::getGlobalGame()->getRenderer(), text.c_str(), color), 1, nullptr, 0, 0 );
 	this->imgTextShadow = new Image( font->renderText(Game::getGlobalGame()->getRenderer(), text.c_str(), shadow), 1, nullptr, 0, 0 );
@@ -683,6 +684,13 @@ INPUT_EVENT Label::input(SDL_Event &event)
 void Label::setText(std::string str)
 {
 	text.assign(str);
+	printf("%s\n", text.c_str());
+	delete this->imgText;
+	delete this->imgTextShadow;
+
+	this->imgText = new Image( font->renderText(Game::getGlobalGame()->getRenderer(), text.c_str(), color), 1, nullptr, 0, 0 );
+	this->imgTextShadow = new Image( font->renderText(Game::getGlobalGame()->getRenderer(), text.c_str(), shadow), 1, nullptr, 0, 0 );
+
 }
 
 /****************************** STATUS_BOX ******************************/

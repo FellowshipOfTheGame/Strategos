@@ -609,14 +609,12 @@ void TacticList::draw()
 void TacticList::setSquad(Unit *squad)
 {
 	selected = nullptr;
-	if (squad != this->squad)
-	{
+
 		this->squad = squad;
 		if (this->squad == nullptr)
 			return;
 
 		std::vector<ItemList*>::iterator iter = lista.begin();
-		printf("removendo taticas antigas\n");
 		//remove elementos da antiga squad
 		iter = lista.begin();
 		while (iter != lista.end())
@@ -624,7 +622,6 @@ void TacticList::setSquad(Unit *squad)
 			delete (*iter);
 			iter = lista.erase(iter);
 		}
-		printf ("recriando lista - begin\n");
 		//coloca Top no topo
 		top = 0;
 		//adiciona taticas da nova squad na lista
@@ -666,8 +663,6 @@ void TacticList::setSquad(Unit *squad)
 			i++;
 		}
 
-		printf ("recriando lista - end\n");
-	}
 }
 
 void TacticList::update()
@@ -676,7 +671,6 @@ void TacticList::update()
 		return;
 	if (this->selected == nullptr)
 		return;
-	printf ("update - begin\n");
 	//encontra o interador da opcao selecionada
 	std::vector<ItemList*>::iterator iter = lista.begin();
 	while (iter != lista.end())
@@ -723,7 +717,6 @@ void TacticList::update()
 		}
 		selected->setType(tp);
 	}
-	printf ("update - end\n");
 }
 
 bool TacticList::hover()
@@ -884,7 +877,7 @@ INPUT_EVENT TacticList::input(SDL_Event &event)
 void ItemList::setType(int i)
 {
 	this->type = i;
-	initialize();
+	this->initialize();
 }
 void ItemList::initialize()
 {
@@ -912,6 +905,7 @@ void ItemList::initialize()
 			this->setText("MOVE_RANDOM");
 			break;
 	}
+	this->draw();
 	this->height = 20;
 	this->width = 100;
 }
@@ -919,28 +913,24 @@ void ItemList::initialize()
 ItemList::ItemList(std::string text, Font *font, SDL_Color color, SDL_Color shadow, std::string GID) :
 		Label(text, font, color, shadow, GID)
 {
-	type = 0;
-	initialize();
+	this->setType(0);
 }
 ItemList::ItemList(int tp, std::string text, Font *font, SDL_Color color, SDL_Color shadow, std::string GID) :
 		Label(text, font, color, shadow, GID)
 {
-	this->type = tp;
-	initialize();
+	this->setType(tp);
 }
 ItemList::ItemList(int tp) :
 		Label("ATTACK_NEAREST_ENEMY", Game::getGlobalGame()->getResourceMNGR()->GetFont("jostix-14"), ColorRGB8::Green, ColorRGB8::White, "LB02")
 {
-	this->type = tp;
-	initialize();
+	this->setType(tp);
 
 }
 
 ItemList::ItemList() :
 		Label("ATTACK_NEAREST_ENEMY", Game::getGlobalGame()->getResourceMNGR()->GetFont("jostix-14"), ColorRGB8::Green, ColorRGB8::White, "LB02")
 {
-	this->type = 0;
-	initialize();
+	this->setType(0);
 }
 ItemList::~ItemList()
 {
