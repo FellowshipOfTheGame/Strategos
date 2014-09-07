@@ -107,6 +107,7 @@ class Button : public cGuiElement
 
     public:
         Button(int x, int y, int width, int height, const Image *back);
+        Button(int x, int y, const Image *back);
         virtual ~Button();
 
         virtual void update();

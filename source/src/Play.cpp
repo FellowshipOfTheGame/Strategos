@@ -18,7 +18,7 @@ Play::Play(STATE previous) :
 	Resource *resource = Game::getGlobalGame()->getResourceMNGR();
 
 	resource->AddImage("assets/ui.gfx", "bg_engaging");
-	resource->AddImage("assets/ui.gfx", "menu-bt");
+	resource->AddImage("assets/ui.gfx", "start-bt");
 	resource->AddFont("assets/fonts.gfx", "jostix-14");
 	resource->AddImage("assets/ui.gfx", "textfield-text");
 
@@ -29,8 +29,7 @@ Play::Play(STATE previous) :
 	lbTitle->setPosition(350, 20);
 	addGuiElement(lbTitle);
 
-	btSimulate = new Button(470, 470, 150, 24, resource->GetImage("menu-bt"));
-	btSimulate->setText(fntEthnocentric, "SIMULATE", ColorRGB8::White, ColorRGB8::Black);
+	btSimulate = new Button(350, 670, resource->GetImage("start-bt"));
 	addGuiElement(btSimulate);
 
 	cbSelect1 = new ComboBox(175, 450, 150, 17, nullptr, ColorRGB8::Green, ColorRGB8::Black, "CB01");

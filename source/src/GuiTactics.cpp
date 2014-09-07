@@ -27,7 +27,7 @@ TacticSet::TacticSet(int x, int y, std::string GID)
 	cmb_choiser->addText("Collaborative Attack");
 	cmb_choiser->addText("Collaborative Defense");
 	cmb_choiser->addText("Kamikase");
-	cmb_choiser->addText("Retreata");
+	cmb_choiser->addText("Retreat");
 	cmb_choiser->addText("Random Movement");
 
 	guiTactic = new TacticAN(x, 5 + cmb_choiser->getY() + cmb_choiser->getHeight(), GID);
@@ -36,7 +36,7 @@ TacticSet::TacticSet(int x, int y, std::string GID)
 	tg2 = new TriggerSet(x + 2, 5 + tg1->getY() + tg1->getHeight());
 
 	cmb_logic = new ComboBox(x + 2, 5 + tg2->getY() + tg2->getHeight(), 200, 20, Game::getGlobalGame()->getResourceMNGR()->GetImage("combo-cmb"),
-	        ColorRGB8::Black, ColorRGB8::White, "COMBO" + GID);
+                                ColorRGB8::Black, ColorRGB8::White, "COMBO" + GID);
 	cmb_logic->setFont(Game::getGlobalGame()->getResourceMNGR()->GetFont("jostix-14"));
 	cmb_logic->addText("AND");
 	cmb_logic->addText("OR");
@@ -65,9 +65,8 @@ void TacticSet::draw()
 
 void TacticSet::update()
 {
-
-
 }
+
 int TacticSet::getType()
 {
 	return tactic->getType();
@@ -75,7 +74,6 @@ int TacticSet::getType()
 
 Tactic* TacticSet::getTactic()
 {
-
 	Tactic *temp;
 	TacticInfo info(tactic->getInfo().allyUnit);
 	switch (cmb_choiser->getSelectedIndex())
@@ -107,6 +105,7 @@ Tactic* TacticSet::getTactic()
 	}
 	return temp;
 }
+
 void TacticSet::setTactic(Tactic *t, int id)
 {
 	unit_id = id;
@@ -541,6 +540,7 @@ void TacticList::initialize()
 	this->height = btn_minus->getY() + btn_minus->getHeight();
 	squad = nullptr;
 }
+
 TacticList::TacticList(Unit *squad, int x, int y)
 {
 	this->x = x;

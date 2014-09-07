@@ -31,6 +31,28 @@ Button::Button(int x, int y, int width, int height, const Image *back)
 	this->shown = true;
 }
 
+Button::Button(int x, int y, const Image *back)
+{
+    //assert(back != nullptr);
+
+    stringImg = 0;
+	this->font = nullptr;
+	this->text = nullptr;
+	this->x = x;
+	this->y = y;
+
+	this->curFrame = 0;
+
+    this->back = back;
+	this->width = back->getFrameWidth();
+	this->height = back->getFrameHeight();
+    this->nFrames = back->getNumberFrames();
+
+	this->enabled = true;
+	this->active = true;
+	this->shown = true;
+}
+
 Button::~Button()
 {
 	//Nothing to be freed
@@ -52,6 +74,7 @@ void Button::update()
  */
 void Button::draw()
 {
+    back->DrawImage(Game::getGlobalGame()->getRenderer(), x, y, curFrame);
 	int lim = 0;
 	int middle = 0; //back->getBaseFrames() / 2;
 	int frameWidth = back->getFrameWidth();

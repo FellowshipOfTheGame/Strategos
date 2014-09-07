@@ -3,80 +3,109 @@
 #center x y
 
 key: menu-bt
-file: assets/ui/button-01.png
+file: assets/images/ui/button-01.png
 clip: 1 3 1 24 0 0
 center: 0 0
-baseFrame: 1
 !
 
 key: exit-bt
-file: assets/menu/button-exit2.png
-clip: 1 3 148 52 0 0
+file: assets/images/buttons/bt_exit.png
+clip: 1 3 358 50 0 0
 center: 0 0
 !
 
-key: play-bt
-file: assets/menu/button-play2.png
-clip: 1 3 172 52 0 0
+key: new_battle-bt
+file: assets/images/buttons/bt_new_battle.png
+clip: 1 3 358 50 0 0
+center: 0 0
+!
+
+key: create_army-bt
+file: assets/images/buttons/bt_create_army.png
+clip: 1 3 358 50 0 0
+center: 0 0
+!
+
+key: unit_setup-bt
+file: assets/images/buttons/bt_unit_setup.png
+clip: 1 3 358 50 0 0
+center: 0 0
+!
+
+key: back-bt
+file: assets/images/buttons/bt_back.png
+clip: 1 3 358 50 0 0
+center: 0 0
+!
+
+key: load_army-bt
+file: assets/images/buttons/bt_load_army.png
+clip: 1 3 358 50 0 0
+center: 0 0
+!
+
+key: start-bt
+file: assets/images/buttons/bt_start.png
+clip: 1 3 358 50 0 0
+center: 0 0
+!
+
+key: confirm-bt
+file: assets/images/buttons/bt_confirm.png
+clip: 1 3 358 50 0 0
 center: 0 0
 !
 
 key: combo-cmb
-file: assets/misc/combo-border.png
+file: assets/images/ui/combo-border.png
 clip: 1 6 22 22 0 0
 center: 0 0
 !
 
 key: textfield-txt
-file: assets/ui/text-box-border2.png
+file: assets/images/ui/text-box-border2.png
 clip: 1 1 2 22 0 0
 center: 0 0
 !
 
-key: box-bx
-file:
-clip:
-center: 0 0
-!
-
 key: bg_create_army
-file: assets/menu/create_army.png
+file: assets/images/menu/create_army.png
 clip: 1 1 1024 768 0 0
 center: 0 0
 !
 
 key: bg_menu
-file: assets/menu/menu.png
+file: assets/images/menu/bg_menu.png
 clip: 1 1 1024 768 0 0
 center: 0 0
 !
 
-key: bg_strategos
-file: assets/menu/Strategos.png
-clip: 1 1 960 186 0 0
+key: bg_strategos_menu
+file: assets/images/menu/strategos_logo.png
+clip: 1 1 1014 143 0 0
 center: 0 0
 !
 
 key: bg_unit_setup
-file: assets/menu/unit_setup_1.png
+file: assets/images/menu/unit_setup_1.png
 clip: 1 1 1024 768 0 0
 center: 0 0
 !
 
 key: bg_engaging
-file: assets/menu/engaging.png
+file: assets/images/menu/engaging.png
 clip: 1 1 1024 768 0 0
 center: 0 0
 !
 
 key: bg-win
-file: assets/menu/result_win.png
+file: assets/images/menu/result_win.png
 clip: 1 1 1024 768 0 0
 center: 0 0
 !
 
 key: bg-lose
-file: assets/menu/result_lose.png
+file: assets/images/menu/result_lose.png
 clip: 1 1 1024 768 0 0
 center: 0 0
 !

@@ -18,21 +18,20 @@
 Unit_Setup::Unit_Setup(STATE previous) :
 		StateMachine(previous, UNIT_SETUP, UNIT_SETUP), rnd(1337)
 {
-	int scrWidth = Game::getGlobalGame()->getWidth();
-	int scrHeight = Game::getGlobalGame()->getHeight();
+    Game *game = Game::getGlobalGame();
+	int scrWidth = game->getWidth();
+	int scrHeight = game->getHeight();
 	Font *fntEthnocentric;
 
-	Game::getGlobalGame()->generateSprites(Game::getGlobalGame()->getEditingArmy()->getDictionary());
+	game->generateSprites(game->getEditingArmy()->getDictionary());
 
-	Resource *resource = Game::getGlobalGame()->getResourceMNGR();
-	resource->AddImage("assets/ui.gfx", "bg_unit_setup");
-
+	Resource *resource = game->getResourceMNGR();
 	resource->AddImage("assets/base.gfx", "blueprint1-bg");
 	resource->AddImage("assets/base.gfx", "squadfocus-bg");
-
+	resource->AddImage("assets/ui.gfx", "bg_unit_setup");
 	resource->AddImage("assets/ui.gfx", "menu-bt");
-	resource->AddImage("assets/ui.gfx", "exit-bt");
-	resource->AddImage("assets/ui.gfx", "play-bt");
+	resource->AddImage("assets/ui.gfx", "back-bt");
+	resource->AddImage("assets/ui.gfx", "confirm-bt");
 	resource->AddImage("assets/army.gfx", "human-ships");
 	fntEthnocentric = resource->GetFont("jostix-14");
 
@@ -40,8 +39,9 @@ Unit_Setup::Unit_Setup(STATE previous) :
 	//imagens de fundo
 	imgBackground = resource->GetImage("bg_unit_setup");
 	squad_selec = resource->GetImage("squadfocus-bg");
-	blueprint = new ImageBox(scrWidth * 0.05, scrHeight * 0.15, resource->GetImage("blueprint1-bg")->getFrameWidth(),
-	        resource->GetImage("blueprint1-bg")->getFrameHeight(), resource->GetImage("blueprint1-bg"), 0, nullptr, "BX1");
+
+	const Image *bprint = resource->GetImage("blueprint1-bg");
+	blueprint = new ImageBox(scrWidth * 0.05, scrHeight * 0.15, bprint->getFrameWidth(), bprint->getFrameHeight(), bprint, 0, nullptr, "BX1");
 	addGuiElement(blueprint);
 
 	//label de titulo
@@ -50,19 +50,17 @@ Unit_Setup::Unit_Setup(STATE previous) :
 	addGuiElement(lbl_Geral);
 
 	//botoes
-	btn_Next = new Button(scrWidth * 0.85, scrHeight * 0.9, 150, 24, resource->GetImage("menu-bt"));
-	btn_Next->setText(resource->GetFont("jostix-14"), "PLAY", ColorRGB8::White, ColorRGB8::White);
+	btn_Next = new Button(scrWidth * 0.60, scrHeight * 0.9, resource->GetImage("confirm-bt"));
 	addGuiElement(btn_Next);
 
-	btn_Back = new Button(scrWidth * 0.05, scrHeight * 0.9, 150, 24, resource->GetImage("menu-bt"));
-	btn_Back->setText(resource->GetFont("jostix-14"), "BACK", ColorRGB8::White, ColorRGB8::White);
+	btn_Back = new Button(scrWidth * 0.05, scrHeight * 0.9, resource->GetImage("back-bt"));
 	addGuiElement(btn_Back);
 
 	btn_Del = new Button(scrWidth * 0.5, scrHeight * 0.1, 150, 24, resource->GetImage("menu-bt"));
 	btn_Del->setText(resource->GetFont("jostix-14"), "DELETE", ColorRGB8::White, ColorRGB8::White);
 	addGuiElement(btn_Del);
 
-	btn_Move = new Button(scrWidth * 0.6, scrHeight * 0.1, 150, 24, resource->GetImage("menu-bt"));
+	btn_Move = new Button(scrWidth * 0.65, scrHeight * 0.1, 150, 24, resource->GetImage("menu-bt"));
 	btn_Move->setText(resource->GetFont("jostix-14"), "MOVE", ColorRGB8::White, ColorRGB8::White);
 	addGuiElement(btn_Move);
 
@@ -75,33 +73,35 @@ Unit_Setup::Unit_Setup(STATE previous) :
 	addGuiElement(bx3);
 	bx4 = new ImageBox(scrWidth * 0.4, scrHeight * 0.1, 50, 50, resource->GetImage("human-ships"), 3, nullptr, "BX1");
 	addGuiElement(bx4);
-	// adicionando box com as imagens das naves
-	dct = Game::getGlobalGame()->getDictionary(0);
-	char str[5];
-	printf("Army Squads: %d\n", Game::getGlobalGame()->getEditingArmy()->nUnits());
-	if (Game::getGlobalGame()->getEditingArmy()->nUnits() < 1)
-	{
-		Army *editingArmy = Game::getGlobalGame()->getEditingArmy();
 
+	// adicionando box com as imagens das naves
+	dct = game->getDictionary(0);
+	char str[5];
+
+    Army *editingArmy = game->getEditingArmy();
+	printf("Army Squads: %d\n", editingArmy->nUnits());
+	if (editingArmy->nUnits() < 1)
+	{
 		editingArmy->createUnit(0, new Coordinates(50 , 50));
 	}
-	for (unsigned int i = 0; i < Game::getGlobalGame()->getEditingArmy()->nUnits(); i++)
+
+	for (unsigned int i = 0; i < editingArmy->nUnits(); i++)
 	{
-		sprintf(str, "%d\n", i);
+		sprintf(str, "%d", i);
 		squad_number.push_back(new Label(str, fntEthnocentric, ColorRGB8::Green, ColorRGB8::White, "LB02"));
-		squad_number[i]->setPosition(Game::getGlobalGame()->getEditingArmy()->getUnitByID(i)->getAvgX() + blueprint->getX(),
-		        Game::getGlobalGame()->getEditingArmy()->getUnitByID(i)->getAvgY() + blueprint->getY());
+		squad_number[i]->setPosition(editingArmy->getUnitByID(i)->getAvgX() + blueprint->getX(), editingArmy->getUnitByID(i)->getAvgY() + blueprint->getY());
 	}
+
 	printf("tactic");
 	list = new TacticList(800, 100);
 	addGuiElement(list);
 	printf("list\n");
-	//else
+
 	squad_focus = nullptr;
 	put_squad = false;
 	move_squad= false;
 	squad_type = 0;
-	//	img1 =
+
 	list->setVisible(false);
 
 	renderCombat = SDL_CreateTexture(Game::getGlobalGame()->getRenderer(), SDL_PIXELFORMAT_RGBA8888,

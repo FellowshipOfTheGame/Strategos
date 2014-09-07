@@ -23,8 +23,9 @@ Create_Army::Create_Army(STATE previous) :
 	resource->AddImage("assets/base.gfx", "blueprint1-bg");
 
 	resource->AddImage("assets/ui.gfx", "menu-bt");
-	resource->AddImage("assets/ui.gfx", "exit-bt");
-	resource->AddImage("assets/ui.gfx", "play-bt");
+	resource->AddImage("assets/ui.gfx", "unit_setup-bt");
+	resource->AddImage("assets/ui.gfx", "back-bt");
+	resource->AddImage("assets/ui.gfx", "load_army-bt");
 	resource->AddImage("assets/army.gfx", "human-ships");
 	fntEthnocentric = resource->GetFont("jostix-14");
 
@@ -32,16 +33,13 @@ Create_Army::Create_Army(STATE previous) :
 	//imagens de fundo
 	imgBackground = resource->GetImage("bg_create_army");
 
-	btn_Next = new Button(520, 660, 150, 24, resource->GetImage("menu-bt"));
-	btn_Next->setText(resource->GetFont("jostix-14"), "Unit Setup", ColorRGB8::White, ColorRGB8::White);
+	btn_Next = new Button(520, 660, resource->GetImage("unit_setup-bt"));
 	addGuiElement(btn_Next);
 
-	btn_Back = new Button(130, 660, 150, 24, resource->GetImage("menu-bt"));
-	btn_Back->setText(resource->GetFont("jostix-14"), "BACK", ColorRGB8::White, ColorRGB8::White);
+	btn_Back = new Button(130, 660, resource->GetImage("back-bt"));
 	addGuiElement(btn_Back);
 
-	btn_Load = new Button(90, 420, 150, 24, resource->GetImage("menu-bt"));
-	btn_Load->setText(resource->GetFont("jostix-14"), "Load", ColorRGB8::White, ColorRGB8::White);
+	btn_Load = new Button(90, 450, resource->GetImage("load_army-bt"));
 	addGuiElement(btn_Load);
 
 	lbl_Title = new Label("Create Army", resource->GetFont("jostix-14"), ColorRGB8::Green, ColorRGB8::Black, "LB02");
@@ -212,17 +210,17 @@ void Create_Army::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Key
 				break;
 		}
 	}
-	if (element == cmb_armys)
-		{
-			switch (action)
-			{
-				case MOUSE_RELEASED_EVENT:
-					break;
+	else if (element == cmb_armys)
+    {
+        switch (action)
+        {
+            case MOUSE_RELEASED_EVENT:
+                break;
 
-				default:
-					break;
-			}
-		}
+            default:
+                break;
+        }
+    }
 }
 
 void Create_Army::Logic()

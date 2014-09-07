@@ -120,10 +120,10 @@ SDL_Rect *Image::createClip(int lines, int collumns, int clipWidth, int clipHeig
 
     for(int i = 0; i < lines; i++)
     {
+        cutY = i * (clipHeight + padding);
+
         if(i == 0)
             cutY += margin;
-
-        cutY = i * (clipHeight + padding);
 
         for(int j = 0; j < collumns; j++, current++)
         {
