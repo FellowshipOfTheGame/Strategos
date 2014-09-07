@@ -268,9 +268,7 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
                                       ColorRGB8::Green, ColorRGB8::White, "LB02"));
                     squad_number[(squad_number.size() - 1)]->setPosition(squad_focus->getAvgX() + blueprint->getX(),
                                                                          squad_focus->getAvgY() + blueprint->getY());
-                    printf ("1 - begin\n");
                     list->setSquad(squad_focus);
-                    printf ("1 - end\n");
             	}
             	put_squad = false;
             }
@@ -309,9 +307,7 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
                             put_squad = true;
                         }
                     }
-                    printf ("2 - begin\n");
 				   list->setSquad(squad_focus);
-				   printf ("2 - end\n");
                    return;
                 }
             }

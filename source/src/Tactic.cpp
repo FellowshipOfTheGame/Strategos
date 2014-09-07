@@ -461,8 +461,14 @@ int MoveRandomly::validateTactic(std::list<Action*> &newActions, TacticValidatio
 	}
 
 	Coordinates coordBase = tvd.validatingUnit->getAveragePos();
-	coordBase.x += (tvd.combatData.randomengine.nextInt()%300) - 150;
-	coordBase.y += (tvd.combatData.randomengine.nextInt()%300) - 150;
+    
+    coordBase.x += (tvd.combatData.randomengine.nextInt()%300) - 150;
+    coordBase.y += (tvd.combatData.randomengine.nextInt()%300) - 150;
+        
+    if(coordBase.x <= 24)
+        coordBase.x = 768;
+    if(coordBase.y <= 24)
+        coordBase.y = 280;
 
 	for (unsigned int i = 0; i < tvd.validatingUnit->nShips(); ++i)
 	{
