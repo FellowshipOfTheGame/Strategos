@@ -583,7 +583,7 @@ TacticList::~TacticList()
 
 void TacticList::draw()
 {
-	int max = (lista.size() < top + 5) ? lista.size() : top + 5;
+	int max = (lista.size() < top + 5) ? (int)lista.size() : top + 5;
 	if (this->shown)
 	{
 		btn_up->draw();
@@ -679,7 +679,7 @@ void TacticList::update()
 		iter++;
 	}
 	//encontra o indice desta opcao
-	int index = distance(lista.begin(), iter);
+	int index = (int)distance(lista.begin(), iter);
 
 	//adiciona taticas da nova squad na lista
 	if (squad)

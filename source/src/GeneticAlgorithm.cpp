@@ -98,10 +98,10 @@ void GeneticAlgorithm::run()
         printf("GENERATION %d\n", i);
 //#endif
 
-        srand(time(nullptr));
+        srand((unsigned)time(nullptr));
 
         // Completar exercito para INDIVIDUOS_GERACAO
-        randomArmies( INDIVIDUOS_GERACAO - individuos.size());
+        randomArmies( INDIVIDUOS_GERACAO - (int)individuos.size());
         // Adicionar alguns individuos aleatorios
         randomArmies( add_random_armies );
 
@@ -145,11 +145,11 @@ void GeneticAlgorithm::run()
 void GeneticAlgorithm::selectFromPop(unsigned int n, std::vector<Army*>& selected, std::vector<Army*>& rejected)
 {
     // Executar batalhas para calcular o fitnes
-    printf("Battle for %d individuos\n", individuos.size());
+    printf("Battle for %lu individuos\n", individuos.size());
 
     std::vector<std::thread> threads;
 
-    const int nPerThread = individuos.size()/allowedThreads;
+    const int nPerThread = (int)individuos.size()/allowedThreads;
     for (int i = 0; i < allowedThreads; ++i){
         threads.push_back( std::thread(&GeneticAlgorithm::threadSimulate, this, i*nPerThread, nPerThread ) );
     }

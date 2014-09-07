@@ -133,7 +133,7 @@ Dictionary *Game::getDictionary(const std::string& name) const
 
 int Game::getNDictionary() const
 {
-    return dict.size();
+    return (int)dict.size();
 }
 
 SDL_Renderer *Game::getRenderer()
@@ -174,7 +174,7 @@ void Game::loadDictionaries()
 			dict.push_back(dny);
 	}
 
-	printf("== Loaded %u dictionaries ==\n", dict.size());
+	printf("== Loaded %lu dictionaries ==\n", dict.size());
 }
 
 void Game::generateSprites(const Dictionary *d){

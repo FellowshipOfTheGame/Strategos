@@ -92,7 +92,7 @@ void Play::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keysym key
             Algorithm **algorithm = Game::getGlobalGame()->getAlgorithm();
 
             const std::vector<Army*>& ar = algorithm[0]->getSelectedArmies();
-            printf("NArmies: %u\n", ar.size());
+            printf("NArmies: %lu\n", ar.size());
             for (unsigned int i = 0; i < ar.size(); ++i)
             {
                 printf("Army: %d, Units: %d\n", i, ar[i]->nUnits());

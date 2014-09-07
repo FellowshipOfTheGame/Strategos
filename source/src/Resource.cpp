@@ -107,7 +107,7 @@ Image* Resource::LoadImage(std::fstream &file, const std::string& key)
 {
 	std::string tag = " ";
 	std::string path = "\0";
-	int nLines, nCols, clipWidth, clipHeight, margin, padding, centerX=0, centerY=0;
+	int nLines = 0, nCols = 0, clipWidth = 0, clipHeight = 0, margin = 0, padding = 0, centerX=0, centerY=0;
 	int success = 0;
 
 
@@ -320,7 +320,7 @@ Mix_Chunk* Resource::LoadSound(std::fstream &file, const std::string& key)
     std::string tag = "\0";
 	std::string path = "\0";
 	int success = 0;
-	float volume;
+	float volume = 0.0;
 
 	while(tag.compare("!") != 0)
 	{
@@ -362,8 +362,8 @@ void Resource::getListOfFiles(std::vector<std::string> &myVec, std::string insid
         /* print all the files and directories within directory */
         while ((ent = readdir (dir)) != nullptr)
         {
-            int len = strlen(ent->d_name);
-            for (int i = 0, L = extension.size(); i < L; ++i)
+            int len = (int)strlen(ent->d_name);
+            for (unsigned long i = 0, L = extension.size(); i < L; ++i)
             {
                 if ( ent->d_name[len-L+i] != extension.at(i)){
                     len = -1;

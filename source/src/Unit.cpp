@@ -156,7 +156,7 @@ Tactic* Unit::getTacticAt(unsigned int pos)
 }
 
 unsigned int Unit::getTacticSize() const{
-	return tactics.size();
+	return (int)tactics.size();
 }
 
 Ship* Unit::getShip(unsigned long gid) const
@@ -325,11 +325,11 @@ void Unit::printInfo()
 	printf("atkCooldown: %d\n", mySquadInfo->stats.maxAtkCD);
 	printf("squadSize: %d \t Alive: %d\n", mySquadInfo->squadSize, shipsAlive);
 
-    printf("Tactics: %d\n", tactics.size());
+    printf("Tactics: %lu\n", tactics.size());
 	for (unsigned int i = 0; i < tactics.size(); i++)
 		printf("-> %s\n",tactics[i]->printTactic().c_str());
 
-    printf("Actions: %d\n", shipsActions.size());
+    printf("Actions: %lu\n", shipsActions.size());
     for (Action* ac : shipsActions)
     {
         if (dynamic_cast<ExplosionAction*>(ac))

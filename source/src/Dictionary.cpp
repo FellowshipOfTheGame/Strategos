@@ -134,7 +134,7 @@ int Dictionary::loadDictionary(const char *inputFile, Resource &resource)
         ++nTypes;
     }
 
-    return keys.size();
+    return (int)keys.size();
 }
 
 const DictKey* Dictionary::getInfoFor(unsigned int pos) const
