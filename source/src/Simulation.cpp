@@ -211,7 +211,7 @@ void Simulation::Logic()
             switch (simulationSTATE)
             {
                 case _SIM_ARMY0_WIN_:
-                    if (Game::getGlobalGame()->getArmy1()->getIsPlayer() == 1){
+                    if (Game::getGlobalGame()->getArmy1()->getIsPlayer() == 1 && Game::getGlobalGame()->getArmy2()->getIsPlayer() == 0){
                         Game::getGlobalGame()->updateAI();
                         Game::getGlobalGame()->winner = 1;
                     }
@@ -219,7 +219,7 @@ void Simulation::Logic()
                 break;
 
                 case _SIM_ARMY1_WIN_:
-                    if (Game::getGlobalGame()->getArmy2()->getIsPlayer() == 1){
+                    if (Game::getGlobalGame()->getArmy2()->getIsPlayer() == 1 && Game::getGlobalGame()->getArmy1()->getIsPlayer() == 0){
                         Game::getGlobalGame()->updateAI();
                         Game::getGlobalGame()->winner = 1;
                     }
