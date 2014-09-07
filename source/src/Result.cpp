@@ -13,6 +13,8 @@ Result::Result(STATE previous) :
 	int scrHeight = Game::getGlobalGame()->getHeight();
 	Resource *resource = Game::getGlobalGame()->getResourceMNGR();
 
+    resource->AddImage("assets/ui.gfx", "menu-bt");
+
 	//imagens de fundo
 	if (Game::getGlobalGame()->winner){
         resource->AddImage("assets/ui.gfx", "bg-win");

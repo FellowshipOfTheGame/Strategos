@@ -45,7 +45,7 @@ Simulation::Simulation(STATE previous)
     }else{
     	printf ("ambos nao nulos");
     }
-    //simulationWorld = new World("rbrararb", "rarbrbra");
+
     Game::getGlobalGame()->generateSprites(game->getArmy1()->getDictionary());
     Game::getGlobalGame()->generateSprites(game->getArmy2()->getDictionary());
 

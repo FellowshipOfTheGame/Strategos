@@ -11,7 +11,7 @@
 //a principio ta pronto
 Button::Button(int x, int y, int width, int height, const Image *back)
 {
-    //assert(back != nullptr);
+    assert(back != nullptr);
 
     stringImg = 0;
 	this->font = nullptr;
@@ -33,7 +33,7 @@ Button::Button(int x, int y, int width, int height, const Image *back)
 
 Button::Button(int x, int y, const Image *back)
 {
-    //assert(back != nullptr);
+    assert(back != nullptr);
 
     stringImg = 0;
 	this->font = nullptr;
