@@ -205,6 +205,7 @@ private:
 	Unit *squad;
 	unsigned int top;
 	void initialize();
+
 public:
 	TacticList(int x, int y);
 	TacticList(Unit *squad, int x, int y);

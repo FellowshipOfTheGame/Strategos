@@ -170,8 +170,14 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
 		switch (action)
 		{
 			case MOUSE_RELEASED_EVENT:
+			    if (squad_focus == nullptr)
+                    return;
+
 				if (!put_squad && squad_focus->getType() != 0)
 				{
+				    delete squad_number[squad_focus->getID()];
+					squad_number.erase(squad_number.begin() + squad_focus->getID());
+
 					Game::getGlobalGame()->getEditingArmy()->removeUnit(squad_focus->getID());
 					squad_focus = nullptr;
 				}
@@ -182,20 +188,20 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
 		}
 	}
 	else if (element == btn_Move)
-		{
-			switch (action)
-			{
-				case MOUSE_RELEASED_EVENT:
-					if (!move_squad)
-					{
-						move_squad = true;
-					}
-					return;
+    {
+        switch (action)
+        {
+            case MOUSE_RELEASED_EVENT:
+                if (!move_squad)
+                {
+                    move_squad = true;
+                }
+                return;
 
-                default:
-                break;
-			}
-		}
+            default:
+            break;
+        }
+    }
 	else if ((element == bx1) && (!move_squad))
 	{
 		switch (action)
@@ -275,7 +281,7 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
             }
             else
             {
-                Coordinates c(mouseX, mouseY);
+                Coordinates c(mouseX- blueprint->getX(), mouseY- blueprint->getY());
                 squad_focus->moveTo(c);
 
                 put_squad = !put_squad;
@@ -294,24 +300,33 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
                 Unit* unit = editingArmy->getUnitByID(i);
                 if (unit->hover(mouseX-blueprint->getX(), mouseY-blueprint->getY()))
                 {
-                    if (squad_focus == unit)
+                    if ( move_squad )
                     {
-                        squad_focus = nullptr;
-                        list->setVisible(false);
+                        put_squad = true;
+                        squad_focus = unit;
+                        list->setVisible(true);
                     }
                     else
                     {
-                        squad_focus = unit;
-                        list->setVisible(true);
-                        if (move_squad)
+                        if (squad_focus == unit)
                         {
-                            put_squad = true;
+                            squad_focus = nullptr;
+                            list->setVisible(false);
+                        }
+                        else
+                        {
+                            squad_focus = unit;
+                            list->setVisible(true);
                         }
                     }
 				   list->setSquad(squad_focus);
                    return;
                 }
             }
+
+            squad_focus = nullptr;
+            list->setSquad(squad_focus);
+            list->setVisible(false);
 		}
 	}
 }
@@ -324,7 +339,6 @@ void Unit_Setup::Logic()
 
     // mover as naves
 	Game::getGlobalGame()->getEditingArmy()->update(rnd);
-
 
 }
 

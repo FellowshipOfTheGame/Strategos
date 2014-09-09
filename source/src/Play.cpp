@@ -32,33 +32,25 @@ Play::Play(STATE previous) :
 	btSimulate = new Button(350, 670, resource->GetImage("start-bt"));
 	addGuiElement(btSimulate);
 
-	cbSelect1 = new ComboBox(175, 450, 150, 17, nullptr, ColorRGB8::Green, ColorRGB8::Black, "CB01");
+	cbSelect1 = new ComboBox(175, 450, nullptr, ColorRGB8::Green, ColorRGB8::Black);
 	cbSelect1->setFont(fntEthnocentric);
 	cbSelect1->addText("Player");
 	cbSelect1->addText("CPU");
 	addGuiElement(cbSelect1);
 
-	cbSelect2 = new ComboBox(700, 450, 150, 17, nullptr, ColorRGB8::Green, ColorRGB8::Black, "CB02");
+	cbSelect2 = new ComboBox(700, 450, nullptr, ColorRGB8::Green, ColorRGB8::Black);
 	cbSelect2->setFont(fntEthnocentric);
 	cbSelect2->addText("Player");
 	cbSelect2->addText("CPU");
 	addGuiElement(cbSelect2);
 
-	cbPlayer1 = new ComboBox(200, 500, 200, 17, nullptr, ColorRGB8::Green, ColorRGB8::Black, "CB-AP01");
+	cbPlayer1 = new ComboBox(200, 500, nullptr, ColorRGB8::Green, ColorRGB8::Black);
 	cbPlayer1->setFont(fntEthnocentric);
 	addGuiElement(cbPlayer1);
-	/*cbCPU1 = new ComboBox(240, 200, 200, 17, nullptr, ColorRGB8::Green, ColorRGB8::Black, "CB-AC01");
-	cbCPU1->setFont(fntEthnocentric);
-	cbCPU1->setVisible(false);
-	addGuiElement(cbCPU1);*/
 
-	cbPlayer2 = new ComboBox(720, 500, 200, 17, nullptr, ColorRGB8::Green, ColorRGB8::Black, "CB-AP02");
+	cbPlayer2 = new ComboBox(720, 500, nullptr, ColorRGB8::Green, ColorRGB8::Black);
 	cbPlayer2->setFont(fntEthnocentric);
 	addGuiElement(cbPlayer2);
-	/*cbCPU2 = new ComboBox(240, 400, 200, 17, nullptr, ColorRGB8::Green, ColorRGB8::Black, "CB-AC02");
-	cbCPU2->setFont(fntEthnocentric);
-	cbCPU2->setVisible(false);
-	addGuiElement(cbCPU2);*/
 
 	//Populate the combo-boxes with the name of the armies already created
 	std::vector<std::string> datFiles;

@@ -47,7 +47,6 @@ Menu::~Menu()
 
 void Menu::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keysym key, Uint8 button)
 {
-    printf("EVENTO!\n");
 	if(element == btExit)
 	{
 		switch (action)

@@ -17,8 +17,7 @@ TacticSet::TacticSet(int x, int y, std::string GID)
 	this->x = x;
 	this->y = y;
 	box_container = new Box(x, y, 200, 100, Game::getGlobalGame()->getResourceMNGR()->GetImage("combo-cmb"), nullptr, "BOX" + GID);
-	cmb_choiser = new ComboBox(x + 2, y + 2, 200, 20, Game::getGlobalGame()->getResourceMNGR()->GetImage("combo-cmb"), ColorRGB8::Black,
-	        ColorRGB8::White, "COMBO" + GID);
+	cmb_choiser = new ComboBox(x + 2, y + 2, Game::getGlobalGame()->getResourceMNGR()->GetImage("combo-cmb"), ColorRGB8::White, ColorRGB8::White);
 	cmb_choiser->setFont(Game::getGlobalGame()->getResourceMNGR()->GetFont("jostix-14"));
 	this->GID = GID;
 
@@ -32,11 +31,10 @@ TacticSet::TacticSet(int x, int y, std::string GID)
 
 	guiTactic = new TacticAN(x, 5 + cmb_choiser->getY() + cmb_choiser->getHeight(), GID);
 
-	tg1 = new TriggerSet(x + 2, 5 + guiTactic->getY() + guiTactic->getHeight());
+	tg1 = new TriggerSet(x + 2, 5 + guiTactic->getY() + guiTactic->getHeight()+22);
 	tg2 = new TriggerSet(x + 2, 5 + tg1->getY() + tg1->getHeight());
 
-	cmb_logic = new ComboBox(x + 2, 5 + tg2->getY() + tg2->getHeight(), 200, 20, Game::getGlobalGame()->getResourceMNGR()->GetImage("combo-cmb"),
-                                ColorRGB8::Black, ColorRGB8::White, "COMBO" + GID);
+	cmb_logic = new ComboBox(x + 2, 5 + tg2->getY() + tg2->getHeight(), Game::getGlobalGame()->getResourceMNGR()->GetImage("combo-cmb"), ColorRGB8::White, ColorRGB8::White);
 	cmb_logic->setFont(Game::getGlobalGame()->getResourceMNGR()->GetFont("jostix-14"));
 	cmb_logic->addText("AND");
 	cmb_logic->addText("OR");
@@ -79,7 +77,7 @@ Tactic* TacticSet::getTactic()
 	switch (cmb_choiser->getSelectedIndex())
 	{
 		case 0:
-			temp = Tactic::copy(tactic);//new AttackNearestEnemy(tactic);
+			temp = new AttackNearestEnemy(info, tactic->getTacticTrigger());
 			break;
 		case 1:
 			temp = new AttackWeakestEnemy(info, tactic->getTacticTrigger());
@@ -151,46 +149,56 @@ void TacticSet::setTactic(Tactic *t, int id)
 	guiTactic->setPosition(x+2, 5+cmb_choiser->getY() + cmb_choiser->getHeight());
 	tactic = t;
 }
+
 INPUT_EVENT TacticSet::input(SDL_Event &event)
 {
 	INPUT_EVENT e = NO_EVENT;
-	if (cmb_choiser->hover())
+
+	e = cmb_choiser->input(event);
+	if (e != NO_EVENT)
 	{
-		e = cmb_choiser->input(event);
 		if (cmb_choiser->getSelectedIndex() != tactic->getType())
 		{
 			printf ("cliquei na opcao %d", cmb_choiser->getSelectedIndex());
 			Tactic *temp = getTactic();
 			delete tactic;
 			setTactic(temp, unit_id);
-			tg1->setPosition(x + 2, 5 + guiTactic->getY() + guiTactic->getHeight());
-			tg2->setPosition(x + 2, 5 + tg1->getY() + tg1->getHeight());
 
-			cmb_logic->setPosition(x + 2, 5 + tg2->getY() + tg2->getHeight());
 			this->height = (cmb_logic->getY() + cmb_logic->getHeight()) - cmb_choiser->getY();
 			printf ("tactic type: %d\n",tactic->getType());
 		}
+
+		return e;
 	}
-	else if (guiTactic->hover())
-	{
-		e = guiTactic->input(event);
+
+    e = guiTactic->input(event);
+	if (e != NO_EVENT){
+	    return e;
 	}
-	else if (tg1->hover())
+
+	e = tg1->input(event);
+    if (e != NO_EVENT)
 	{
-		e = tg1->input(event);
 		tactic->getTacticTrigger().setTriggerA(tg1->getTrigger());
+		return e;
 	}
-	else if (tg2->hover())
+
+    e = tg2->input(event);
+	if (e != NO_EVENT)
 	{
-		e = tg2->input(event);
 		tactic->getTacticTrigger().setTriggerB(tg2->getTrigger());
+		return e;
 	}
-	else if (cmb_logic->hover())
+
+    e = cmb_logic->input(event);
+	if (e != NO_EVENT)
 	{
-		e = cmb_logic->input(event);
+	    printf("cmb_logic %d\n", e);
 		tactic->getTacticTrigger().setLogicOperator(cmb_logic->getSelectedIndex());
+		return e;
 	}
-	return e;
+
+	return NO_EVENT;
 }
 
 void TacticSet::convert_AN()
@@ -250,6 +258,7 @@ void TacticSet::convert_RM()
 		guiTactic = new TacticRM(x, y, GID);
 	}
 }
+
 /*GuiTactic*/
 GuiTactic::GuiTactic(int x, int y, std::string GID)
 {
@@ -339,7 +348,7 @@ TacticCA::TacticCA(int x, int y, int id, std::string GID) :
 {
 	this->x=x;
 	this->y=y;
-	cmb_partner = new ComboBox(x, y, 50, 30, Game::getGlobalGame()->getResourceMNGR()->GetImage("combo-cmb"), ColorRGB8::Black, ColorRGB8::White, "COMBO" + GID);
+	cmb_partner = new ComboBox(x, y, Game::getGlobalGame()->getResourceMNGR()->GetImage("combo-cmb"), ColorRGB8::White, ColorRGB8::White);
 	cmb_partner->setFont(Game::getGlobalGame()->getResourceMNGR()->GetFont("jostix-14"));
 
 	char str[5];
@@ -387,7 +396,7 @@ TacticCD::TacticCD(int x, int y, int id, std::string GID) :
 {
 	this->x=x;
 	this->y=y;
-	cmb_partner = new ComboBox(x , y, 50, 30, Game::getGlobalGame()->getResourceMNGR()->GetImage("combo-cmb"), ColorRGB8::Black, ColorRGB8::White, "COMBO" + GID);
+	cmb_partner = new ComboBox(x , y, Game::getGlobalGame()->getResourceMNGR()->GetImage("combo-cmb"), ColorRGB8::White, ColorRGB8::White);
 	cmb_partner->setFont(Game::getGlobalGame()->getResourceMNGR()->GetFont("jostix-14"));
 
 	char str[5];
@@ -455,7 +464,7 @@ TacticRT::TacticRT(int x, int y, int id, std::string GID) :
 {
 	this->x=x;
 	this->y=y;
-	cmb_partner = new ComboBox(x , y , 50, 30, Game::getGlobalGame()->getResourceMNGR()->GetImage("combo-cmb"), ColorRGB8::Black, ColorRGB8::White, "COMBO" + GID);
+	cmb_partner = new ComboBox(x , y, Game::getGlobalGame()->getResourceMNGR()->GetImage("combo-cmb"), ColorRGB8::White, ColorRGB8::White);
 	cmb_partner->setFont(Game::getGlobalGame()->getResourceMNGR()->GetFont("jostix-14"));
 
 	char str[5];
@@ -731,32 +740,34 @@ bool TacticList::hover()
 
 INPUT_EVENT TacticList::input(SDL_Event &event)
 {
-	if ((this->selected) && (tct_set->hover()))
+    INPUT_EVENT e = NO_EVENT;
+
+	if ( this->selected )
 	{
-		INPUT_EVENT e = tct_set->input(event);
-		if (e != NO_EVENT)
-		{
-			if ((selected != nullptr) && (squad->getTacticSize() > 0))
-			{
-				int i = 0;
-				std::vector<ItemList*>::iterator iter = lista.begin();
-				while (iter != lista.end())
-				{
-					if ((*iter) == selected)
-					{
-						squad->setTacticAt(tct_set->getTactic(), i);
-						break;
-					}
-					++i;
-					++iter;
-				}
-			}
-		}
-		return e;
+	    e = tct_set->input(event);
+        if (e != NO_EVENT && squad->getTacticSize() > 0 )
+        {
+            int i = 0;
+            std::vector<ItemList*>::iterator iter = lista.begin();
+            while (iter != lista.end())
+            {
+                if ((*iter) == selected)
+                {
+                    squad->setTacticAt(tct_set->getTactic(), i);
+                    break;
+                }
+                ++i;
+                ++iter;
+            }
+
+            return e;
+        }
 	}
-	if (btn_up->hover())
+
+	e = btn_up->input(event);
+	if (e != NO_EVENT)
 	{
-		switch (btn_up->input(event))
+		switch ( e )
 		{
 			case MOUSE_RELEASED_EVENT:
 				if (top > 0)
@@ -766,10 +777,14 @@ INPUT_EVENT TacticList::input(SDL_Event &event)
 			default:
 				break;
 		}
+
+		return e;
 	}
-	else if (btn_down->hover())
+
+	e = btn_down->input(event);
+	if ( e != NO_EVENT )
 	{
-		switch (btn_down->input(event))
+		switch (e)
 		{
 			case MOUSE_RELEASED_EVENT:
 				if (top + 5 < lista.size())
@@ -779,13 +794,15 @@ INPUT_EVENT TacticList::input(SDL_Event &event)
 			default:
 				break;
 		}
+		return e;
 	}
-	else if (btn_plus->hover())
+
+	e = btn_plus->input(event);
+	if ( e != NO_EVENT )
 	{
 		TacticInfo info(0);
-		switch (btn_plus->input(event))
+		switch (e)
 		{
-
 			case MOUSE_RELEASED_EVENT:
 				lista.push_back(new ItemList());
 				squad->addTactic(new AttackNearestEnemy(info, TacticTrigger(new Trigger_Always(), new Trigger_Always(), 0)));
@@ -795,13 +812,16 @@ INPUT_EVENT TacticList::input(SDL_Event &event)
 			default:
 				break;
 		}
+		return e;
 	}
-	else if (btn_minus->hover())
+
+	e = btn_minus->input(event);
+	if (e != NO_EVENT)
 	{
-		switch (btn_minus->input(event))
+		switch (e)
 		{
 			case MOUSE_RELEASED_EVENT:
-				if ((selected != nullptr) && (squad->getTacticSize() > 0))
+				if ( (selected != nullptr) && (squad->getTacticSize() > 0) )
 				{
 					int i = 0;
 					std::vector<ItemList*>::iterator iter = lista.begin();
@@ -809,12 +829,12 @@ INPUT_EVENT TacticList::input(SDL_Event &event)
 					{
 						if ((*iter) == selected)
 						{
-							iter = lista.erase(lista.begin() + i);
-
+							iter = lista.erase(iter);
 							break;
 						}
-						i++;
+						++i;
 					}
+
 					squad->removeTactic(i);
 					delete selected;
 					selected = nullptr;
@@ -824,10 +844,13 @@ INPUT_EVENT TacticList::input(SDL_Event &event)
 			default:
 				break;
 		}
+		return e;
 	}
-	else if (btn_show->hover())
+
+	e = btn_show->input(event);
+	if (e != NO_EVENT)
 	{
-		switch (btn_show->input(event))
+		switch (e)
 		{
 			case MOUSE_RELEASED_EVENT:
 				this->shown= !this->shown;
@@ -835,41 +858,46 @@ INPUT_EVENT TacticList::input(SDL_Event &event)
 			default:
 				break;
 		}
+
+		return e;
 	}
-	else
-	{
-		for (unsigned int i = 0; i < lista.size(); i++)
-		{
-			if (lista[i]->hover())
-			{
-				switch (event.type)
-				{
-					case SDL_MOUSEBUTTONUP:
-						if (selected == nullptr)
-						{
-							this->height += tct_set->getHeight();
-						}
-						if (selected == lista[i])
-						{
-							selected->setSelected(false);
-							selected = nullptr;
-							this->height -= tct_set->getHeight();
-						}
-						else
-						{
-							if (selected != nullptr)
-							{
-								selected->setSelected(false);
-							}
-							selected = lista[i];
-							selected->setSelected(true);
-							tct_set->setTactic(squad->getTacticAt(i), squad->getID());
-						}
-						return MOUSE_RELEASED_EVENT;
-				}
-			}
-		}
-	}
+
+	// Checar se clicou em outro item da lista
+    for (unsigned int i = 0; i < lista.size(); i++)
+    {
+        if (lista[i]->hover())
+        {
+            switch (event.type)
+            {
+                case SDL_MOUSEBUTTONUP:
+                    if (selected == lista[i])
+                    {
+                        selected->setSelected(false);
+                        selected = nullptr;
+                        this->height -= tct_set->getHeight();
+
+                        // Adicionar tamanho do editor de taticas
+                        if (selected == nullptr){
+                            this->height += tct_set->getHeight();
+                        }
+                    }
+                    else
+                    {
+                        if (selected != nullptr)
+                        {
+                            selected->setSelected(false);
+                        }
+                        selected = lista[i];
+                        selected->setSelected(true);
+                        tct_set->setTactic(squad->getTacticAt(i), squad->getID());
+                    }
+                return MOUSE_RELEASED_EVENT;
+            }
+
+            return MOUSE_OVER;
+        }
+    }
+
 	return NO_EVENT;
 }
 /*************************************************************/
@@ -962,25 +990,24 @@ INPUT_EVENT ItemList::input(SDL_Event &event)
 	}
 	return NO_EVENT;
 }
+
 /*************************************************************/
+
 TriggerSet::TriggerSet(int x, int y)
 {
 	this->x = x;
 	this->y = y;
 	this->width = 100;
-	cmb_trigger = new ComboBox(x, y, 200, 20, Game::getGlobalGame()->getResourceMNGR()->GetImage("combo-cmb"), ColorRGB8::Black, ColorRGB8::White,
-	        "COMBO" + GID);
+	cmb_trigger = new ComboBox(x, y, Game::getGlobalGame()->getResourceMNGR()->GetImage("combo-cmb"), ColorRGB8::White, ColorRGB8::White);
 	cmb_trigger->setFont(Game::getGlobalGame()->getResourceMNGR()->GetFont("jostix-14"));
 	cmb_trigger->addText("ALWAYS");
 	cmb_trigger->addText("LIFE");
-	cmb_trigger->addText("SHIELD");
 
-	cmb_operation = new ComboBox(x, cmb_trigger->getY() + cmb_trigger->getHeight(), 200, 20,
-	        Game::getGlobalGame()->getResourceMNGR()->GetImage("combo-cmb"), ColorRGB8::Black, ColorRGB8::White, "COMBO" + GID);
+	cmb_operation = new ComboBox(x, cmb_trigger->getY() + cmb_trigger->getHeight(), Game::getGlobalGame()->getResourceMNGR()->GetImage("combo-cmb"), ColorRGB8::White, ColorRGB8::White);
 	cmb_operation->setFont(Game::getGlobalGame()->getResourceMNGR()->GetFont("jostix-14"));
-	cmb_operation->addText("    =   ");
-	cmb_operation->addText("   <=   ");
-	cmb_operation->addText("   >=   ");
+	cmb_operation->addText("   = ");
+	cmb_operation->addText("  <= ");
+	cmb_operation->addText("  >= ");
 
 	value = new TextField(x, cmb_operation->getY() + cmb_operation->getHeight(), 190, 20,
 	        Game::getGlobalGame()->getResourceMNGR()->GetImage("textfield-text"), ColorRGB8::White, "TF02");
@@ -988,12 +1015,14 @@ TriggerSet::TriggerSet(int x, int y)
 	value->setText("100");
 	this->height = (value->getY() + value->getHeight()) - cmb_trigger->getY();
 }
+
 TriggerSet::~TriggerSet()
 {
 	delete cmb_trigger;
 	delete cmb_operation;
 	delete value;
 }
+
 Trigger* TriggerSet::getTrigger()
 {
 	Trigger *tg = 0;
@@ -1005,37 +1034,36 @@ Trigger* TriggerSet::getTrigger()
 		case 1:
 			tg = new Trigger_Life(atoi(value->getText().c_str()), cmb_operation->getSelectedIndex());
 			break;
-		case 2:
-			tg = new Trigger_Life(atoi(value->getText().c_str()), cmb_operation->getSelectedIndex());
-			break;
 	}
 	return tg;
 }
+
 void TriggerSet::draw()
 {
 	cmb_trigger->setPosition(this->x, this->y);
-	cmb_operation->setPosition(this->x, cmb_trigger->getY()+cmb_trigger->getHeight());
-	value->setPosition(this->x,cmb_operation->getY()+cmb_operation->getHeight());
-
+	cmb_operation->setPosition(this->x, cmb_trigger->getY()+cmb_trigger->getHeight()+1);
+	value->setPosition(this->x,cmb_operation->getY()+cmb_operation->getHeight()+1);
 
 	value->draw();
 	cmb_operation->draw();
 	cmb_trigger->draw();
 }
+
 INPUT_EVENT TriggerSet::input(SDL_Event &event)
 {
 	INPUT_EVENT e = NO_EVENT;
-	if (cmb_trigger->hover())
-	{
-		e = cmb_trigger->input(event);
-	}
-	else if (cmb_operation->hover())
-	{
-		e = cmb_operation->input(event);
-	}
-	else
-	{
-		e = value->input(event);
-	}
-	return e;
+
+    e = cmb_trigger->input(event);
+	if (e != NO_EVENT)
+        return e;
+
+    e = cmb_operation->input(event);
+	if (e != NO_EVENT)
+        return e;
+
+    e = value->input(event);
+    if (e != NO_EVENT)
+        return e;
+
+	return NO_EVENT;
 }

@@ -36,7 +36,7 @@ sfxExplode1: assets/Audio.sfx explosion1
 sfxExplode2: assets/Audio.sfx explosion2
 sfxExplode3: assets/Audio.sfx explosion3
 sfxExplode4: assets/Audio.sfx explosion4
-sfxShoot: assets/Audio.sfx shoot1
+sfxShoot: assets/Audio.sfx shoot2
 END_SHIP
 
 ship: AncientCruiser

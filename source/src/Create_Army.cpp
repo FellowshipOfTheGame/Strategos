@@ -15,7 +15,6 @@ Create_Army::Create_Army(STATE previous) :
 {
 	int scrWidth = Game::getGlobalGame()->getWidth();
 	int scrHeight = Game::getGlobalGame()->getHeight();
-	Font *fntEthnocentric;
 
 	Resource *resource = Game::getGlobalGame()->getResourceMNGR();
 	resource->AddImage("assets/ui.gfx", "bg_create_army");
@@ -26,40 +25,45 @@ Create_Army::Create_Army(STATE previous) :
 	resource->AddImage("assets/ui.gfx", "unit_setup-bt");
 	resource->AddImage("assets/ui.gfx", "back-bt");
 	resource->AddImage("assets/ui.gfx", "load_army-bt");
+	resource->AddImage("assets/ui.gfx", "combo-cmb");
 	resource->AddImage("assets/army.gfx", "human-ships");
-	fntEthnocentric = resource->GetFont("jostix-14");
 
-	resource->AddFont("assets/fonts.gfx", "jostix-14");
+
+	resource->AddFont("assets/fonts.gfx", "general-gui");
+	Font *fntGui = resource->GetFont("general-gui");
+
 	//imagens de fundo
 	imgBackground = resource->GetImage("bg_create_army");
 
+	// Botoes
 	btn_Next = new Button(520, 660, resource->GetImage("unit_setup-bt"));
 	addGuiElement(btn_Next);
 
 	btn_Back = new Button(130, 660, resource->GetImage("back-bt"));
 	addGuiElement(btn_Back);
 
-	btn_Load = new Button(90, 450, resource->GetImage("load_army-bt"));
+	btn_Load = new Button(scrWidth * 0.5, scrHeight * 0.3, resource->GetImage("load_army-bt"));
 	addGuiElement(btn_Load);
 
-	lbl_Title = new Label("Create Army", resource->GetFont("jostix-14"), ColorRGB8::Green, ColorRGB8::Black, "LB02");
+	// Labels
+	lbl_Title = new Label("Create Army", fntGui, ColorRGB8::Green, ColorRGB8::Black, "LB02");
 	lbl_Title->setPosition(scrWidth * 0.45, scrHeight * 0.05);
 	addGuiElement(lbl_Title);
 
-	lbl_ArmyName = new Label("Army Name", resource->GetFont("jostix-14"), ColorRGB8::Green, ColorRGB8::Black, "LB02");
+	lbl_ArmyName = new Label("Army Name", fntGui, ColorRGB8::Green, ColorRGB8::Black, "LB02");
 	lbl_ArmyName->setPosition(360, 120);
 	addGuiElement(lbl_ArmyName);
 
-	txt_ArmyName = new TextField(510, 120, 190, 17, Game::getGlobalGame()->getResourceMNGR()->GetImage("textfield-text"),
-	        ColorRGB8::Green, "TF02");
-	txt_ArmyName->setFont(Game::getGlobalGame()->getResourceMNGR()->GetFont("jostix-14"));
+	// Txt Field
+	txt_ArmyName = new TextField(510, 120, 190, 28, resource->GetImage("textfield-text"), ColorRGB8::Green, "TF02");
+	txt_ArmyName->setFont(fntGui);
 	txt_ArmyName->setText("");
 	addGuiElement(txt_ArmyName);
 
-	cmb_species = new ComboBox(92, 360, 150, 17, Game::getGlobalGame()->getResourceMNGR()->GetImage("combo-cmb"),
-	        ColorRGB8::Green, ColorRGB8::Black, "CB01");
+	// Tipo do exercito
+	cmb_species = new ComboBox(scrWidth * 0.2, scrHeight * 0.6, resource->GetImage("combo-cmb"), ColorRGB8::Green, ColorRGB8::Black);
 
-    cmb_species->setFont(fntEthnocentric);
+    cmb_species->setFont(fntGui);
     for (int i = 0; i < Game::getGlobalGame()->getNDictionary(); ++i)
     {
         dct = Game::getGlobalGame()->getDictionary(i);
@@ -70,7 +74,7 @@ Create_Army::Create_Army(STATE previous) :
     // Default: Dict 0
 	dct = Game::getGlobalGame()->getDictionary(0);
 	lbl_Descr = new Label("Description", resource->GetFont("jostix-14"), ColorRGB8::Green, ColorRGB8::Black, "LB02");
-	lbl_Descr->setPosition(360, 170);
+	lbl_Descr->setPosition(100, scrHeight * 0.7);
 	lbl_Descr->setText(dct->description);
 	addGuiElement(lbl_Descr);
 
@@ -89,9 +93,8 @@ Create_Army::Create_Army(STATE previous) :
 	bx4 = new ImageBox(scrWidth * 0.6, scrHeight * 0.8, 50, 50, resource->GetImage("human-ships"), 3, nullptr, "BX1");
 	addGuiElement(bx4);
 
-	cmb_armys = new ComboBox(scrWidth * 0.4, scrHeight * 0.4+100, 150, 17, Game::getGlobalGame()->getResourceMNGR()->GetImage("combo-cmb"),
-	        ColorRGB8::Green, ColorRGB8::Black, "CB01");
-	cmb_armys->setFont(fntEthnocentric);
+	cmb_armys = new ComboBox(scrWidth * 0.2, scrHeight * 0.3, resource->GetImage("combo-cmb"), ColorRGB8::Green, ColorRGB8::Black);
+	cmb_armys->setFont(fntGui);
 	addGuiElement(cmb_armys);
 	std::vector<std::string> datFiles;
 	Resource::getListOfFiles(datFiles, "assets/saves/", ".dat");

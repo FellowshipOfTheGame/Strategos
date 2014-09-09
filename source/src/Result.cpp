@@ -51,7 +51,7 @@ Result::Result(STATE previous) :
 	original_log1->calculateGeneralLog();
 	original_log2->calculateGeneralLog();
 
-	graphSteps = 20;
+	graphSteps = 100;
 	graphW = 800;
 	graphH = 500;
 	graphX = 112;   // (windowW-graphW)/2

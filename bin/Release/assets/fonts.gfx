@@ -24,3 +24,8 @@ key: jostix-14
 file: assets/font/joystix_monospace.ttf
 size: 14
 !
+
+key: general-gui
+file: assets/font/heavy_data.ttf
+size: 26
+!

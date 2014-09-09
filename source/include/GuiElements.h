@@ -16,7 +16,8 @@ typedef enum {
 	MOUSE_PRESSED_EVENT,
 	MOUSE_RELEASED_EVENT,
 	KEY_PRESSED_EVENT,
-	KEY_RELEASED_EVENT
+	KEY_RELEASED_EVENT,
+	MOUSE_OVER
 
 } INPUT_EVENT;
 
@@ -188,8 +189,7 @@ class ComboBox : public cGuiElement
         unsigned int lenght;
 
     public:
-        ComboBox(int x, int y, int width, int height, const Image *border, SDL_Color fontColor, SDL_Color fontShadow,std::string GID);
-        //ComboBox(int x, int y, int width, int height, Image *border, string GID);
+        ComboBox(int x, int y, const Image *border, SDL_Color fontColor, SDL_Color fontShadow);
         virtual ~ComboBox();
 
         virtual void update();

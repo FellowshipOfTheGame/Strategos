@@ -180,6 +180,7 @@ void Resource::AddFont(const char *path, const std::string& key)
 				{
 					LoadFont(file, key);
 					success = 1;
+					break;
 				}
 			}
 		}

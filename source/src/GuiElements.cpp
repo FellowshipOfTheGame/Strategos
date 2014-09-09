@@ -128,29 +128,29 @@ void Button::draw()
 
 INPUT_EVENT Button::input(SDL_Event &event)
 {
-	switch (event.type)
-	{
-		case SDL_MOUSEBUTTONDOWN:
-			if (hover(event.button.x, event.button.y))
-			{
-				curFrame = IMG_BUTTON_PRESSED;
-				printf("PRESSED!!!!!!!!!!!!!!!!!!!!!\n");
-				return MOUSE_PRESSED_EVENT;
-			}
-			break;
+    if (hover(event.button.x, event.button.y))
+    {
+        curFrame = IMG_BUTTON_MOUSE_OVER;
+        switch (event.type)
+        {
+            case SDL_MOUSEBUTTONDOWN:
+                curFrame = IMG_BUTTON_PRESSED;
+                return MOUSE_PRESSED_EVENT;
 
-		case SDL_MOUSEBUTTONUP:
-			if (hover(event.button.x, event.button.y))
-			{
-				curFrame = IMG_BUTTON_MOUSE_OVER;
-				return MOUSE_RELEASED_EVENT;
-			}
-			break;
+            case SDL_MOUSEBUTTONUP:
+                return MOUSE_RELEASED_EVENT;
 
-		default:
-			curFrame = IMG_BUTTON_NORMAL;
-			break;
-	}
+            default:
+                curFrame = IMG_BUTTON_NORMAL;
+                break;
+        }
+
+        return MOUSE_OVER;
+    }
+    else
+    {
+        curFrame = IMG_BUTTON_NORMAL;
+    }
 
 	return NO_EVENT;
 }
@@ -435,19 +435,21 @@ void TextField::setFont(Font *font)
 
 /****************************** COMBO_BOX ******************************/
 
-ComboBox::ComboBox(int x, int y, int width, int height, const Image *border, SDL_Color fontColor, SDL_Color fontShadow, std::string GID)
+ComboBox::ComboBox(int x, int y, const Image *Border, SDL_Color fontColor, SDL_Color fontShadow)
 {
-	//list = new std::vector<std::string>(1);
 	this->font = nullptr;
 	this->drop = false;
 	this->x = x;
 	this->y = y;
-	this->width = width;
-	this->height = height;
-	this->cell_height = height;
+	this->width = 100;
+	this->height = 20;
+
+	if (Border)
+        this->cell_height = Border->getFrameHeight();
+
 	this->selected = 0;
 
-	this->border = border;
+	this->border = Border;
 	this->color = fontColor;
 	this->shadow = fontShadow;
 
@@ -471,7 +473,8 @@ ComboBox::~ComboBox()
 void ComboBox::setFont(Font *font)
 {
 	this->font = font;
-	this->cell_height = font->getPtSize()+2;
+	if (!border)
+        this->cell_height = font->getPtSize()+2;
 }
 
 INPUT_EVENT ComboBox::input(SDL_Event &event)
@@ -502,6 +505,7 @@ INPUT_EVENT ComboBox::input(SDL_Event &event)
 					{
 						selected--;
 					}
+
 					printf("selected %d %lu %s\n", selected, list.size(), list[selected].c_str());
 
 					this->height = cell_height;
@@ -520,6 +524,8 @@ INPUT_EVENT ComboBox::input(SDL_Event &event)
 				//curFrame = back->getBaseFrames()*IMG_BUTTON_NORMAL;
 				break;
 		}
+
+		return MOUSE_OVER;
 	}
 
 	return NO_EVENT;
@@ -536,12 +542,12 @@ void ComboBox::draw()
 		{
 			this->height = ((cell_height) * (int)(list.size() + 1));
 
-			// Renderizar fundo
+			// Renderizar fundo quando aberto
 			if (border != nullptr){
                 for (i = 0; i < list.size()+1; i++){
                     border->DrawImage(renderer, x, y + cell_height*i, 0);
-                    for (j = 0; j < lenght; j++){
-                        border->DrawImage(renderer, x +font->getPtSize() *(j+1), y +cell_height*i, 1);
+                    for (j = 0; j < lenght+1; j++){
+                        border->DrawImage(renderer, x + border->getFrameWidth()*(j+1), y +cell_height*i, 1);
                     }
                 }
 			}
@@ -564,12 +570,12 @@ void ComboBox::draw()
 			this->height = cell_height;
 			if (border != nullptr)
 			{
-				border->DrawImage(renderer, x, y - 3, 0);
+				border->DrawImage(renderer, x, y, 0);
 				for (i = 0; i < lenght; i++){
-					border->DrawImage(renderer, x + font->getPtSize() + (font->getPtSize() * i), y - 3, 1);
+					border->DrawImage(renderer, x + (border->getFrameWidth()*(i+1)), y, 1);
 				}
 				// Seta
-				border->DrawImage(renderer, x + font->getPtSize() + (font->getPtSize()*i), y - 3, 2);
+				border->DrawImage(renderer, x + (border->getFrameWidth()*(i+1)), y, 2);
 			}else{
                 SDL_Rect rect;
                 rect.x = x;
@@ -592,8 +598,13 @@ void ComboBox::update()
 void ComboBox::addText(std::string str)
 {
 	if (str.size() > lenght)
-		lenght = (int)str.size() + 2;
+		lenght = (int)str.size() + 1;
 	this->list.push_back(str);
+
+	if ( border )
+        width = (lenght+2)*border->getFrameWidth();
+	else
+        width = (lenght+2)*font->getPtSize();
 
 	Image *t = new Image(font->renderText(Game::getGlobalGame()->getRenderer(), str.c_str(), color), 1, nullptr, 0, 0);
 
