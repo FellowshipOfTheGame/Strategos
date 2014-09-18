@@ -44,6 +44,7 @@ class Unit_Setup : public StateMachine
         SDL_Texture* renderCombat;
 
         ImageBox *bx1,*bx2,*bx3,*bx4;
+        StatusBox *st_box;
 
         Dictionary *dct;
         std::vector<Label*> squad_number;

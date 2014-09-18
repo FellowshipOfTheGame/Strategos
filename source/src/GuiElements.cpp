@@ -171,7 +171,7 @@ void Button::setText(Font *font, const char *str, SDL_Color forecolor, SDL_Color
 
 /****************************** BOX ******************************/
 
-Box::Box(int x, int y, int width, int height, const Image *background, const Image *border, std::string GID)
+Box::Box(int x, int y, int width, int height, const Image *background, const Image *border)
 {
 	this->x = x;
 	this->y = y;
@@ -179,18 +179,19 @@ Box::Box(int x, int y, int width, int height, const Image *background, const Ima
 	this->height = height;
 	this->background = nullptr;
 	this->border = nullptr;
+
 	if (background != nullptr)
 		this->background = background;
 	else
 	{
-		printf("WARNING: Could not find background for box %s\n", GID.c_str());
+		printf("WARNING: Could not find background for box\n");
 	}
 
 	if (border != nullptr)
 		this->border = border;
 	else
 	{
-		printf("WARNING: Could not find border for box %s\n", GID.c_str());
+		printf("WARNING: Could not find border for box\n");
 	}
 	this->enabled = true;
 	this->active = true;
@@ -241,8 +242,8 @@ INPUT_EVENT Box::input(SDL_Event &event)
 }
 /****************************** BOX ******************************/
 
-ImageBox::ImageBox(int x, int y, int width, int height, const Image *background, int frame, const Image *border, std::string GID) :
-		Box(x, y, width, height, background, border, GID)
+ImageBox::ImageBox(int x, int y, int width, int height, const Image *background, int frame, const Image *border) :
+		Box(x, y, width, height, background, border)
 {
 	this->frame = frame;
 }
@@ -262,16 +263,39 @@ void ImageBox::draw()
 	//int right = x + width;
 	//int bottom = y + height;
 	/*Desenha o fundo*/
-	if (border != nullptr)
-	{
+	if (border){
 		border->DrawImage(render, x, y);
 	}
-	if (background != nullptr)
-	{
+
+	if (background){
 		background->DrawImage(render, x, y, frame);
 	}
 }
 
+bool ImageBox::hover(int mouseX, int mouseY)
+{
+    if (background){
+        const int xC = x-background->getCenterX();
+        const int yC = y-background->getCenterY();
+        return (mouseX > xC && mouseX < xC+width) && (mouseY > yC && mouseY < yC+height);
+    }
+
+    return (mouseX > x && mouseX < x+width) && (mouseY > y && mouseY < y+height);
+}
+
+bool ImageBox::hover()
+{
+    int mouseX, mouseY;
+
+    SDL_GetMouseState(&mouseX, &mouseY);
+
+    if (background){
+        const int xC = x-background->getCenterX();
+        const int yC = y-background->getCenterY();
+        return (mouseX > xC && mouseX < xC+width) && (mouseY > yC && mouseY < yC+height);
+    }
+    return (mouseX > x && mouseX < x+width) && (mouseY > y && mouseY < y+height);
+}
 INPUT_EVENT ImageBox::input(SDL_Event &event)
 {
 
@@ -715,7 +739,7 @@ StatusBox::StatusBox(int x, int y, const Image *imgBack, const Image *imgBorder,
 	//int right = left + height;
 	//int bottom = top + width;
 
-	bxBounds = new Box(getX(), getY(), width, height, imgBack, imgBorder, "BOX" + GID);
+	bxBounds = new Box(getX(), getY(), width, height, imgBack, imgBorder);
 
 	Font *font = Game::getGlobalGame()->getResourceMNGR()->GetFont("jostix-14");
 	lbName = new Label("Name", font, ColorRGB8::Green, ColorRGB8::White, "LBL01" + GID);
@@ -763,8 +787,9 @@ StatusBox::~StatusBox()
 
 void StatusBox::draw()
 {
-	if (shown == true)
+	if (shown)
 	{
+	    printf("wqweqwe\n");
 		//bxBounds->draw();
 		lbName->draw();
 		lbHP->draw();

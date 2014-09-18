@@ -41,7 +41,7 @@ Unit_Setup::Unit_Setup(STATE previous) :
 	squad_selec = resource->GetImage("squadfocus-bg");
 
 	const Image *bprint = resource->GetImage("blueprint1-bg");
-	blueprint = new ImageBox(scrWidth * 0.05, scrHeight * 0.15, bprint->getFrameWidth(), bprint->getFrameHeight(), bprint, 0, nullptr, "BX1");
+	blueprint = new ImageBox(scrWidth * 0.05, scrHeight * 0.18, bprint->getFrameWidth(), bprint->getFrameHeight(), bprint, 0, nullptr);
 	addGuiElement(blueprint);
 
 	//label de titulo
@@ -64,18 +64,19 @@ Unit_Setup::Unit_Setup(STATE previous) :
 	btn_Move->setText(resource->GetFont("jostix-14"), "MOVE", ColorRGB8::White, ColorRGB8::White);
 	addGuiElement(btn_Move);
 
-	//Box de naves
-	bx1 = new ImageBox(scrWidth * 0.1, scrHeight * 0.1, 50, 50, resource->GetImage("human-ships"), 0, nullptr, "BX1");
-	addGuiElement(bx1);
-	bx2 = new ImageBox(scrWidth * 0.2, scrHeight * 0.1, 50, 50, resource->GetImage("human-ships"), 1, nullptr, "BX1");
-	addGuiElement(bx2);
-	bx3 = new ImageBox(scrWidth * 0.3, scrHeight * 0.1, 50, 50, resource->GetImage("human-ships"), 2, nullptr, "BX1");
-	addGuiElement(bx3);
-	bx4 = new ImageBox(scrWidth * 0.4, scrHeight * 0.1, 50, 50, resource->GetImage("human-ships"), 3, nullptr, "BX1");
-	addGuiElement(bx4);
-
 	// adicionando box com as imagens das naves
 	dct = game->getDictionary(0);
+
+    //Box de naves
+	bx1 = new ImageBox(scrWidth * 0.1, scrHeight * 0.12, 128, 128, dct->getInfoFor(0)->gfx_sfx.shipIdle, 0, nullptr);
+	addGuiElement(bx1);
+	bx2 = new ImageBox(scrWidth * 0.2, scrHeight * 0.12, 128, 128, dct->getInfoFor(1)->gfx_sfx.shipIdle, 0, nullptr);
+	addGuiElement(bx2);
+	bx3 = new ImageBox(scrWidth * 0.3, scrHeight * 0.12, 128, 128, dct->getInfoFor(2)->gfx_sfx.shipIdle, 0, nullptr);
+	addGuiElement(bx3);
+	bx4 = new ImageBox(scrWidth * 0.4, scrHeight * 0.12, 128, 128, dct->getInfoFor(3)->gfx_sfx.shipIdle, 0, nullptr);
+	addGuiElement(bx4);
+
 	char str[5];
 
     Army *editingArmy = game->getEditingArmy();
@@ -93,8 +94,13 @@ Unit_Setup::Unit_Setup(STATE previous) :
 		squad_number[i]->setPosition(editingArmy->getUnitByID(i)->getAvgX() + blueprint->getX(), editingArmy->getUnitByID(i)->getAvgY() + blueprint->getY());
 	}
 
+    st_box = new StatusBox(0, 0, nullptr, nullptr, "Statusbox");
+	st_box->update(0, 0, dct->getInfoFor(0));
+	st_box->setVisible(false);
+	addGuiElement(st_box);
+
 	printf("tactic");
-	list = new TacticList(800, 100);
+	list = new TacticList(800, 110);
 	addGuiElement(list);
 	printf("list\n");
 
@@ -265,7 +271,7 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
             	{
                     Army *editingArmy = Game::getGlobalGame()->getEditingArmy();
 
-                    editingArmy->createUnit(squad_type, new Coordinates(mouseX - blueprint->getX(), mouseY - blueprint->getY()));
+                    editingArmy->createUnit(squad_type, Coordinates(mouseX - blueprint->getX(), mouseY - blueprint->getY()));
 
                     squad_focus = editingArmy->getUnitAtIndex(editingArmy->nUnits() - 1);
                     squad_type = 0;
@@ -333,6 +339,34 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
 
 void Unit_Setup::Logic()
 {
+    int scrWidth = Game::getGlobalGame()->getWidth();
+	int scrHeight = Game::getGlobalGame()->getHeight();
+
+    if (bx1->hover())
+	{
+		st_box->update(scrWidth * 0.8, scrHeight * 0.2, dct->getInfoFor(0));
+		st_box->setVisible(true);
+	}
+	else if (bx2->hover())
+	{
+		st_box->update(scrWidth * 0.8, scrHeight * 0.2, dct->getInfoFor(1));
+		st_box->setVisible(true);
+	}
+	else if (bx3->hover())
+	{
+		st_box->update(scrWidth * 0.8, scrHeight * 0.2, dct->getInfoFor(2));
+		st_box->setVisible(true);
+	}
+	else if (bx4->hover())
+	{
+		st_box->update(scrWidth * 0.8, scrHeight * 0.2, dct->getInfoFor(3));
+		st_box->setVisible(true);
+	}
+	else
+    {
+		st_box->setVisible(false);
+	}
+
 	//verifica unit selecionada
 	//verifica se um componente foi modificado
 	updateGuiElements();
@@ -387,7 +421,7 @@ void Unit_Setup::Render()
 	if (put_squad)
 	{
 		SDL_GetMouseState(&mouseX, &mouseY);
-		Game::getGlobalGame()->getResourceMNGR()->GetImage("human-ships")->DrawImage(renderer, mouseX, mouseY, squad_type);
+		dct->getInfoFor(squad_type)->gfx_sfx.shipIdle->DrawImage(renderer, mouseX, mouseY, 0);
 	}
 
 	for (unsigned int i = 0; i < squad_number.size(); i++)

@@ -75,19 +75,14 @@ Create_Army::Create_Army(STATE previous) :
 	lbl_Descr->setText(dct->description);
 	addGuiElement(lbl_Descr);
 
-	st_box = new StatusBox(0, 0, nullptr, nullptr, "Statusbox");
-	st_box->update(0, 0, dct->getInfoFor(0));
-	st_box->setVisible(false);
-	addGuiElement(st_box);
-
 	// adicionando box com as imagens das naves
-	bx1 = new ImageBox(scrWidth * 0.3, scrHeight * 0.8, 50, 50, resource->GetImage("human-ships"), 0, nullptr, "BX1");
+	bx1 = new ImageBox(scrWidth * 0.3, scrHeight * 0.8, 128, 128, dct->getInfoFor(0)->gfx_sfx.shipIdle, 0, nullptr);
 	addGuiElement(bx1);
-	bx2 = new ImageBox(scrWidth * 0.4, scrHeight * 0.8, 50, 50, resource->GetImage("human-ships"), 1, nullptr, "BX1");
+	bx2 = new ImageBox(scrWidth * 0.4, scrHeight * 0.8, 128, 128, dct->getInfoFor(1)->gfx_sfx.shipIdle, 0, nullptr);
 	addGuiElement(bx2);
-	bx3 = new ImageBox(scrWidth * 0.5, scrHeight * 0.8, 50, 50, resource->GetImage("human-ships"), 2, nullptr, "BX1");
+	bx3 = new ImageBox(scrWidth * 0.5, scrHeight * 0.8, 128, 128, dct->getInfoFor(2)->gfx_sfx.shipIdle, 0, nullptr);
 	addGuiElement(bx3);
-	bx4 = new ImageBox(scrWidth * 0.6, scrHeight * 0.8, 50, 50, resource->GetImage("human-ships"), 3, nullptr, "BX1");
+	bx4 = new ImageBox(scrWidth * 0.6, scrHeight * 0.8, 128, 128, dct->getInfoFor(3)->gfx_sfx.shipIdle, 0, nullptr);
 	addGuiElement(bx4);
 
 	cmb_armys = new ComboBox(scrWidth * 0.2, scrHeight * 0.3, resource->GetImage("combo-cmb"), ColorRGB8::Green, ColorRGB8::Black);
@@ -95,6 +90,11 @@ Create_Army::Create_Army(STATE previous) :
 	addGuiElement(cmb_armys);
 	std::vector<std::string> datFiles;
 	Resource::getListOfFiles(datFiles, "assets/saves/", ".dat");
+
+	st_box = new StatusBox(0, 0, nullptr, nullptr, "Statusbox");
+	st_box->update(0, 0, dct->getInfoFor(0));
+	st_box->setVisible(false);
+	addGuiElement(st_box);
 
 	for (unsigned int i = 0; i < datFiles.size(); ++i)
 	{
@@ -225,20 +225,10 @@ void Create_Army::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Key
 
 void Create_Army::Logic()
 {
-	updateGuiElements();
-}
-
-void Create_Army::Render()
-{
-	int scrWidth = Game::getGlobalGame()->getWidth();
+    int scrWidth = Game::getGlobalGame()->getWidth();
 	int scrHeight = Game::getGlobalGame()->getHeight();
 
-	Game::getGlobalGame()->setBackgroundColor(0, 0, 0);
-	SDL_Renderer* renderer = Game::getGlobalGame()->getRenderer();
-
-	imgBackground->DrawImage(renderer);
-	drawGuiElements();
-	if (bx1->hover())
+    if (bx1->hover())
 	{
 		st_box->update(scrWidth * 0.2, scrHeight * 0.4, dct->getInfoFor(0));
 		st_box->setVisible(true);
@@ -259,8 +249,23 @@ void Create_Army::Render()
 		st_box->setVisible(true);
 	}
 	else
+    {
 		st_box->setVisible(false);
+	}
 
+	updateGuiElements();
+}
+
+void Create_Army::Render()
+{
+	int scrWidth = Game::getGlobalGame()->getWidth();
+	int scrHeight = Game::getGlobalGame()->getHeight();
+
+	Game::getGlobalGame()->setBackgroundColor(0, 0, 0);
+	SDL_Renderer* renderer = Game::getGlobalGame()->getRenderer();
+
+	imgBackground->DrawImage(renderer);
+	drawGuiElements();
 }
 
 void Create_Army::Clean()

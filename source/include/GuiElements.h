@@ -48,12 +48,7 @@ class cGuiElement
 
         virtual bool hover(int mouseX, int mouseY)
         {
-            if( (mouseX > x && mouseX < x+width) && (mouseY > y && mouseY < y+height) )
-            {
-                return true;
-            }
-
-            return false;
+            return (mouseX > x && mouseX < x+width) && (mouseY > y && mouseY < y+height);
         }
 
         // TENTAR NAO UTILIZAR MAIS ESTE MODO!
@@ -63,12 +58,7 @@ class cGuiElement
 
             SDL_GetMouseState(&mouseX, &mouseY);
 
-            if( (mouseX > x && mouseX < x+width) && (mouseY > y && mouseY < y+height) )
-            {
-                return true;
-            }
-
-            return false;
+            return (mouseX > x && mouseX < x+width) && (mouseY > y && mouseY < y+height);
         }
 
         //SETTERS / GETTERS
@@ -125,7 +115,7 @@ class Box : public cGuiElement
         const Image *background;
 
     public:
-        Box(int x, int y, int width, int height, const Image *background, const Image *border, std::string GID);
+        Box(int x, int y, int width, int height, const Image *background, const Image *border);
         virtual ~Box();
 
         virtual void update();
@@ -139,8 +129,11 @@ class ImageBox : public Box
         int frame;
 
     public:
-        ImageBox(int x, int y, int width, int height, const Image *background, int frame, const Image *border, std::string GID);
+        ImageBox(int x, int y, int width, int height, const Image *background, int frame, const Image *border);
         virtual ~ImageBox();
+
+        bool hover(int mouseX, int mouseY) override;
+        bool hover() override;
 
         virtual void update();
         virtual void draw();

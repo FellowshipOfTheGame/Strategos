@@ -16,7 +16,7 @@ TacticSet::TacticSet(int x, int y, std::string GID)
 {
 	this->x = x;
 	this->y = y;
-	box_container = new Box(x, y, 200, 100, Game::getGlobalGame()->getResourceMNGR()->GetImage("combo-cmb"), nullptr, "BOX" + GID);
+	box_container = new Box(x, y, 200, 100, Game::getGlobalGame()->getResourceMNGR()->GetImage("combo-cmb"), nullptr);
 	cmb_choiser = new ComboBox(x + 2, y + 2, Game::getGlobalGame()->getResourceMNGR()->GetImage("combo-cmb"), ColorRGB8::White, ColorRGB8::White);
 	cmb_choiser->setFont(Game::getGlobalGame()->getResourceMNGR()->GetFont("jostix-14"));
 	this->GID = GID;
@@ -541,7 +541,7 @@ void TacticList::initialize()
 	btn_minus = new Button(this->x + 101, 5 + btn_down->getY() + btn_down->getHeight(), 100, 20, resource->GetImage("menu-bt"));
 	btn_minus->setText(resource->GetFont("jostix-14"), "-", ColorRGB8::White, ColorRGB8::White);
 
-	btn_show = new Button(this->x - 40, this->y, 40, 100, resource->GetImage("menu-bt"));
+	btn_show = new Button(this->x - 42, this->y, 40, 100, resource->GetImage("menu-bt"));
 	btn_show->setText(resource->GetFont("jostix-14"), "Hidden", ColorRGB8::White, ColorRGB8::White);
 	top = 0;
 	selected = nullptr;
@@ -619,58 +619,57 @@ void TacticList::setSquad(Unit *squad)
 {
 	selected = nullptr;
 
-		this->squad = squad;
-		if (this->squad == nullptr)
-			return;
+    this->squad = squad;
+    if (this->squad == nullptr)
+        return;
 
-		std::vector<ItemList*>::iterator iter = lista.begin();
-		//remove elementos da antiga squad
-		iter = lista.begin();
-		while (iter != lista.end())
-		{
-			delete (*iter);
-			iter = lista.erase(iter);
-		}
-		//coloca Top no topo
-		top = 0;
-		//adiciona taticas da nova squad na lista
+    std::vector<ItemList*>::iterator iter = lista.begin();
+    //remove elementos da antiga squad
+    iter = lista.begin();
+    while (iter != lista.end())
+    {
+        delete (*iter);
+        iter = lista.erase(iter);
+    }
+    //coloca Top no topo
+    top = 0;
+    //adiciona taticas da nova squad na lista
 
-		unsigned int i = 0;
-		int tp = -1;
-		while (i < squad->getTacticSize())
-		{
-			if (dynamic_cast<AttackNearestEnemy*>(squad->getTacticAt(i)) != nullptr)
-			{
-				tp = 0;
-			}
-			else if (dynamic_cast<AttackWeakestEnemy*>(squad->getTacticAt(i)) != nullptr)
-			{
-				tp = 1;
-			}
-			else if (dynamic_cast<AttackCollab*>(squad->getTacticAt(i)) != nullptr)
-			{
-				tp = 2;
-			}
-			else if (dynamic_cast<DefenseCollab*>(squad->getTacticAt(i)) != nullptr)
-			{
-				tp = 3;
-			}
-			else if (dynamic_cast<Kamikase*>(squad->getTacticAt(i)) != nullptr)
-			{
-				tp = 4;
-			}
-			else if (dynamic_cast<Retreat*>(squad->getTacticAt(i)) != nullptr)
-			{
-				tp = 5;
-			}
-			else if (dynamic_cast<MoveRandomly*>(squad->getTacticAt(i)) != nullptr)
-			{
-				tp = 6;
-			}
-			lista.push_back(new ItemList(tp));
-			i++;
-		}
-
+    unsigned int i = 0;
+    int tp = -1;
+    while (i < squad->getTacticSize())
+    {
+        if (dynamic_cast<AttackNearestEnemy*>(squad->getTacticAt(i)) != nullptr)
+        {
+            tp = 0;
+        }
+        else if (dynamic_cast<AttackWeakestEnemy*>(squad->getTacticAt(i)) != nullptr)
+        {
+            tp = 1;
+        }
+        else if (dynamic_cast<AttackCollab*>(squad->getTacticAt(i)) != nullptr)
+        {
+            tp = 2;
+        }
+        else if (dynamic_cast<DefenseCollab*>(squad->getTacticAt(i)) != nullptr)
+        {
+            tp = 3;
+        }
+        else if (dynamic_cast<Kamikase*>(squad->getTacticAt(i)) != nullptr)
+        {
+            tp = 4;
+        }
+        else if (dynamic_cast<Retreat*>(squad->getTacticAt(i)) != nullptr)
+        {
+            tp = 5;
+        }
+        else if (dynamic_cast<MoveRandomly*>(squad->getTacticAt(i)) != nullptr)
+        {
+            tp = 6;
+        }
+        lista.push_back(new ItemList(tp));
+        i++;
+    }
 }
 
 void TacticList::update()
@@ -679,6 +678,7 @@ void TacticList::update()
 		return;
 	if (this->selected == nullptr)
 		return;
+
 	//encontra o interador da opcao selecionada
 	std::vector<ItemList*>::iterator iter = lista.begin();
 	while (iter != lista.end())
