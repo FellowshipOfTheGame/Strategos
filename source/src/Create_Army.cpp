@@ -19,14 +19,11 @@ Create_Army::Create_Army(STATE previous) :
 	Resource *resource = Game::getGlobalGame()->getResourceMNGR();
 	resource->AddImage("assets/ui.gfx", "bg_create_army");
 
-	resource->AddImage("assets/base.gfx", "blueprint1-bg");
-
 	resource->AddImage("assets/ui.gfx", "menu-bt");
 	resource->AddImage("assets/ui.gfx", "unit_setup-bt");
 	resource->AddImage("assets/ui.gfx", "back-bt");
 	resource->AddImage("assets/ui.gfx", "load_army-bt");
 	resource->AddImage("assets/ui.gfx", "combo-cmb");
-	resource->AddImage("assets/army.gfx", "human-ships");
 
 
 	resource->AddFont("assets/fonts.gfx", "general-gui");

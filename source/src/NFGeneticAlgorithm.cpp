@@ -181,6 +181,11 @@ Army* NFGeneticAlgorithm::higherFitnessArmy()
 {
     printf("Selecting higherFitnessArmy\n");
 
+    if (individuos.empty())
+    {
+        run();
+    }
+
     std::string name = "GA/"+std::to_string(armyType)+"/"+individuos.back()->getName();
     printf("Selected: %s\n", name.c_str());
 

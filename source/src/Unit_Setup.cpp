@@ -23,7 +23,7 @@ Unit_Setup::Unit_Setup(STATE previous) :
 	int scrHeight = game->getHeight();
 	Font *fntEthnocentric;
 
-	game->generateSprites(game->getEditingArmy()->getDictionary());
+//	game->generateSprites(game->getEditingArmy()->getDictionary());
 
 	Resource *resource = game->getResourceMNGR();
 	resource->AddImage("assets/base.gfx", "blueprint1-bg");

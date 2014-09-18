@@ -34,6 +34,8 @@ class Image
         int getNumberFrames() const;
         int getFrameWidth() const;
         int getFrameHeight() const;
+        int getCenterX() const;
+        int getCenterY() const;
 
         /**
          *

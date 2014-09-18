@@ -109,6 +109,16 @@ int Image::getFrameHeight() const
     return frameHeight;
 }
 
+int Image::getCenterX() const
+{
+    return centerX;
+}
+
+int Image::getCenterY() const
+{
+    return centerY;
+}
+
 /** Um Clip e' utilizado para subdividir uma imagem em pedacos menores */
 SDL_Rect *Image::createClip(int lines, int collumns, int clipWidth, int clipHeight, int margin, int padding)
 {
