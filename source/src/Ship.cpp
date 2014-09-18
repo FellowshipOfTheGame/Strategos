@@ -1,5 +1,6 @@
 
 #include "Ship.h"
+#include "Game.h"
 
 #include "CombatLog.h"
 #include "Global.h"
@@ -20,9 +21,9 @@ int directionTo(float fromRad, float toRad)
     return 0;
 }
 
-Ship::Ship(const shipBaseStats &initialStats, const Coordinates& Coord, CombatRound* log, const shipEffects* ship_effects)
+Ship::Ship(const shipBaseStats &initialStats, const Coordinates& Coord, bool world_type, CombatRound* log, const shipEffects* ship_effects)
     : baseStats(initialStats), stats(initialStats),
-      shipeffects(ship_effects), coord(Coord), unitPos(Coord), targetPos(Coord), myLog(log)
+      shipeffects(ship_effects), coord(Coord), unitPos(Coord), targetPos(Coord), myLog(log), worldType(world_type)
 {
     currentDirection = M_PI/2;
 
@@ -78,7 +79,7 @@ int Ship::update(RandomEngine& randE)
     }
 
     const float destDir = coord.angleTo(targetPos);
-    const float angularVelocity = 5.0 * M_PI/180.0; // rad/frame
+    const float angularVelocity = 4.0 * M_PI/180.0; // rad/frame
     const int sign = directionTo( currentDirection, destDir );
 
     if (distance > 0.8*SPACIAL_UNIT_2)
@@ -179,6 +180,11 @@ void Ship::moveTo(const Coordinates& c)
     stats.isMoving = move_action;
 }
 
+bool Ship::getWorldType() const
+{
+    return worldType;
+}
+
 float Ship::getHP() const{
     return stats.currentHP;
 }
@@ -189,4 +195,25 @@ int Ship::getX() const{
 
 int Ship::getY() const{
     return coord.y;
+}
+
+void Ship::draw()
+{
+    if (!shipeffects || !shipeffects->shipIdle)
+        return;
+
+    SDL_Renderer* renderer = Game::getGlobalGame()->getRenderer();
+
+    float x = getDirection() * 180.0 / M_PI;
+    while (x < 0.0)     x += 360.0;
+    while (x > 360.0)     x -= 360.0;
+
+    const int dir_frame = int(x / (360.0 / _ROTATION_FRAMES_)) % _ROTATION_FRAMES_;
+
+    const Image* img = shipeffects->shipIdle;
+    img->DrawImage(renderer, getX(), getY(), dir_frame);
+
+//    static float xxx = 0;
+//    img->DrawImage(renderer, 64, 64, int(xxx)%_ROTATION_FRAMES_);
+//    xxx += 0.01;
 }

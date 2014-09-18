@@ -27,7 +27,7 @@ Unit::Unit(unsigned int ID, const DictKey *info, Coordinates position)
         basicTacticMoveRandom( TacticInfo(nullptr), TacticTrigger(0, 0, TRIGGER_LOGIC_OR) ),
         basicTacticAttackNearest( TacticInfo(nullptr), TacticTrigger(0, 0, TRIGGER_LOGIC_OR) )
 {
-	restoreUnit(0);
+	restoreUnit(0, 0);
 }
 
 Unit::Unit(const Unit* copy)
@@ -42,7 +42,7 @@ Unit::Unit(const Unit* copy)
     for (unsigned int i = 0; i < copy->tactics.size(); ++i)
         tactics.push_back(Tactic::copy(copy->tactics[i]));
 
-    restoreUnit(copy->team);
+    restoreUnit(copy->team, 0);
 }
 
 Unit::~Unit()
@@ -59,7 +59,7 @@ Unit::~Unit()
         delete *it;
 }
 
-void Unit::restoreUnit(int teamID, const Coordinates atBaseP, CombatLog *log)
+void Unit::restoreUnit(int teamID, const Coordinates atBaseP, bool world_type, CombatLog *log)
 {
     for (unsigned int i = 0; i < ships.size(); ++i)
         delete ships[i];
@@ -76,20 +76,18 @@ void Unit::restoreUnit(int teamID, const Coordinates atBaseP, CombatLog *log)
 
     if (log){
         myLog = log->getLogForUnit(id);
-    }
-    else{
+    }else{
         myLog = nullptr;
-        gfxsfx = nullptr;
     }
 
-    double circleRadius = 12.0 * (mySquadInfo->squadSize-1);
+    double circleRadius = UNIT_RADIUS*0.2 * (mySquadInfo->squadSize-1);
     float dAngle = 6.283185306 / mySquadInfo->squadSize;
 	for (unsigned int i = 0; i < mySquadInfo->squadSize; i++)
 	{
 		Coordinates coordships(atBaseP);
 		coordships.x += circleRadius * cos(i * dAngle);
 		coordships.y += -circleRadius * sin(i * dAngle);
-		Ship *nship = new Ship(mySquadInfo->stats, coordships, myLog, gfxsfx);
+		Ship *nship = new Ship(mySquadInfo->stats, coordships, world_type, myLog, gfxsfx);
 
 		ships.push_back(nship);
 	}
@@ -106,9 +104,9 @@ int Unit::getTeam() const
     return team;
 }
 
-void Unit::restoreUnit(int teamID, CombatLog *log)
+void Unit::restoreUnit(int teamID, bool world_type, CombatLog *log)
 {
-    restoreUnit(teamID, bluePrintCoord, log);
+    restoreUnit(teamID, bluePrintCoord, world_type, log);
 }
 
 void Unit::addTactic(Tactic *tactic)
@@ -226,7 +224,7 @@ const Coordinates& Unit::getAveragePos() const{
 
 bool Unit::hover(float mX, float mY) const
 {
-	return (averageCoord.distance(mX, mY) < 64);
+	return (averageCoord.distance(mX, mY) < UNIT_RADIUS);
 }
 
 unsigned long Unit::nShips() const
@@ -390,59 +388,48 @@ void Unit::render()
 
     SDL_Renderer* renderer = Game::getGlobalGame()->getRenderer();
 
-    if (!mySquadInfo->gfx_sfx.shipsGFX){
-			printf("No img");
-    }else{
-        for (unsigned int j = 0; j < nShips(); j++)
+    for (unsigned int j = 0; j < nShips(); j++)
+    {
+        Ship *ship = ships[j];
+
+        if (!ship->isAlive()) continue;
+
+        ship->draw();
+
+        SDL_Rect rLife;
+        rLife.x = ship->getX() - LIFE_BAR_SIZE/2;
+        rLife.y = ship->getY() - 32;
+        rLife.h = 4;
+
+        // Barra de vida fundo
+        SDL_SetRenderDrawColor(renderer, 0,0,0, 200);
+        rLife.w = LIFE_BAR_SIZE;
+        SDL_RenderFillRect(renderer, &rLife);
+
+        // Interior
+        rLife.x += 1;
+        rLife.y += 1;
+        rLife.h -= 2;
+        rLife.w = (ship->getHP()/ship->getBaseStats().maxHP)*LIFE_BAR_SIZE-2;
+        SDL_SetRenderDrawColor(renderer,
+                               255*(1.0-ship->getHP()/ship->getBaseStats().maxHP),
+                               255*(ship->getHP()/ship->getBaseStats().maxHP), 0, 200);
+        SDL_RenderFillRect(renderer, &rLife);
+
+        // Barra de Shield
+        if (ship->getStats().currentShield > 0)
         {
-            Ship *ship = ships[j];
-
-            if (!ship->isAlive()) continue;
-
-            float x = ship->getDirection() * 180.0 / M_PI;
-            while (x < 0.0)     x += 360.0;
-
-            int frame = ((int(x) % 360) / (360 / _ROTATION_FRAMES_)) % _ROTATION_FRAMES_;
-            Image *img = mySquadInfo->gfx_sfx.shipsGFX[frame];
-
-            if (img){
-                img->DrawImage(renderer, ship->getX() - (img->getFrameWidth() / 2), ship->getY() - (img->getFrameHeight() / 2));
-            }
-
-            SDL_Rect rLife;
-            rLife.x = ship->getX() - LIFE_BAR_SIZE/2;
-            rLife.y = ship->getY() - 32;
-            rLife.h = 4;
-
-            // Barra de vida fundo
-            SDL_SetRenderDrawColor(renderer, 0,0,0, 200);
-            rLife.w = LIFE_BAR_SIZE;
+            SDL_SetRenderDrawColor(renderer, 228,228,228, 200);
+            rLife.w = ship->getStats().currentShield/ship->getBaseStats().shield*LIFE_BAR_SIZE-2;
             SDL_RenderFillRect(renderer, &rLife);
+        }
 
-            // Interior
-            rLife.x += 1;
-            rLife.y += 1;
-            rLife.h -= 2;
-            rLife.w = (ship->getHP()/ship->getBaseStats().maxHP)*LIFE_BAR_SIZE-2;
-            SDL_SetRenderDrawColor(renderer,
-                                   255*(1.0-ship->getHP()/ship->getBaseStats().maxHP),
-                                   255*(ship->getHP()/ship->getBaseStats().maxHP), 0, 200);
-            SDL_RenderFillRect(renderer, &rLife);
+        // Target line
+        SDL_SetRenderDrawColor(renderer, 255,255,255, 90);
+        SDL_RenderDrawLine(renderer, ship->getPosition().x, ship->getPosition().y,
+                           ship->getTargetPos().x, ship->getTargetPos().y );
 
-            // Barra de Shield
-            if (ship->getStats().currentShield > 0)
-            {
-                SDL_SetRenderDrawColor(renderer, 228,228,228, 200);
-                rLife.w = ship->getStats().currentShield/ship->getBaseStats().shield*LIFE_BAR_SIZE-2;
-                SDL_RenderFillRect(renderer, &rLife);
-            }
-
-            // Target line
-            SDL_SetRenderDrawColor(renderer, 255,255,255, 90);
-            SDL_RenderDrawLine(renderer, ship->getPosition().x, ship->getPosition().y,
-                               ship->getTargetPos().x, ship->getTargetPos().y );
-
-            // Debug
+        // Debug
 //            SDL_Rect a;
 //            a.x = ship->getPosition().x;
 //            a.y = ship->getPosition().y;
@@ -466,13 +453,12 @@ void Unit::render()
 //                SDL_SetRenderDrawColor(renderer, 0, 255,255 ,255);
 //                SDL_RenderFillRect(renderer, &a );
 //            }
-        }
     }
 
     // Desenhar circulo do time
     if (team == 0)
-        circleRGBA(renderer, averageCoord.x, averageCoord.y, 64, 255,0,0, 240);
+        circleRGBA(renderer, averageCoord.x, averageCoord.y, UNIT_RADIUS, 255,0,0, 240);
     else
-        circleRGBA(renderer, averageCoord.x, averageCoord.y, 64, 0,0,255, 240);
+        circleRGBA(renderer, averageCoord.x, averageCoord.y, UNIT_RADIUS, 0,0,255, 240);
 }
 

@@ -8,10 +8,16 @@
 #!
 
 #HUMANS
-key: human-ships
-file: assets/images/human-ships.png
-clip: 4 1 32 34 0 1
-center: 0 0
+key: human-ship-bomber
+file: assets/images/human-bomber.png
+clip: 8 8 128 128 0 0
+center: 64 64
+!
+
+key: human-ship-fighter
+file: assets/images/human-fighter.png
+clip: 8 8 64 64 0 0
+center: 32 32
 !
 
 key: human-shootSimple

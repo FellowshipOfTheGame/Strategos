@@ -46,10 +46,10 @@ Simulation::Simulation(STATE previous)
     	printf ("ambos nao nulos");
     }
 
-    Game::getGlobalGame()->generateSprites(game->getArmy1()->getDictionary());
-    Game::getGlobalGame()->generateSprites(game->getArmy2()->getDictionary());
+//    Game::getGlobalGame()->generateSprites(game->getArmy1()->getDictionary());
+//    Game::getGlobalGame()->generateSprites(game->getArmy2()->getDictionary());
 
-    simulationWorld = new World(game->getArmy1(), game->getArmy2(), game->getCombatLog(0), game->getCombatLog(1) );
+    simulationWorld = new World(game->getArmy1(), game->getArmy2(), game->getCombatLog(0), game->getCombatLog(1), 1 );
 
     camera = new Camera(0, 0, screenWidth, screenHeight, screenWidth*2, screenHeight*1.5f);
     bgOffsetX = bgOffsetY = 0;
@@ -289,7 +289,7 @@ void Simulation::Render()
 
     if(selectedUnit)
     {
-        filledCircleRGBA( renderer, selectedUnit->getAvgX()-camera->getX(), selectedUnit->getAvgY()-camera->getY(), 64, 0, 0, 255, 128 );
+        filledCircleRGBA( renderer, selectedUnit->getAvgX()-camera->getX(), selectedUnit->getAvgY()-camera->getY(), UNIT_RADIUS, 0, 0, 255, 128 );
     }
 }
 

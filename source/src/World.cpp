@@ -13,12 +13,11 @@ using namespace std;
 /// Armies iguais = Todas as ships serao as mesmas
 /// quando uma morre, ambas morrem. ERRO ERRO
 
-World::World(Army *army1, Army *army2, CombatLog *log1, CombatLog *log2)
+World::World(Army *army1, Army *army2, CombatLog *log1, CombatLog *log2, bool word_type)
     :   combatData(army1->nUnits(), army2->nUnits()),
         army1Log( log1 ), army2Log( log2 ),
         tvdForArmy1(combatData, army2->getUnits(), army1->getUnits(), army1Log),
         tvdForArmy2(combatData, army1->getUnits(), army2->getUnits(), army2Log)
-
 {
     totalSteps = 0;
 
@@ -36,8 +35,8 @@ World::World(Army *army1, Army *army2, CombatLog *log1, CombatLog *log2)
 //	printf("%d VS %d ", army1->nUnits(), army2->nUnits());
 
 	// Setar posicao de cada exercito
-	army1->restore(0, army1Log);
-	army2->restore(1, army2Log);
+	army1->restore(0, word_type, army1Log);
+	army2->restore(1, word_type, army2Log);
 
 //    printf("World Ready!\n");
 }

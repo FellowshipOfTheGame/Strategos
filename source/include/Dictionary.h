@@ -14,7 +14,7 @@
 
 #include "Resource.h"
 
-#define _ROTATION_FRAMES_ 36
+#define _ROTATION_FRAMES_ (64)
 
 class DictKey
 {
@@ -49,7 +49,7 @@ class Dictionary
 
         int loadDictionary(const char *inputFile, Resource &resource);
         const DictKey* getInfoFor(unsigned int pos) const;
-        void generateSprites();
+//        void generateSprites();
 
         std::string title;
         std::string description;
@@ -58,11 +58,6 @@ class Dictionary
         DictKey* readAttribute(std::fstream &input, Resource &resource);
 
         std::vector<DictKey*> keys;
-        Image *baseGFX;
-
-        // Vetor de Vetores de imagens
-        // shipsGFX[Type][Angulo%frames] eh um Image*
-        Image ***shipsGFX;
 };
 
 #endif

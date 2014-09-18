@@ -171,7 +171,7 @@ AttackAction::AttackAction(Ship *Source, Ship *Target)
 {
     ++_N_ACTIONS_ATTACK_;
 
-    if (source->getEffects()){
+    if (source->getWorldType() == 1 && source->getEffects()){
         shootEffect = source->getEffects()->shootGFX;
         SoundManager::play(source->getEffects()->shootSFX, rand()%4);
     }
@@ -194,7 +194,7 @@ Action* AttackAction::act()
         bool letal = target->takeDamage(source->getBaseStats().damage);
         source->dealDamage( source->getBaseStats().damage, letal );
 
-        if ( letal )
+        if ( letal && target->getWorldType() == 1 )
             return new ExplosionAction(coord, target->getEffects());
         else
             return new DamageAction(coord);

@@ -23,6 +23,9 @@
 #include "Action.h"
 #include "Dictionary.h"
 
+
+#define UNIT_RADIUS 128
+
 void print_MaxActions();
 
 class Unit
@@ -100,10 +103,10 @@ class Unit
 
         /// Recria todas as naves da unidade
         /// Altera a posicao base
-        void restoreUnit(int teamID, const Coordinates atBaseP, CombatLog *log = nullptr);
+        void restoreUnit(int teamID, const Coordinates atBaseP, bool world_type, CombatLog *log = nullptr);
 
         /// Reseta as naves na posicao da BluePrint
-        void restoreUnit(int teamID, CombatLog *log = nullptr);
+        void restoreUnit(int teamID, bool world_type, CombatLog *log = nullptr);
 
         /// Retorna o numero de naves vivas
         ///

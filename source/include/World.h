@@ -41,7 +41,8 @@ class World
         void calcActions();
 
     public:
-        World(Army *army1, Army *army2, CombatLog *log1, CombatLog *log2);
+        //! word_type - 0 = simulacao nao visual. 1 simulacao visual (efeitos de som e imagem)
+        World(Army *army1, Army *army2, CombatLog *log1, CombatLog *log2, bool word_type);
         ~World();
 
         // Simula um "Frame"

@@ -450,7 +450,7 @@ const std::string& Army::getName() const
 	return name;
 }
 
-void Army::restore(int asTeam, CombatLog *log)
+void Army::restore(int asTeam, bool world_type, CombatLog *log)
 {
     int offX = 0;
     int offY = 0;
@@ -463,13 +463,13 @@ void Army::restore(int asTeam, CombatLog *log)
         for (unsigned int i = 0; i < units.size(); i++){
             const int x = TEAM_AREA_WIDTH - units[i]->getBluePrintX() + offX;
             const int y = TEAM_AREA_HEIGHT - units[i]->getBluePrintY() + offY;
-            units[i]->restoreUnit( 1, Coordinates(x, y), log );
+            units[i]->restoreUnit( 1, Coordinates(x, y), world_type, log );
         }
     }
     else
     {
         for (unsigned int i = 0; i < units.size(); i++){
-            units[i]->restoreUnit( 0, log );
+            units[i]->restoreUnit( 0, world_type, log );
         }
     }
 }

@@ -13,7 +13,6 @@ using namespace std;
 using namespace std;
 
 Dictionary::Dictionary()
-    : baseGFX(0), shipsGFX(0)
 {
 	//DICIONARIO VAZIO, APENAS COM AS UNIDADES GENERICAS, DEVE VIR AQUI
 }
@@ -28,22 +27,9 @@ Dictionary::~Dictionary()
 		keys.erase(iter);
 		iter = keys.begin();
 	}
-
-    if (shipsGFX)
-    {
-        for (unsigned int i = 0; i < keys.size(); ++i)
-        {
-            for (unsigned int j = 0; j < _ROTATION_FRAMES_; ++j)
-            {
-                delete shipsGFX[i][j];
-            }
-            delete [] shipsGFX[i];
-        }
-        delete [] shipsGFX;
-    }
 }
 
-void Dictionary::generateSprites()
+/*void Dictionary::generateSprites()
 {
     if (shipsGFX) return;
 
@@ -66,7 +52,7 @@ void Dictionary::generateSprites()
     }
 
     printf("Sprites gerados!\n");
-}
+}*/
 
 int Dictionary::loadDictionary(const char *inputFile, Resource &resource)
 {
@@ -87,17 +73,7 @@ int Dictionary::loadDictionary(const char *inputFile, Resource &resource)
     {
         string tag;
         dictInput >> tag;
-        if (tag == "gfxShips:")
-        {
-            string tmp;
-
-            dictInput >> tag;
-            dictInput >> tmp;
-
-            baseGFX = resource.AddImage(tag.c_str(), tmp);
-//            printf("Path: %s, Key: %s, %p\n", path.c_str(), tmp.c_str(), shipsGFX);
-        }
-        else if (tag == "DESCRP:")
+        if (tag == "DESCRP:")
         {
             int reading = 0;
             char chr = 0;
@@ -193,6 +169,14 @@ DictKey* Dictionary::readAttribute(fstream &input, Resource &resource)
         else if(tag.compare("squad:") == 0)
         {
             input >> key->squadSize;
+        }
+        else if(tag.compare("gfxShips:") == 0)
+        {
+            string keyImg;
+            input >> tag;
+            input >> keyImg;
+            key->gfx_sfx.shipIdle = resource.AddImage( tag.c_str(), keyImg );
+//            printf("Path: %s, Key: %s, %p\n", path.c_str(), keyImg.c_str(), key->shootGFX);
         }
         else if(tag.compare("gfxShoot:") == 0)
         {

@@ -13,15 +13,16 @@
 struct shipEffects
 {
     shipEffects() :
-        shootGFX(0), explosionGFX(0), shipsGFX(0)
+        shipIdle(nullptr), shootGFX(nullptr), explosionGFX(nullptr)
         {
             explosionsSFX[0] = explosionsSFX[1] = explosionsSFX[2] = explosionsSFX[3] = nullptr;
             shootSFX = nullptr;
         }
 
+    Image *shipIdle;
+
     Image *shootGFX;
     Image *explosionGFX;
-    Image **shipsGFX;
 
     Mix_Chunk* explosionsSFX[4]; // 4 Variacoes de som
     Mix_Chunk* shootSFX;
@@ -92,11 +93,14 @@ class Ship
 
         CombatRound* myLog;
 
+        bool worldType;
+
     public:
-        Ship(const shipBaseStats &initialStats, const Coordinates& Coord, CombatRound* log=nullptr, const shipEffects* ship_effects=nullptr);
+        Ship(const shipBaseStats &initialStats, const Coordinates& Coord, bool world_type, CombatRound* log=nullptr, const shipEffects* ship_effects=nullptr);
         ~Ship();
 
         int update(RandomEngine& randE);
+        void draw();
         bool isAlive() const;
 
         SHIP_MOVE getMoving() {return stats.isMoving;}
@@ -112,6 +116,7 @@ class Ship
 
         float getDirection() const;
 
+        bool getWorldType() const;
         float getHP() const;
         void kill();
 

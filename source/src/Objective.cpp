@@ -103,7 +103,7 @@ double Objective::calculateFitness(const Army *ind, int simSteps)
 
 int Objective::fight(Army *a, Army *b, int *steps)
 {
-	World *world = new World(a, b, nullptr, nullptr);
+	World *world = new World(a, b, nullptr, nullptr, 0);
 
     *steps = 0;
     int ret = _SIM_CONTINUE_;

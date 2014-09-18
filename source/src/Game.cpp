@@ -177,13 +177,13 @@ void Game::loadDictionaries()
 	printf("== Loaded %lu dictionaries ==\n", dict.size());
 }
 
-void Game::generateSprites(const Dictionary *d){
+/*void Game::generateSprites(const Dictionary *d){
     for (unsigned int i = 0; i < dict.size(); ++i)
         if (dict[i] == d){
             dict[i]->generateSprites();
             return;
         }
-}
+}*/
 
 void Game::setBackgroundColor(Uint8 r, Uint8 g, Uint8 b)
 {

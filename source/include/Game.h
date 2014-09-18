@@ -46,7 +46,7 @@ class Game
 		Dictionary *getDictionary(const std::string& name) const;
 		int getNDictionary() const;
 
-        void generateSprites(const Dictionary *d);
+//        void generateSprites(const Dictionary *d);
 		void setBackgroundColor(Uint8 r, Uint8 g, Uint8 b);
 
 		//Por enquanto vou colocar aqui
