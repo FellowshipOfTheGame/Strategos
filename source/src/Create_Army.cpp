@@ -76,13 +76,13 @@ Create_Army::Create_Army(STATE previous) :
 	addGuiElement(lbl_Descr);
 
 	// adicionando box com as imagens das naves
-	bx1 = new ImageBox(scrWidth * 0.3, scrHeight * 0.8, 128, 128, dct->getInfoFor(0)->gfx_sfx.shipIdle, 0, nullptr);
+	bx1 = new ImageBox(scrWidth * 0.3, scrHeight * 0.8, 128, 100, dct->getInfoFor(0)->gfx_sfx.shipIdle, 0, nullptr);
 	addGuiElement(bx1);
-	bx2 = new ImageBox(scrWidth * 0.4, scrHeight * 0.8, 128, 128, dct->getInfoFor(1)->gfx_sfx.shipIdle, 0, nullptr);
+	bx2 = new ImageBox(scrWidth * 0.4, scrHeight * 0.8, 128, 100, dct->getInfoFor(1)->gfx_sfx.shipIdle, 0, nullptr);
 	addGuiElement(bx2);
-	bx3 = new ImageBox(scrWidth * 0.5, scrHeight * 0.8, 128, 128, dct->getInfoFor(2)->gfx_sfx.shipIdle, 0, nullptr);
+	bx3 = new ImageBox(scrWidth * 0.5, scrHeight * 0.8, 128, 100, dct->getInfoFor(2)->gfx_sfx.shipIdle, 0, nullptr);
 	addGuiElement(bx3);
-	bx4 = new ImageBox(scrWidth * 0.6, scrHeight * 0.8, 128, 128, dct->getInfoFor(3)->gfx_sfx.shipIdle, 0, nullptr);
+	bx4 = new ImageBox(scrWidth * 0.6, scrHeight * 0.8, 128, 100, dct->getInfoFor(3)->gfx_sfx.shipIdle, 0, nullptr);
 	addGuiElement(bx4);
 
 	cmb_armys = new ComboBox(scrWidth * 0.2, scrHeight * 0.3, resource->GetImage("combo-cmb"), ColorRGB8::Green, ColorRGB8::Black);

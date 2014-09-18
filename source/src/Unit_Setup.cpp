@@ -40,6 +40,12 @@ Unit_Setup::Unit_Setup(STATE previous) :
 	imgBackground = resource->GetImage("bg_unit_setup");
 	squad_selec = resource->GetImage("squadfocus-bg");
 
+	// Tactic List
+	list = new TacticList(800, 110);
+	list->setVisible(false);
+	addGuiElement(list);
+
+	// Blue Print
 	const Image *bprint = resource->GetImage("blueprint1-bg");
 	blueprint = new ImageBox(scrWidth * 0.05, scrHeight * 0.18, bprint->getFrameWidth(), bprint->getFrameHeight(), bprint, 0, nullptr);
 	addGuiElement(blueprint);
@@ -68,13 +74,13 @@ Unit_Setup::Unit_Setup(STATE previous) :
 	dct = game->getDictionary(0);
 
     //Box de naves
-	bx1 = new ImageBox(scrWidth * 0.1, scrHeight * 0.12, 128, 128, dct->getInfoFor(0)->gfx_sfx.shipIdle, 0, nullptr);
+	bx1 = new ImageBox(scrWidth * 0.1, scrHeight * 0.12, 128, 90, dct->getInfoFor(0)->gfx_sfx.shipIdle, 0, nullptr);
 	addGuiElement(bx1);
-	bx2 = new ImageBox(scrWidth * 0.2, scrHeight * 0.12, 128, 128, dct->getInfoFor(1)->gfx_sfx.shipIdle, 0, nullptr);
+	bx2 = new ImageBox(scrWidth * 0.2, scrHeight * 0.12, 128, 70, dct->getInfoFor(1)->gfx_sfx.shipIdle, 0, nullptr);
 	addGuiElement(bx2);
-	bx3 = new ImageBox(scrWidth * 0.3, scrHeight * 0.12, 128, 128, dct->getInfoFor(2)->gfx_sfx.shipIdle, 0, nullptr);
+	bx3 = new ImageBox(scrWidth * 0.3, scrHeight * 0.12, 128, 90, dct->getInfoFor(2)->gfx_sfx.shipIdle, 0, nullptr);
 	addGuiElement(bx3);
-	bx4 = new ImageBox(scrWidth * 0.4, scrHeight * 0.12, 128, 128, dct->getInfoFor(3)->gfx_sfx.shipIdle, 0, nullptr);
+	bx4 = new ImageBox(scrWidth * 0.4, scrHeight * 0.12, 128, 90, dct->getInfoFor(3)->gfx_sfx.shipIdle, 0, nullptr);
 	addGuiElement(bx4);
 
 	char str[5];
@@ -99,17 +105,11 @@ Unit_Setup::Unit_Setup(STATE previous) :
 	st_box->setVisible(false);
 	addGuiElement(st_box);
 
-	printf("tactic");
-	list = new TacticList(800, 110);
-	addGuiElement(list);
-	printf("list\n");
-
 	squad_focus = nullptr;
 	put_squad = false;
 	move_squad= false;
 	squad_type = 0;
 
-	list->setVisible(false);
 
 	renderCombat = SDL_CreateTexture(Game::getGlobalGame()->getRenderer(), SDL_PIXELFORMAT_RGBA8888,
                         SDL_TEXTUREACCESS_TARGET, TEAM_AREA_WIDTH, TEAM_AREA_HEIGHT);
@@ -260,80 +260,79 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
                 break;
 		}
 	}
-	else if ((element == blueprint) && (put_squad)) // Adicionar uma unidade
+	else if (element == blueprint) // Adicionar uma unidade
 	{
         if (action == MOUSE_RELEASED_EVENT)
         {
-            char str[5];
-            if (!move_squad)
+            Army *editingArmy = Game::getGlobalGame()->getEditingArmy();
+
+            if (put_squad)
             {
-            	if (squad_type != 0)
-            	{
-                    Army *editingArmy = Game::getGlobalGame()->getEditingArmy();
+                char str[5];
+                if (!move_squad)
+                {
+                    if (squad_type != 0)
+                    {
 
-                    editingArmy->createUnit(squad_type, Coordinates(mouseX - blueprint->getX(), mouseY - blueprint->getY()));
+                        editingArmy->createUnit(squad_type, Coordinates(mouseX - blueprint->getX(), mouseY - blueprint->getY()));
 
-                    squad_focus = editingArmy->getUnitAtIndex(editingArmy->nUnits() - 1);
-                    squad_type = 0;
-                    sprintf(str, "%d", editingArmy->nUnits());
-                    squad_number.push_back(
-                            new Label(str, Game::getGlobalGame()->getResourceMNGR()->GetFont("jostix-14"),
-                                      ColorRGB8::Green, ColorRGB8::White, "LB02"));
-                    squad_number[(squad_number.size() - 1)]->setPosition(squad_focus->getAvgX() + blueprint->getX(),
-                                                                         squad_focus->getAvgY() + blueprint->getY());
-                    list->setSquad(squad_focus);
-            	}
-            	put_squad = false;
+                        squad_focus = editingArmy->getUnitAtIndex(editingArmy->nUnits() - 1);
+                        squad_type = 0;
+                        sprintf(str, "%d", editingArmy->nUnits());
+                        squad_number.push_back(
+                                new Label(str, Game::getGlobalGame()->getResourceMNGR()->GetFont("jostix-14"),
+                                          ColorRGB8::Green, ColorRGB8::White, "LB02"));
+                        squad_number[(squad_number.size() - 1)]->setPosition(squad_focus->getAvgX() + blueprint->getX(),
+                                                                             squad_focus->getAvgY() + blueprint->getY());
+                        list->setSquad(squad_focus);
+                    }
+                    put_squad = false;
+                }
+                else
+                {
+                    Coordinates c(mouseX- blueprint->getX(), mouseY- blueprint->getY());
+                    squad_focus->moveTo(c);
+
+                    put_squad = !put_squad;
+                    move_squad = !move_squad;
+                }
             }
             else
             {
-                Coordinates c(mouseX- blueprint->getX(), mouseY- blueprint->getY());
-                squad_focus->moveTo(c);
-
-                put_squad = !put_squad;
-                move_squad = !move_squad;
-            }
-            return;
-        }
-	}
-	else
-	{
-        if (action == MOUSE_RELEASED_EVENT)
-        {
-            Army* editingArmy = Game::getGlobalGame()->getEditingArmy();
-            for (i = 0; i < editingArmy->nUnits(); i++)
-            {
-                Unit* unit = editingArmy->getUnitByID(i);
-                if (unit->hover(mouseX-blueprint->getX(), mouseY-blueprint->getY()))
+                for (int i = 0; i < editingArmy->nUnits(); i++)
                 {
-                    if ( move_squad )
+                    Unit* unit = editingArmy->getUnitByID(i);
+                    if (unit->hover(mouseX-blueprint->getX(), mouseY-blueprint->getY()))
                     {
-                        put_squad = true;
-                        squad_focus = unit;
-                        list->setVisible(true);
-                    }
-                    else
-                    {
-                        if (squad_focus == unit)
+                        if ( move_squad )
                         {
-                            squad_focus = nullptr;
-                            list->setVisible(false);
-                        }
-                        else
-                        {
+                            put_squad = true;
                             squad_focus = unit;
                             list->setVisible(true);
                         }
+                        else
+                        {
+                            if (squad_focus == unit)
+                            {
+                                squad_focus = nullptr;
+                                list->setVisible(false);
+                            }
+                            else
+                            {
+                                squad_focus = unit;
+                                list->setVisible(true);
+                            }
+                        }
+                       list->setSquad(squad_focus);
+                       return;
                     }
-				   list->setSquad(squad_focus);
-                   return;
                 }
-            }
 
-            squad_focus = nullptr;
-            list->setSquad(squad_focus);
-            list->setVisible(false);
-		}
+                squad_focus = nullptr;
+                list->setSquad(squad_focus);
+                list->setVisible(false);
+            }
+        }
 	}
 }
 
@@ -381,20 +380,14 @@ void Unit_Setup::Render()
 	int mouseX, mouseY;
 	SDL_Renderer* renderer = Game::getGlobalGame()->getRenderer();
 
-
 	Game::getGlobalGame()->setBackgroundColor(255, 0, 0);
 
 	imgBackground->DrawImage(renderer);
-	drawGuiElements();
+
+    // Mostrar GUI
+    drawGuiElements();
 	list->update();
 	list->draw();
-
-	if (squad_focus)
-	{
-		squad_selec->DrawImage(renderer,
-		        squad_focus->getAvgX() + blueprint->getX() - Game::getGlobalGame()->getResourceMNGR()->GetImage("squadfocus-bg")->getFrameWidth() / 2,
-		        squad_focus->getAvgY() + blueprint->getY() - Game::getGlobalGame()->getResourceMNGR()->GetImage("squadfocus-bg")->getFrameHeight() / 2);
-	}
 
 	// Desenhar army na tela
     SDL_SetRenderTarget(renderer, renderCombat);
@@ -418,19 +411,28 @@ void Unit_Setup::Render()
     SDL_SetRenderDrawBlendMode(renderer, SDL_BlendMode::SDL_BLENDMODE_NONE);
     SDL_RenderCopy( renderer, renderCombat, 0, &rect);
 
+    // Elemento selecionado
+	if (squad_focus)
+	{
+		squad_selec->DrawImage(renderer,
+		        squad_focus->getAvgX() + blueprint->getX() - Game::getGlobalGame()->getResourceMNGR()->GetImage("squadfocus-bg")->getFrameWidth() / 2,
+		        squad_focus->getAvgY() + blueprint->getY() - Game::getGlobalGame()->getResourceMNGR()->GetImage("squadfocus-bg")->getFrameHeight() / 2);
+	}
+
+	// Unit sendo adicionada
 	if (put_squad)
 	{
 		SDL_GetMouseState(&mouseX, &mouseY);
 		dct->getInfoFor(squad_type)->gfx_sfx.shipIdle->DrawImage(renderer, mouseX, mouseY, 0);
 	}
 
+	// Numero das unidades
 	for (unsigned int i = 0; i < squad_number.size(); i++)
 	{
 		squad_number[i]->setPosition(Game::getGlobalGame()->getEditingArmy()->getUnitByID(i)->getAvgX() + blueprint->getX(),
 				Game::getGlobalGame()->getEditingArmy()->getUnitByID(i)->getAvgY() + blueprint->getY());
 		squad_number[i]->draw();
 	}
-	//list->draw();
 }
 
 void Unit_Setup::Clean()

@@ -296,9 +296,9 @@ bool ImageBox::hover()
     }
     return (mouseX > x && mouseX < x+width) && (mouseY > y && mouseY < y+height);
 }
+
 INPUT_EVENT ImageBox::input(SDL_Event &event)
 {
-
 	if (hover())
 	{
 		switch (event.type)
@@ -309,6 +309,8 @@ INPUT_EVENT ImageBox::input(SDL_Event &event)
 			case SDL_MOUSEBUTTONUP:
 				return MOUSE_RELEASED_EVENT;
 		}
+
+		return MOUSE_OVER;
 	}
 	return NO_EVENT;
 }

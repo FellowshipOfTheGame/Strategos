@@ -109,11 +109,11 @@ public:
                     }
                 }
 
-                if (newEvent != NO_EVENT) // Nao ocorre evento quando recebe NO_EVENT (valor 0)
-                {
-                    //Quando necessario chamamos a funcao que indica que um evento ocorreu
-                    onInputEvent(guiElements[i], newEvent, event.key.keysym, event.button.button);
-                }
+                //Quando necessario chamamos a funcao que indica que um evento ocorreu
+                onInputEvent(guiElements[i], newEvent, event.key.keysym, event.button.button);
+
+                if (newEvent != NO_EVENT)
+                    break;
             }
         }
 

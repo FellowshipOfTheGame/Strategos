@@ -883,12 +883,13 @@ INPUT_EVENT TacticList::input(SDL_Event &event)
                     }
                     else
                     {
-                        if (selected != nullptr)
-                        {
+                        if (selected){
                             selected->setSelected(false);
                         }
+
                         selected = lista[i];
                         selected->setSelected(true);
+
                         tct_set->setTactic(squad->getTacticAt(i), squad->getID());
                     }
                 return MOUSE_RELEASED_EVENT;
