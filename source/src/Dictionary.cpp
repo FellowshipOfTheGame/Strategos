@@ -132,20 +132,19 @@ DictKey* Dictionary::readAttribute(fstream &input, Resource &resource)
         input >> tag;
 //        printf("TAG: %s\n", tag.c_str());
 
-        if(tag.compare("ship:") == 0)
-        {
+        if(tag.compare("ship:") == 0){
             input >> key->name;
         }
-        if(tag.compare("hp:") == 0)
-        {
+        else if(tag.compare("cost:") == 0){
+            input >> key->cost;
+        }
+        else if(tag.compare("hp:") == 0){
            input >>key->stats.maxHP;
         }
-        else if(tag.compare("damage:") == 0)
-        {
+        else if(tag.compare("damage:") == 0){
             input >> key->stats.damage;
         }
-        else if(tag.compare("atkCD:") == 0)
-        {
+        else if(tag.compare("atkCD:") == 0){
             input >> key->stats.maxAtkCD;
         }
         else if(tag.compare("range:") == 0)
@@ -154,20 +153,16 @@ DictKey* Dictionary::readAttribute(fstream &input, Resource &resource)
             key->stats.range *= SPACIAL_UNIT;
             key->stats.range2 = key->stats.range*key->stats.range;
         }
-        else if(tag.compare("shield:") == 0)
-        {
+        else if(tag.compare("shield:") == 0){
             input >> key->stats.shield;
         }
-        else if(tag.compare("dodge:") == 0)
-        {
+        else if(tag.compare("dodge:") == 0){
             input >> key->stats.dodge;
         }
-        else if(tag.compare("speed:") == 0)
-        {
+        else if(tag.compare("speed:") == 0){
             input >> key->stats.speed;
         }
-        else if(tag.compare("squad:") == 0)
-        {
+        else if(tag.compare("squad:") == 0){
             input >> key->squadSize;
         }
         else if(tag.compare("gfxShips:") == 0)

@@ -5,6 +5,7 @@
 #include "Unit.h"
 #include "Game.h"
 #include "World.h"
+#include "Algorithm.h"
 
 // Limita a qtd de gold que a Army pode ter
 // Remove unidades aleatorias - NAO GARANTE CONSISTENCIA das taticas
@@ -14,13 +15,13 @@ void Objective::GoldCap(Army *army)
 	for (unsigned int i = 1; i < army->nUnits(); i++)
 	{
 	    Unit *unit = army->getUnitAtIndex(i);
-		gold += unit->getType()*10;
+		gold += unit->getUnitInfo()->cost;
 	}
 
 	while (gold > GOLD_AMOUNT)
 	{
 		n = 1+(rand()%(army->nUnits()-2));
-		gold -= army->getUnitAtIndex(n)->getType()*10;
+		gold -= army->getUnitAtIndex(n)->getUnitInfo()->cost;
 		Unit* removed = army->removeUnit(n);
 		delete removed; // TODO: Talvez usar isso em outra army?
 	}

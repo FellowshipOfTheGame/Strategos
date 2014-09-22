@@ -3,6 +3,7 @@ Pode ter quebra de linha.@
 
 SQUADS
 ship: MotherShip
+cost: 0
 hp: 1000
 damage: 70
 atkCD: 25
@@ -22,7 +23,8 @@ sfxShoot: assets/Audio.sfx shoot1
 END_SHIP
 
 ship: AncientFighter
-hp: 800
+cost: 20
+hp: 600
 damage: 10
 atkCD: 8
 range: 10
@@ -41,7 +43,8 @@ sfxShoot: assets/Audio.sfx shoot2
 END_SHIP
 
 ship: AncientCruiser
-hp: 1500
+cost: 50
+hp: 800
 damage: 100
 atkCD: 30
 range: 25
@@ -60,6 +63,7 @@ sfxShoot: assets/Audio.sfx shoot1
 END_SHIP
 
 ship: Ancient
+cost: 30
 hp: 500
 damage: 20
 atkCD: 20

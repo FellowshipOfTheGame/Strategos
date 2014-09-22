@@ -10,7 +10,7 @@
 
 #include "Global.h"
 #include "Game.h"
-
+#include "Algorithm.h"
 
 Play::Play(STATE previous) :
 		StateMachine(previous, GAMEPLAY, GAMEPLAY)

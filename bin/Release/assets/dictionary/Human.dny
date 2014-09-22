@@ -3,6 +3,7 @@ Pode ter quebra de linha.@
 
 SQUADS
 ship: MotherShip
+cost: 0
 hp: 1000
 damage: 70
 atkCD: 25
@@ -22,13 +23,14 @@ sfxShoot: assets/Audio.sfx shoot1
 END_SHIP
 
 ship: Fighter
-hp: 200
+cost: 10
+hp: 300
 damage: 10
 atkCD: 9
-range: 10
-shield: 100
+range: 12
+shield: 150
 dodge: 10
-speed: 2.5
+speed: 2.8
 squad: 5
 gfxShips: assets/Army.gfx human-ship-fighter
 gfxShoot: assets/Army.gfx human-shootSimple
@@ -41,7 +43,8 @@ sfxShoot: assets/Audio.sfx shoot2
 END_SHIP
 
 ship: Bomber
-hp: 400
+cost: 30
+hp: 500
 damage: 50
 atkCD: 20
 range: 18
@@ -60,7 +63,8 @@ sfxShoot: assets/Audio.sfx shoot1
 END_SHIP
 
 ship: Support
-hp: 300
+cost: 20
+hp: 350
 damage: 20
 atkCD: 14
 range: 16

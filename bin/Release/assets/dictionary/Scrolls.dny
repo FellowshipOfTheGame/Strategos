@@ -3,6 +3,7 @@ Pode ter quebra de linha.@
 
 SQUADS
 ship: MotherShip
+cost: 0
 hp: 1000
 damage: 70
 atkCD: 25
@@ -22,6 +23,7 @@ sfxShoot: assets/Audio.sfx shoot1
 END_SHIP
 
 ship: Fighter
+cost: 10
 hp: 200
 damage: 12
 atkCD: 12
@@ -41,6 +43,7 @@ sfxShoot: assets/Audio.sfx shoot2
 END_SHIP
 
 ship: Bomber
+cost: 30
 hp: 400
 damage: 50
 atkCD: 20
@@ -60,6 +63,7 @@ sfxShoot: assets/Audio.sfx shoot1
 END_SHIP
 
 ship: Support
+cost: 20
 hp: 300
 damage: 20
 atkCD: 14

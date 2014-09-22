@@ -16,11 +16,12 @@
 
 #include "Resource.h"
 #include "Dictionary.h"
-#include "Algorithm.h"
 #include "CombatLog.h"
 #include "SoundManager.h"
 
 #define CONFIG_FILE  "setup.cfg"
+
+class Algorithm;
 
 class Game
 {

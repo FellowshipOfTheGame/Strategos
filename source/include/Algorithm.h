@@ -3,7 +3,7 @@
 
 #include "Army.h"
 
-#define GOLD_AMOUNT 350
+#define GOLD_AMOUNT 270
 
 // Classe base para Algoritmo Genetico
 

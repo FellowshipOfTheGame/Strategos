@@ -1,8 +1,9 @@
 #include "InitManager.h"
 
-#include "World.h"
-#include "Game.h"
+#include "Algorithm.h"
 #include "Global.h"
+#include "Game.h"
+#include "World.h"
 
 // 4 tipos, 0 sendo a nave mae
 #define RANDOM_UNIT (rand()%3 +1)

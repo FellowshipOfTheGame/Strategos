@@ -23,6 +23,7 @@ class DictKey
         shipBaseStats stats;
         unsigned int squadSize;
         int type;
+        int cost; //! Custo da unidade
 
         shipEffects gfx_sfx;
 
