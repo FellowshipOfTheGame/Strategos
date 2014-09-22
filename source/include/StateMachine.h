@@ -96,17 +96,15 @@ public:
             for (unsigned int i = 0; i < guiElements.size(); i++)
             {
                 INPUT_EVENT newEvent = guiElements[i]->input(event);
-                if ( dynamic_cast<TextField*>(guiElements[i]) != nullptr)
+
+                if (newEvent == MOUSE_RELEASED_EVENT)
                 {
-                    if (newEvent == MOUSE_RELEASED_EVENT)
-                    {
-                        if (focus != nullptr)
-                        {
-                            focus->setActive(false);
-                        }
-                        focus =  guiElements[i];
-                        focus->setActive(true);
+                    if (!!focus && focus != guiElements[i]){
+                        focus->setActive(false);
                     }
+
+                    focus = guiElements[i];
+                    focus->setActive(true);
                 }
 
                 //Quando necessario chamamos a funcao que indica que um evento ocorreu

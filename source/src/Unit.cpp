@@ -143,7 +143,6 @@ Unit* Unit::getTarget() const
 
 void Unit::setTacticAt(Tactic *tactic, int pos)
 {
-	printf ("tentando dar insert em %d\n",pos);
 	tactics.insert(tactics.begin()+pos, tactic);
 	removeTactic(pos+1);
 }
@@ -154,7 +153,7 @@ Tactic* Unit::getTacticAt(unsigned int pos)
 }
 
 unsigned int Unit::getTacticSize() const{
-	return (int)tactics.size();
+	return tactics.size();
 }
 
 Ship* Unit::getShip(unsigned long gid) const

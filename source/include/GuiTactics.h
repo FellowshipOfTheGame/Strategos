@@ -3,6 +3,7 @@
 
 #include "GuiElements.h"
 #include "Army.h"
+
 //trigger
 class TriggerSet: public cGuiElement
 {
@@ -18,7 +19,9 @@ public:
 	int getValue();
 	int getOperation();
 	void draw();
-	INPUT_EVENT input(SDL_Event &event);
+
+	INPUT_EVENT input(SDL_Event &event) override;
+	void setActive(bool state) override;
 };
 
 class GuiTactic : public cGuiElement
@@ -28,7 +31,7 @@ public:
 	~GuiTactic();
 
 	virtual void update(){}
-	void update(int x, int y, DictKey *key);
+	virtual void update(int x, int y, DictKey *key);
 	virtual void draw();
 	virtual INPUT_EVENT input(SDL_Event &event);
 	void setDistance(int i);

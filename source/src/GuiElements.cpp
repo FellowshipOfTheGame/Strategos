@@ -411,6 +411,10 @@ void TextField::enterLetter(char letter)
 
 INPUT_EVENT TextField::input(SDL_Event &event)
 {
+    if (!active && !hover()){
+        return NO_EVENT;
+    }
+
 	switch (event.type)
 	{
 		case SDL_MOUSEBUTTONUP:

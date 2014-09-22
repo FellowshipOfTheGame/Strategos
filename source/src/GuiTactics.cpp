@@ -179,6 +179,7 @@ INPUT_EVENT TacticSet::input(SDL_Event &event)
 	e = tg1->input(event);
     if (e != NO_EVENT)
 	{
+	    tg2->setActive(false);
 		tactic->getTacticTrigger().setTriggerA(tg1->getTrigger());
 		return e;
 	}
@@ -186,6 +187,7 @@ INPUT_EVENT TacticSet::input(SDL_Event &event)
     e = tg2->input(event);
 	if (e != NO_EVENT)
 	{
+	    tg1->setActive(false);
 		tactic->getTacticTrigger().setTriggerB(tg2->getTrigger());
 		return e;
 	}
@@ -1067,4 +1069,12 @@ INPUT_EVENT TriggerSet::input(SDL_Event &event)
         return e;
 
 	return NO_EVENT;
+}
+
+void TriggerSet::setActive(bool state)
+{
+    cmb_trigger->setActive(state);
+    cmb_operation->setActive(state);
+    value->setActive(state);
+    active = state;
 }

@@ -21,9 +21,6 @@ Unit_Setup::Unit_Setup(STATE previous) :
     Game *game = Game::getGlobalGame();
 	int scrWidth = game->getWidth();
 	int scrHeight = game->getHeight();
-	Font *fntEthnocentric;
-
-//	game->generateSprites(game->getEditingArmy()->getDictionary());
 
 	Resource *resource = game->getResourceMNGR();
 	resource->AddImage("assets/base.gfx", "blueprint1-bg");
@@ -33,7 +30,7 @@ Unit_Setup::Unit_Setup(STATE previous) :
 	resource->AddImage("assets/ui.gfx", "back-bt");
 	resource->AddImage("assets/ui.gfx", "confirm-bt");
 	resource->AddImage("assets/army.gfx", "human-ships");
-	fntEthnocentric = resource->GetFont("jostix-14");
+	Font *fntEthnocentric = resource->GetFont("jostix-14");
 
 	resource->AddFont("assets/fonts.gfx", "jostix-14");
 	//imagens de fundo
@@ -143,7 +140,6 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
 {
 	int mouseX, mouseY;
 	SDL_GetMouseState(&mouseX, &mouseY);
-	unsigned int i;
 
 	TacticInfo info(0);
 	if (element == btn_Back)
@@ -299,7 +295,7 @@ void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keys
             }
             else
             {
-                for (int i = 0; i < editingArmy->nUnits(); i++)
+                for (size_t i = 0; i < editingArmy->nUnits(); i++)
                 {
                     Unit* unit = editingArmy->getUnitByID(i);
                     if (unit->hover(mouseX-blueprint->getX(), mouseY-blueprint->getY()))
