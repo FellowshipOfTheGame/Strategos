@@ -10,7 +10,7 @@
 #include "Tactic.h"
 
 using namespace ColorRGB8;
-//TODO arrumar posicionamento dos elementos
+
 /****************************** TacticSet ******************************/
 TacticSet::TacticSet(int x, int y, std::string GID)
 {

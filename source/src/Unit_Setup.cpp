@@ -14,7 +14,6 @@
 
 //#include "GuiTactics.cpp"
 //TODO arrumar blueprint
-//TODO adicionar botao para mover unidades
 Unit_Setup::Unit_Setup(STATE previous) :
 		StateMachine(previous, UNIT_SETUP, UNIT_SETUP), rnd(1337)
 {

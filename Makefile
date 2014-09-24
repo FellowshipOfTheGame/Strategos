@@ -28,7 +28,7 @@ EXECUTABLE = strategos
 
 CPPFLAGS= $(includes) -std=c++11 -std=gnu++11 -D$(OS)
 LDFLAGS=
-LDLIBS= -lSDL2 -lSDL2_image -lSDL2_ttf
+LDLIBS= -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer
 
 SRCS_CPP = $(wildcard source/src/*.cpp) $(wildcard source/SDL2_gfx/*.cpp)
 SRCS_C = $(wildcard source/SDL2_gfx/*.c)

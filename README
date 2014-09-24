@@ -1,16 +1,4 @@
 
-======================= Créditos =======================
-Ivan Caramello (desenvolvedor)
-Matheus Lin (desenvolvedor e artista)
-Bruno Toderi (desenvolvedor)
-Guilherme 'Kurama' (desenvolvedor)
-Helder S. L. Moraes(desenvolvedor)
-Mateus Malvessi Pereira (desenvolvedor)
-Yvan Cezarino Fernandes (arte)
-Ana Luiza Figueiroa (arte)
-Stéfanie Fares Sabbag (arte)
-
-
 ======================= Descrição =======================
 
 Strategos (General em grego e sigla para "STRATegy Evolutive Genetic Optimized Simulator"),
@@ -44,3 +32,38 @@ que eu computador dispor para realizá-las juntas, usando vários núcleos e outras
 Assim, a otimização feita a partir da Paralelização do código, tanto durante a batalha quanto
 durante o 'treinamento' do computador, poderiam ocorrer em tempos bem mais razoáveis.
 
+======================= Bibliotecas =======================
+SDL2
+SDL2_Mixer
+SDL2_Image
+SDL2_TTF
+
+======================= Compilando =======================
+Linux:
+Instale as bibliotecas necessárias e depois rode o makefile com:
+make
+
+Windows:
+Utilizando o projeto do Code::Blocks, configure os diretórios para as bibliotecas no seu ambiente:
+SDL_HOME	- Diretorio base do SDL2
+SDL_IMAGE_HOME	- Diretório base do SDL2_Image
+SDL_MIXER_HOME	- Diretório base do SDL2_Mixer
+SDL_TTF_HOME	- Diretório base do SDL2_TTF
+
+Todos esses diretórios devem possuir dentro a seguinte configuração:
+pasta_sdl_exemplo
+	/include
+	/lib
+
+
+======================= Créditos =======================
+Ivan Caramello (desenvolvedor)
+Matheus Lin (desenvolvedor e arte)
+Bruno Toderi (desenvolvedor)
+Guilherme 'Kurama' (desenvolvedor)
+Helder S. L. Moraes (desenvolvedor)
+Mateus Malvessi Pereira (desenvolvedor)
+Yvan Cezarino Fernandes (arte)
+Ana Luiza Figueiroa (arte)
+Stéfanie Fares Sabbag (arte)
+Juliana Crivelli (arte)
