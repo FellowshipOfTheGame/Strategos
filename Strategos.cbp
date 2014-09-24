@@ -31,7 +31,6 @@
 				<Compiler>
 					<Add option="-O3" />
 					<Add directory="source/include" />
-					<Add directory="include" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
