@@ -29,3 +29,8 @@ key: general-gui
 file: assets/font/heavy_data.ttf
 size: 26
 !
+
+key: general-gui-big
+file: assets/font/heavy_data.ttf
+size: 42
+!

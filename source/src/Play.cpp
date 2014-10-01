@@ -20,11 +20,15 @@ Play::Play(STATE previous) :
 	resource->AddImage("assets/ui.gfx", "bg_engaging");
 	resource->AddImage("assets/ui.gfx", "start-bt");
 	resource->AddFont("assets/fonts.gfx", "jostix-14");
+	resource->AddFont("assets/fonts.gfx", "general-gui");
+	resource->AddFont("assets/fonts.gfx", "general-gui-big");
 	resource->AddImage("assets/ui.gfx", "textfield-text");
 
 	imgBackground = resource->GetImage("bg_engaging");
 
 	Font *fntEthnocentric = resource->GetFont("jostix-14");
+	Font *fntGeneralBig = resource->GetFont("general-gui-big");
+	Font *fntGeneral = resource->GetFont("general-gui");
 	lbTitle = new Label("Choose your Destiny!!", fntEthnocentric, ColorRGB8::Red, ColorRGB8::White, "LB_TITLE");
 	lbTitle->setPosition(350, 20);
 	addGuiElement(lbTitle);
@@ -32,24 +36,24 @@ Play::Play(STATE previous) :
 	btSimulate = new Button(350, 670, resource->GetImage("start-bt"));
 	addGuiElement(btSimulate);
 
-	cbSelect1 = new ComboBox(175, 450, nullptr, ColorRGB8::Green, ColorRGB8::Black);
-	cbSelect1->setFont(fntEthnocentric);
+	cbSelect1 = new ComboBox(175, 200, nullptr, ColorRGB8::Red, ColorRGB8::Black);
+	cbSelect1->setFont(fntGeneralBig);
 	cbSelect1->addText("Player");
 	cbSelect1->addText("CPU");
 	addGuiElement(cbSelect1);
 
-	cbSelect2 = new ComboBox(700, 450, nullptr, ColorRGB8::Green, ColorRGB8::Black);
-	cbSelect2->setFont(fntEthnocentric);
+	cbSelect2 = new ComboBox(700, 200, nullptr, ColorRGB8::Green, ColorRGB8::Black);
+	cbSelect2->setFont(fntGeneralBig);
 	cbSelect2->addText("Player");
 	cbSelect2->addText("CPU");
 	addGuiElement(cbSelect2);
 
-	cbPlayer1 = new ComboBox(200, 500, nullptr, ColorRGB8::Green, ColorRGB8::Black);
-	cbPlayer1->setFont(fntEthnocentric);
+	cbPlayer1 = new ComboBox(200, 400, nullptr, ColorRGB8::Green, ColorRGB8::Black);
+	cbPlayer1->setFont(fntGeneral);
 	addGuiElement(cbPlayer1);
 
-	cbPlayer2 = new ComboBox(720, 500, nullptr, ColorRGB8::Green, ColorRGB8::Black);
-	cbPlayer2->setFont(fntEthnocentric);
+	cbPlayer2 = new ComboBox(720, 400, nullptr, ColorRGB8::Green, ColorRGB8::Black);
+	cbPlayer2->setFont(fntGeneral);
 	addGuiElement(cbPlayer2);
 
 	//Populate the combo-boxes with the name of the armies already created
