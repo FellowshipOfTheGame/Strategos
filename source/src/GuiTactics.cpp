@@ -67,87 +67,94 @@ void TacticSet::update()
 
 int TacticSet::getType()
 {
-	return tactic->getType();
+	return guiTactic->getType();
 }
 
 Tactic* TacticSet::getTactic()
 {
 	Tactic *temp;
-	TacticInfo info(tactic->getInfo().allyUnit);
+	TacticInfo info(Game::getGlobalGame()->getEditingArmy()->getUnitAtIndex(guiTactic->getPartner()));
+    TacticTrigger tt(tg1->getTrigger(), tg2->getTrigger(), cmb_logic->getSelectedIndex());
+
 	switch (cmb_choiser->getSelectedIndex())
 	{
 		case 0:
-			temp = new AttackNearestEnemy(info, tactic->getTacticTrigger());
+			temp = new AttackNearestEnemy(info, tt);
 			break;
 		case 1:
-			temp = new AttackWeakestEnemy(info, tactic->getTacticTrigger());
+			temp = new AttackWeakestEnemy(info, tt);
 			break;
 		case 2:
-			temp = new AttackCollab(info, tactic->getTacticTrigger());
+			temp = new AttackCollab(info, tt);
 			break;
 		case 3:
-			temp = new DefenseCollab(info, tactic->getTacticTrigger());
+			temp = new DefenseCollab(info, tt);
 			break;
 		case 4:
-			temp = new Kamikase(info, tactic->getTacticTrigger());
+			temp = new Kamikase(info, tt);
 			break;
 		case 5:
-			temp = new Retreat(info, tactic->getTacticTrigger());
+			temp = new Retreat(info, tt);
 			break;
 		case 6:
-			temp = new MoveRandomly(info, tactic->getTacticTrigger());
+			temp = new MoveRandomly(info, tt);
 			break;
 		default:
 			temp = nullptr;
 			break;
 	}
+
 	return temp;
 }
 
-void TacticSet::setTactic(Tactic *t, int id)
+void TacticSet::setTactic(int t, int id)
 {
+    printf("CONVERTE SAPORRA PARA %d\n", t);
 	unit_id = id;
-	if (dynamic_cast<AttackNearestEnemy*>(t))
+	switch (t)
 	{
-		cmb_choiser->setSelectedIndex(0);
-		convert_AN();
+	    case TACTIC_ATTACK_NEAREST_ENEMY:
+	        cmb_choiser->setSelectedIndex(0);
+            convert_AN();
+        break;
+
+	    case TACTIC_ATTACK_WEAKEST_ENEMY:
+	        cmb_choiser->setSelectedIndex(1);
+            convert_AW();
+        break;
+
+	    case TACTIC_ATTACK_COLLAB:
+	        cmb_choiser->setSelectedIndex(2);
+            convert_CA(id);
+        break;
+
+	    case TACTIC_DEFENSE_COLLAB:
+	        cmb_choiser->setSelectedIndex(3);
+            convert_CD(id);
+        break;
+
+        case TACTIC_KAMIKASE:
+            cmb_choiser->setSelectedIndex(4);
+            convert_KM();
+        break;
+
+        case TACTIC_RETREAT:
+            cmb_choiser->setSelectedIndex(5);
+            convert_RT(id);
+        break;
+
+        case TACTIC_MOVE_RANDOM:
+            cmb_choiser->setSelectedIndex(6);
+            convert_RM();
+        break;
+
+        default:
+            printf("ERRO\n");
+        break;
 	}
-	else if (dynamic_cast<AttackWeakestEnemy*>(t))
-	{
-		cmb_choiser->setSelectedIndex(1);
-		convert_AW();
-	}
-	else if (dynamic_cast<AttackCollab*>(t))
-	{
-		cmb_choiser->setSelectedIndex(2);
-		convert_CA(id);
-	}
-	else if (dynamic_cast<DefenseCollab*>(t))
-	{
-		cmb_choiser->setSelectedIndex(3);
-		convert_CD(id);
-	}
-	else if (dynamic_cast<Kamikase*>(t))
-	{
-		cmb_choiser->setSelectedIndex(4);
-		convert_KM();
-	}
-	else if (dynamic_cast<Retreat*>(t))
-	{
-		cmb_choiser->setSelectedIndex(5);
-		convert_RT(id);
-	}
-	else if (dynamic_cast<MoveRandomly*>(t))
-	{
-		cmb_choiser->setSelectedIndex(6);
-		convert_RM();
-	}
-	else
-	{
-		printf("erro\n");
-	}
+
 	guiTactic->setPosition(x+2, 5+cmb_choiser->getY() + cmb_choiser->getHeight());
-	tactic = t;
+//	tactic = t;
 }
 
 INPUT_EVENT TacticSet::input(SDL_Event &event)
@@ -157,15 +164,13 @@ INPUT_EVENT TacticSet::input(SDL_Event &event)
 	e = cmb_choiser->input(event);
 	if (e != NO_EVENT)
 	{
-		if (cmb_choiser->getSelectedIndex() != tactic->getType())
+		if (cmb_choiser->getSelectedIndex() != guiTactic->getType())
 		{
 			printf ("cliquei na opcao %d", cmb_choiser->getSelectedIndex());
-			Tactic *temp = getTactic();
-			delete tactic;
-			setTactic(temp, unit_id);
+			setTactic(cmb_choiser->getSelectedIndex(), unit_id);
 
 			this->height = (cmb_logic->getY() + cmb_logic->getHeight()) - cmb_choiser->getY();
-			printf ("tactic type: %d\n",tactic->getType());
+			printf ("tactic type: %d\n", guiTactic->getType());
 		}
 
 		return e;
@@ -180,7 +185,6 @@ INPUT_EVENT TacticSet::input(SDL_Event &event)
     if (e != NO_EVENT)
 	{
 	    tg2->setActive(false);
-		tactic->getTacticTrigger().setTriggerA(tg1->getTrigger());
 		return e;
 	}
 
@@ -188,7 +192,6 @@ INPUT_EVENT TacticSet::input(SDL_Event &event)
 	if (e != NO_EVENT)
 	{
 	    tg1->setActive(false);
-		tactic->getTacticTrigger().setTriggerB(tg2->getTrigger());
 		return e;
 	}
 
@@ -196,7 +199,6 @@ INPUT_EVENT TacticSet::input(SDL_Event &event)
 	if (e != NO_EVENT)
 	{
 	    printf("cmb_logic %d\n", e);
-		tactic->getTacticTrigger().setLogicOperator(cmb_logic->getSelectedIndex());
 		return e;
 	}
 
@@ -208,7 +210,7 @@ void TacticSet::convert_AN()
 	if (dynamic_cast<TacticAN*>(this->guiTactic) == nullptr)
 	{
 		delete guiTactic;
-		guiTactic= new TacticAN(x, y, GID);
+		guiTactic = new TacticAN(x, y, GID);
 	}
 }
 void TacticSet::convert_AW()
@@ -388,8 +390,9 @@ int TacticCA::getPartner()
 
 INPUT_EVENT TacticCA::input(SDL_Event &event)
 {
-	if (cmb_partner->hover())
-		return cmb_partner->input(event);
+	if (cmb_partner->hover()){
+        cmb_partner->input(event);
+	}
 	return NO_EVENT;
 }
 /****************************** TacticCD ******************************/
@@ -892,7 +895,7 @@ INPUT_EVENT TacticList::input(SDL_Event &event)
                         selected = lista[i];
                         selected->setSelected(true);
 
-                        tct_set->setTactic(squad->getTacticAt(i), squad->getID());
+                        tct_set->setTactic(squad->getTacticAt(i)->getType(), squad->getID());
                     }
                 return MOUSE_RELEASED_EVENT;
             }

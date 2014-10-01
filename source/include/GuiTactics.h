@@ -24,6 +24,7 @@ public:
 	void setActive(bool state) override;
 };
 
+
 class GuiTactic : public cGuiElement
 {
 public:
@@ -36,8 +37,10 @@ public:
 	virtual INPUT_EVENT input(SDL_Event &event);
 	void setDistance(int i);
 	int getDistance();
-	int getPartner(){ return 0; }
+	virtual int getPartner(){ return 0; }
+	virtual int getType() = 0;
 };
+
 
 class TacticSet : public cGuiElement
 {
@@ -49,7 +52,7 @@ protected:
 	std::vector<std::string> vetor;
 	GuiTactic *guiTactic;
 	int unit_id;
-	Tactic *tactic;
+//	Tactic *tactic;
 
 public:
 	TacticSet(int x, int y, std::string GID);
@@ -61,7 +64,7 @@ public:
 	virtual INPUT_EVENT input(SDL_Event &event);
 	Tactic* getTactic();
 	int getType();
-	void setTactic(Tactic *t, int id);
+	void setTactic(int t, int id);
 	void convert_AN();
 	void convert_AW();
 	void convert_CA(int id);
@@ -84,6 +87,8 @@ public:
 	void update(int x, int y, DictKey *key);
 	void draw();
 	INPUT_EVENT input(SDL_Event &event);
+
+	int getType() override {return TACTIC_ATTACK_NEAREST_ENEMY;}
 };
 
 /*Attack Weakest*/
@@ -98,6 +103,8 @@ public:
 	void update(int x, int y, DictKey *key);
 	void draw();
 	INPUT_EVENT input(SDL_Event &event);
+
+	int getType() override {return TACTIC_ATTACK_WEAKEST_ENEMY;}
 };
 
 /*Collaborative Attack*/
@@ -115,6 +122,8 @@ public:
 	INPUT_EVENT input(SDL_Event &event);
 
 	int getPartner();
+
+	int getType() override {return TACTIC_ATTACK_COLLAB;}
 };
 
 /*Collaborative Defense*/
@@ -132,6 +141,7 @@ public:
 	INPUT_EVENT input(SDL_Event &event);
 	int getPartner();
 
+	int getType() override {return TACTIC_DEFENSE_COLLAB;}
 };
 
 /*Kamikase*/
@@ -146,6 +156,8 @@ public:
 	void update(int x, int y, DictKey *key);
 	void draw();
 	INPUT_EVENT input(SDL_Event &event);
+
+	int getType() override {return TACTIC_KAMIKASE;}
 
 };
 /*Retreat*/
@@ -163,6 +175,7 @@ public:
 	INPUT_EVENT input(SDL_Event &event);
 	int getPartner();
 
+	int getType() override {return TACTIC_RETREAT;}
 };
 
 /*Random Movement*/
@@ -177,6 +190,8 @@ public:
 	void update(int x, int y, DictKey *key);
 	void draw();
 	INPUT_EVENT input(SDL_Event &event);
+
+	int getType() override {return TACTIC_MOVE_RANDOM;}
 };
 
 //itemlist
@@ -197,6 +212,7 @@ public:
 	void draw();
 	INPUT_EVENT input(SDL_Event &event);
 };
+
 //tacticlist
 class TacticList: public cGuiElement
 {

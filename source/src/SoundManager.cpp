@@ -58,13 +58,13 @@ int SoundManager::getPlayingCount() { return Mix_Playing(-1); }
 int SoundManager::reserveChannels(int num) { return Mix_ReserveChannels(num); }
 
 void SoundManager::play(Mix_Chunk *chunk, int channel, int nTimes) {
-    if( Mix_PlayChannel(channel, chunk, nTimes) == -1)
-        REMOVE std::cout << "Mixer: Error playing at channel " << channel << ".\n";
+//    if( Mix_PlayChannel(channel, chunk, nTimes) == -1)
+//        REMOVE std::cout << "Mixer: Error playing at channel " << channel << ".\n";
 }
 
 void SoundManager::loop(Mix_Chunk *chunk) {
-    if( Mix_PlayChannel(-1, chunk, -1) == -1)
-        REMOVE std::cout << "Mixer: Error playing chunk.\n";
+//    if( Mix_PlayChannel(-1, chunk, -1) == -1)
+//        REMOVE std::cout << "Mixer: Error playing chunk.\n";
 }
 
 void SoundManager::pause(int channel) { Mix_Pause(channel); }

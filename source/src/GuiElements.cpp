@@ -536,7 +536,7 @@ INPUT_EVENT ComboBox::input(SDL_Event &event)
 						selected--;
 					}
 
-					printf("selected %d %lu %s\n", selected, list.size(), list[selected].c_str());
+//					printf("selected %d %lu '%s'\n", selected, list.size(), list[selected].c_str());
 
 					this->height = cell_height;
 					opened = false;
@@ -587,7 +587,7 @@ void ComboBox::draw()
                 rect.y = y;
                 rect.w = lenght*font->getPtSize();
                 rect.h = cell_height * (int)(list.size()+1) + 1;
-                SDL_RenderFillRect(renderer, &rect);
+//                SDL_RenderFillRect(renderer, &rect);
             }
 
             // Renderizar textos
@@ -612,7 +612,7 @@ void ComboBox::draw()
                 rect.y = y;
                 rect.w = lenght*font->getPtSize();
                 rect.h = cell_height;
-                SDL_RenderFillRect(renderer, &rect);
+//                SDL_RenderFillRect(renderer, &rect);
 			}
 		}
 
@@ -795,7 +795,6 @@ void StatusBox::draw()
 {
 	if (shown)
 	{
-	    printf("wqweqwe\n");
 		//bxBounds->draw();
 		lbName->draw();
 		lbHP->draw();
