@@ -132,7 +132,7 @@ Create_Army::~Create_Army()
 	delete st_box;
 }
 
-void Create_Army::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keysym key, Uint8 button)
+void Create_Army::onInputEvent(GuiElement* element, INPUT_EVENT action, SDL_Keysym key, Uint8 button)
 {
 	if (element == btn_Back)
 	{

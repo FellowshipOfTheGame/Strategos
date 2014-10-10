@@ -45,7 +45,7 @@ Menu::~Menu()
 	delete btCreate;
 }
 
-void Menu::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keysym key, Uint8 button)
+void Menu::onInputEvent(GuiElement* element, INPUT_EVENT action, SDL_Keysym key, Uint8 button)
 {
 	if(element == btExit)
 	{

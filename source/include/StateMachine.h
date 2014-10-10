@@ -27,8 +27,8 @@ private:
 	STATE current;
 	STATE next;
 
-	std::vector <cGuiElement*> guiElements;
-	cGuiElement *focus;
+	std::vector <GuiElement*> guiElements;
+	GuiElement *focus;
 public:
 	StateMachine(STATE previous, STATE current, STATE next)
     {
@@ -48,12 +48,12 @@ public:
     STATE getCurrent() {return current;}
     STATE getNext() {return next;}
 
-    void addGuiElement(cGuiElement *element)
+    void addGuiElement(GuiElement *element)
     {
         guiElements.push_back(element);
     }
 
-    virtual void onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keysym key, Uint8 button) = 0;
+    virtual void onInputEvent(GuiElement* element, INPUT_EVENT action, SDL_Keysym key, Uint8 button) = 0;
     virtual void onKeyDownEvent(SDL_Keysym key){}
     virtual void onKeyUpEvent(SDL_Keysym key){}
     virtual void onMouseDownEvent(Uint8 button){}
@@ -122,7 +122,7 @@ public:
 
     void updateGuiElements()
     {
-        std::vector <cGuiElement*>::iterator it = guiElements.begin();
+        std::vector <GuiElement*>::iterator it = guiElements.begin();
         while (it != guiElements.end())
         {
             if((*it)->isEnabled())
@@ -134,7 +134,7 @@ public:
 
     void drawGuiElements()
     {
-        std::vector <cGuiElement*>::iterator it = guiElements.begin();
+        std::vector <GuiElement*>::iterator it = guiElements.begin();
         while (it != guiElements.end())
         {
             if((*it)->isVisible())

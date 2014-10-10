@@ -73,7 +73,7 @@ Simulation::~Simulation()
     delete camera;
 }
 
-void Simulation::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keysym key, Uint8 button)
+void Simulation::onInputEvent(GuiElement* element, INPUT_EVENT action, SDL_Keysym key, Uint8 button)
 {
 
 }

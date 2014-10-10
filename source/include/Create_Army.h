@@ -26,7 +26,7 @@ private:
 
     TextField *txt_ArmyName;
     //TextField *txt_GenName;
-    
+
     ComboBox *cmb_species, *cmb_armys;
 
     StatusBox *st_box;
@@ -38,7 +38,7 @@ public:
     Create_Army(STATE previous);
     ~Create_Army();
 
-    void onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keysym key, Uint8 button) override;
+    void onInputEvent(GuiElement* element, INPUT_EVENT action, SDL_Keysym key, Uint8 button) override;
     void Logic();
     void Render();
     void Clean();

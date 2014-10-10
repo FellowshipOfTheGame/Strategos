@@ -5,7 +5,7 @@
 #include "Army.h"
 
 //trigger
-class TriggerSet: public cGuiElement
+class TriggerSet: public GuiElement
 {
 private:
 	ComboBox *cmb_trigger;
@@ -28,7 +28,7 @@ public:
 };
 
 
-class GuiTactic : public cGuiElement
+class GuiTactic : public GuiElement
 {
 public:
 	GuiTactic(int x, int y, std::string GID);
@@ -45,7 +45,7 @@ public:
 };
 
 
-class TacticSet : public cGuiElement
+class TacticSet : public GuiElement
 {
     public:
         TacticSet(int x, int y, std::string GID);
@@ -206,7 +206,7 @@ public:
 };
 
 //tacticlist
-class TacticList: public cGuiElement
+class TacticList: public GuiElement
 {
 private:
 	Button *btn_up, *btn_down, *btn_plus, *btn_minus, *btn_show;

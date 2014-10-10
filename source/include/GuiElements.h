@@ -21,7 +21,7 @@ typedef enum {
 
 } INPUT_EVENT;
 
-class cGuiElement
+class GuiElement
 {
     protected:
         int x;
@@ -34,14 +34,14 @@ class cGuiElement
         std::string GID;     //GID = Global Identifier ... ID que identifica univocamente cada componente grafico instanciado
 
     public:
-        cGuiElement()
+        GuiElement()
         {
             height = width = 0;
             x=y= 0;
             shown = enabled = active = 1;
         }
 
-        virtual ~cGuiElement(){}
+        virtual ~GuiElement(){}
 
         virtual void update(){}
         virtual void draw(){}
@@ -83,7 +83,7 @@ class cGuiElement
 };
 
 
-class Button : public cGuiElement
+class Button : public GuiElement
 {
     private:
         Image *stringImg;
@@ -108,7 +108,7 @@ class Button : public cGuiElement
         void setText(Font *font, const char *str, SDL_Color forecolor, SDL_Color backcolor);
 };
 
-class Box : public cGuiElement
+class Box : public GuiElement
 {
     protected:
         const Image *border;
@@ -140,7 +140,7 @@ class ImageBox : public Box
         virtual INPUT_EVENT input(SDL_Event &event);
 };
 
-class TextField : public cGuiElement
+class TextField : public GuiElement
 {
     private:
         std::string text;
@@ -166,7 +166,7 @@ class TextField : public cGuiElement
         void setCaps(bool caps);
 };
 
-class ComboBox : public cGuiElement
+class ComboBox : public GuiElement
 {
     private:
         std::vector<std::string> list;
@@ -198,7 +198,7 @@ class ComboBox : public cGuiElement
         void setSelected(std::string str);
 };
 
-class Label : public cGuiElement
+class Label : public GuiElement
 {
     private:
         Font *font;
@@ -221,7 +221,7 @@ class Label : public cGuiElement
         void setText(std::string str);
 };
 
-class StatusBox : public cGuiElement
+class StatusBox : public GuiElement
 {
     private:
         Box *bxBounds;

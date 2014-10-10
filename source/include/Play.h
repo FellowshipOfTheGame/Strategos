@@ -34,7 +34,7 @@ public:
     Play(STATE previous);
     ~Play();
 
-    void onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keysym key, Uint8 button) override;
+    void onInputEvent(GuiElement* element, INPUT_EVENT action, SDL_Keysym key, Uint8 button) override;
     void onKeyDownEvent(SDL_Keysym key) override;
     void onKeyUpEvent(SDL_Keysym key) override;
     void onMouseDownEvent(Uint8 button) override;

@@ -24,7 +24,7 @@ void Options::Logic()
 
 }
 
-void Options::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keysym key, Uint8 button)
+void Options::onInputEvent(GuiElement* element, INPUT_EVENT action, SDL_Keysym key, Uint8 button)
 {
 
 }

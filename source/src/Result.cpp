@@ -189,7 +189,7 @@ void Result::normalizeRounds(const CombatRound* l1, const CombatRound* l2)
     }
 }
 
-void Result::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keysym key, Uint8 button)
+void Result::onInputEvent(GuiElement* element, INPUT_EVENT action, SDL_Keysym key, Uint8 button)
 {
 	if (element == btn_Next)
 	{

@@ -27,7 +27,7 @@ class Menu : public StateMachine
         Menu(STATE previous);
         ~Menu();
 
-        void onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keysym key, Uint8 button) override;
+        void onInputEvent(GuiElement* element, INPUT_EVENT action, SDL_Keysym key, Uint8 button) override;
         void Logic();
         void Render();
         void Clean();

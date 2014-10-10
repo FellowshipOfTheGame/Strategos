@@ -22,7 +22,7 @@ class Unit_Setup : public StateMachine
         Unit_Setup(STATE previous);
         ~Unit_Setup();
 
-        void onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keysym key, Uint8 button);
+        void onInputEvent(GuiElement* element, INPUT_EVENT action, SDL_Keysym key, Uint8 button);
         void Logic();
         void Render();
         void Clean();

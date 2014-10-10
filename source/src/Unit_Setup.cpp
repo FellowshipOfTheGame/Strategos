@@ -135,7 +135,7 @@ Unit_Setup::~Unit_Setup()
 	delete blueprint;
 }
 
-void Unit_Setup::onInputEvent(cGuiElement* element, INPUT_EVENT action, SDL_Keysym key, Uint8 button)
+void Unit_Setup::onInputEvent(GuiElement* element, INPUT_EVENT action, SDL_Keysym key, Uint8 button)
 {
 	int mouseX, mouseY;
 	SDL_GetMouseState(&mouseX, &mouseY);
