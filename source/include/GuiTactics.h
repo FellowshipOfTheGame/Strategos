@@ -4,7 +4,7 @@
 #include "GuiElements.h"
 #include "Army.h"
 
-//trigger
+// Editor de Trigger
 class TriggerSet: public GuiElement
 {
 private:
@@ -19,9 +19,9 @@ public:
 	Trigger* getTrigger();
 	void draw();
 
-	int setType(int type);
-	int setValue(double val);
-	int setOperation(int op);
+	void setType(int type);
+	void setValue(double val);
+	void setOperation(int op);
 
 	INPUT_EVENT input(SDL_Event &event) override;
 	void setActive(bool state) override;
@@ -51,7 +51,6 @@ class TacticSet : public GuiElement
         TacticSet(int x, int y, std::string GID);
         virtual ~TacticSet();
 
-        void update(int x, int y, DictKey *key);
         void update();
         virtual void draw();
         virtual INPUT_EVENT input(SDL_Event &event);
@@ -59,13 +58,7 @@ class TacticSet : public GuiElement
         int getType();
         void setTactic(int t, int id);
         void setTactic(Tactic *tactic, int id);
-        void convert_AN();
-        void convert_AW();
-        void convert_CA(int id);
-        void convert_CD(int id);
-        void convert_KM();
-        void convert_RT(int id);
-        void convert_RM();
+
 
     protected:
         Box *box_container;
@@ -78,6 +71,14 @@ class TacticSet : public GuiElement
 
     private:
         void setUItriggers(const TacticTrigger& trigger);
+
+        void convert_AN();
+        void convert_AW();
+        void convert_CA(int id);
+        void convert_CD(int id);
+        void convert_KM();
+        void convert_RT(int id);
+        void convert_RM();
 };
 
 

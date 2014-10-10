@@ -32,7 +32,7 @@
 
 #define N_UNIT_TYPE             4
 
-#define DONT_HAVE_FITNESS   -1000.0
+#define DONT_HAVE_FITNESS   (-1000.0)
 
 class Army
 {

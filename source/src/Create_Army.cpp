@@ -258,9 +258,6 @@ void Create_Army::Logic()
 
 void Create_Army::Render()
 {
-	int scrWidth = Game::getGlobalGame()->getWidth();
-	int scrHeight = Game::getGlobalGame()->getHeight();
-
 	Game::getGlobalGame()->setBackgroundColor(0, 0, 0);
 	SDL_Renderer* renderer = Game::getGlobalGame()->getRenderer();
 

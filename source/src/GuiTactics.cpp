@@ -369,7 +369,7 @@ TacticCA::TacticCA(int x, int y, int id, int ally, std::string GID) :
 	for (unsigned int i = 0; i < unt.size(); i++)
 	{
 		if (id == unt[i]->getID()){
-		    sprintf(str, "<SELF>", unt[i]->getID());
+		    sprintf(str, "<SELF>");
 		}else{
             sprintf(str, "%d", unt[i]->getID());
 		}
@@ -430,7 +430,7 @@ TacticCD::TacticCD(int x, int y, int id, int ally, std::string GID) :
 	for (size_t i = 0; i < unt.size(); i++)
 	{
 		if (id == unt[i]->getID()){
-		    sprintf(str, "<SELF>", unt[i]->getID());
+		    sprintf(str, "<SELF>");
 		}else{
             sprintf(str, "%d", unt[i]->getID());
 		}
@@ -505,7 +505,7 @@ TacticRT::TacticRT(int x, int y, int id, int ally, std::string GID) :
 	for (unsigned int i = 0; i < unt.size(); i++)
 	{
 		if (id == unt[i]->getID()){
-		    sprintf(str, "<SELF>", unt[i]->getID());
+		    sprintf(str, "<SELF>");
 		}else{
             sprintf(str, "%d", unt[i]->getID());
 		}
@@ -1046,19 +1046,19 @@ Trigger* TriggerSet::getTrigger()
 	return tg;
 }
 
-int TriggerSet::setType(int type)
+void TriggerSet::setType(int type)
 {
     cmb_trigger->setSelectedIndex(type);
 }
 
-int TriggerSet::setValue(double val)
+void TriggerSet::setValue(double val)
 {
     char text[16];
     sprintf(text, "%.2lf", val);
     value->setText( text );
 }
 
-int TriggerSet::setOperation(int op)
+void TriggerSet::setOperation(int op)
 {
     cmb_operation->setSelectedIndex(op);
 }
