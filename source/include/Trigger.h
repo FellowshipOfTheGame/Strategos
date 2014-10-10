@@ -68,17 +68,19 @@ class TacticTrigger
         Trigger* getTriggerA();
         Trigger* getTriggerB();
 
+        const Trigger* getTriggerA() const;
+        const Trigger* getTriggerB() const;
+
         /// Tactic Trigger will own the Trigger
         void setTriggerA(Trigger* t);
         /// Tactic Trigger will own the Trigger
         void setTriggerB(Trigger* t);
 
-        int getLogicOperator(){
+        int getLogicOperator() const{
             return operation;
         }
 
-        void setLogicOperator(int newOperator)
-        {
+        void setLogicOperator(int newOperator){
             operation = newOperator;
         }
 

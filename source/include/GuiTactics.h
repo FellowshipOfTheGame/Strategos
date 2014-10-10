@@ -12,13 +12,16 @@ private:
 	TextField *value;
 	ComboBox *cmb_operation;
 	void initialize();
+
 public:
 	TriggerSet(int x, int y);
 	~TriggerSet();
 	Trigger* getTrigger();
-	int getValue();
-	int getOperation();
 	void draw();
+
+	int setType(int type);
+	int setValue(double val);
+	int setOperation(int op);
 
 	INPUT_EVENT input(SDL_Event &event) override;
 	void setActive(bool state) override;
@@ -32,11 +35,11 @@ public:
 	~GuiTactic();
 
 	virtual void update(){}
-	virtual void update(int x, int y, DictKey *key);
-	virtual void draw();
+	virtual void update(int x, int y, DictKey *key){}
+	virtual void draw(){}
 	virtual INPUT_EVENT input(SDL_Event &event);
-	void setDistance(int i);
-	int getDistance();
+
+	virtual void setPartner( int id ){};
 	virtual int getPartner(){ return 0; }
 	virtual int getType() = 0;
 };
@@ -44,34 +47,37 @@ public:
 
 class TacticSet : public cGuiElement
 {
-protected:
-	Box *box_container;
-	ComboBox *cmb_choiser;
-	TriggerSet *tg1, *tg2;
-	ComboBox *cmb_logic;
-	std::vector<std::string> vetor;
-	GuiTactic *guiTactic;
-	int unit_id;
-//	Tactic *tactic;
+    public:
+        TacticSet(int x, int y, std::string GID);
+        virtual ~TacticSet();
 
-public:
-	TacticSet(int x, int y, std::string GID);
-	virtual ~TacticSet();
+        void update(int x, int y, DictKey *key);
+        void update();
+        virtual void draw();
+        virtual INPUT_EVENT input(SDL_Event &event);
+        Tactic* getTactic();
+        int getType();
+        void setTactic(int t, int id);
+        void setTactic(Tactic *tactic, int id);
+        void convert_AN();
+        void convert_AW();
+        void convert_CA(int id);
+        void convert_CD(int id);
+        void convert_KM();
+        void convert_RT(int id);
+        void convert_RM();
 
-	void update(int x, int y, DictKey *key);
-	void update();
-	virtual void draw();
-	virtual INPUT_EVENT input(SDL_Event &event);
-	Tactic* getTactic();
-	int getType();
-	void setTactic(int t, int id);
-	void convert_AN();
-	void convert_AW();
-	void convert_CA(int id);
-	void convert_CD(int id);
-	void convert_KM();
-	void convert_RT(int id);
-	void convert_RM();
+    protected:
+        Box *box_container;
+        ComboBox *cmb_choiser;
+        TriggerSet *tg1, *tg2;
+        ComboBox *cmb_logic;
+        std::vector<std::string> vetor;
+        GuiTactic *guiTactic;
+        int unit_id;
+
+    private:
+        void setUItriggers(const TacticTrigger& trigger);
 };
 
 
@@ -82,11 +88,6 @@ private:
 public:
 	TacticAN(int x, int y, std::string GID);
 	virtual ~TacticAN();
-
-	void update(){}
-	void update(int x, int y, DictKey *key);
-	void draw();
-	INPUT_EVENT input(SDL_Event &event);
 
 	int getType() override {return TACTIC_ATTACK_NEAREST_ENEMY;}
 };
@@ -99,11 +100,6 @@ public:
 	TacticAW(int x, int y, std::string GID);
 	virtual ~TacticAW();
 
-	void update(){}
-	void update(int x, int y, DictKey *key);
-	void draw();
-	INPUT_EVENT input(SDL_Event &event);
-
 	int getType() override {return TACTIC_ATTACK_WEAKEST_ENEMY;}
 };
 
@@ -111,17 +107,19 @@ public:
 class TacticCA : public GuiTactic
 {
 private:
-ComboBox *cmb_partner;
+    ComboBox *cmb_partner;
+    int selfUnitID;
+
 public:
-	TacticCA(int x, int y, int id, std::string GID);
+	TacticCA(int x, int y, int id, int ally, std::string GID);
 	virtual ~TacticCA();
 
 	void update(){}
-	void update(int x, int y, DictKey *key);
 	void draw();
 	INPUT_EVENT input(SDL_Event &event);
 
 	int getPartner();
+	void setPartner( int id );
 
 	int getType() override {return TACTIC_ATTACK_COLLAB;}
 };
@@ -131,15 +129,17 @@ class TacticCD : public GuiTactic
 {
 private:
 	ComboBox *cmb_partner;
+    int selfUnitID;
+
 public:
-	TacticCD(int x, int y, int id, std::string GID);
+	TacticCD(int x, int y, int id, int ally, std::string GID);
 	virtual ~TacticCD();
 
 	void update(){}
-	void update(int x, int y, DictKey *key);
 	void draw();
 	INPUT_EVENT input(SDL_Event &event);
 	int getPartner();
+	void setPartner( int id );
 
 	int getType() override {return TACTIC_DEFENSE_COLLAB;}
 };
@@ -152,11 +152,6 @@ public:
 	TacticKM(int x, int y, std::string GID);
 	virtual ~TacticKM();
 
-	void update(){}
-	void update(int x, int y, DictKey *key);
-	void draw();
-	INPUT_EVENT input(SDL_Event &event);
-
 	int getType() override {return TACTIC_KAMIKASE;}
 
 };
@@ -164,16 +159,18 @@ public:
 class TacticRT : public GuiTactic
 {
 private:
-		ComboBox *cmb_partner;
+    ComboBox *cmb_partner;
+    int selfUnitID;
+
 public:
-	TacticRT(int x, int y, int id, std::string GID);
+	TacticRT(int x, int y, int id, int ally, std::string GID);
 	virtual ~TacticRT();
 
 	void update(){}
-	void update(int x, int y, DictKey *key);
 	void draw();
 	INPUT_EVENT input(SDL_Event &event);
 	int getPartner();
+	void setPartner( int id );
 
 	int getType() override {return TACTIC_RETREAT;}
 };
@@ -185,11 +182,6 @@ private:
 public:
 	TacticRM(int x, int y, std::string GID);
 	virtual ~TacticRM();
-
-	void update(){}
-	void update(int x, int y, DictKey *key);
-	void draw();
-	INPUT_EVENT input(SDL_Event &event);
 
 	int getType() override {return TACTIC_MOVE_RANDOM;}
 };

@@ -78,6 +78,16 @@ Trigger* TacticTrigger::getTriggerB()
     return tB;
 }
 
+const Trigger* TacticTrigger::getTriggerA() const
+{
+    return tA;
+}
+
+const Trigger* TacticTrigger::getTriggerB() const
+{
+    return tB;
+}
+
 void TacticTrigger::setTriggerA(Trigger* t)
 {
 	if (tA)
