@@ -582,11 +582,11 @@ void ComboBox::draw()
                 }
 			}
             else{
-                SDL_Rect rect;
-                rect.x = x;
-                rect.y = y;
-                rect.w = lenght*font->getPtSize();
-                rect.h = cell_height * (int)(list.size()+1) + 1;
+//                SDL_Rect rect;
+//                rect.x = x;
+//                rect.y = y;
+//                rect.w = lenght*font->getPtSize();
+//                rect.h = cell_height * (int)(list.size()+1) + 1;
 //                SDL_RenderFillRect(renderer, &rect);
             }
 
@@ -607,11 +607,11 @@ void ComboBox::draw()
 				// Seta
 				border->DrawImage(renderer, x + (border->getFrameWidth()*(i+1)), y, 2);
 			}else{
-                SDL_Rect rect;
-                rect.x = x;
-                rect.y = y;
-                rect.w = lenght*font->getPtSize();
-                rect.h = cell_height;
+//                SDL_Rect rect;
+//                rect.x = x;
+//                rect.y = y;
+//                rect.w = lenght*font->getPtSize();
+//                rect.h = cell_height;
 //                SDL_RenderFillRect(renderer, &rect);
 			}
 		}

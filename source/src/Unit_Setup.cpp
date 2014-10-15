@@ -180,6 +180,7 @@ void Unit_Setup::onInputEvent(GuiElement* element, INPUT_EVENT action, SDL_Keysy
 					squad_number.erase(squad_number.begin() + squad_focus->getID());
 
 					Game::getGlobalGame()->getEditingArmy()->removeUnit(squad_focus->getID());
+
 					squad_focus = nullptr;
 				}
 				return;

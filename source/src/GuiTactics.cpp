@@ -126,6 +126,10 @@ void TacticSet::setTactic(Tactic *tactic, int id)
 
     delete guiTactic;
 
+    int allyid = 0;
+    if (tactic->getInfo().allyUnit)
+        allyid = tactic->getInfo().allyUnit->getID();
+
     switch (tactic->getType())
     {
 	    case TACTIC_ATTACK_NEAREST_ENEMY:
@@ -137,11 +141,11 @@ void TacticSet::setTactic(Tactic *tactic, int id)
         break;
 
 	    case TACTIC_ATTACK_COLLAB:
-            guiTactic = new TacticCA(x,y, id, tactic->getInfo().allyUnit->getID(), GID);
+            guiTactic = new TacticCA(x,y, id, allyid, GID);
         break;
 
 	    case TACTIC_DEFENSE_COLLAB:
-            guiTactic = new TacticCD(x,y, id, tactic->getInfo().allyUnit->getID(), GID);
+            guiTactic = new TacticCD(x,y, id, allyid, GID);
         break;
 
         case TACTIC_KAMIKASE:
@@ -149,7 +153,7 @@ void TacticSet::setTactic(Tactic *tactic, int id)
         break;
 
         case TACTIC_RETREAT:
-            guiTactic = new TacticRT(x,y, id, tactic->getInfo().allyUnit->getID(), GID);
+            guiTactic = new TacticRT(x,y, id, allyid, GID);
         break;
 
         case TACTIC_MOVE_RANDOM:

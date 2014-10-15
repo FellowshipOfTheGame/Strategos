@@ -389,6 +389,18 @@ Unit* Army::removeUnit(unsigned int i)
         units[i]->setID(i);
     }
 
+    // Remover referencias para a unidade removida
+    for (int i = 0; i < units.size(); ++i)
+    {
+        for (int j = 0; j < units[i]->getTacticSize(); ++j)
+        {
+            Tactic* t = units[i]->getTacticAt(j);
+            if ( t->getInfo().allyUnit == removed ){
+                t->setInfo(TacticInfo(nullptr));
+            }
+        }
+    }
+
 	return removed;
 }
 
